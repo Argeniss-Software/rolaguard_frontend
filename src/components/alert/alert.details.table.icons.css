@@ -1,0 +1,44 @@
+.div-container {
+    float: right !important;
+    padding-right: 20px;
+}
+
+#gateway-logo {
+    margin: 0px 0px 0px 0px;
+    width: 2.7em;
+    padding-bottom: 0 !important;
+}
+
+#device-logo {
+    margin: 0px 0px 0px 0px;
+    width: 1.9em;
+    padding-bottom: 0 !important;
+}
+
+.device-popup{
+    display:grid;
+}
+
+.div-container table thead tr th {
+    border-bottom: none !important;
+}
+
+.hide {
+    display: none;
+}
+
+.icon-font-size-gateway {
+    font-size: 2.3em;
+}
+
+.icon-font-arrows-h {
+    font-size : 1.1em;
+}
+
+.icon-font-size-device {
+    font-size: 1.5em;
+}
+
+.icon-description {
+    font-size: 11px;
+}

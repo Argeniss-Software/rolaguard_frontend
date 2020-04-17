@@ -1,0 +1,12 @@
+.hide {
+    display: none !important;
+    visibility: hidden;
+}
+
+.ui.table tr td {
+    border-top: none !important;
+}
+
+.divider-margin {
+    margin: 3px !important;
+}

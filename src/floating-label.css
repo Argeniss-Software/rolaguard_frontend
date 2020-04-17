@@ -1,0 +1,113 @@
+.form-label.form-css-label .required .required input:not([type="radio"]) + label:after,
+.form-label.form-css-label .required .dropdown-label-wrapper .dropdown-label:after {
+  margin: -.2em 0 0 .2em;
+  content: '*';
+  color: #db2828;
+}
+
+.form-label.form-css-label .ui.input,
+.form-label.form-css-label .ui.checkbox,
+.form-label.form-css-label .ui.radio {
+  z-index: 0;
+}
+
+/* .form-label.form-css-label input:not([type="checkbox"]) + label,
+.form-label.form-css-label input:not([type="radio"]) + label */
+.form-label.form-css-label input[type=date] + label,
+.form-label.form-css-label input[type=datetime-local] + label,
+.form-label.form-css-label input[type=email] + label,
+.form-label.form-css-label input[type=file] + label,
+.form-label.form-css-label input[type=number] + label,
+.form-label.form-css-label input[type=password] + label,
+.form-label.form-css-label input[type=search] + label,
+.form-label.form-css-label input[type=tel] + label,
+.form-label.form-css-label input[type=text] + label,
+.form-label.form-css-label input[type=time] + label,
+.form-label.form-css-label input[type=url] + label {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: #909090;
+  z-index: -1;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+/* .form-css-label input:not([type="checkbox"]),
+.form-css-label input:not([type="radio"]) */
+.form-label.form-css-label input[type=date],
+.form-label.form-css-label input[type=datetime-local],
+.form-label.form-css-label input[type=email],
+.form-label.form-css-label input[type=file],
+.form-label.form-css-label input[type=number],
+.form-label.form-css-label input[type=password],
+.form-label.form-css-label input[type=search],
+.form-label.form-css-label input[type=tel],
+.form-label.form-css-label input[type=text],
+.form-label.form-css-label input[type=time],
+.form-label.form-css-label input[type=url] {
+  background: transparent !important;
+}
+
+.form-label.form-css-label input[type=date][data-empty="false"] + label,
+.form-label.form-css-label input[type=datetime-local][data-empty="false"] + label,
+.form-label.form-css-label input[type=email][data-empty="false"] + label,
+.form-label.form-css-label input[type=file][data-empty="false"] + label,
+.form-label.form-css-label input[type=number][data-empty="false"] + label,
+.form-label.form-css-label input[type=password][data-empty="false"] + label,
+.form-label.form-css-label input[type=search][data-empty="false"] + label,
+.form-label.form-css-label input[type=tel][data-empty="false"] + label,
+.form-label.form-css-label input[type=text][data-empty="false"] + label,
+.form-label.form-css-label input[type=time][data-empty="false"] + label,
+.form-label.form-css-label input[type=url][data-empty="false"] + label,
+
+.form-label.form-css-label input[type=date]:valid + label,
+.form-label.form-css-label input[type=datetime-local]:valid + label,
+.form-label.form-css-label input[type=email]:valid + label,
+.form-label.form-css-label input[type=file]:valid + label,
+.form-label.form-css-label input[type=number]:valid + label,
+.form-label.form-css-label input[type=password]:valid + label,
+.form-label.form-css-label input[type=search]:valid + label,
+.form-label.form-css-label input[type=tel]:valid + label,
+.form-label.form-css-label input[type=text]:valid + label,
+.form-label.form-css-label input[type=time]:valid + label,
+.form-label.form-css-label input[type=url]:valid + label,
+
+.form-label.form-css-label input[type=date]:focus + label,
+.form-label.form-css-label input[type=datetime-local]:focus + label,
+.form-label.form-css-label input[type=email]:focus + label,
+.form-label.form-css-label input[type=file]:focus + label,
+.form-label.form-css-label input[type=number]:focus + label,
+.form-label.form-css-label input[type=password]:focus + label,
+.form-label.form-css-label input[type=search]:focus + label,
+.form-label.form-css-label input[type=tel]:focus + label,
+.form-label.form-css-label input[type=text]:focus + label,
+.form-label.form-css-label input[type=time]:focus + label,
+.form-label.form-css-label input[type=url]:focus + label {
+  background-color: white;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-weight: 700;
+  font-size: 12px;
+  z-index: 1;
+  -webkit-transform: translate3d(0, -20px, 0);
+          transform: translate3d(0, -20px, 0);
+}
+
+.form-label label.dropdown-label {
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  color: #909090;
+  background-color: white;
+  padding-left: 3px;
+  padding-right: 3px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  z-index: 9;
+}
+
+.dropdown-label-wrapper {
+  position: relative;
+}

@@ -1,0 +1,24 @@
+#login-logo {
+    width: 150px;
+    margin: 0px 0px 25px 0px;
+}
+
+.login-form {
+    background-image: url(../img/background.jpg);
+    background-color: #cccccc;
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.cover {
+    position: relative;
+    top: -100vh;
+    left: 0px;
+    content: "";
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    background: rgba(0,0,0,0.6);
+}

@@ -1,0 +1,21 @@
+.accordion .content {
+    margin-left: 22px;
+    margin-bottom: 10px;
+}
+.alert-details-technical-table{
+    max-width: 520px;
+    margin: 0 auto;
+}
+.alert-details-technical-table table {
+    border-collapse: collapse !important;
+}
+.alert-details-technical-table .ui.table tbody tr td {
+    border-top: 1px solid lightgray !important;
+}
+.technical-details-table-row-left {
+    border: 1px solid lightgray !important;
+    border-right: none !important;
+}
+.technical-details-table-row-right {
+    border: 1px solid lightgray !important;
+}

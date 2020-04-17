@@ -1,0 +1,15 @@
+@media only screen and (min-width: 768px) {
+  #phone-component-country-code {
+    padding: 0px !important;
+  }
+  
+  #phone-component-number {
+    padding: 0 0 0 5px !important;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #phone-component-number {
+    padding-top: 0px;
+  }
+}

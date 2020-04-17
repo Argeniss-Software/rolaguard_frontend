@@ -1,0 +1,31 @@
+/* position alert in app top */
+.message {
+    position: fixed;
+    z-index: 1000000  !important;
+    min-width: 200px;
+    max-width: 500px;
+}
+
+.message.top-right {
+    top: 12px;
+    right: 20px  !important;
+}
+
+.message.top-left {
+    top: 12px;
+    left: 20px  !important;
+}
+
+.message.bottom-right {
+    right: 20px  !important;
+    bottom: 21px !important;
+}
+
+.message.bottom-left {
+    left: 20px  !important;
+    bottom: 21px !important;
+}
+
+.app-container {
+    height: auto;
+}

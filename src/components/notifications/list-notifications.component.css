@@ -1,0 +1,11 @@
+.risk-column {
+  width: 100px;
+}
+
+.created-column {
+  width: 210px;
+}
+
+th {
+  padding-bottom: 5px !important;
+}

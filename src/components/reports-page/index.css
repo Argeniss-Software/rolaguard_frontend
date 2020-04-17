@@ -1,0 +1,24 @@
+.search-box > i, .input-box > i {
+    margin-right: 5px;
+}
+
+.search-box, .input-box {
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.view-header-actions {
+    display: flex;
+}
+
+.react-datepicker__input-container > input {
+    border: 0;
+    border-bottom: 1px solid rgba(55, 185, 220, 0.8);
+    height: 30px;
+    padding: 0px 10px;
+    color: rgba(0,0,0,.6);
+    font-size: 1.2em;
+    min-width: 225px;
+}
