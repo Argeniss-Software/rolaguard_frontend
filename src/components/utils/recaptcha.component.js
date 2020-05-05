@@ -32,6 +32,10 @@ class RecaptchaComponent extends Component {
   }
 
   render() {
+    if (!window.RECAPTCHA_SITEKEY){
+      this.props.authStore.setCaptcha("Recaptcha site-key not set");
+      return (<div></div>);
+    }
     return (
       <div>
         {/* You can replace captchaDemo with any ref word */}
