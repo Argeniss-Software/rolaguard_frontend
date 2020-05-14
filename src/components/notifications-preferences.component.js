@@ -9,7 +9,7 @@ import AlertUtil from '../util/alert-util';
 import "./notifications-preferences.component.css";
 import Validation from "../util/validation";
 
-@inject("notificationStore", "mapStore")
+@inject("notificationStore")
 class NotificationsPreferencesComponent extends React.Component {
 
     constructor(props) {
