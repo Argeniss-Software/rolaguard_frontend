@@ -15,35 +15,37 @@ docker build -t rolaguard-frontend
 ```
 
 ### Development Enviroment
+These instructions are meant to set up a local development environment for the frontend, using the backend running in the `docker-compose` from [main RoLaGuard repository](https://github.com/Argeniss-Software/rolaguard).
 
-#### Installing dependencies
-In order to run the frontend in development mode, you need to have node.js installed. The first time you run the code you need to install all dependencies, this is done by running (in the root folder) the following command:
+#### Install dependencies
+First, you need to have node.js installed. The first time you run the code you need to install all dependencies. This is done by running (in the frontend folder) the following command:
 ```bash
 npm install
 ```
 
-#### Changing the backend server
-The frontend is configured to work out of the box when it is running with `docker-compose` in the [main RoLaGuard repository](https://github.com/Argeniss-Software/rolaguard). In order to make it work in development mode it must be configured to make the HTTP requests to a local backend. This can be done by adding the following lines in the `./public/config.js`:
+#### Point to local backend and configure reCaptcha
+After that, the frontend must be configured to make the HTTP requests to the local backend running in the docker-compose. This can be done by adding the following lines in the `./public/config.js`:
 
 ```
-window.RUNTIME_API_HOST= 'http://localhost:3000/api/v1.0/';
-window.RUNTIME_WS_HOST= 'http://localhost:3000/';
+window.RUNTIME_API_HOST= 'http://localhost:30000/api/v1.0/';
+window.RUNTIME_WS_HOST= 'http://localhost:30000/';
 window.RECAPTCHA_SITEKEY= RECAPTCHA_SITE_KEY;
 ```
-You can change the API host and/or the WS host to match your configuration.
+You can change the API host and/or the WS host to match your configuration (in case you modified the default configs).
 
-The site key must be the public key from the reCAPTCHA service, you can generete your own keys or (for testing purpouses) you can use the testing keys [provided by google](https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do).
+Where RECAPTCHA_SITE_KEY is the public key from the reCAPTCHA service. To get obtain this key, you can generate your own (for testing purposes) or you can use the testing keys [provided by google](https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do).
 
 **Google test keys**
 - Site key: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
 - Secret key: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
 
-(the secret key have to be configured in the backend)
+NOTE: you have to configure the reCaptcha secret key as an environment variable in the [backend](https://github.com/Argeniss-Software/rolaguard/blob/master/config/backend.env).
 
 #### Runnning the frontend
-Once you have installed the dependencies and have configured the backend server, you can run the development mode by runing the following command in the root folder.
+Once you installed the dependencies, pointed the frontend to the local backend and have the docker-compose up an running, you can launch the local frontend by executing the following command in the frontend folder.
 ```bash
 npm start
 ```
-(in development mode, the code will recompile after every change made in the source code)
+
+NOTE: in development mode, the code will recompile after saving every change made in the source code.
 
