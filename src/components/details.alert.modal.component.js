@@ -127,11 +127,11 @@ class DetailsAlertModal extends Component {
         </Modal.Header>
         <Modal.Content>
           <Modal.Description>
+            <AlertDetailTableIcon parameters={this.props.alert.alert.parameters} />
             <p>{alert_type.description}</p>
             <div style={{marginBottom: 15 }}>
               <p style={{fontWeight: 'bolder', marginBottom: 3 }}>Source</p>
               Message collector <i>{alert.data_collector_name}</i>
-              <AlertDetailTableIcon parameters={this.props.alert.alert.parameters} />
             </div>
 
             <Accordion>
