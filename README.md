@@ -4,7 +4,7 @@
 
 This repository contains the source code of the RoLaGuard frontend. This component is the responsible of generating the graphical user interface.
 
-To access the main project with instructions to easily run the rolaguard locally visit the [RoLaGuard](https://github.com/Argeniss-Software/rolaguard) repository. For contributions, please visit the [CONTRIBUTIONS](https://github.com/Argeniss-Software/rolaguard/blob/master/CONTRIBUTIONS.md) file
+To access the main project with instructions to easily run the rolaguard locally visit the [RoLaGuard](https://github.com/Argeniss-Software/rolaguard) repository. For contributions, please visit the [CONTRIBUTING.md](https://github.com/Argeniss-Software/rolaguard/blob/master/CONTRIBUTING.md) file
 
 ### Building the docker image
 
@@ -33,7 +33,7 @@ window.RECAPTCHA_SITEKEY= RECAPTCHA_SITE_KEY;
 ```
 You can change the API host and/or the WS host to match your configuration (in case you modified the default configs).
 
-Where RECAPTCHA_SITE_KEY is the public key from the reCAPTCHA service. To get obtain this key, you can generate your own (for testing purposes) or you can use the testing keys [provided by google](https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do).
+Where RECAPTCHA_SITE_KEY is the public key from the reCAPTCHA service. To get this key, you can generate your own (for testing purposes) or you can use the testing keys [provided by google](https://developers.google.com/recaptcha/docs/faq#id-like-to-run-automated-tests-with-recaptcha.-what-should-i-do).
 
 **Google test keys**
 - Site key: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
