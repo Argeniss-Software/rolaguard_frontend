@@ -18,7 +18,7 @@ docker build -t rolaguard-frontend
 These instructions are meant to set up a local development environment for the frontend, using the backend running in the `docker-compose` from [main RoLaGuard repository](https://github.com/Argeniss-Software/rolaguard).
 
 #### Install dependencies
-First, you need to have node.js installed. The first time you run the code you need to install all dependencies. This is done by running (in the frontend folder) the following command:
+First, you need to have [node.js](https://nodejs.org/download/release/latest-v12.x/) 12 LTE installed. The first time you run the code you need to install all dependencies. This is done by running (in the frontend folder) the following command:
 ```bash
 npm install
 ```
