@@ -10,7 +10,8 @@ import DashboardComponent from './dashboard.component';
 import NotFoundPage from '../pages/notFoundPage.page';
 import UserProfileComponent from './user.profile.component';
 import AlarmReviewComponent from './alarm_review.component';
-// Don't delete he next line. It serves the DatePicker in the Alerts Review dashboard
+import InventoryReviewComponent from './device/inventory_review.component';
+// Don't delete the next line. It serves the DatePicker in the Alerts Review dashboard
 import ReportComponent from './reports-page';
 import DataCollectorListComponent from './data_collectors.list.component';
 import DataCollectorLogComponent from './data_collector.log.component';
@@ -31,6 +32,9 @@ class DashBoardRouter extends React.Component {
 
                     {/* QUARANTINE */}
                     <Route exact path='/dashboard/quarantine' component={QuarantineComponent}/>
+
+                    {/* DEVICES */}
+                    <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
 
                     {/* DATA COLLECTORS */}
                     <Route exact path='/dashboard/data_collectors' render={ (props) => <DataCollectorListComponent history={props.history}  /> }/>
