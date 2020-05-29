@@ -21,7 +21,7 @@ class AlertListComponent extends React.Component {
     if(!alerts || alerts.length === 0) {
       return (
         <Table.Row>
-          <Table.Cell colSpan='6'>
+          <Table.Cell colSpan='9'>
             <EmptyComponent emptyMessage="No alerts found" />
           </Table.Cell>
         </Table.Row>
@@ -41,8 +41,10 @@ class AlertListComponent extends React.Component {
                 <Table.Cell onClick={() => showAlertDetails(index)}>
                   {alert_types[alert.type].name}
                 </Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.dev_name}</Table.Cell>
                 <Table.Cell singleLine onClick={() => showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}</Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)} className="upper">{alert.parameters.gateway}</Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.gw_name}</Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>{alert.data_collector_name}</Table.Cell>
                 <Table.Cell className="td-actions">
                   {

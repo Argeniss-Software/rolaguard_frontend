@@ -519,12 +519,14 @@ class AlarmReviewComponent extends React.Component {
                       <Table.Row>
                         <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                        <Table.HeaderCell >DESCRIPTION</Table.HeaderCell>
+                        <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                         <Table.HeaderCell collapsing sorted={orderBy[0] === 'created_at' ? (orderBy[1] === 'ASC' ? 'ascending' : 'descending') : null} onClick={ () => this.handleSort('created_at')}>
                           DATE
                         </Table.HeaderCell>
-                        <Table.HeaderCell>GATEWAY</Table.HeaderCell>
-                        <Table.HeaderCell>COLLECTOR</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                        <Table.HeaderCell>GATEWAY NAME</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
                         <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
@@ -532,7 +534,7 @@ class AlarmReviewComponent extends React.Component {
                       <Table.Body>
                         {newAlerts && 
                         <Table.Row>
-                          <Table.Cell colSpan='6' verticalAlign='middle' style={{textAlign: 'center'}}>
+                          <Table.Cell colSpan='9' verticalAlign='middle' style={{textAlign: 'center'}}>
                             <Message info compact>
                               <Icon name='bell'/>
                               There're new alerts.&nbsp;&nbsp;<Button circular positive size='mini' icon='fas fa-sync' onClick={() => {this.updateRange('DAY');this.setState({newAlerts: false})}} content='Reload now'/>
