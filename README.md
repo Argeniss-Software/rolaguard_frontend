@@ -11,7 +11,7 @@ To access the main project with instructions to easily run the rolaguard locally
 To build the docker image locally:
 
 ```bash
-docker build -t rolaguard-frontend
+docker build -t rolaguardcommunity/frontend:latest .
 ```
 
 ### Development Enviroment
