@@ -53,14 +53,15 @@ class AlertDetailTableIcon extends Component {
     }
 
     render(){
-        const {dev_eui, gateway, device_name, dev_addr} = this.props.parameters;
+        const {dev_eui, dev_name, gateway, gw_name, dev_addr} = this.props.parameters;
+
         return (
         <div className="div-container">
             <Table compact="very" basic="very">
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell textAlign="center" className={dev_eui ? "" : "hide"}>
-                        {dev_eui && this.getDevicePopup(dev_eui, dev_addr, device_name, "device")}
+                        {dev_eui && this.getDevicePopup(dev_eui, dev_addr, dev_name, "device")}
                     </Table.HeaderCell>
                     <Table.HeaderCell textAlign="center" className={gateway && dev_eui ? "" : "hide"}>
                         <i className="fas fa-ellipsis-h icon-font-arrows-h" ></i>
@@ -73,13 +74,18 @@ class AlertDetailTableIcon extends Component {
             </Table.Header>
             <Table.Body>
                 <Table.Row>
-                <Table.Cell className={dev_eui ? "" : "hide"}>
-                    {this.getIconDescription(dev_eui)}
-                </Table.Cell>
-                <Table.Cell  className={gateway && dev_eui ? "" : "hide"}></Table.Cell>
-                <Table.Cell className={gateway ? "" : "hide"}>
-                    {this.getIconDescription(gateway)}
-                </Table.Cell>
+                    <Table.Cell className={dev_name || gw_name ? "" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
+                    <Table.Cell  className={dev_name || gw_name ? "" : "hide"}></Table.Cell>
+                    <Table.Cell className={dev_name || gw_name ? "" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                    <Table.Cell className={dev_eui ? "" : "hide"} textAlign= "center">
+                        {this.getIconDescription(dev_eui)}
+                    </Table.Cell>
+                    <Table.Cell  className={gateway && dev_eui ? "" : "hide"}></Table.Cell>
+                    <Table.Cell className={gateway ? "" : "hide"} textAlign= "center">
+                        {this.getIconDescription(gateway)}
+                    </Table.Cell>
                 </Table.Row>
             </Table.Body>
             </Table>
