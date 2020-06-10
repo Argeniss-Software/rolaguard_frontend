@@ -4,11 +4,11 @@ import AlertUtil from '../../util/alert-util';
 
 class InventoryIdComponent extends React.Component {
 
-    getPopup(text, textDescription, styleClass) {
+    getPopup(text, textDescription) {
       return (
         <Popup
             trigger={
-              <span><i className={styleClass}/> {text}</span>
+              <span>{text}</span>
             }
             content={textDescription}
           />
@@ -16,19 +16,16 @@ class InventoryIdComponent extends React.Component {
     }
 
     render() {
-        const { parameters, alertType } = this.props
-        const showNotAplicable = AlertUtil.alertTypes.notAplicableDescription.includes(alertType);
-        const notApplicableText = "Not Applicable";
+        const { id, type  } = this.props
 
-        if (parameters && parameters.dev_eui && parameters.dev_eui.trim && parameters.dev_eui.trim() !== '' && parameters.dev_eui.toLowerCase() !== 'unknown') {
-            return this.getPopup(showNotAplicable? "N/A" : parameters.dev_eui, showNotAplicable? notApplicableText : "Device EUI", showNotAplicable ? "" : "fas fa-fingerprint");
+        if (type && type.toLowerCase().trim() === 'device' && type.toLowerCase() !== 'unknown') {
+            return this.getPopup(id? id : 'ID UNDEFINED' , "Device EUI");
+        }
+        if (type && type.toLowerCase().trim() === 'gateway' && type.toLowerCase() !== 'unknown') {
+          return this.getPopup(id? id : 'ID UNDEFINED', "Gateway ID");
         }
       
-        if (parameters && parameters.dev_addr && parameters.dev_addr.trim && parameters.dev_addr.trim() !== '' && parameters.dev_addr.toLowerCase() !== 'unknown') {
-          return this.getPopup(showNotAplicable? "N/A" : parameters.dev_addr, showNotAplicable? notApplicableText : "Device Address", showNotAplicable ? "" : "fas fa-at");
-        }
-      
-        return this.getPopup(showNotAplicable? "N/A" : "Unknown identifier", showNotAplicable? notApplicableText : "Unknown identifier", showNotAplicable ? "" : "fas fa-question");
+        return this.getPopup("Unknown identifier", "Unknown identifier");
     }
 }
 

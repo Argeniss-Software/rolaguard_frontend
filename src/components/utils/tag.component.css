@@ -1,0 +1,14 @@
+.container {
+    padding: 3px;
+    margin: 2px;
+    background-color: #37b9dc;
+    border-radius: 5px;
+    width: min-content;
+    display:inline-block;
+}
+
+.text {
+    font-size: small;
+    font-weight: 800;
+    color: white;
+}
