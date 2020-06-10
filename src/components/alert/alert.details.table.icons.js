@@ -17,7 +17,7 @@ class AlertDetailTableIcon extends Component {
 
     getGatewayPopup(icon, value, text, type) {
         return (
-            <Popup trigger={
+            <Popup offset="34, 0" trigger={
                 <div>
                     {/* <i className={"icon-font-size-" + type +" fas " + icon} /> */}
                     <img id="gateway-logo" className="animated" src={this.state.gatewayUrl} alt=""/>
@@ -32,7 +32,7 @@ class AlertDetailTableIcon extends Component {
 
     getDevicePopup(dev_eui, dev_addr, device_name, type) {
         return (
-            <Popup trigger={
+            <Popup offset="30, 0" trigger={
                 <div>
                     <img id="device-logo" className="animated" src={this.state.microchipUrl} alt=""/>
                 </div>
