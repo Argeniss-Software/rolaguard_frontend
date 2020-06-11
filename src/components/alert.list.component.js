@@ -35,13 +35,14 @@ class AlertListComponent extends React.Component {
                 <Table.Cell className="id-cell upper" onClick={() => showAlertDetails(index)}>
                   <DeviceIdComponent parameters={alert.parameters} alertType={alert.type}/>
                 </Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.dev_name}</Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.dev_vendor}</Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>
                   <Label horizontal style={{backgroundColor: this.colorsMap[ alert_types[alert.type].risk ], color: 'white', borderWidth: 1, borderColor: this.colorsMap[ alert_types[alert.type].risk ], width: '100px'}}>{alert_types[alert.type].risk}</Label>
                 </Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>
                   {alert_types[alert.type].name}
                 </Table.Cell>
-                <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.dev_name}</Table.Cell>
                 <Table.Cell singleLine onClick={() => showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}</Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)} className="upper">{alert.parameters.gateway}</Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>{alert.parameters.gw_name}</Table.Cell>
