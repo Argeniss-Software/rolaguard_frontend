@@ -370,6 +370,8 @@ class QuarantineComponent extends React.Component {
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DEVICE VENDOR</Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
@@ -389,6 +391,8 @@ class QuarantineComponent extends React.Component {
                                 <Table.Cell className="id-cell upper"  onClick={() => this.showAlertDetails(index)}>
                                   <DeviceIdComponent parameters={item.alert.parameters} alertType={alert.type}/>
                                 </Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert.parameters.dev_name}</Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert.parameters.dev_vendor}</Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>
                                   <Label horizontal style={{backgroundColor: AlertUtil.getColorsMap()[item.alert_type.risk], color: 'white', borderWidth: 1, width: '100px'}}>
                                     {item.alert_type.risk}
