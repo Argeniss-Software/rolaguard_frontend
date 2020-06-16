@@ -253,12 +253,6 @@ class PhoneComponent extends React.Component {
           "flag":"cm"
         },
         {
-          "text":"Canada (+1)",
-          "value":"+1",
-          "key":39,
-          "flag":"ca"
-        },
-        {
           "text":"Cayman Islands (+1345)",
           "value":"+1345",
           "key":40,
@@ -1389,6 +1383,12 @@ class PhoneComponent extends React.Component {
           "value":"+1",
           "key":230,
           "flag":"us"
+        },
+        {
+          "text":"Canada (+1)",
+          "value":"+1",
+          "key":39,
+          "flag":"ca"
         },
         {
           "text":"Uruguay (+598)",

@@ -374,6 +374,7 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell collapsing>DEVICE VENDOR</Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
                           <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
@@ -398,6 +399,7 @@ class QuarantineComponent extends React.Component {
                                   </Label>
                                 </Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert_type.name}</Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert.parameters.dev_name }</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.last_checked}</Moment>}</Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)} className="upper">{item.alert.parameters.gateway}</Table.Cell>
