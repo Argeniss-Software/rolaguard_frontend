@@ -15,7 +15,7 @@ const AlertUtil = {
   },
 
   parameters : {
-    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui']
+    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui']
   },
 
   alertTypes: {
@@ -35,8 +35,8 @@ const AlertUtil = {
     "packet_id": "Current Message ID",
     "packet_date": "Packet date",
     "gateway": "Gateway",
-    "gw_name": "Gateway name",
-    "gw_vendor": "Gateway vendor",
+    "gw_name": "Gateway Name",
+    "gw_vendor": "Gateway Vendor",
     "created_at": "Created at",
     "app_key": "App Key",
     "packet_type_1": "Message 1 Type",
