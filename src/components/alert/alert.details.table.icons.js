@@ -17,7 +17,7 @@ class AlertDetailTableIcon extends Component {
 
     getGatewayPopup(icon, value, text, type) {
         return (
-            <Popup trigger={
+            <Popup offset="34, 0" trigger={
                 <div>
                     {/* <i className={"icon-font-size-" + type +" fas " + icon} /> */}
                     <img id="gateway-logo" className="animated" src={this.state.gatewayUrl} alt=""/>
@@ -32,7 +32,7 @@ class AlertDetailTableIcon extends Component {
 
     getDevicePopup(dev_eui, dev_addr, device_name, type) {
         return (
-            <Popup trigger={
+            <Popup offset="30, 0" trigger={
                 <div>
                     <img id="device-logo" className="animated" src={this.state.microchipUrl} alt=""/>
                 </div>
@@ -53,7 +53,7 @@ class AlertDetailTableIcon extends Component {
     }
 
     render(){
-        const {dev_eui, dev_name, gateway, gw_name, dev_addr} = this.props.parameters;
+        const {dev_eui, dev_addr, dev_name, dev_vendor, gateway, gw_name, gw_vendor} = this.props.parameters;
 
         return (
         <div className="div-container">
@@ -74,9 +74,14 @@ class AlertDetailTableIcon extends Component {
             </Table.Header>
             <Table.Body>
                 <Table.Row>
-                    <Table.Cell className={dev_name || gw_name ? "" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
-                    <Table.Cell  className={dev_name || gw_name ? "" : "hide"}></Table.Cell>
-                    <Table.Cell className={dev_name || gw_name ? "" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
+                    <Table.Cell className={dev_name || gw_name ? "icon-description" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
+                    <Table.Cell  className={dev_name || gw_name ? "icon-description" : "hide"}></Table.Cell>
+                    <Table.Cell className={dev_name || gw_name ? "icon-description" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
+                </Table.Row>
+                <Table.Row>
+                    <Table.Cell className={dev_vendor || gw_vendor ? "icon-description" : "hide"} textAlign= "center">{dev_vendor? dev_vendor : ""}</Table.Cell>
+                    <Table.Cell  className={dev_vendor || gw_vendor ? "icon-description" : "hide"}></Table.Cell>
+                    <Table.Cell className={dev_vendor || gw_vendor ? "icon-description" : "hide"} textAlign= "center">{gw_vendor? gw_vendor : ""}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
                     <Table.Cell className={dev_eui ? "" : "hide"} textAlign= "center">

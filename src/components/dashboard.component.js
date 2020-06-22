@@ -423,12 +423,11 @@ class DashboardComponent extends React.Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                             <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                             <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                            <Table.HeaderCell>GATEWAY NAME</Table.HeaderCell>
                             <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
                             <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                           </Table.Row>
