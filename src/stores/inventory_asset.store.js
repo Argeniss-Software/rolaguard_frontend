@@ -1,29 +1,47 @@
 import { observable, action, computed } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
+import { Table } from "semantic-ui-react";
 
 class InventoryAssetsStore {
   @observable assets = [];
   @observable dataCollectors = [];
   @observable gateways = [];
   @observable vendors = [];
-  @observable assetsCount = [];
+  @observable assetsCount = null;
+  @observable pagesCount = null;
   @observable assetsTypes = [];
 
   getHeaders() {
-    return {headers: { Authorization: "Bearer " + AuthStore.access_token }};
+    return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
   @action
-  getAssets(includeParameters, page, size) {
-    return API.get(`inventory?page=${page}&size=${size}`, this.getHeaders()).then(response => {
-      this.assets.clear();
-      this.assets = response.data;
-      return this.assets;
-    });
+  getAssets(pagination, criteria) {
+    const { page, size } = pagination || {};
+    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
+
+    const headers = this.getHeaders();
+    const params = {
+      ...vendors && {'vendors': vendors},
+      ...gateways && {'gateway_ids': gateways},
+      ...dataCollectors && {'data_collector_ids': dataCollectors},
+      ...tags && {'tag_ids': tags},
+      ...type && {'asset_type': type},
+      page,
+      size
+    };
+    return API.get(`inventory/list`, { headers, params} );
   }
 
-  @action
+  getAsstesCount(){
+    return this.assetsCount;
+  }
+
+  getPagesCount(){
+    return this.pagesCount;
+  }
+  
   getMockupAssets(){
     {/* Just for mockup reasons */}
 
@@ -61,9 +79,25 @@ class InventoryAssetsStore {
     ];
 
     this.assets = assets;
-
     return this.assets;
   }
+
+
+  getDataCollectorsCount(criteria){
+    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
+
+    const headers = this.getHeaders();
+    const params = {
+      ...vendors && {'vendors': vendors},
+      ...gateways && {'gateway_ids': gateways},
+      ...dataCollectors && {'data_collector_ids': dataCollectors},
+      ...tags && {'tag_ids': tags},
+      ...type && {'asset_type': type},
+    };
+
+    return API.get(`inventory/count/data_collector`, { headers, params} );
+  }
+
 
   getMockupDataCollectors() {
     const dataCollectors = [
@@ -72,14 +106,12 @@ class InventoryAssetsStore {
         "percentage":0.9,
         "value":81,
         "id":48,
-        "color":"#38b9dc"
      },
      {
         "label":"ChirpStack2",
         "percentage":0.1,
         "value":9,
         "id":6,
-        "color":"#1f77b4"
      }
     ];
 
@@ -87,13 +119,26 @@ class InventoryAssetsStore {
     return this.dataCollectors;
   }
 
+  getGatewaysCount(criteria){
+    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
+
+    const headers = this.getHeaders();
+    const params = {
+      ...vendors && {'vendors': vendors},
+      ...gateways && {'gateway_ids': gateways},
+      ...dataCollectors && {'data_collector_ids': dataCollectors},
+      ...tags && {'tag_ids': tags},
+      ...type && {'asset_type': type},
+    };
+
+    return API.get(`inventory/count/gateway`, { headers, params} );
+  }
   getMockupGateways() {
     const gateways = [
       {
         "label": "Devices",
         "percentage": 0.8461538461538461,
         "value": 11,
-        "color": "#ff902b",
         "id": "Devices",
         "selected": false
       },
@@ -101,7 +146,6 @@ class InventoryAssetsStore {
         "label": "Gateways",
         "percentage": 0.15384615384615385,
         "value": 2,
-        "color": "#f05050",
         "id": "Gateways",
         "selected": false
       }
@@ -111,6 +155,21 @@ class InventoryAssetsStore {
     return this.gateways;
   }
 
+  getVendorsCount(criteria){
+    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
+
+    const headers = this.getHeaders();
+    const params = {
+      ...vendors && {'vendors': vendors},
+      ...gateways && {'gateway_ids': gateways},
+      ...dataCollectors && {'data_collector_ids': dataCollectors},
+      ...tags && {'tag_ids': tags},
+      ...type && {'asset_type': type},
+    };
+
+    return API.get(`inventory/count/vendor`, { headers, params} );
+  }
+
   getMockupVendors() {
     const vendors =  [
       {
@@ -118,13 +177,11 @@ class InventoryAssetsStore {
          "selected":true,
          "percentage":0.9,
          "value":90,
-         "color":"#f05050"
       },
       {
          "label":"Vendor2",
          "percentage":0.1,
          "value":10,
-         "color":"#5d9cec"
       }
    ];
 

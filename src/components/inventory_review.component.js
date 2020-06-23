@@ -1,11 +1,12 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Pagination, Grid, Segment, Button, Loader, Divider, Label, Icon, Popup, Message, GridColumn } from "semantic-ui-react";
+import { Table, Pagination, Grid, Segment, Button, Loader, Divider, Label, Icon, Popup, Message, GridColumn, Checkbox } from "semantic-ui-react";
+import ColorUtil from "../util/colors.js";
 import Pie from "./visualizations/Pie";
 import Tag from "./utils/tag.component";
 import Bubble from "./visualizations/Bubble";
 
-import "./alarm_review.component.css";
+import "./inventory_review.component.css";
 import LoaderComponent from "./utils/loader.component";
 import EmptyComponent from "./utils/empty.component";
 import InventoryIdComponent from "./utils/inventory-id.component";
@@ -20,46 +21,89 @@ class InventoryReviewComponent extends React.Component {
     super(props);
 
     this.state = {
+      tagsFeatureFlag: false,
       isLoading: true,
-      isGraphsLoading: false,
-      isStatusLoading: false,
+      isGraphsLoading: true,
       activePage: 1,
       pageSize: 20,
       assets: [],
-      assetsCount: 1,
-			vendors: [],
-      gateways: [],
-      dataCollectors: [],
-      count: null,
-      orderBy: ['created_at', 'DESC'],
+      assetsCount: null,
+			byVendorsViz: [],
+      byGatewaysViz: [],
+      byDataCollectorsViz: [],
+      byTagsViz: [],
+      selectedAsset: null,
       showFilters: true,
       criteria: {
-        type: [],
-        gateway: [],
-        dataCollector: [],
-        
+        types: [],
+        vendors: [],
+        gateways: [],
+        dataCollectors: [],
+        tags: [],
       }
     };
   }
 
   componentWillMount() {
-    this.loadAlertsAndCounts();
+    this.loadAssetsAndCounts();
   }
 
-  loadAlertsAndCounts = () => {
-    const assetsPromise = this.props.inventoryAssetsStore.getMockupAssets();
-    const dataCollectorsPromise = this.props.inventoryAssetsStore.getMockupDataCollectors();
-    const gatewaysPromise = this.props.inventoryAssetsStore.getMockupGateways();
-    const vendorsPromise = this.props.inventoryAssetsStore.getMockupVendors();
+  loadAssetsAndCounts = () => {
+    const { activePage, pageSize, criteria } = this.state;
+    const assetsPromise = this.props.inventoryAssetsStore.getAssets({page: activePage, size: pageSize}, criteria);
+    const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(criteria);
+    const gatewaysPromise = this.props.inventoryAssetsStore.getGatewaysCount(criteria);
+    const vendorsPromise = this.props.inventoryAssetsStore.getVendorsCount(criteria);
+
+    {/* Remove following line when tags feature is available */}
+    const tagsPromise = [];
+    {/*
+      This must be uncommented when tags feature is available
+    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(crgiteria)
+    */}
+
     
-    Promise.all([assetsPromise, dataCollectorsPromise, gatewaysPromise, vendorsPromise]).then(
+    Promise.all([assetsPromise, dataCollectorsPromise, gatewaysPromise, vendorsPromise, tagsPromise]).then(
       (responses) => {
+        console.log(responses)
+
+
+        {/* Filted data by count (delete entries with count=0, if any) */}
+        const filterByCount = (data) => data.count !== 0;
+
+        const assetsList = responses[0].data.devices;
+        {/*const assetsCount = responses[0].data.total_items;*/}
+        const assetsCount = 776
+        const dataCollectors = responses[1].data.filter(filterByCount);
+        const gateways = responses[2].data.filter(filterByCount);
+        const vendors = responses[3].data.filter(filterByCount);
+        {/*
+          This must be uncommented when tags feature is available
+        const tags = responses[4].data.filter(filterByCount);
+        */}
+
+        {/* Map API data into Piechart-ready data */}
+        const mapper = (item, index) => {return {code:item.id, label:item.name, value:item.count, percentage: item.count/assetsCount}};
+
+        const dataCollectorsPieData = dataCollectors.map(mapper);
+        const gatewaysPieData = gateways.map(mapper);
+        const vendorsPieData = vendors.map(mapper);
+
+        {/* Apply colormaps */}
+        const applyColormap = (item, index) => item.color = ColorUtil.getByIndex(index)
+
+        dataCollectorsPieData.forEach(applyColormap);
+        gatewaysPieData.forEach(applyColormap);
+        vendorsPieData.forEach(applyColormap);
 
         this.setState({
-          assets: assetsPromise,
-          dataCollectors: dataCollectorsPromise,
-          gateways: gatewaysPromise,
-          vendors: vendorsPromise
+          assets: assetsList,
+          assetsCount: assetsCount,
+          byDataCollectorsViz: dataCollectorsPieData,
+          byGatewaysViz: gatewaysPieData,
+          byVendorsViz: vendorsPieData,
+          isLoading: false,
+          isGraphsLoading: false
         });
      }
     );
@@ -68,7 +112,6 @@ class InventoryReviewComponent extends React.Component {
 
 
   showAssetDetails(index){
-
   }
 
   handleItemSelected = (array, selectedItem, type) => {
@@ -78,49 +121,51 @@ class InventoryReviewComponent extends React.Component {
     const { criteria, pageSize } = this.state;
 
     switch(type) {
-      case 'statuses':
-        const theOtherItem = array.find(item => item.label !== selectedItem.label);
-        if(foundItem.label === 'RESOLVED') {  
-          if(foundItem.selected) {
-            theOtherItem.selected = false;
-            criteria.resolved = true;
-          } else {
-            criteria.resolved = null;
-          }
-        } else {
-          if(foundItem.selected) {
-            theOtherItem.selected = false;
-            criteria.resolved = false;
-          } else {
-            criteria.resolved = null;
-          }
-        }        
+      case 'vendor':
+        criteria.vendors = array.filter(item => item.selected).map(item => item.code);
         break;
 
-      case 'types':
-        criteria.type = array.filter(item => item.selected).map(item => item.code);
-        break;
-
-      case 'risks':
-        criteria.risk = array.filter(risk => risk.selected).map(risk => risk.label);
+      case 'gateway':
+        criteria.gateways = array.filter(gw => gw.selected).map(gw => gw.code);
         break;
       
-      case 'dataCollectors':
-        criteria.dataCollector = array.filter(dc => dc.selected).map(dc => dc.id);
+      case 'dataCollector':
+        criteria.dataCollectors = array.filter(dc => dc.selected).map(dc => dc.code);
+        break;
     }
 
-    this.setState({[type]: array, activePage: 1, isLoading: true, criteria});
+    this.setState({[type]: array, activePage: 1, isLoading: true, isGraphsLoading: true, criteria});
 
-    const alertsPromise = this.props.alertStore.query({page: 0, size: pageSize, order: this.state.orderBy}, criteria);
-    const countPromise = this.props.alertStore.count('TOTAL', criteria);
+    this.loadAssetsAndCounts()
+  }
 
-    Promise.all([alertsPromise, countPromise]).then(
-      responses => {
-        const alerts = responses[0].data;
-        const alertsCount = responses[1].data.count;
+  clearFilters() {
+    const { criteria } = this.state;
+
+    this.state.byVendorsViz.forEach(entry => entry.selected = false) 
+    this.state.byGatewaysViz.forEach(entry => entry.selected = false)
+    this.state.byDataCollectorsViz.forEach(entry => entry.selected = false)
+    this.state.byTagsViz.forEach(entry => entry.selected = false)
+
+    criteria.types = [];
+    criteria.vendors = [];
+    criteria.dataCollectors = [];
+    criteria.tags = [];
+
+    this.setState({ criteria });
+    this.loadAssetsAndCounts();
+  }
+
+  handlePaginationChange = (e, { activePage }) => {
+    this.setState({ activePage, isLoading: true });
+    const { criteria, pageSize, selectedAlert } = this.state;
+
+    const assetsPromise = this.props.inventoryAssetsStore.getAssets({page: activePage, size: pageSize}, criteria);
+    
+    Promise.all([assetsPromise]).then(
+      (responses) => {
         this.setState({
-          alertsCount,
-          alerts,
+          assets: responses[0].data.devices,
           isLoading: false
         });
       }
@@ -139,10 +184,8 @@ class InventoryReviewComponent extends React.Component {
   }
 
   render(){
-    let { showFilters, devices, assets, assetsCount, vendors, gateways, pageSize, activePage, dataCollectors } = this.state;
+    let { showFilters, assets, assetsCount, byVendorsViz, byGatewaysViz, pageSize, activePage, byDataCollectorsViz, tagsFeatureFlag } = this.state;
     let totalPages = Math.ceil(assetsCount/pageSize);
-    const spacing = 15;
-    const position = [51.505, -0.09]
     return (
       <div className="app-body-container-view">
       <div className="animated fadeIn animation-view">
@@ -174,8 +217,8 @@ class InventoryReviewComponent extends React.Component {
                     <Loader active={this.state.isGraphsLoading === true} />
                     <Pie 
                       isLoading={this.state.isGraphsLoading}
-                      data={vendors}
-                      type={'vendors'}
+                      data={byVendorsViz}
+                      type={'vendor'}
                       handler={this.handleItemSelected}
                     />
                   </div>
@@ -187,8 +230,8 @@ class InventoryReviewComponent extends React.Component {
                     <Loader active={this.state.isGraphsLoading === true} />
                     <Pie 
                       isLoading={this.state.isGraphsLoading}
-                      data={gateways}
-                      type={'gateways'}
+                      data={byGatewaysViz}
+                      type={'gateway'}
                       handler={this.handleItemSelected}
                     />
                   </div>
@@ -200,47 +243,62 @@ class InventoryReviewComponent extends React.Component {
                     <Loader active={this.state.isGraphsLoading === true} />
                     <Pie
                       isLoading={this.state.isGraphsLoading}
-                      data={dataCollectors}
-                      type={'dataCollectors'}
+                      data={byDataCollectorsViz}
+                      type={'dataCollector'}
                       handler={this.handleItemSelected}
                     />
                   </div>
                 </Grid.Column> 
 
                 <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">TAGS</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Bubble
-                      isLoading={this.state.isGraphsLoading}
-                      data={[]}
-                      type={'tags'}
-                      handler={this.handleItemSelected} />
-                  </div>
+                  {tagsFeatureFlag &&  
+                    <div className="box-data"> 
+                      <h5 className="visualization-title">TAGS</h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      {/*<Bubble
+                        isLoading={this.state.isGraphsLoading}
+                        data={[]}
+                        type={'tags'}
+                      handler={this.handleItemSelected} />*/}
+                    </div>
+                  }
+                  {!tagsFeatureFlag &&
+                    <div className="box-data">
+                      <h5 style={{color: "gray"}}>WORK IN PROGRESS</h5>
+                      <i style={{color: "gray", aling: "middle"}} className="fas fa-exclamation fa-4x"></i>
+                    </div>
+                  }
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           </Segment>}
-            <div className="view-body">            
+            <div className="view-body">
               <div className="table-container">
                 <div className="table-container-box">
                   <Segment>
                       {showFilters && (
                         <div>
                           <label style={{fontWeight: 'bolder'}}>Filters: </label>
-                          <span className="range-select" onClick={() => this.updateRange('DAY')}>Clear</span>
-                        </div>)}
-
+                          <span className="range-select" onClick={() => this.clearFilters()}>Clear</span>
+                        </div>
+                        )}
+                        {tagsFeatureFlag &&
+                          <div style={{display: "flex", position: "relative", float: "right"}} className="range-select" onClick={this.clearFilters}>
+                            Assing tags
+                          </div>
+                        }
                         {!this.isLoading &&
                           <Table className="animated fadeIn" basic="very" compact="very">
 
                             <Table.Header>
                               <Table.Row>
+                                {tagsFeatureFlag && <Table.HeaderCell collapsing><Checkbox/></Table.HeaderCell>}
                                 <Table.HeaderCell collapsing></Table.HeaderCell>
                                 <Table.HeaderCell collapsing>ID</Table.HeaderCell>
                                 <Table.HeaderCell>NAME</Table.HeaderCell>
                                 <Table.HeaderCell>VENDOR</Table.HeaderCell>
-                                <Table.HeaderCell>TAGS</Table.HeaderCell>
+                                {tagsFeatureFlag && <Table.HeaderCell>TAGS</Table.HeaderCell>}
+                                <Table.HeaderCell>APPLICATION</Table.HeaderCell>
                                 <Table.HeaderCell>DATA COLLECTOR</Table.HeaderCell>
                               </Table.Row>
                             </Table.Header>
@@ -259,19 +317,23 @@ class InventoryReviewComponent extends React.Component {
                                   assets.map((item, index) => {
                                     return (
                                       <Table.Row key={index}  style={{cursor: 'pointer'}}>
+                                        {tagsFeatureFlag && <Table.Cell><Checkbox/></Table.Cell>}
                                         <Table.Cell onClick={() => this.showAssetDetails(index)}>{this.showIcon(item.type)}</Table.Cell>
                                         <Table.Cell className="id-cell upper"  onClick={() => this.showAssetDetails(index)}>
                                           <InventoryIdComponent type={item.type} id={item.id}/>
                                         </Table.Cell>
                                         <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.name}</Table.Cell>
                                         <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.vendor}</Table.Cell>
-                                        <Table.Cell>
-                                          {
-                                            item.tags &&
-                                            item.tags.map( (tag) => {return(<Tag text={tag} />)})
-                                          }
-                                        </Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.dataCollector}</Table.Cell>
+                                        {tagsFeatureFlag &&
+                                          <Table.Cell>
+                                            {
+                                              item.tags &&
+                                              item.tags.map( (tag) => {return(<Tag text={tag} />)})
+                                            }
+                                          </Table.Cell>
+                                        }
+                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.application}</Table.Cell>
+                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.data_collector}</Table.Cell>
                                       </Table.Row>
                                     );
                                   })
@@ -283,7 +345,7 @@ class InventoryReviewComponent extends React.Component {
                         }
                         
                         {this.state.isLoadingTable && (
-                          <LoaderComponent loadingMessage="Loading quarantine ..." style={{marginBottom: 20}}/>
+                          <LoaderComponent loadingMessage="Loading inventory ..." style={{marginBottom: 20}}/>
                         )}
                         {!this.state.isLoadingTable && totalPages > 1 && (
                           <Grid className="segment centered">
