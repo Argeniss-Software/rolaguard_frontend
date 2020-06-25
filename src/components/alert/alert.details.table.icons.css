@@ -1,7 +1,8 @@
 .div-container {
     float: right !important;
-    padding-right: 20px;
-    margin-top: 47px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 #gateway-logo {
