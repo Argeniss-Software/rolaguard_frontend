@@ -55,6 +55,9 @@ class DetailsAlertModal extends Component {
     const { modalOpen, activeIndex } = this.state;
     const { alert, alert_type, isFirst, isLast } = this.props.alert
 
+    function isNumber(value){
+      return typeof value === 'number';
+    }
     function isFloat(value) {
       return typeof value === 'number' && value % 1 !== 0;
     }
@@ -72,8 +75,11 @@ class DetailsAlertModal extends Component {
       const parameterToUpper = AlertUtil.parameters.toUpper.includes(messageParameter);
       const header = AlertUtil.getParameterHeader(messageParameter);
 
-      if(isFloat(value) && messageParameter.indexOf('lati') === -1 && messageParameter.indexOf('long') === -1) {
-        value = value.toFixed(2);
+      if(isNumber(value)){
+        if(isFloat(value) && messageParameter.indexOf('lati') === -1 && messageParameter.indexOf('long') === -1) {
+          value = value.toFixed(2);
+        }
+        value = value.toString();
       }
       if (value) {
         messageTable.push(
