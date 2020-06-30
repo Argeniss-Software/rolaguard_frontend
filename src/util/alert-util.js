@@ -15,7 +15,8 @@ const AlertUtil = {
   },
 
   parameters : {
-    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui']
+    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui'],
+    shouldNotFix: ['old_latitude', 'new_latitude', 'old_longitude', 'new_longitude']
   },
 
   alertTypes: {
