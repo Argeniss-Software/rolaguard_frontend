@@ -106,12 +106,10 @@ class InventoryDetailsModal extends Component {
   }
 
   showGeolocation(location){
-    {location && location.latitude && location.longitude &&
-      <span>Map</span>
-    }
-    {(!location || !location.latitude || !location.longitude) &&
-      <span>There is no location set, you can <b>set one now</b>.</span>
-    }
+    return (<div style={{backgroundColor: "#e0e1e2", textAlign:"center", width: "100%", borderRadius: "5px"}}>
+      <h5 style={{color: "gray", alignSelf:"center", paddingTop: "10px"}}>WORK IN PROGRESS</h5>
+      <i class="fas fa-exclamation fa-4x" style={{color: "gray", alignContent:"center", paddingBottom: "10px"}}></i>
+    </div>);
   }
 
   render() {
@@ -151,8 +149,7 @@ class InventoryDetailsModal extends Component {
           </div>
         </Modal.Header>
         <Modal.Content>
-          Tags: {this.showTags(item.tags)} <Tag name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)" onSelection={() => alert("feature not implemented")}/>
-          <ItemDetailsIcon item={item} />
+              Tags: {this.showTags(item.tags)} <Tag name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)" onSelection={() => alert("Work in progress")}/>
           <Modal.Description>
             <Accordion>
               <div>

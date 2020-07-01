@@ -4,10 +4,10 @@ import { Table, Pagination, Grid, Segment, Loader, Label, Icon, Checkbox } from 
 import ColorUtil from "../../util/colors.js";
 import Pie from "../visualizations/Pie";
 import Tag from "../utils/tags/tag.component";
-import Bubble from "../visualizations/Bubble";
+//import Bubble from "../visualizations/Bubble";
 import InventoryDetailsModal from "./inventory.modal.component"
 
-import "./inventory_review.component.css";
+import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
 import InventoryIdComponent from "./inventory-id.component";
