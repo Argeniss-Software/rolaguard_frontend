@@ -1,10 +1,12 @@
 .container {
-    padding: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 1px;
+    padding-bottom: 2px;
     margin: 2px;
-    background-color: #37b9dc;
     border-radius: 5px;
-    width: min-content;
     display:inline-block;
+    cursor: pointer;
 }
 
 .text {
