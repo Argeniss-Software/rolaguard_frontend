@@ -71,6 +71,17 @@ class MenuComponent extends React.Component {
                   content="Alerts"
                 />
 
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("inventory", "/dashboard/inventory") }} className={this.state.activeItem === "inventory" ? "active" : ""}>
+                      <i className="fas fa-microchip"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Inventory</span>)}
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Inventory"
+                />  
+
                 {this.props.sidebarCollapsed === false && <h3>Administration</h3>}
 
                 <Popup

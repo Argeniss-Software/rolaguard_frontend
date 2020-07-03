@@ -1,0 +1,12 @@
+.tag-selector {
+    display: inline;
+}
+
+.tag-selector-popup {
+}
+
+.tag-list-selector {
+    width: 200px;
+    height: 100px;
+    overflow-y: auto;
+}

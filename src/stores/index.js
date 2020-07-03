@@ -9,6 +9,7 @@ import alertStore from "./alert.store"
 import dataCollectorStore from './data_collector.store'
 import policyStore from './policy.store'
 import notificationStore from './notification.store'
+import inventoryAssetsStore from './inventory_asset.store'
 
 const stores = {
     authStore,
@@ -21,7 +22,8 @@ const stores = {
     alertStore,
     dataCollectorStore,
     policyStore,
-    notificationStore
+    notificationStore,
+    inventoryAssetsStore
 };
 
 export default stores

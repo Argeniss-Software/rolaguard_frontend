@@ -1,0 +1,186 @@
+#visualization-container {
+    z-index: -1;
+}
+
+@media only screen and (max-width: 991px) {
+    .tablet-no-margin-top {
+        margin-top: 0px !important;
+    }
+}
+
+@media only screen and (max-width: 1338px) {
+    #datepicker-container {
+        width: 100% !important;
+    }
+    #range-container {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.graphs-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.graph > h3 {
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 5px;
+    font-weight: 800;
+}
+
+.graph {
+    text-align: center;
+}
+
+.graph-count {
+    display: flex;
+    height: 80px;
+    width: 200px;
+    background-color: rgb(52, 152, 219);
+    box-shadow: 0 0 10px 0 rgba(0,0,0,.2);
+}
+
+.graph-count i {
+    padding: 10px;
+    font-size: 3em;
+    padding-top: 30px;
+    width: 100px;
+    height: 100%;
+    background-color: rgba(0,0,0,.2);
+}
+
+.graph-count h4 {
+    width: 100%;
+    text-align: center;
+    font-size: 4em;
+    margin-top: 0px;
+}
+
+.data-container {
+    DISPLAY: FLEX;
+    justify-content: space-around;
+}
+
+.data-container > .data-container-box {
+    display: flex;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.data-container > .data-container-box > i {
+    width: 30%;
+    margin-top: 1rem;
+    font-size: 2.2em;
+    text-align: center;
+    align-self: center;
+    padding-right: 10px;
+    border-right: 1px solid rgba(0,0,0,0.2);
+    color: #37B9DC;
+}
+
+.data-container > .data-container-box > .box-data {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.box-data > h3 {
+    margin: 0;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0 10px;
+}
+
+.box-data > h2 {
+    margin: 0;
+    font-weight: 100;
+    margin-top: 5px;
+}
+
+.table-container {
+    display: flex;
+    margin-top: 0;
+}
+
+.table-container-box {
+    width: 100%;
+}
+
+.table-container-box:first-child {
+    margin-right: 0px;
+}
+
+.table-container-box > h3 {
+    color: #37B9DC;
+}
+
+.grid.segment {
+    border-style: hidden;
+    box-shadow: none;
+}
+
+.apply-filter-date {
+    width: 80%;
+}
+
+.card {
+    background: whitesmoke !important;
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 60px;					
+    height: 28px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: transparent;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+.view-body {
+    min-height: 100px;
+}
+
+.react-datepicker-wrapper {
+    margin-left: 8px !important;
+    width: 100%;
+}
+
+.react-datepicker__input-container {
+    min-width: unset;
+    width: 100%;
+}
+
+.react-datepicker__input-container input {
+    min-width: unset !important;
+    background-color: transparent;
+    font-size: 1em !important;
+    width: 100%;
+    padding-left: 3px !important;
+}
+
+th {
+    background: transparent !important;
+    border-left-style: none !important;
+    padding-bottom: 5px !important;
+}
+
+.fa-clipboard-check {
+    color: lightslategray;
+    font-size: 1.25em;
+}
+
+/* @media only screen and (max-width: 991px) {
+    .column {
+        margin-top: 20px !important;
+    }
+} */
