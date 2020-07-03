@@ -7,9 +7,9 @@ class Tag extends React.Component {
     }
 
     render() {
-        const { name, color, textColor, id, onSelection} = this.props;
+        const { name, color, textColor, id, onClick} = this.props;
         return (
-            <div className="container" style={{backgroundColor: color}} onClick={onSelection}>
+            <div className="container" style={{backgroundColor: color}} onClick={onClick}>
                 <div className="text" style={{color: textColor}}>{name}</div>
             </div>
         );

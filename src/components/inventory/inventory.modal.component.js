@@ -5,6 +5,7 @@ import { Markup } from 'interweave';
 
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
+import TagSelector from "../utils/tags/tag.selector.component";
 import AlertUtil from "../../util/alert-util";
 import moment from "moment";
 import { withRouter } from 'react-router-dom';
@@ -15,12 +16,103 @@ class InventoryDetailsModal extends Component {
     super(props);
 
     this.state = {
+      tags: [
+        {name: "tag1", color: "#5d9cec", id: "idtag1"},
+        {name: "tag2", color: "#fad732", id: "idtag2"},
+        {name: "tag3", color: "#ff902b", id: "idtag3"},
+        {name: "tag4", color: "#f05050", id: "idtag4"},
+        {name: "tag5", color: "#1f77b4", id: "idtag5"},
+        {name: "tag11", color: "#5d9cec", id: "idtag11"},
+        {name: "tag21", color: "#fad732", id: "idtag21"},
+        {name: "tag31", color: "#ff902b", id: "idtag31"},
+        {name: "tag41", color: "#f05050", id: "idtag41"},
+        {name: "tag51", color: "#1f77b4", id: "idtag51"},
+        {name: "tag12", color: "#5d9cec", id: "idtag12"},
+        {name: "tag22", color: "#fad732", id: "idtag22"},
+        {name: "tag32", color: "#ff902b", id: "idtag32"},
+        {name: "tag42", color: "#f05050", id: "idtag42"},
+        {name: "tag52", color: "#1f77b4", id: "idtag52"},
+        {name: "tag13", color: "#5d9cec", id: "idtag13"},
+        {name: "tag23", color: "#fad732", id: "idtag23"},
+        {name: "tag33", color: "#ff902b", id: "idtag33"},
+        {name: "tag43", color: "#f05050", id: "idtag43"},
+        {name: "tag53", color: "#1f77b4", id: "idtag53"},
+        {name: "tag1", color: "#5d9cec", id: "idtag1"},
+        {name: "tag2", color: "#fad732", id: "idtag2"},
+        {name: "tag3", color: "#ff902b", id: "idtag3"},
+        {name: "tag4", color: "#f05050", id: "idtag4"},
+        {name: "tag5", color: "#1f77b4", id: "idtag5"},
+        {name: "tag11", color: "#5d9cec", id: "idtag11"},
+        {name: "tag21", color: "#fad732", id: "idtag21"},
+        {name: "tag31", color: "#ff902b", id: "idtag31"},
+        {name: "tag41", color: "#f05050", id: "idtag41"},
+        {name: "tag51", color: "#1f77b4", id: "idtag51"},
+        {name: "tag12", color: "#5d9cec", id: "idtag12"},
+        {name: "tag22", color: "#fad732", id: "idtag22"},
+        {name: "tag32", color: "#ff902b", id: "idtag32"},
+        {name: "tag42", color: "#f05050", id: "idtag42"},
+        {name: "tag52", color: "#1f77b4", id: "idtag52"},
+        {name: "tag13", color: "#5d9cec", id: "idtag13"},
+        {name: "tag23", color: "#fad732", id: "idtag23"},
+        {name: "tag33", color: "#ff902b", id: "idtag33"},
+        {name: "tag43", color: "#f05050", id: "idtag43"},
+        {name: "tag53", color: "#1f77b4", id: "idtag53"},
+        {name: "tag1", color: "#5d9cec", id: "idtag1"},
+        {name: "tag2", color: "#fad732", id: "idtag2"},
+        {name: "tag3", color: "#ff902b", id: "idtag3"},
+        {name: "tag4", color: "#f05050", id: "idtag4"},
+        {name: "tag5", color: "#1f77b4", id: "idtag5"},
+        {name: "tag11", color: "#5d9cec", id: "idtag11"},
+        {name: "tag21", color: "#fad732", id: "idtag21"},
+        {name: "tag31", color: "#ff902b", id: "idtag31"},
+        {name: "tag41", color: "#f05050", id: "idtag41"},
+        {name: "tag51", color: "#1f77b4", id: "idtag51"},
+        {name: "tag12", color: "#5d9cec", id: "idtag12"},
+        {name: "tag22", color: "#fad732", id: "idtag22"},
+        {name: "tag32", color: "#ff902b", id: "idtag32"},
+        {name: "tag42", color: "#f05050", id: "idtag42"},
+        {name: "tag52", color: "#1f77b4", id: "idtag52"},
+        {name: "tag13", color: "#5d9cec", id: "idtag13"},
+        {name: "tag23", color: "#fad732", id: "idtag23"},
+        {name: "tag33", color: "#ff902b", id: "idtag33"},
+        {name: "tag43", color: "#f05050", id: "idtag43"},
+        {name: "tag53", color: "#1f77b4", id: "idtag53"},
+        {name: "tag1", color: "#5d9cec", id: "idtag1"},
+        {name: "tag2", color: "#fad732", id: "idtag2"},
+        {name: "tag3", color: "#ff902b", id: "idtag3"},
+        {name: "tag4", color: "#f05050", id: "idtag4"},
+        {name: "tag5", color: "#1f77b4", id: "idtag5"},
+        {name: "tag11", color: "#5d9cec", id: "idtag11"},
+        {name: "tag21", color: "#fad732", id: "idtag21"},
+        {name: "tag31", color: "#ff902b", id: "idtag31"},
+        {name: "tag41", color: "#f05050", id: "idtag41"},
+        {name: "tag51", color: "#1f77b4", id: "idtag51"},
+        {name: "tag12", color: "#5d9cec", id: "idtag12"},
+        {name: "tag22", color: "#fad732", id: "idtag22"},
+        {name: "tag32", color: "#ff902b", id: "idtag32"},
+        {name: "tag42", color: "#f05050", id: "idtag42"},
+        {name: "tag52", color: "#1f77b4", id: "idtag52"},
+        {name: "tag13", color: "#5d9cec", id: "idtag13"},
+        {name: "tag23", color: "#fad732", id: "idtag23"},
+        {name: "tag33", color: "#ff902b", id: "idtag33"},
+        {name: "tag43", color: "#f05050", id: "idtag43"},
+        {name: "tag53", color: "#1f77b4", id: "idtag53"},
+      ],
       isLoading: true,
       modalOpen: true,
-      itemDetails: null,
+      item: this.props.item.item,
       activeIndex: 1
     };
+
+    this.hanldleTagSelected = this.hanldleTagSelected.bind(this)
   }
+
+  componentWillMount(){
+    this.setState({
+      item: this.props.item.item
+    });
+  }
+
 
   handleClose = e => {
     this.setState({ modalOpen: false });
@@ -112,9 +204,18 @@ class InventoryDetailsModal extends Component {
     </div>);
   }
 
+  hanldleTagSelected(tag){
+    let { item } = this.state;
+    item.tags.push(tag)
+    this.setState({
+      item,
+    });
+    // Call API to apply tag to selected element
+  }
+
   render() {
-    const { modalOpen, activeIndex } = this.state;
-    const { item, itemType, isFirst, isLast } = this.props.item
+    const { modalOpen, activeIndex, item } = this.state;
+    const { itemType, isFirst, isLast } = this.props.item;
 
     const locationIndex = 2;
     const technicalDetailsIndex = 1;
@@ -149,7 +250,11 @@ class InventoryDetailsModal extends Component {
           </div>
         </Modal.Header>
         <Modal.Content>
-              Tags: {this.showTags(item.tags)} <Tag name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)" onSelection={() => alert("Work in progress")}/>
+              Tags: {this.showTags(item.tags)}
+              <TagSelector
+                tags={this.state.tags.filter((tag) => !item.tags.map((tag) => tag.id).includes(tag.id))}
+                onSelection={this.hanldleTagSelected}
+              />
           <Modal.Description>
             <Accordion>
               <div>
