@@ -519,12 +519,12 @@ class AlarmReviewComponent extends React.Component {
                       <Table.Row>
                         <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                        <Table.HeaderCell >DESCRIPTION</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
                         <Table.HeaderCell collapsing sorted={orderBy[0] === 'created_at' ? (orderBy[1] === 'ASC' ? 'ascending' : 'descending') : null} onClick={ () => this.handleSort('created_at')}>
                           DATE
                         </Table.HeaderCell>
-                        <Table.HeaderCell>GATEWAY</Table.HeaderCell>
-                        <Table.HeaderCell>COLLECTOR</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
                         <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
