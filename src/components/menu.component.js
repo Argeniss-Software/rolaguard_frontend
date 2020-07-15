@@ -38,7 +38,7 @@ class MenuComponent extends React.Component {
 
         return (
             <nav className="animated fadeInLeft">
-                {this.props.sidebarCollapsed === false && (<h3>Views</h3>)}
+                <h3></h3>
 
                 <Popup
                   trigger={
@@ -80,9 +80,20 @@ class MenuComponent extends React.Component {
                   }
                   style={popupStyle}
                   content="Inventory"
-                />  
+                /> 
 
-                {this.props.sidebarCollapsed === false && <h3>Administration</h3>}
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("resources-usage", "/dashboard/resources_usage") }} className={this.state.activeItem === "resources-usage" ? "active" : ""}>
+                      <i className="fas fa-chart-line"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Resources Usage</span>)}
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Resources Usage"
+                />
+
+                <h3></h3>
 
                 <Popup
                   trigger={
