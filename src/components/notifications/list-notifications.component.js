@@ -198,7 +198,7 @@ class ListNotificationsComponent extends React.Component {
                 {!hasError && !isLoading && notifications.length === 0 && (
                   <Table.Row>
                     <Table.Cell colSpan='4'>
-                      <EmptyComponent emptyMessage="You don't have notifications" />
+                      <EmptyComponent emptyMessage="There's no events to show" />
                     </Table.Cell>
                   </Table.Row>
                 )}
@@ -249,7 +249,7 @@ class ListNotificationsComponent extends React.Component {
               </Table.Body>
             </Table>
             {isLoading && (
-              <LoaderComponent loadingMessage="Loading notifications..." />
+              <LoaderComponent loadingMessage="Loading events..." />
             )}
             { hasError && 
               <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%'}}/>
