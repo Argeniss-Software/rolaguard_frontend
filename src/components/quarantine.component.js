@@ -283,16 +283,16 @@ class QuarantineComponent extends React.Component {
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>QUARANTINE</h1>
+            <h1>CURRENT ISSUES</h1>
           </div>
 
           {/* VIEW BODY */}
           <div className="view-body">
             {quarantineDeviceCount == null && (
-              <LoaderComponent loadingMessage="Loading Quarantine data..."/>
+              <LoaderComponent loadingMessage="Loading Current Issues..."/>
             )}
             {quarantineDeviceCount == 0 && (
-              <EmptyComponent emptyMessage="There are no devices in quarantine" />
+              <EmptyComponent emptyMessage="There are no issues" />
             )}
             {quarantineDeviceCount > 0 && (
               <div>

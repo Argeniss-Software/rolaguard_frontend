@@ -136,7 +136,7 @@ class NotificationsPreferencesComponent extends React.Component {
           <div className="app-body-container-view">
             <div className="animated fadeIn animation-view">
               <div className="view-header mb-lg">
-                <h1>NOTIFICATIONS PREFERENCES</h1>
+                <h1>EVENTS MANAGER</h1>
               </div>
               { hasError && (<div id="error-message-wrapper">
                 <Message error header='Oops!' content={'Something went wrong. Try again later.'} className="error-message"/>
@@ -154,7 +154,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Message collectors ({dataCollectors.length})
+                    Origin ({dataCollectors.length})
                   </Accordion.Title>
                 <Accordion.Content active={activeIndex === 2}>
                   <Table className="animated fadeIn" unstackable basic="very">
@@ -190,7 +190,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Alerts
+                    Triggers
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 1}>
                     <Table className="animated fadeIn" unstackable basic="very">
@@ -226,7 +226,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Destination
+                    Action
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 0}>
                     <Table className="animated fadeIn" unstackable basic="very">

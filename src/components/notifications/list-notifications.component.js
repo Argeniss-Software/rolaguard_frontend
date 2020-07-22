@@ -23,7 +23,7 @@ class ListNotificationsComponent extends React.Component {
     state = {
         hasError: false,
         isLoading: false,
-        title: 'NOTIFICATIONS',
+        title: 'EVENTS LOG',
         notifications: [],
         totalItems: null,
         totalPages: null,
@@ -181,10 +181,6 @@ class ListNotificationsComponent extends React.Component {
           <div className="view-header">
             <h1>{title}</h1>
             <div className="view-header-actions">
-              <div onClick={() => history.push("/dashboard/notifications/preferences")}>
-                <i className="fas fa-cog" />
-                <span>PREFERENCES</span>
-              </div>
             </div>
 
           </div>
