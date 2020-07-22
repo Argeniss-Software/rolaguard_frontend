@@ -198,7 +198,7 @@ class ListNotificationsComponent extends React.Component {
                 {!hasError && !isLoading && notifications.length === 0 && (
                   <Table.Row>
                     <Table.Cell colSpan='4'>
-                      <EmptyComponent emptyMessage="There's no events to show" />
+                      <EmptyComponent emptyMessage="There are no events to show" />
                     </Table.Cell>
                   </Table.Row>
                 )}
