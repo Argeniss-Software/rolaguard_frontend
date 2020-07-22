@@ -77,7 +77,7 @@ const TagSelector = (props) => {
                 {/* Shows tags that can be assign to the selected devices*/}
                 {!loading && tagsFiltered && tagsFiltered.length !== 0 &&
                     <div className="tag-list-selector center">
-                        {tagsFiltered.map((tag) => <Tag key={tag.id} name={tag.name} color={tag.color} onClick={() => handleTagSelection(tag)}/>)}
+                        {tagsFiltered.map((tag) => <Tag key={tag.id} selectable={true} name={tag.name} color={tag.color} onClick={() => handleTagSelection(tag)}/>)}
                     </div>
                 }
                 {/* No items to show */}

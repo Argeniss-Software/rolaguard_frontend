@@ -50,6 +50,10 @@ const API = {
         throw error;
       }
     );
+  },
+
+  getHost: () => {
+    return API_HOST;
   }
 };
 

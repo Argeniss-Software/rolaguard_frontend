@@ -55,7 +55,7 @@ class ItemDetailsIcon extends Component {
 
     render(){
         
-        const { type, name, vendor, id } =this.props.item;
+        const { type, name, vendor, hex_id } =this.props.item;
         
 
         return (
@@ -65,12 +65,12 @@ class ItemDetailsIcon extends Component {
                     <Table.Row>
                         {type.trim().toLowerCase() === 'device' &&
                             <Table.HeaderCell textAlign="center">
-                                {this.getDevicePopup(id, name, vendor)}
+                                {this.getDevicePopup(hex_id, name, vendor)}
                             </Table.HeaderCell>
                         }
                         {type.trim().toLowerCase() === 'gateway' &&
                             <Table.HeaderCell textAlign="center">
-                                {this.getGatewayPopup(id, name, vendor)}
+                                {this.getGatewayPopup(hex_id, name, vendor)}
                             </Table.HeaderCell>
                         }
                     </Table.Row>
@@ -83,7 +83,7 @@ class ItemDetailsIcon extends Component {
                         <Table.Cell className={vendor ? "icon-description" : "hide"} textAlign= "center">{vendor ? vendor : ""}</Table.Cell>
                     </Table.Row>
                     <Table.Row>
-                        <Table.Cell className={id ? "icon-description" : "hide"} textAlign= "center">{id? id.toUpperCase() : ""}</Table.Cell>
+                        <Table.Cell className={hex_id ? "icon-description" : "hide"} textAlign= "center">{hex_id? hex_id.toUpperCase() : ""}</Table.Cell>
                     </Table.Row>
                 </Table.Body>
                 </Table>

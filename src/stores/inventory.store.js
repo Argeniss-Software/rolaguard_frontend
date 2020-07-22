@@ -87,6 +87,21 @@ class InventoryAssetsStore {
 
     return API.get(`inventory/count/vendor`, { headers, params} );
   }
+
+  getTagsCount(criteria){
+    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
+
+    const headers = this.getHeaders();
+    const params = {
+      ...vendors && {'vendors': vendors},
+      ...gateways && {'gateway_ids': gateways},
+      ...dataCollectors && {'data_collector_ids': dataCollectors},
+      ...tags && {'tag_ids': tags},
+      ...type && {'asset_type': type},
+    };
+
+    return API.get(`inventory/count/tag`, { headers, params} );
+  }
 }
 
 export default new InventoryAssetsStore();

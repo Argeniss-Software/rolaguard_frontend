@@ -1,6 +1,7 @@
 import { observable, action, computed } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
+import axios from "axios";
 
 class TagsStore {
 
@@ -24,7 +25,6 @@ class TagsStore {
     return API.post(`tags?color=${encodeURIComponent(color)}&name=${encodeURIComponent(name)}`, {}, {headers})
   }
 
-  @action
   assignTag( tag, item ){
     const tagId = tag.id;
     const itemType = item.type;
@@ -38,22 +38,22 @@ class TagsStore {
 
     return API.post(
       `tags/${encodeURIComponent(tagId)}/assets`,
-      JSON.stringify(params),
+      params,
       {headers});
   }
 
   removeTag( tag, item){
     const tagId = tag.id;
-    const itemType = item.type;
+    const itemType = item.type.toLowerCase();
     const itemId = item.id;
 
     const headers = this.getHeaders();
-    const params = {
-        ...itemType && {'asset_type': itemType},
-        ...itemId && {'asset_id': itemId},
-    }
+    const params = {asset_list :[{
+      'asset_type': itemType.toLowerCase(),
+      'asset_id': itemId,
+    }]}
 
-    return API.delete(`tags/${tagId}/assets`, { headers, params });
+    return API.delete(`tags/${tagId}/assets`, {headers: headers, data: params});
   }
 
 }

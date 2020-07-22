@@ -8,6 +8,9 @@
     width: auto;
     height: auto;
     display:inline-block;
+    cursor: default;
+}
+.selectable {
     cursor: pointer;
 }
 

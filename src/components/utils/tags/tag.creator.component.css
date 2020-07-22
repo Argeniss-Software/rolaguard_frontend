@@ -15,3 +15,7 @@
 .selected {
     opacity: 1;
 }
+
+.modal-content {
+    text-align: center;
+}

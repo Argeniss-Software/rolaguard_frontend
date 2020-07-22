@@ -50,7 +50,7 @@ class InventoryDetailsModal extends Component {
   }
 
   showTags(tags){
-      return tags.map((tag)=>{return <Tag key={tag.id} name={tag.name} color={tag.color} id={tag.id} onClick={() => this.handleTagRemoval(tag.id)}/>})
+      return tags.map((tag)=>{return <Tag key={tag.id} name={tag.name} removable={true} color={tag.color} id={tag.id} onRemoveClick={() => this.handleTagRemoval(tag)}/>})
   }
 
 
@@ -61,7 +61,7 @@ class InventoryDetailsModal extends Component {
     if(item && item.type && item.type.trim().toLowerCase() === 'device'){
       table = [
         { title: "Item type", value: item.type },
-        { title: "DevEUI", value: item.id? item.id.toUpperCase() : null},
+        { title: "DevEUI", value: item.hex_id? item.hex_id.toUpperCase() : null},
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.application },
@@ -71,7 +71,7 @@ class InventoryDetailsModal extends Component {
     if(item && item.type && item.type.trim().toLowerCase() === 'gateway'){
       table = [
         { title: "Item type",  value: item.type },
-        { title: "Gateway ID",value: item.id? item.id.toUpperCase() : null },
+        { title: "Gateway ID",value: item.hex_id? item.hex_id.toUpperCase() : null },
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.application },
@@ -122,14 +122,14 @@ class InventoryDetailsModal extends Component {
   }
 
 
-  handleTagRemoval = (tagId) => {
-    alert("tag method")
+  handleTagRemoval = (tag) => {
     const { item } = this.state;
-    item.tags = item.tags.filter((tag) => tag.id !== tagId);
-    this.setState({
-      item
+    this.props.tagsStore.removeTag(tag, item).then(() =>{
+      item.tags = item.tags.filter((t) => t.id !== tag.id);
+      this.setState({
+        item
+      });
     });
-
   }
 
   render() {
@@ -146,7 +146,7 @@ class InventoryDetailsModal extends Component {
         open={modalOpen}
         onClose={this.handleClose}>
         <Modal.Header>
-          {(item.name && item.name.toUpperCase()) || (item.id && item.type && `${item.type.toUpperCase()}: ${item.id}`) || (item.type && item.type.toUpperCase())}
+          {(item.name && item.name.toUpperCase()) || (item.hex_id && item.type && `${item.type.toUpperCase()}: ${item.hex_id}`) || (item.type && item.type.toUpperCase())}
           <div style={{float:"right"}}>
             {this.props.onNavigate &&
               <Button
