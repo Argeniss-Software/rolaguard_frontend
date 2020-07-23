@@ -31,7 +31,7 @@ class DashBoardRouter extends React.Component {
                     <Route exact path='/dashboard' component={DashboardComponent}/>
 
                     {/* QUARANTINE */}
-                    <Route exact path='/dashboard/quarantine' component={QuarantineComponent}/>
+                    <Route exact path='/dashboard/current_issues' component={QuarantineComponent}/>
 
                     {/* DEVICES */}
                     <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
@@ -50,8 +50,8 @@ class DashBoardRouter extends React.Component {
                     <Route exact path='/dashboard/policies/:id/edit' component={NewPolicyComponent}/>
 
                     {/* NOTIFICATIONS */}
-                    <Route exact path='/dashboard/notifications/preferences' component={NotificationsPreferencesComponent}/>
-                    <Route exact path='/dashboard/notifications' component={ListNotificationsComponent}/>
+                    <Route exact path='/dashboard/events_log' component={ListNotificationsComponent}/>
+                    <Route exact path='/dashboard/events_manager' component={NotificationsPreferencesComponent}/>
 
                     {/* ALARM EVENTS */}
                     <Route path='/dashboard/alerts_review' component={AlarmReviewComponent} />

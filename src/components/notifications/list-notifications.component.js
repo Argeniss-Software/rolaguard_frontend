@@ -23,7 +23,7 @@ class ListNotificationsComponent extends React.Component {
     state = {
         hasError: false,
         isLoading: false,
-        title: 'NOTIFICATIONS',
+        title: 'EVENTS LOG',
         notifications: [],
         totalItems: null,
         totalPages: null,
@@ -181,10 +181,6 @@ class ListNotificationsComponent extends React.Component {
           <div className="view-header">
             <h1>{title}</h1>
             <div className="view-header-actions">
-              <div onClick={() => history.push("/dashboard/notifications/preferences")}>
-                <i className="fas fa-cog" />
-                <span>PREFERENCES</span>
-              </div>
             </div>
 
           </div>
@@ -202,7 +198,7 @@ class ListNotificationsComponent extends React.Component {
                 {!hasError && !isLoading && notifications.length === 0 && (
                   <Table.Row>
                     <Table.Cell colSpan='4'>
-                      <EmptyComponent emptyMessage="You don't have notifications" />
+                      <EmptyComponent emptyMessage="There are no events to show" />
                     </Table.Cell>
                   </Table.Row>
                 )}
@@ -253,7 +249,7 @@ class ListNotificationsComponent extends React.Component {
               </Table.Body>
             </Table>
             {isLoading && (
-              <LoaderComponent loadingMessage="Loading notifications..." />
+              <LoaderComponent loadingMessage="Loading events..." />
             )}
             { hasError && 
               <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%'}}/>
