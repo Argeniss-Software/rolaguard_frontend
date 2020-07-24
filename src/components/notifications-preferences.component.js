@@ -302,7 +302,7 @@ class NotificationsPreferencesComponent extends React.Component {
                   </Accordion.Content>
                 </Accordion>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/>
+                  {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
                   <Form.Button color="green" disabled={isLoading || isSaving} loading={isSaving} content="Save" style={{marginTop: 25, marginLeft: 10}} onClick={this.save}/>
                 </div>
               </div>
