@@ -106,7 +106,7 @@ class MenuComponent extends React.Component {
                       <i className="fas fa-file-alt"></i>
                       {this.props.sidebarCollapsed === false && (
                         <span>
-                          Events log {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                          Events Log {countUnread && <Label color='red' circular>{countUnread}</Label> }
                         </span>
                       )}
                       
