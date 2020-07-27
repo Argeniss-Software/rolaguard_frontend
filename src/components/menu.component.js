@@ -85,12 +85,12 @@ class MenuComponent extends React.Component {
                 <h3></h3>
                 <Popup
                   trigger={
-                    <a onClick={() => { this.selectedItem("events_manager", "/dashboard/events_manager") || resetUnread() }} className={this.state.activeItem === "events_manager" ? "active" : ""}>
+                    <a onClick={() => { this.selectedItem("events_manager", "/dashboard/events_manager")}} className={this.state.activeItem === "events_manager" ? "active" : ""}>
                       <i className="fas fa-project-diagram"></i>
                       
                       {this.props.sidebarCollapsed === false && (
                         <span>
-                          Events Manager {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                          Events Manager
                         </span>
                       )}
                       
@@ -106,7 +106,7 @@ class MenuComponent extends React.Component {
                       <i className="fas fa-file-alt"></i>
                       {this.props.sidebarCollapsed === false && (
                         <span>
-                          Events log {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                          Events Log {countUnread && <Label color='red' circular>{countUnread}</Label> }
                         </span>
                       )}
                       

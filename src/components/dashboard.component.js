@@ -366,9 +366,9 @@ class DashboardComponent extends React.Component {
                         <BarChart isLoading={this.state.quarantineCountLoading} data={this.props.deviceStore.quarantineDeviceCountGrouped} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
                         <Loader active={this.state.quarantineCountLoading === true} />
                         <div className="box-data-legend">
-                          <i className="fas fa-bug" />
+                          <i className="fas fa-exclamation-triangle" />
                           <div>
-                            <h3>QUARANTINE</h3>
+                            <h3>CURRENT ISSUES</h3>
                             {
                               this.state.quarantineDeviceCountLoading === true ? 
                               <div className="ui active inline loader"></div> :
