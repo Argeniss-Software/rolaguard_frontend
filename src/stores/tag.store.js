@@ -25,7 +25,7 @@ class TagsStore {
     return API.post(`tags?color=${encodeURIComponent(color)}&name=${encodeURIComponent(name)}`, {}, {headers})
   }
 
-  assignTag( tag, item ){
+  assignTag( tag, item ) {
     const tagId = tag.id;
     const itemType = item.type;
     const itemId = item.id;
@@ -42,7 +42,18 @@ class TagsStore {
       {headers});
   }
 
-  removeTag( tag, item){
+  assignTagToDevices( tag, items) {
+
+    const headers = this.getHeaders();
+    const params = {asset_list : items.map((item) => {return {'asset_type': item.type.toLowerCase(),'asset_id':item.id}})}
+
+    return API.post(
+      `tags/${encodeURIComponent(tag.id)}/assets`,
+      params,
+      {headers});
+  }
+
+  removeTag( tag, item) {
     const tagId = tag.id;
     const itemType = item.type.toLowerCase();
     const itemId = item.id;

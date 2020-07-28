@@ -54,7 +54,7 @@ const TagSelector = (props) => {
         <Popup
             trigger={
                 <span>
-                    <Tag name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)"/>
+                    <Tag selectable={true} name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)"/>
                 </span>
             }
             on='click'
