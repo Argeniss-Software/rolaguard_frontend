@@ -99,7 +99,7 @@ class ListPoliciesComponent extends React.Component {
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>NAME</Table.HeaderCell>
-                    <Table.HeaderCell>MESSAGE COLLECTORS</Table.HeaderCell>
+                    <Table.HeaderCell>DATA SOURCES</Table.HeaderCell>
                     <Table.HeaderCell>ACTIONS</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>

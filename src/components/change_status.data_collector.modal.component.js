@@ -46,8 +46,8 @@ class ChangeStatusDataCollectorModal extends Component {
     const { dataCollector } = this.props;
     const { status } = dataCollector;
     const buttonIcon =  status === 'DISABLED' ? 'fas fa-power-off' : 'fas fa-ban';
-    const buttonContent = status === 'DISABLED' ? 'Enable message collector' : 'Disable message collector';
-    const body = status === 'DISABLED' ? 'The message collector will be enabled. Are you sure?' : 'The message collector will be disabled. Are you sure?';
+    const buttonContent = status === 'DISABLED' ? 'Enable data source' : 'Disable data source';
+    const body = status === 'DISABLED' ? 'The data source will be enabled. Are you sure?' : 'The data source will be disabled. Are you sure?';
 
     return (
       <Modal

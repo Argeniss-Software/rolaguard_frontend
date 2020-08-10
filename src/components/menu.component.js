@@ -132,11 +132,11 @@ class MenuComponent extends React.Component {
                   trigger={
                     <a onClick={() => { this.selectedItem("data_collector", "/dashboard/data_collectors") }} className={this.state.activeItem === "data_collector" ? "active" : ""}>
                       <i className="fas fa-sitemap"></i>
-                      {this.props.sidebarCollapsed === false && (<span>Message Collectors</span>)}
+                      {this.props.sidebarCollapsed === false && (<span>Data Sources</span>)}
                     </a>
                   }
                   style={popupStyle}
-                  content="Message Collectors"
+                  content="Data Sources"
                 />
 
                 {isAdmin && (

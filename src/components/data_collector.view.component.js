@@ -42,7 +42,7 @@ class DataCollectorViewComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>VIEW MESSAGE COLLECTOR</h1>
+            <h1>VIEW DATA SOURCE</h1>
 
             {/* HEADER ACTIONS */}
             <div className="view-header-actions">
@@ -68,7 +68,7 @@ class DataCollectorViewComponent extends React.Component {
           {/* VIEW BODY */}
           <div className="view-body">
             {this.state.isLoading && (
-              <LoaderComponent loadingMessage="Loading message collector..." />
+              <LoaderComponent loadingMessage="Loading data source..." />
             )}
             {!this.state.isLoading && (
               <div>

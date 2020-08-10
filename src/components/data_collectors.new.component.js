@@ -46,7 +46,7 @@ class DataCollectorsNewComponent extends React.Component {
             errorTesting: false,
             testingResult: '',
             testSuccess: false,
-            title: 'New Message Collector'
+            title: 'New Data Source'
         }
     }
 
@@ -172,7 +172,7 @@ class DataCollectorsNewComponent extends React.Component {
         });
 
         if (dataCollectorId) {
-            this.setState({isLoading: true, title: 'Edit Message Collector'});
+            this.setState({isLoading: true, title: 'Edit Data Source'});
             this.props.dataCollectorStore.getDataCollectorById(dataCollectorId)
                 .then((response) => {
                     const {name, description, ip, port, user, password, ssl, topics, data_collector_type_id, policy_id, gateway_id} = response.data;
@@ -279,7 +279,7 @@ class DataCollectorsNewComponent extends React.Component {
                     {/* VIEW BODY */}
                     <div className="view-body">
                         <div>
-                            {isLoading && <LoaderComponent loadingMessage="Loading message collector..." />}
+                            {isLoading && <LoaderComponent loadingMessage="Loading data source..." />}
                             {!isLoading &&
                             <Form className="form-label form-css-label text-center" onSubmit={this.handleSubmit} warning noValidate="novalidate" autoComplete="off" style={{ marginTop: "2em" }}>
                                 <Form.Group>
