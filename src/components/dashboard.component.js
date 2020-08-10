@@ -428,7 +428,7 @@ class DashboardComponent extends React.Component {
                             <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                           </Table.Row>
                         </Table.Header>

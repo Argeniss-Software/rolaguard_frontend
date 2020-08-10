@@ -25,7 +25,7 @@ class ItemDetailsIcon extends Component {
                 <div className="device-popup">
                     <span className={item.name ? "" : "hide"}>{item.name ? "GW NAME: " + item.name.toUpperCase() : ""}</span>
                     <span className={item.id ? "" : "hide"}>{item.id ? "GW ID: " + item.id.toUpperCase() : ""}</span>
-                    <span className={item.data_collector ? "" : "hide"}>{item.data_collector ? "DATA COLLECTOR: " + item.data_collector.toUpperCase() : ""}</span>
+                    <span className={item.data_collector ? "" : "hide"}>{item.data_collector ? "DATA SOURCE: " + item.data_collector.toUpperCase() : ""}</span>
                 </div>
             </Popup>
         );

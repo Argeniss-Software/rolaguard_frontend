@@ -376,7 +376,7 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
                           <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>

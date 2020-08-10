@@ -98,7 +98,7 @@ export default class QuarantineRemoveModal extends Component {
                   <Table.Cell>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
-                  <Table.Cell>COLLECTOR</Table.Cell>
+                  <Table.Cell>DATA SOURCE</Table.Cell>
                   <Table.Cell>{item.data_collector_name}</Table.Cell>
                 </Table.Row>
               </Table.Body>

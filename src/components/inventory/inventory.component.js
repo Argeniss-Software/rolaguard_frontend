@@ -393,7 +393,7 @@ class InventoryReviewComponent extends React.Component {
                                 <Table.HeaderCell>NAME</Table.HeaderCell>
                                 <Table.HeaderCell>VENDOR</Table.HeaderCell>
                                 <Table.HeaderCell>APPLICATION</Table.HeaderCell>
-                                <Table.HeaderCell>DATA COLLECTOR</Table.HeaderCell>
+                                <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
                                 {tagsFeatureFlag && <Table.HeaderCell>TAGS</Table.HeaderCell>}
                               </Table.Row>
                             </Table.Header>
