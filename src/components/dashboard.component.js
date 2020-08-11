@@ -366,9 +366,9 @@ class DashboardComponent extends React.Component {
                         <BarChart isLoading={this.state.quarantineCountLoading} data={this.props.deviceStore.quarantineDeviceCountGrouped} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
                         <Loader active={this.state.quarantineCountLoading === true} />
                         <div className="box-data-legend">
-                          <i className="fas fa-bug" />
+                          <i className="fas fa-exclamation-triangle" />
                           <div>
-                            <h3>QUARANTINE</h3>
+                            <h3>CURRENT ISSUES</h3>
                             {
                               this.state.quarantineDeviceCountLoading === true ? 
                               <div className="ui active inline loader"></div> :
@@ -423,11 +423,12 @@ class DashboardComponent extends React.Component {
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                             <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                             <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
-                            <Table.HeaderCell>GATEWAY</Table.HeaderCell>
-                            <Table.HeaderCell>COLLECTOR</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
                             <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                           </Table.Row>
                         </Table.Header>

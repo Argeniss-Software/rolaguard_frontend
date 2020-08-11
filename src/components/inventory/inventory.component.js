@@ -9,6 +9,7 @@ import Tag from "../utils/tags/tag.component";
 import InventoryDetailsModal from "./inventory.modal.component";
 import AssignTagsModal from "./inventory.assign-tags.modal.component";
 
+
 import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
@@ -140,6 +141,7 @@ class InventoryReviewComponent extends React.Component {
   }
 
   goToAlert = (direction) => {
+
     let newIndex = this.state.selectedAsset.index + direction;
 
     if (this.state.selectedAsset.index === 0 && direction < 0) {

@@ -10,6 +10,7 @@
     display:inline-block;
     cursor: default;
 }
+
 .selectable {
     cursor: pointer;
 }

@@ -3,14 +3,11 @@ import { observer, inject } from "mobx-react";
 import { Accordion , Modal, Icon, Button, Segment, Grid, Table, Divider} from "semantic-ui-react";
 import { withRouter } from 'react-router-dom';
 
-
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
 import TagSelector from "../utils/tags/tag.selector.component";
 import LoaderComponent from "../utils/loader.component";
 import ItemDetailsIcon from "./inventory.modal.icon.component";
-
-
 
 @inject("tagsStore")
 @observer
@@ -52,7 +49,6 @@ class InventoryDetailsModal extends Component {
   showTags(tags){
       return tags.map((tag)=>{return <Tag key={tag.id} name={tag.name} removable={true} color={tag.color} id={tag.id} onRemoveClick={() => this.handleTagRemoval(tag)}/>})
   }
-
 
   showTechnicalDetails(item){
 
@@ -112,7 +108,6 @@ class InventoryDetailsModal extends Component {
 
   hanldleTagSelected(tag){
     let { item } = this.state;
-
     this.props.tagsStore.assignTag(tag, item).then(() => {
       item.tags.push(tag)
       this.setState({
@@ -137,7 +132,6 @@ class InventoryDetailsModal extends Component {
     const { index, itemType, isFirst, isLast } = this.props.selectedItem;
     const { assets } = this.props;
     const item = assets[index];
-
 
     return (
       <Modal
@@ -208,7 +202,6 @@ class InventoryDetailsModal extends Component {
             content="Close"
           />
         </Modal.Actions>
-      
       </Modal>
     );
   }

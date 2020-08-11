@@ -64,7 +64,7 @@ export default class QuarantineRemoveModal extends Component {
                 <i className="fas fa-trash" />
               </button>
             }
-            content={isAdmin ? "Remove from quarantine" : "Remove from quarantine (only for admin users)"}
+            content={isAdmin ? "Remove issue" : "Remove issue (only for admin users)"}
           />
         }
         centered={false}
@@ -74,7 +74,7 @@ export default class QuarantineRemoveModal extends Component {
         closeOnDimmerClick={false}
         closeOnEscape={false}>
         <Modal.Header>
-          <i className="fas fa-trash" /> Remove from quarantine
+          <i className="fas fa-trash" /> Remove issue
         </Modal.Header>
         <Modal.Content>
             <Table className="animated fadeIn" basic definition compact>
@@ -107,7 +107,7 @@ export default class QuarantineRemoveModal extends Component {
               <TextArea placeholder='Leave a comment (required)' value={comment} onChange={this.handleChange} style={{resize: 'none'}}/>
               <span>
                 {error && (
-                  <Label basic color='red'>We are sorry. It has been an error while trying to remove this item from quarantine.</Label>
+                  <Label basic color='red'>We are sorry. It has been an error while trying to remove this issue.</Label>
                 )}
               </span>
           </Form>

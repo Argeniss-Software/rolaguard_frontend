@@ -283,16 +283,16 @@ class QuarantineComponent extends React.Component {
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>QUARANTINE</h1>
+            <h1>CURRENT ISSUES</h1>
           </div>
 
           {/* VIEW BODY */}
           <div className="view-body">
             {quarantineDeviceCount == null && (
-              <LoaderComponent loadingMessage="Loading Quarantine data..."/>
+              <LoaderComponent loadingMessage="Loading Current Issues..."/>
             )}
             {quarantineDeviceCount == 0 && (
-              <EmptyComponent emptyMessage="There are no devices in quarantine" />
+              <EmptyComponent emptyMessage="There are no issues" />
             )}
             {quarantineDeviceCount > 0 && (
               <div>
@@ -370,12 +370,13 @@ class QuarantineComponent extends React.Component {
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
-                          <Table.HeaderCell>GATEWAY</Table.HeaderCell>
-                          <Table.HeaderCell>COLLECTOR</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
                           <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
@@ -387,6 +388,7 @@ class QuarantineComponent extends React.Component {
                                 <Table.Cell className="id-cell upper"  onClick={() => this.showAlertDetails(index)}>
                                   <DeviceIdComponent parameters={item.alert.parameters} alertType={alert.type}/>
                                 </Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert.parameters.dev_name}</Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>
                                   <Label horizontal style={{backgroundColor: AlertUtil.getColorsMap()[item.alert_type.risk], color: 'white', borderWidth: 1, width: '100px'}}>
                                     {item.alert_type.risk}
@@ -395,7 +397,7 @@ class QuarantineComponent extends React.Component {
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert_type.name}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.last_checked}</Moment>}</Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)} className="upper">{item.alert.parameters.gateway}</Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)} className="upper">{item.alert.parameters.gateway + (item.alert.parameters.gw_name? `(${item.alert.parameters.gw_name})` : "")}</Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.data_collector_name}</Table.Cell>
                                 <Table.Cell>
                                   <div className="td-actions">

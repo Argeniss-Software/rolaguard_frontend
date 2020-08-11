@@ -136,7 +136,7 @@ class NotificationsPreferencesComponent extends React.Component {
           <div className="app-body-container-view">
             <div className="animated fadeIn animation-view">
               <div className="view-header mb-lg">
-                <h1>NOTIFICATIONS PREFERENCES</h1>
+                <h1>EVENTS MANAGER</h1>
               </div>
               { hasError && (<div id="error-message-wrapper">
                 <Message error header='Oops!' content={'Something went wrong. Try again later.'} className="error-message"/>
@@ -154,7 +154,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Message collectors ({dataCollectors.length})
+                    Origin ({dataCollectors.length})
                   </Accordion.Title>
                 <Accordion.Content active={activeIndex === 2}>
                   <Table className="animated fadeIn" unstackable basic="very">
@@ -190,7 +190,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Alerts
+                    Triggers
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 1}>
                     <Table className="animated fadeIn" unstackable basic="very">
@@ -226,7 +226,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Destination
+                    Action
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 0}>
                     <Table className="animated fadeIn" unstackable basic="very">
@@ -302,7 +302,7 @@ class NotificationsPreferencesComponent extends React.Component {
                   </Accordion.Content>
                 </Accordion>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/>
+                  {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
                   <Form.Button color="green" disabled={isLoading || isSaving} loading={isSaving} content="Save" style={{marginTop: 25, marginLeft: 10}} onClick={this.save}/>
                 </div>
               </div>

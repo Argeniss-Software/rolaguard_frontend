@@ -15,7 +15,8 @@ const AlertUtil = {
   },
 
   parameters : {
-    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui']
+    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui'],
+    shouldNotFix: ['old_latitude', 'new_latitude', 'old_longitude', 'new_longitude']
   },
 
   alertTypes: {
@@ -26,14 +27,20 @@ const AlertUtil = {
     "alert_solved": "Alert solved",
     "dev_eui": "DevEUI",
     "dev_addr": "DevAddr",
+    "dev_name": "Device Name",
+    "dev_vendor": "Device Vendor",
     "counter": "Previous Counter",
     "new_counter": "Counter",
     "prev_packet_id": "Previous Message ID",
     "packet_id": "Current Message ID",
     "packet_date": "Packet date",
     "gateway": "Gateway",
+    "gw_name": "Gateway Name",
+    "gw_vendor": "Gateway Vendor",
     "created_at": "Created at",
+    "app_name": "App Name",
     "app_key": "App Key",
+    "join_eui": "AppEUI",
     "packet_type_1": "Message 1 Type",
     "packet_type_2": "Message Type",
     "packet_id_1": "Message 1 ID",

@@ -55,6 +55,9 @@ class DetailsAlertModal extends Component {
     const { modalOpen, activeIndex } = this.state;
     const { alert, alert_type, isFirst, isLast } = this.props.alert
 
+    function isNumber(value){
+      return typeof value === 'number';
+    }
     function isFloat(value) {
       return typeof value === 'number' && value % 1 !== 0;
     }
@@ -72,8 +75,12 @@ class DetailsAlertModal extends Component {
       const parameterToUpper = AlertUtil.parameters.toUpper.includes(messageParameter);
       const header = AlertUtil.getParameterHeader(messageParameter);
 
-      if(isFloat(value) && messageParameter.indexOf('lati') === -1 && messageParameter.indexOf('long') === -1) {
-        value = value.toFixed(2);
+      const numberShouldFix = !AlertUtil.parameters.shouldNotFix.includes(messageParameter);
+      if(isNumber(value)){
+        if(isFloat(value) && numberShouldFix) {
+          value = value.toFixed(2);
+        }
+        value = value.toString();
       }
       if (value) {
         messageTable.push(
@@ -127,11 +134,11 @@ class DetailsAlertModal extends Component {
         </Modal.Header>
         <Modal.Content>
           <Modal.Description>
+            <AlertDetailTableIcon parameters={this.props.alert.alert.parameters} />
             <p>{alert_type.description}</p>
             <div style={{marginBottom: 15 }}>
               <p style={{fontWeight: 'bolder', marginBottom: 3 }}>Source</p>
               Message collector <i>{alert.data_collector_name}</i>
-              <AlertDetailTableIcon parameters={this.props.alert.alert.parameters} />
             </div>
 
             <Accordion>
