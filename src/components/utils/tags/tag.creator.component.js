@@ -4,6 +4,7 @@ import { Popup, Input, Divider, Button, Modal, Form} from "semantic-ui-react";
 
 import "./tag.creator.component.css";
 import Tag from "./tag.component";
+import Validation from "../../../util/validation";
 import LoaderComponent from "../../utils/loader.component";
 import { rgb } from "d3";
 
@@ -22,14 +23,13 @@ const ColorPicker = (props) => {
     );
 }
 
-
 const TagsCreatorModal = (props) => {
 
     const { tagsStore } = React.useContext(MobXProviderContext);
 
     const [open, setOpen] = React.useState(!!props.open);
     const [name, setName] = React.useState("tag name");
-    const [nameDefault, setNameDefault] = React.useState(true);
+    const [validTagName, setValidTagName] = React.useState(false);
     const [color, setColor] = React.useState("#AAAAAA");
     const [colorDefault, setColorDefault] = React.useState(true);
     const [sended, setSended] = React.useState(false);
@@ -38,7 +38,7 @@ const TagsCreatorModal = (props) => {
 
     const handleInput = (field) => {
         setName(field.target.value? field.target.value : "tag name");
-        setNameDefault(!field.target.value);
+        setValidTagName(field.target.value && Validation.isValidTagName(field.target.value));
     }
 
     const handleColorSelect = (color) => {
@@ -82,7 +82,7 @@ const TagsCreatorModal = (props) => {
 										color={color}
 										textColor="white"
 										fontSize="30px"
-										opacity={nameDefault? "0.5" : "1"}
+										opacity={validTagName? "1" : "0.5"}
 									/>
 								</div>
 								<Input disabled={sended} nameClass="" placeholder="tag name" onChange={handleInput}/>
@@ -102,7 +102,7 @@ const TagsCreatorModal = (props) => {
                     loading={sended}
                     type="submit"
                     color="green"
-                    disabled={nameDefault || colorDefault}
+                    disabled= {!validTagName || colorDefault}
                     content="Create"
                     onClick={ () => handleCreate(name, color)}
                 />

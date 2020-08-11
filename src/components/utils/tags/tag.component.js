@@ -27,7 +27,7 @@ const Tag = (props) => {
             style={{backgroundColor: color, fontSize:props.fontSize, opacity:props.opacity}}
             onClick={onClick}
         >
-            <span className="text" style={{color: textColor}}>{name} {removable?<i style={{cursor: "pointer"}} onClick={props.onRemoveClick} className="fas fa-times-circle fa-sm"></i>:""}</span>
+            <span className="tag-text" style={{color: textColor}}>{name} {removable?<i style={{cursor: "pointer"}} onClick={props.onRemoveClick} className="fas fa-times-circle fa-sm"></i>:""}</span>
         </div>
     );
 }

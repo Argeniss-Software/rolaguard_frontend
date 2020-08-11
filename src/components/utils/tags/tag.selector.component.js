@@ -50,12 +50,10 @@ const TagSelector = (props) => {
     }
 
     return (
-        <div>
+        <React.Fragment>
         <Popup
             trigger={
-                <span>
-                    <Tag selectable={true} name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)"/>
-                </span>
+                <Tag selectable={true} name="+ add tag" color="#e0e1e2" textColor="rgba(0,0,0,.6)"/>
             }
             on='click'
             open={open}
@@ -103,7 +101,7 @@ const TagSelector = (props) => {
             <TagsCreatorModal
             open={showTagCreatorModal}
             onClose={() => setShowTagCreatorModal(false)}/>}
-        </div>
+        </React.Fragment>
     );
 }
 

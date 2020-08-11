@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Pagination, Grid, Segment, Loader, Label, Icon, Checkbox, Popup } from "semantic-ui-react";
+import { Table, Pagination, Grid, Segment, Loader, Label, Icon, Checkbox, Popup, Button } from "semantic-ui-react";
 import ColorUtil from "../../util/colors.js";
 import Pie from "../visualizations/Pie";
 import BarChart from "../visualizations/Bar";
@@ -28,7 +28,7 @@ class InventoryReviewComponent extends React.Component {
       isLoading: true,
       isGraphsLoading: true,
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       pagesCount: null,
       assets: [],
       assetsCount: null,
@@ -284,6 +284,109 @@ class InventoryReviewComponent extends React.Component {
     });
   }
 
+  showInventoryTable(){
+    const {assetsCount, isLoadingTable, assets, criteria, selectAll} = this.state;
+    return(
+      <Table striped selectable className="animated fadeIn" basic="very" compact="very">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell collapsing>
+              <Popup
+              trigger = {<Checkbox checked={selectAll} onChange={(e) => this.toggleSelection(e)}/>}
+              >
+                This checkbox will select all items listed on this page, it will not select items on other pages.
+              </Popup>
+            </Table.HeaderCell>
+            <Table.HeaderCell style={{cursor: "pointer"}} onClick={() => this.toggleDeviceType(criteria.type)}collapsing>
+                {this.showIcon(criteria.type)}
+            </Table.HeaderCell>
+            <Table.HeaderCell collapsing>ID</Table.HeaderCell>
+            <Table.HeaderCell>NAME</Table.HeaderCell>
+            <Table.HeaderCell>VENDOR</Table.HeaderCell>
+            <Table.HeaderCell>APPLICATION</Table.HeaderCell>
+            <Table.HeaderCell>DATA COLLECTOR</Table.HeaderCell>
+            <Table.HeaderCell>TAGS</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+
+        {assetsCount === 0 &&
+          <Table.Row>
+            <Table.Cell colSpan='100%'>
+              <EmptyComponent emptyMessage="No assets found" />
+            </Table.Cell>
+          </Table.Row>
+        }
+
+        {assetsCount > 0 &&
+          <Table.Body id="inventory-table">
+            {!isLoadingTable && assets && (
+              assets.map((item, index) => {
+                return (
+                  <Table.Row key={index}  style={{cursor: 'pointer'}}>
+                    <Table.Cell>
+                      <Checkbox checked={item.selected} onChange={(event) => this.toggleSingleSelect(item, index, event)}/>
+                    </Table.Cell>
+                    <Table.Cell style={{textAlign:"center"}} onClick={() => this.showAssetDetails(index)}>{this.showIcon(item.type)}</Table.Cell>
+                    <Table.Cell className="id-cell upper"  onClick={() => this.showAssetDetails(index)}>
+                      <InventoryIdComponent type={item.type} id={item.hex_id}/>
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.name}</Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.vendor}</Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.application}</Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.data_collector}</Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                        {item.tags.map( (tag) => {return(<Tag key={tag.id} name={tag.name} color={tag.color} textColor="#FFFFFF"/>)})}
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })
+            )}
+          </Table.Body>
+        }
+      </Table>
+    );
+  }
+
+  showActionsButtons() {
+    const { assets } = this.state;
+    return(
+      <React.Fragment>
+        <Button 
+          onClick={() => alert("Work in progress")}
+          disabled={!assets.some((asset) => asset.selected)}
+        >
+          SET IMPORTANCE
+        </Button>
+
+        <Button
+          onClick={() => this.setState({assignTags: true})}
+          disabled={!assets.some((asset) => asset.selected)}
+        >
+          ASSIGN TAGS
+        </Button>
+      </React.Fragment>
+    );
+  }
+
+  showFilters() {
+    const { byVendorsViz, byGatewaysViz, byDataCollectorsViz } = this.state;
+
+    const filter = (item) => item.selected;
+    const filteredVendors = byVendorsViz.filter(filter);
+    const filteredGateways = byGatewaysViz.filter(filter);
+    const filteredDataCollectors = byDataCollectorsViz.filter(filter);
+
+    return(
+      <React.Fragment>
+        <label style={{fontWeight: 'bolder'}}>Filters: </label>
+          {filteredVendors.map( (item, index) => <Label as='a' key={'status'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byVendorsViz, item, 'byVendorsViz')}}>{item.label}<Icon name='delete'/></Label>)}
+          {filteredGateways.map( (item, index) => <Label as='a' key={'risk'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byGatewaysViz, item, 'byGatewaysViz')}}>{item.label}<Icon name='delete'/></Label>)}
+          {filteredDataCollectors.map( (item, index) => <Label as='a' key={'dc'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byDataCollectorsViz, item, 'byDataCollectorsViz')}}>{item.label}<Icon name='delete'/></Label>)}
+        <span className="range-select" onClick={this.clearFilters}>Clear</span>
+      </React.Fragment>
+    );
+  }
+
   render(){
     const { 
       showFilters,
@@ -299,12 +402,6 @@ class InventoryReviewComponent extends React.Component {
       selectAll,
       assignTags,
     } = this.state;
-
-    const filter = (item) => item.selected;
-    const filteredVendors = byVendorsViz.filter(filter);
-    const filteredGateways = byGatewaysViz.filter(filter);
-    const filteredDataCollectors = byDataCollectorsViz.filter(filter);
-
 
     return (
       <div className="app-body-container-view">
@@ -404,103 +501,35 @@ class InventoryReviewComponent extends React.Component {
                   </div>
                 </Grid.Column>
               </Grid.Row>
-              <Grid.Row>
-                <Grid.Column className="data-container-box pl0 pr0">
-                  {showFilters && 
-                    <div className="box-data">
-                      <label style={{fontWeight: 'bolder'}}>Filters: </label>
-                        {filteredVendors.map( (item, index) => <Label as='a' key={'status'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byVendorsViz, item, 'byVendorsViz')}}>{item.label}<Icon name='delete'/></Label>)}
-                        {filteredGateways.map( (item, index) => <Label as='a' key={'risk'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byGatewaysViz, item, 'byGatewaysViz')}}>{item.label}<Icon name='delete'/></Label>)}
-                        {filteredDataCollectors.map( (item, index) => <Label as='a' key={'dc'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(byDataCollectorsViz, item, 'byDataCollectorsViz')}}>{item.label}<Icon name='delete'/></Label>)}
-                      <span className="range-select" onClick={this.clearFilters}>Clear</span>
-                    </div>
-                  }
-                </Grid.Column>
-              </Grid.Row>
             </Grid>
           </Segment>}
             <div className="view-body">
               <div className="table-container">
                 <div className="table-container-box">
                   <Segment>
-                        {assets.some((asset) => asset.selected) &&
-                          <div style={{display: "flex", position: "relative", float: "right"}} className="range-select" onClick={() => this.setState({assignTags: true})}>
-                            Assign tags to selected items
-                          </div>
-                        }
-                        {!this.isLoading &&
-                          <Table striped selectable className="animated fadeIn" basic="very" compact="very">
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell collapsing>
-                                  <Popup
-                                  trigger = {<Checkbox checked={selectAll} onChange={(event) => this.toggleSelection(event)}/>}
-                                  >
-                                    This checkbox will select all items listed on this page, it will not select items on other pages.
-                                  </Popup>
-                                </Table.HeaderCell>
-                                <Table.HeaderCell style={{cursor: "pointer"}} onClick={() => this.toggleDeviceType(criteria.type)}collapsing>
-                                    {this.showIcon(criteria.type)}
-                                </Table.HeaderCell>
-                                <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-                                <Table.HeaderCell>NAME</Table.HeaderCell>
-                                <Table.HeaderCell>VENDOR</Table.HeaderCell>
-                                <Table.HeaderCell>APPLICATION</Table.HeaderCell>
-                                <Table.HeaderCell>DATA COLLECTOR</Table.HeaderCell>
-                                <Table.HeaderCell>TAGS</Table.HeaderCell>
-                              </Table.Row>
-                            </Table.Header>
+                    <div className="header-table-container">
+                      <div className={showFilters? "box-data filters-container" : "hide "}>
+                        {this.showFilters()}
+                      </div>
+                      <div className="actions-buttons-container">
+                        {this.showActionsButtons()}
+                      </div>
+                    </div>
+                    {/* Show inventory table */}
+                    {!this.isLoading && this.showInventoryTable()}
 
-                            {assetsCount === 0 &&
-                              <Table.Row>
-                                <Table.Cell colSpan='100%'>
-                                  <EmptyComponent emptyMessage="No assets found" />
-                                </Table.Cell>
-                              </Table.Row>
-                            }
-
-                            {assetsCount > 0 &&
-                              <Table.Body>
-                                {!this.state.isLoadingTable && assets && (
-                                  assets.map((item, index) => {
-                                    return (
-                                      <Table.Row key={index}  style={{cursor: 'pointer'}}>
-                                        <Table.Cell>
-                                          <Checkbox checked={item.selected} onChange={(event) => this.toggleSingleSelect(item, index, event)}/>
-                                        </Table.Cell>
-                                        <Table.Cell style={{textAlign:"center"}} onClick={() => this.showAssetDetails(index)}>{this.showIcon(item.type)}</Table.Cell>
-                                        <Table.Cell className="id-cell upper"  onClick={() => this.showAssetDetails(index)}>
-                                          <InventoryIdComponent type={item.type} id={item.hex_id}/>
-                                        </Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.name}</Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.vendor}</Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.application}</Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.data_collector}</Table.Cell>
-                                        <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                                            {item.tags.map( (tag) => {return(<Tag key={tag.id} name={tag.name} color={tag.color} textColor="#FFFFFF"/>)})}
-                                        </Table.Cell>
-                                      </Table.Row>
-                                    );
-                                  })
-                                )}
-                              </Table.Body>
-                            }
-
-                          </Table>
-                        }
-                        
-                        {this.state.isLoadingTable && (
-                          <LoaderComponent loadingMessage="Loading inventory ..." style={{marginBottom: 20, height:"320px"}}/>
-                        )}
-                        {!this.state.isLoadingTable && pagesCount > 1 && (
-                          <Grid className="segment centered">
-                            <Pagination className="" activePage={activePage} onPageChange={this.handlePaginationChange} totalPages={pagesCount} />
-                          </Grid>
-                        )}
+                    {this.state.isLoadingTable && (
+                      <LoaderComponent loadingMessage="Loading inventory ..." style={{marginBottom: 20, height:"320px"}}/>
+                    )}
+                    {!this.state.isLoadingTable && pagesCount > 1 && (
+                      <Grid className="segment centered">
+                        <Pagination className="" activePage={activePage} onPageChange={this.handlePaginationChange} totalPages={pagesCount} />
+                      </Grid>
+                    )}
                   </Segment>
 
                   {selectedAsset && <InventoryDetailsModal loading={this.state.isLoading} selectedItem={selectedAsset} assets={this.state.assets} onClose={this.closeInventoryDetails} onNavigate={this.goToAlert}/>}
-                  {assignTags && <AssignTagsModal open={assignTags} assets={assets} onClose={() => this.setState({assignTags: false})}/>}
+                  {assignTags && <AssignTagsModal open={assignTags} assets={assets} onClose={() => {this.setState({assignTags: false}); window.location.reload(false);}}/>}
                 </div>
               </div>
             </div>
