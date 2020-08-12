@@ -25,7 +25,6 @@ const SetImoprtanceModal = (props) => {
 
 
   const ShowTags = (props) => {
-    console.log(tagsToAssign);
     return tagsToAssign.map((tag) => <Tag key={tag.id} removable={true} name={tag.name} id={tag.id} color={tag.color} onRemoveClick={() => handleTagRemoval(tag)} />)
   };
 
