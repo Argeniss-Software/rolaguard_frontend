@@ -14,8 +14,6 @@ import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
 import InventoryIdComponent from "./inventory-id.component";
-import { withRouter } from "react-router-dom";
-import { selectAll } from "d3";
 
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
@@ -71,8 +69,6 @@ class InventoryReviewComponent extends React.Component {
     
     Promise.all([assetsPromise, dataCollectorsPromise, gatewaysPromise, vendorsPromise, tagsPromise]).then(
       (responses) => {
-        console.log(responses)
-
 
         {/* Filted data by count (delete entries with count=0, if any) */}
         const filterByCount = (data) => data.count !== 0;
@@ -107,8 +103,6 @@ class InventoryReviewComponent extends React.Component {
         vendorsPieData.forEach((item) => item.selected = criteria.vendors.includes(item.code));
 
         assetsList.forEach((item) => item.selected = false);
-
-        console.log(tags);
         
         this.setState({
           assets: assetsList,

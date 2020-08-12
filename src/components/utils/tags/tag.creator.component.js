@@ -75,21 +75,21 @@ const TagsCreatorModal = (props) => {
             </Modal.Header>
 
             <Modal.Content>
-							<div className="modal-content">
-								<div className="tag-preview">
-									<Tag
-										name={name}
-										color={color}
-										textColor="white"
-										fontSize="30px"
-										opacity={validTagName? "1" : "0.5"}
-									/>
-								</div>
-								<Input disabled={sended} nameClass="" placeholder="tag name" onChange={handleInput}/>
-								<div style={{textAlign:"center", margin: "15px"}}>
-										{colors.map((col, index) => <ColorPicker disabled={sended} selected={color} color={col} onColorSelect={handleColorSelect}/>)}
-								</div>
-							</div>
+                <div className="modal-content">
+                    <div className="tag-preview">
+                        <Tag
+                            name={name}
+                            color={color}
+                            textColor="white"
+                            fontSize="30px"
+                            opacity={validTagName? "1" : "0.5"}
+                        />
+                    </div>
+                    <Input disabled={sended} nameClass="" placeholder="tag name" onChange={handleInput}/>
+                    <div style={{textAlign:"center", margin: "15px"}}>
+                            {colors.map((col, index) => <ColorPicker disabled={sended} selected={color} color={col} onColorSelect={handleColorSelect}/>)}
+                    </div>
+                </div>
             </Modal.Content>
 
             <Modal.Actions>

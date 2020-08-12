@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Modal, Table, Button } from "semantic-ui-react";
+import { Modal, Button } from "semantic-ui-react";
 
 import "./inventory.assign-tags.modal.component.css"
 
@@ -15,12 +15,11 @@ const AssignTagsModal = (props) => {
     props:
       open: boolean
       assets: list of all asset on the page (with selected parameter)
-      onClose: function to run when closing modal without assigning tags
-      onSuccess: function to call when assig
+      onClose: function to run when closing modal
 
-      This component will assign the tags to all selected devices by itself,
-      there is no neeed to handle the close event, but it will triggger.
+      This component will assign the tags to all selected devices by itself
   */
+
  const { tagsStore } = React.useContext(MobXProviderContext);
  const [open, setOpen] = React.useState(!!props.open);
  const [tagsToAssign, setTagsToAssign] = React.useState([]);
@@ -29,7 +28,6 @@ const AssignTagsModal = (props) => {
 
 
   const ShowTags = (props) => {
-    console.log(tagsToAssign);
     return tagsToAssign.map((tag) => <Tag key={tag.id} removable={true} name={tag.name} id={tag.id} color={tag.color} onRemoveClick={() => handleTagRemoval(tag)} />)
   };
 
@@ -55,7 +53,6 @@ const AssignTagsModal = (props) => {
   }
 
 
-  console.log(tagsToAssign);
   return(
     <Modal
     open={open} 

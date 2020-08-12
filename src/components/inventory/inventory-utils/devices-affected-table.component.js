@@ -24,7 +24,7 @@ const DevicesTable = (props) => {
               <Table.Row key={index}>
                 <Table.Cell>{item.hex_id}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>{item.vendor? item.vendor : "asfgzdfh "}</Table.Cell>
+                <Table.Cell>{item.vendor}</Table.Cell>
               </Table.Row>
             )}
           </Table.Body>

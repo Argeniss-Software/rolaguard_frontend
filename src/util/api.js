@@ -51,10 +51,6 @@ const API = {
       }
     );
   },
-
-  getHost: () => {
-    return API_HOST;
-  }
 };
 
 export default API;
