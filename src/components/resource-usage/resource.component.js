@@ -7,7 +7,7 @@ import {
   Pagination,
   TableCell,
   Popup,
-  Icon
+  Icon,
 } from "semantic-ui-react";
 import EmptyComponent from "../utils/empty.component";
 import LoaderComponent from "../utils/loader.component";
@@ -30,6 +30,7 @@ const ResourceUsageComponent = (props) => {
         received: 123,
         sended: 456,
         lost: 789,
+        signal_strength: 50
       },
       {
         hex_id: "0000000000",
@@ -39,6 +40,7 @@ const ResourceUsageComponent = (props) => {
         received: 123,
         sended: 456,
         lost: 789,
+        signal_strength: 20
       },
     ],
   });
@@ -122,9 +124,20 @@ const ResourceUsageComponent = (props) => {
         <Popup
           trigger={
             <span>
-              <i class="green arrow alternate circle down icon"></i>{received} /
-              <i class="orange arrow alternate circle up icon"></i>{sended} /
-              <i class="grey exclamation triangle icon"></i>{lost}
+              <Icon
+                color="green"
+                name="arrow alternate circle down "
+                type="icon"
+              />
+              {received} /
+              <Icon
+                color="orange"
+                name="arrow alternate circle up"
+                type="icon"
+              />
+              {sended} /
+              <Icon color="grey" name="exclamation triangle" type="icon" />
+              {lost}
             </span>
           }
           position="bottom left"
@@ -320,6 +333,14 @@ const ResourceUsageComponent = (props) => {
                                 </Table.Cell>
                                 <Table.Cell>
                                   {item.package_frequency}
+                                </Table.Cell>
+                                <Table.Cell className="center">
+                                  <Icon
+                                    color="blue"
+                                    name="wifi"
+                                    type="icon"
+                                  />
+								  {item.signal_strength} dB.
                                 </Table.Cell>
                               </Table.Row>
                             );
