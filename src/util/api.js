@@ -50,7 +50,7 @@ const API = {
         throw error;
       }
     );
-  }
+  },
 };
 
 export default API;

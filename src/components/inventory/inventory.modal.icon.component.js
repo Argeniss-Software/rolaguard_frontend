@@ -15,65 +15,80 @@ class ItemDetailsIcon extends Component {
         }
     }
 
-    getGatewayPopup(item) {
+    getGatewayPopup(id, name, vendor) {
         return (
             <Popup trigger={
                 <div>
                     <img id="gateway-inventory-logo" className="animated" src={this.state.gatewayUrl} alt=""/>
                 </div>
-                } flowing hoverable>
+                }
+                flowing hoverable
+                position="bottom center"
+                >
                 <div className="device-popup">
-                    <span className={item.name ? "" : "hide"}>{item.name ? "GW NAME: " + item.name.toUpperCase() : ""}</span>
-                    <span className={item.id ? "" : "hide"}>{item.id ? "GW ID: " + item.id.toUpperCase() : ""}</span>
-                    <span className={item.data_collector ? "" : "hide"}>{item.data_collector ? "DATA SOURCE: " + item.data_collector.toUpperCase() : ""}</span>
+                    <span className={name ? "" : "hide"}>{name ? "GW NAME: " + name : ""}</span>
+                    <span className={id ? "" : "hide"}>{id ? "GW EUI: " + id.toUpperCase() : ""}</span>
+                    <span className={vendor ? "" : "hide"}>{vendor ? "GW VENDOR: " + vendor : ""}</span>
                 </div>
             </Popup>
         );
     }
 
-    getDevicePopup(item) {
+    getDevicePopup(id, name, vendor) {
         return (
             <Popup trigger={
                 <div>
                     <img id="device-inventory-logo" className="animated" src={this.state.microchipUrl} alt=""/>
                 </div>
-                } flowing hoverable>
-                <div className="device-inventory-popup">
-                    <span className={item.name ? "" : "hide"}>{item.name ? "DEVICE NAME: " + item.name.toUpperCase() : ""}</span>
-                    <span className={item.id ? "" : "hide"}>{item.id ? "DEV EUI: " + item.id.toUpperCase() : ""}</span>
+                }
+                flowing hoverable
+                position="bottom center"
+                >
+                <div className="device-popup">
+                    <span className={name ? "" : "hide"}>{name ? "DEVICE NAME: " + name : ""}</span>
+                    <span className={id ? "" : "hide"}>{id ? "DEV EUI: " + id.toUpperCase() : ""}</span>
+                    <span className={vendor ? "" : "hide"}>{vendor ? "DEV EUI: " + vendor : ""}</span>
                 </div>
             </Popup>
         );
     }
 
-    getIconDescription(value) {
-        return (
-            <span className="icon-inventory-description">{value ? value.toUpperCase() : ""}</span>
-        );
-    }
-
     render(){
-        const { item } = this.props;
+        
+        const { type, name, vendor, hex_id } =this.props.item;
+        
+
         return (
-        <div className="div-inventory-container">
-            <Table compact="very" basic="very">
-            <Table.Header>
-                <Table.Row>
-                    <Table.HeaderCell textAlign="center" className={item.type ? "" : "hide"}>
-                        {item.type.trim().toLowerCase() === 'device' && this.getDevicePopup(item)}
-                        {item.type.trim().toLowerCase() === 'gateway' && this.getGatewayPopup(item)}
-                    </Table.HeaderCell>
-                </Table.Row>
-            </Table.Header>
-            <Table.Body>
-                <Table.Row>
-                    <Table.Cell className={item.type ? "" : "hide"}>
-                    </Table.Cell>
-                </Table.Row>
-            </Table.Body>
-            </Table>
-        </div>
-        ); 
+            <div className="div-inventory-container">
+                <Table compact="very" basic="very">
+                <Table.Header>
+                    <Table.Row>
+                        {type.trim().toLowerCase() === 'device' &&
+                            <Table.HeaderCell textAlign="center">
+                                {this.getDevicePopup(hex_id, name, vendor)}
+                            </Table.HeaderCell>
+                        }
+                        {type.trim().toLowerCase() === 'gateway' &&
+                            <Table.HeaderCell textAlign="center">
+                                {this.getGatewayPopup(hex_id, name, vendor)}
+                            </Table.HeaderCell>
+                        }
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    <Table.Row>
+                        <Table.Cell className={name ? "icon-description" : "hide"} textAlign= "center">{name ? name : ""}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell className={vendor ? "icon-description" : "hide"} textAlign= "center">{vendor ? vendor : ""}</Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell className={hex_id ? "icon-description" : "hide"} textAlign= "center">{hex_id? hex_id.toUpperCase() : ""}</Table.Cell>
+                    </Table.Row>
+                </Table.Body>
+                </Table>
+            </div>
+        );
     }
 }
 

@@ -5,7 +5,9 @@
 .asset-details-technical-table{
     width: 520px;
     max-width: 520px !important;
-    margin: 0 auto;
+    margin: 0px auto;
+    margin-top: 10px;
+    text-align: center;
 }
 .asset-details-technical-table table {
     border-collapse: collapse !important;
@@ -19,4 +21,14 @@
 }
 .technical-details-table-row-right {
     border: 1px solid lightgray !important;
+}
+#modal-content {
+
+}
+.modal-content-grid{
+    float: center;
+    margin: 10px;
+}
+.grid-field{
+    margin: 10px;
 }
