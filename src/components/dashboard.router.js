@@ -37,9 +37,6 @@ class DashBoardRouter extends React.Component {
                     {/* DEVICES */}
                     <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
 
-                    {/* DEVICES */}
-                    <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
-
                     {/* RESOURCES */}
                     <Route exact path='/dashboard/resources_usage' component={ResourceUsageComponent}/>
 
