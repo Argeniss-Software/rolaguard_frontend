@@ -483,7 +483,7 @@ class AlarmReviewComponent extends React.Component {
                 </Grid.Column>
                 <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
                   <div className="box-data">
-                    <h5 className="visualization-title">BY MESSAGE COLLECTOR</h5>
+                    <h5 className="visualization-title">BY DATA SOURCE</h5>
                     <Loader active={this.state.isGraphsLoading === true} />
                     <Pie
                       isLoading={this.state.isGraphsLoading}
@@ -525,7 +525,7 @@ class AlarmReviewComponent extends React.Component {
                           DATE
                         </Table.HeaderCell>
                         <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
                         <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>

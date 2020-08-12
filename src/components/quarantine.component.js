@@ -327,7 +327,7 @@ class QuarantineComponent extends React.Component {
 
                       <Grid.Column className="data-container-box pr0" floated="left" mobile={16} tablet={8} computer={4}>
                         <div className="box-data">
-                          <h5 className="visualization-title">BY MESSAGE COLLECTOR</h5>
+                          <h5 className="visualization-title">BY DATA SOURCE</h5>
                           <Loader active={isLoadingByCollectorViz} />
                           <Pie 
                             isLoading={this.state.isLoadingTable}
@@ -376,7 +376,7 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
                           <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>

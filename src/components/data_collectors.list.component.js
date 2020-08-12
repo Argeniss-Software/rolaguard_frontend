@@ -231,13 +231,13 @@ class DataCollectorListComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>MESSAGE COLLECTORS</h1>
+            <h1>DATA SOURCES</h1>
 
             {/* HEADER ACTIONS */}
             <div className="view-header-actions">
               {isAdmin && <div onClick={() => history.push("/dashboard/data_collectors/new")}>
                 <i className="fas fa-plus" />
-                <span>NEW MESSAGE COLLECTOR</span>
+                <span>NEW DATA SOURCE</span>
               </div>}
             </div>
           </div>
@@ -245,11 +245,11 @@ class DataCollectorListComponent extends React.Component {
           {/* VIEW BODY */}
           <div className="view-body">
           {!this.state.isLoading && dataCollectorList.length === 0 && (
-              <h3 style={{textAlign: 'center'}}>No registered message collectors.</h3>
+              <h3 style={{textAlign: 'center'}}>No registered data sources.</h3>
             )}
 
             {isLoading && (
-              <LoaderComponent loadingMessage="Loading message collectors..." />
+              <LoaderComponent loadingMessage="Loading data sources..." />
             )}
             {!this.state.isLoading && dataCollectorList.length > 0 && (
               <Table className="animated fadeIn" basic="very" compact="very">

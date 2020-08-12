@@ -61,7 +61,7 @@ class InventoryDetailsModal extends Component {
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.application },
-        { title: "Data Collector", value: item.data_collector }
+        { title: "Data Source", value: item.data_collector }
       ]
     }
     if(item && item.type && item.type.trim().toLowerCase() === 'gateway'){
@@ -71,7 +71,7 @@ class InventoryDetailsModal extends Component {
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.application },
-        { title: "Data Collector", value: item.data_collector }
+        { title: "Data Source", value: item.data_collector }
       ]
     }
 

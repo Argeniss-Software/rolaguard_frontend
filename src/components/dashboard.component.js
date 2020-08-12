@@ -308,7 +308,7 @@ class DashboardComponent extends React.Component {
               <div>
                 <Segment>
                 <div className="animated fadeIn">
-                    <h3><i className="fas fa-sitemap"/> | MESSAGE COLLECTORS {
+                    <h3><i className="fas fa-sitemap"/> | DATA SOURCES {
                     dataCollectorsLoading === true ?
                     <div className="ui active inline loader"/> :
                     <DataCollectorTooltip dataCollectors={dataCollectors} 
@@ -320,7 +320,7 @@ class DashboardComponent extends React.Component {
                 
 
                 <div style={{display: 'flex', marginTop: '0.9rem', marginBottom: '0.9rem'}}>
-                  <Dropdown placeholder='Filter by message collector' 
+                  <Dropdown placeholder='Filter by data source' 
                     fluid
                     clearable 
                     multiple 
@@ -428,7 +428,7 @@ class DashboardComponent extends React.Component {
                             <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                           </Table.Row>
                         </Table.Header>

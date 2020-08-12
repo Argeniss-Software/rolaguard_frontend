@@ -93,7 +93,7 @@ class ResolveAlarmModal extends Component {
                 <Table.Cell>{<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}</Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell>COLLECTOR</Table.Cell>
+                <Table.Cell>DATA SOURCE</Table.Cell>
                 <Table.Cell>{alert.data_collector_name}</Table.Cell>
               </Table.Row>
             </Table.Body>

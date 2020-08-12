@@ -65,7 +65,7 @@ class DeletePolicyModal extends Component {
       errorMessages.push('This policy can\'t be removed because it\'s the default policy.');
     }
     if(hasDataCollectors) {
-      errorMessages.push('This policy can\'t be removed because it\'s used by at least one message collector.');
+      errorMessages.push('This policy can\'t be removed because it\'s used by at least one data source.');
     }
     if(generalError) {
       errorMessages.push('Something went wrong. Try again later.');

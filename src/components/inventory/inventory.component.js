@@ -300,7 +300,7 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell>NAME</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
-            <Table.HeaderCell>DATA COLLECTOR</Table.HeaderCell>
+            <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>TAGS</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -439,7 +439,7 @@ class InventoryReviewComponent extends React.Component {
 
                 <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
                   <div className="box-data">
-                    <h5 className="visualization-title">BY MESSAGE COLLECTOR</h5>
+                    <h5 className="visualization-title">BY DATA SOURCE</h5>
                     <Loader active={this.state.isGraphsLoading === true} />
                     <Pie
                       isLoading={this.state.isGraphsLoading}

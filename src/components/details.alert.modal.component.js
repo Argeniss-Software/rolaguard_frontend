@@ -138,7 +138,7 @@ class DetailsAlertModal extends Component {
             <p>{alert_type.description}</p>
             <div style={{marginBottom: 15 }}>
               <p style={{fontWeight: 'bolder', marginBottom: 3 }}>Source</p>
-              Message collector <i>{alert.data_collector_name}</i>
+              Data source <i>{alert.data_collector_name}</i>
             </div>
 
             <Accordion>
