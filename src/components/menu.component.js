@@ -80,8 +80,7 @@ class MenuComponent extends React.Component {
                   }
                   style={popupStyle}
                   content="Inventory"
-                />  
-
+                />
                 <h3></h3>
                 <Popup
                   trigger={

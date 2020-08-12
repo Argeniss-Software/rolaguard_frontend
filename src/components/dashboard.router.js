@@ -36,6 +36,9 @@ class DashBoardRouter extends React.Component {
                     {/* DEVICES */}
                     <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
 
+                    {/* DEVICES */}
+                    <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
+
                     {/* DATA COLLECTORS */}
                     <Route exact path='/dashboard/data_collectors' render={ (props) => <DataCollectorListComponent history={props.history}  /> }/>
                     <Route path='/dashboard/data_collectors/:data_collector_id/view' component={DataCollectorViewComponent}/>

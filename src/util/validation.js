@@ -73,6 +73,11 @@ const Validation = {
   isValidPort: port => {
     const value = parseInt(port);
     return !(isNaN(value) || value <= 0 || value >= 65536);
+  },
+
+  isValidTagName: (tagName) => {
+    const regex = new RegExp("^[a-zA-Z0-9_. ]+$");
+    return regex.test(tagName);
   }
 };
 

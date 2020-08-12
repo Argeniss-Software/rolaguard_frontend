@@ -194,7 +194,7 @@ class Pie extends Component {
           .duration(200)
           .style("opacity", 1);
 
-        let tooltipContent = `<div><strong>${d.data.label? d.data.label : "unknown"}</strong> (${d.data.label? d.data.label : "unknown"}})</div>`;
+        let tooltipContent = `<div><strong>${d.data.label? d.data.label : "unknown"}</strong> (${d.data.label? d.data.label : "unknown"})</div>`;
         tooltipContent = `<div class="ui bottom left popup transition visible" style="width:100%"><div class="content">${tooltipContent}</div></div>`;
 
         this.tooltip.html(tooltipContent)

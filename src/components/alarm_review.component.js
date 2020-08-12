@@ -520,7 +520,7 @@ class AlarmReviewComponent extends React.Component {
                         <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                         <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                        <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
                         <Table.HeaderCell collapsing sorted={orderBy[0] === 'created_at' ? (orderBy[1] === 'ASC' ? 'ascending' : 'descending') : null} onClick={ () => this.handleSort('created_at')}>
                           DATE
                         </Table.HeaderCell>
