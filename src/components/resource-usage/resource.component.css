@@ -7,3 +7,6 @@
     background-color: #cce2ff !important;
     background: #cce2ff !important
 }
+div.ui.medium.progress {
+    margin-bottom: 0px;
+}

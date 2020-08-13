@@ -8,6 +8,7 @@ import {
   TableCell,
   Popup,
   Icon,
+  Progress
 } from "semantic-ui-react";
 import EmptyComponent from "../utils/empty.component";
 import LoaderComponent from "../utils/loader.component";
@@ -144,15 +145,23 @@ const ResourceUsageComponent = (props) => {
         >
           <div>
             <div>
-              <i class="green arrow alternate circle down icon"></i>
+              <Icon
+                color="green"
+                name="arrow alternate circle down "
+                type="icon"
+              />
               Received: <strong>{received}</strong>
             </div>
             <div>
-              <i class="orange arrow alternate circle up icon"></i>
+              <Icon
+                color="orange"
+                name="arrow alternate circle up"
+                type="icon"
+              />
               Sent: <strong>{sended}</strong>
             </div>
             <div>
-              <i class="grey exclamation triangle icon"></i>
+              <Icon color="grey" name="exclamation triangle" type="icon" />
               Lost: <strong>{lost}</strong>
             </div>
           </div>
@@ -200,7 +209,7 @@ const ResourceUsageComponent = (props) => {
                   <div className="box-data">
                     <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
                     <i
-                      style={{ color: "gray", aling: "middle" }}
+                      style={{ color: "gray", align: "middle" }}
                       className="fas fa-exclamation fa-4x"
                     ></i>
                   </div>
@@ -215,7 +224,7 @@ const ResourceUsageComponent = (props) => {
                   <div className="box-data">
                     <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
                     <i
-                      style={{ color: "gray", aling: "middle" }}
+                      style={{ color: "gray", align: "middle" }}
                       className="fas fa-exclamation fa-4x"
                     ></i>
                   </div>
@@ -292,7 +301,10 @@ const ResourceUsageComponent = (props) => {
                           MESSAGES <i>(R/S/L)</i>
                         </Table.HeaderCell>
                         <Table.HeaderCell>FREQUENCY</Table.HeaderCell>
-                        <Table.HeaderCell>SIGNAL STRENGTH</Table.HeaderCell>
+                        <Table.HeaderCell>
+                          <Icon color="blue" name="wifi" type="icon" />
+                          SIGNAL STRENGTH
+                        </Table.HeaderCell>
                       </Table.Row>
                     </Table.Header>
 
@@ -334,13 +346,15 @@ const ResourceUsageComponent = (props) => {
                                 <Table.Cell>
                                   {item.package_frequency}
                                 </Table.Cell>
-                                <Table.Cell className="center">
-                                  <Icon
-                                    color="blue"
-                                    name="wifi"
-                                    type="icon"
-                                  />
-								  {item.signal_strength} dB.
+                                <Table.Cell>
+                                    <Progress
+                                      size="medium"
+                                      color="green"
+                                      value={item.signal_strength}
+                                      total={100}
+                                      active
+                                      progress="percent"
+                                    ></Progress>
                                 </Table.Cell>
                               </Table.Row>
                             );
