@@ -12,6 +12,7 @@ import {
 } from "semantic-ui-react";
 import EmptyComponent from "../utils/empty.component";
 import LoaderComponent from "../utils/loader.component";
+import AssetIdComponent from "../utils/asset-id.component";
 
 import "./resource.component.css";
 
@@ -29,8 +30,11 @@ const ResourceUsageComponent = (props) => {
         type: "device",
         state: "connected",
         received: 123,
+        received_p: 10.5,
         sended: 456,
+        sended_p: 50.4,
         lost: 789,
+        lost_p: 39.1,
         signal_strength: 50
       },
       {
@@ -39,8 +43,11 @@ const ResourceUsageComponent = (props) => {
         type: "gateway",
         state: "disconnected",
         received: 123,
+        received_p: 10.5,
         sended: 456,
+        sended_p: 50.4,
         lost: 789,
+        lost_p: 39.1,
         signal_strength: 20
       },
     ],
@@ -119,7 +126,7 @@ const ResourceUsageComponent = (props) => {
       );
   };
 
-  const showMessagesSummary = (received, sended, lost) => {
+  const showMessagesSummary = (received, sended, lost, received_p, sended_p, lost_p) => {
     return (
       <span>
         <Popup
@@ -130,15 +137,15 @@ const ResourceUsageComponent = (props) => {
                 name="arrow alternate circle down "
                 type="icon"
               />
-              {received} /
+              <strong>{received_p}%</strong> /
               <Icon
                 color="orange"
                 name="arrow alternate circle up"
                 type="icon"
               />
-              {sended} /
+              <strong>{sended_p}%</strong> /
               <Icon color="grey" name="exclamation triangle" type="icon" />
-              {lost}
+              <strong>{lost_p}%</strong>
             </span>
           }
           position="bottom left"
@@ -150,7 +157,10 @@ const ResourceUsageComponent = (props) => {
                 name="arrow alternate circle down "
                 type="icon"
               />
-              Received: <strong>{received}</strong>
+              Received:
+              <strong>
+                {received} ({received_p}%)
+              </strong>
             </div>
             <div>
               <Icon
@@ -158,11 +168,17 @@ const ResourceUsageComponent = (props) => {
                 name="arrow alternate circle up"
                 type="icon"
               />
-              Sent: <strong>{sended}</strong>
+              Sent: 
+              <strong>
+                {sended} ({sended_p}%)
+              </strong>
             </div>
             <div>
               <Icon color="grey" name="exclamation triangle" type="icon" />
-              Lost: <strong>{lost}</strong>
+              Lost: 
+              <strong>
+                {lost} ({lost_p}%)
+              </strong>
             </div>
           </div>
         </Popup>
@@ -331,7 +347,12 @@ const ResourceUsageComponent = (props) => {
                                 <Table.Cell style={{ textAlign: "center" }}>
                                   {showDeviceTypeIcon(item.type)}
                                 </Table.Cell>
-                                <Table.Cell>{item.hex_id}</Table.Cell>
+                                <Table.Cell>
+                                  <AssetIdComponent
+                                    type={item.type}
+                                    id={item.hex_id}
+                                  />
+                                </Table.Cell>
                                 <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>
                                   {showStateIcon(item.state)}
@@ -340,21 +361,24 @@ const ResourceUsageComponent = (props) => {
                                   {showMessagesSummary(
                                     item.received,
                                     item.sended,
-                                    item.lost
+                                    item.lost,
+                                    item.received_p,
+                                    item.sended_p,
+                                    item.lost_p
                                   )}
                                 </Table.Cell>
                                 <Table.Cell>
                                   {item.package_frequency}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <Progress
-                                      size="medium"
-                                      color="green"
-                                      value={item.signal_strength}
-                                      total={100}
-                                      active
-                                      progress="percent"
-                                    ></Progress>
+                                  <Progress
+                                    size="medium"
+                                    color="green"
+                                    value={item.signal_strength}
+                                    total={100}
+                                    active
+                                    progress="percent"
+                                  ></Progress>
                                 </Table.Cell>
                               </Table.Row>
                             );
