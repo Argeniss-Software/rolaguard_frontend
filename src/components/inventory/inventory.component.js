@@ -12,7 +12,7 @@ import AssignTagsModal from "./inventory.assign-tags.modal.component";
 import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
-import InventoryIdComponent from "./inventory-id.component";
+import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
@@ -335,7 +335,7 @@ class InventoryReviewComponent extends React.Component {
                       className="id-cell upper"
                       onClick={() => this.showAssetDetails(index)}
                     >
-                      <InventoryIdComponent type={item.type} id={item.hex_id} />
+                      <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.name}
