@@ -8,7 +8,6 @@
 import React from "react";
 
 function ShowDeviceIcon(props) {
-  debugger
   const type = props && props.type && props.type.toLowerCase().trim();
   if (type === "device") {
     return <i className="fas fa-microchip" />;
