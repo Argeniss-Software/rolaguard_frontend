@@ -109,21 +109,20 @@ const ResourceUsageComponent = (props) => {
 
   const showStateIcon = (state, lastConnection) => {
     const connectedState = "connected";
-    const disconnectedState = "disconnected";
+    const dissconectedState = "disconnected";
 
-    if (state.trim().toLowerCase() === connectedState)
-      return (
-        <span>
-          <Icon color="green" name="circle" /> connected
-        </span>
-      );
-
-    if (state.trim().toLowerCase() === disconnectedState)
-      return (
-        <span>
-          <Icon color="red" name="circle" /> disconnected
-        </span>
-      );
+    const statusText = (state && state.trim().toLowerCase() === connectedState) ? connectedState : dissconectedState;
+    const colorStatus = statusText === connectedState ? 'green' : 'red';
+    
+    return (
+      <Popup
+        trigger= {<Icon color={colorStatus} name="circle" />}
+      >
+        <Popup.Header>Asset Status</Popup.Header>
+        <Popup.Content>
+          <Icon color={colorStatus} name="circle" /> {statusText}
+        </Popup.Content>
+      </Popup>);
   };
 
   const showMessagesSummary = (received, sended, lost, received_p, sended_p, lost_p) => {
@@ -353,10 +352,11 @@ const ResourceUsageComponent = (props) => {
                                     id={item.hex_id}
                                   />
                                 </Table.Cell>
-                                <Table.Cell>{item.name}</Table.Cell>
                                 <Table.Cell>
                                   {showStateIcon(item.state)}
+                                  {item.name}
                                 </Table.Cell>
+                                <Table.Cell>??</Table.Cell>
                                 <Table.Cell>
                                   {showMessagesSummary(
                                     item.received,
