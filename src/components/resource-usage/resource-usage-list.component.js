@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Icon, Table, TableCell, Icon, Progress } from "semantic-ui-react";
+import { Icon, Table, Progress } from "semantic-ui-react";
 
 import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
