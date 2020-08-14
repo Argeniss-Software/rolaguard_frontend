@@ -11,6 +11,7 @@ import NotFoundPage from '../pages/notFoundPage.page';
 import UserProfileComponent from './user.profile.component';
 import AlarmReviewComponent from './alarm_review.component';
 import InventoryReviewComponent from './inventory/inventory.component';
+import ResourceUsageComponent from './resource-usage/resource.component';
 // Don't delete the next line. It serves the DatePicker in the Alerts Review dashboard
 import ReportComponent from './reports-page';
 import DataCollectorListComponent from './data_collectors.list.component';
@@ -36,8 +37,8 @@ class DashBoardRouter extends React.Component {
                     {/* DEVICES */}
                     <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
 
-                    {/* DEVICES */}
-                    <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
+                    {/* RESOURCES */}
+                    <Route exact path='/dashboard/resources_usage' component={ResourceUsageComponent}/>
 
                     {/* DATA COLLECTORS */}
                     <Route exact path='/dashboard/data_collectors' render={ (props) => <DataCollectorListComponent history={props.history}  /> }/>
