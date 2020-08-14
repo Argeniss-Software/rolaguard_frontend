@@ -58,6 +58,11 @@ const clearFilters = () => {
 //******************************************************* */
 const ResourceUsageComponent = (props) => {
   const [showFilters, setShowFilters] = React.useState(true);
+  
+  const [criteria, setCriteria] = React.useState({
+    type: null,
+  });
+
   const [listState, setListState] = React.useState({
     activePage: 1,
     pagesCount: 1,
