@@ -8,20 +8,25 @@
 import React from "react";
 
 function ShowDeviceIcon(props) {
+  
   const type = props && props.type && props.type.toLowerCase().trim();
-  if (type === "device") {
-    return <i className="fas fa-microchip" />;
-  } else if (type === "gateway") {
-    return <i className="fas fa-broadcast-tower" />;
+
+  const deviceTitle = "device"
+  const gatewayTitle = "gateway";
+
+  if (type === deviceTitle) {
+    return <i className="fas fa-microchip" title={deviceTitle} />;
+  } else if (type === gatewayTitle) {
+    return <i className="fas fa-broadcast-tower" title={gatewayTitle} />;
   } else {
     return (
       <span>
-        <i className="fas fa-broadcast-tower" />/
-        <i className="fas fa-microchip" />
+        <i className="fas fa-broadcast-tower" title={gatewayTitle} />/
+        <i className="fas fa-microchip" title={deviceTitle} />
       </span>
     );
-
   }
 }
 
 export default ShowDeviceIcon;
+
