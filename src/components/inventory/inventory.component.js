@@ -328,8 +328,8 @@ class InventoryReviewComponent extends React.Component {
                     <Table.Cell
                       style={{ textAlign: "center" }}
                       onClick={() => this.showAssetDetails(index)}
-                    >
-                      <ShowDeviceIcon type={item.type} />
+                      >                      
+                      <ShowDeviceIcon type={(item.type && !["gateway", "device"].includes(item.type.toLowerCase().trim())) ? "unknown" : item.type}></ShowDeviceIcon>
                     </Table.Cell>
                     <Table.Cell
                       className="id-cell upper"

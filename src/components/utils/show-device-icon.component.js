@@ -13,11 +13,14 @@ function ShowDeviceIcon(props) {
 
   const deviceTitle = "device"
   const gatewayTitle = "gateway";
+  const unknown = "unknown";
 
   if (type === deviceTitle) {
     return <i className="fas fa-microchip" title={deviceTitle} />;
   } else if (type === gatewayTitle) {
     return <i className="fas fa-broadcast-tower" title={gatewayTitle} />;
+  } else if (type === unknown) {
+    return <i className="fas fa-question" title={gatewayTitle} />;
   } else {
     return (
       <span>

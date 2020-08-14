@@ -277,11 +277,7 @@ const ResourceUsageComponent = (props) => {
                   >
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell
-                          style={{ cursor: "pointer" }}
-                          onClick={() => toggleDeviceType(criteria.type)}
-                          collapsing
-                        >
+                        <Table.HeaderCell>
                           {ShowDeviceIcon(criteria.type)}
                         </Table.HeaderCell>
                         <Table.HeaderCell collapsing>ID</Table.HeaderCell>
@@ -319,7 +315,16 @@ const ResourceUsageComponent = (props) => {
                                 style={{ cursor: "pointer" }}
                               >
                                 <Table.Cell style={{ textAlign: "center" }}>
-                                  {ShowDeviceIcon(item.type)}
+                                  <ShowDeviceIcon
+                                    type={
+                                      item.type &&
+                                      !["gateway", "device"].includes(
+                                        item.type.toLowerCase().trim()
+                                      )
+                                        ? "unknown"
+                                        : item.type
+                                    }
+                                  ></ShowDeviceIcon>
                                 </Table.Cell>
                                 <Table.Cell>
                                   <AssetIdComponent
@@ -367,7 +372,7 @@ const ResourceUsageComponent = (props) => {
 
                 {listState.isLoading && (
                   <LoaderComponent
-                    loadingMessage="Loading inventory ..."
+                    loadingMessage="Loading resource ussage..."
                     style={{ marginBottom: 20 }}
                   />
                 )}
