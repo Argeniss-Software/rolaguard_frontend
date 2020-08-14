@@ -13,6 +13,7 @@ import {
 import EmptyComponent from "../utils/empty.component";
 import LoaderComponent from "../utils/loader.component";
 import AssetIdComponent from "../utils/asset-id.component";
+import ShowDeviceIcon from "../utils/show-device-icon.component";
 
 import "./resource.component.css";
 
@@ -61,50 +62,23 @@ const ResourceUsageComponent = (props) => {
   const handlePaginationChange = () => {};
 
   const toggleDeviceType = (type) => {
+    const { criteria, pageSize } = this.state;
+
     /* null stands for both types */
     const order = [null, "gateway", "device"];
 
     const nextType = order[(order.indexOf(type) + 1) % order.length];
-    setCriteria((criteria) => {
-      return {
-        ...criteria,
-        type: nextType,
-      };
+    criteria.type = nextType;
+
+    const activePage = 1;
+    this.setState({
+      criteria,
+      activePage,
+      isLoading: true,
+      isGraphsLoading: true,
     });
-  };
 
-  const showDeviceTypeIcon = (type) => {
-    if (
-      type &&
-      type.toLowerCase().trim() === "device" &&
-      type.toLowerCase() !== "unknown"
-    ) {
-      return <i className="fas fa-microchip" />;
-    }
-    if (
-      type &&
-      type.toLowerCase().trim() === "gateway" &&
-      type.toLowerCase() !== "unknown"
-    ) {
-      return <i className="fas fa-broadcast-tower" />;
-    }
-    if (type && type.toLowerCase().trim() === "unknown") {
-      return <i className="fas fa-question" />;
-    }
-
-    return (
-      <div>
-        <i
-          style={{ verticalAlign: "middle" }}
-          className="fas fa-broadcast-tower fa-xs"
-        />
-        /
-        <i
-          style={{ verticalAlign: "middle" }}
-          className="fas fa-microchip fa-xs"
-        />
-      </div>
-    );
+    this.loadAssetsAndCounts();
   };
 
   const showStateIcon = (state, lastConnection) => {
@@ -308,7 +282,7 @@ const ResourceUsageComponent = (props) => {
                           onClick={() => toggleDeviceType(criteria.type)}
                           collapsing
                         >
-                          {showDeviceTypeIcon(criteria.type)}
+                          {ShowDeviceIcon(criteria.type)}
                         </Table.HeaderCell>
                         <Table.HeaderCell collapsing>ID</Table.HeaderCell>
                         <Table.HeaderCell>NAME</Table.HeaderCell>
@@ -345,7 +319,7 @@ const ResourceUsageComponent = (props) => {
                                 style={{ cursor: "pointer" }}
                               >
                                 <Table.Cell style={{ textAlign: "center" }}>
-                                  {showDeviceTypeIcon(item.type)}
+                                  {ShowDeviceIcon(item.type)}
                                 </Table.Cell>
                                 <Table.Cell>
                                   <AssetIdComponent
@@ -372,14 +346,16 @@ const ResourceUsageComponent = (props) => {
                                   {item.package_frequency}
                                 </Table.Cell>
                                 <Table.Cell>
-                                  <Progress
-                                    size="medium"
-                                    color="green"
-                                    value={item.signal_strength}
-                                    total={100}
-                                    active
-                                    progress="percent"
-                                  ></Progress>
+                                  {item.type == "device" && (
+                                    <Progress
+                                      size="medium"
+                                      color="green"
+                                      value={item.signal_strength}
+                                      total={100}
+                                      active
+                                      progress="percent"
+                                    ></Progress>
+                                  )}
                                 </Table.Cell>
                               </Table.Row>
                             );
