@@ -113,7 +113,7 @@ const ResourceUsageComponent = (props) => {
 
     const statusText = (state && state.trim().toLowerCase() === connectedState) ? connectedState : dissconectedState;
     const colorStatus = statusText === connectedState ? 'green' : 'red';
-    
+
     return (
       <Popup
         trigger= {<Icon color={colorStatus} name="circle" />}
@@ -149,7 +149,8 @@ const ResourceUsageComponent = (props) => {
           }
           position="bottom left"
         >
-          <div>
+          <Popup.Header>Messages on the last 24 hours</Popup.Header>
+          <Popup.Content>
             <div>
               <Icon
                 color="green"
@@ -167,19 +168,19 @@ const ResourceUsageComponent = (props) => {
                 name="arrow alternate circle up"
                 type="icon"
               />
-              Sent: 
+              Sent:
               <strong>
                 {sended} ({sended_p}%)
               </strong>
             </div>
             <div>
               <Icon color="grey" name="exclamation triangle" type="icon" />
-              Lost: 
+              Lost:
               <strong>
                 {lost} ({lost_p}%)
               </strong>
             </div>
-          </div>
+          </Popup.Content>
         </Popup>
       </span>
     );
