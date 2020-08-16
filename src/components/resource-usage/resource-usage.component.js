@@ -1,5 +1,6 @@
-import * as React from "react";
-import { MobXProviderContext } from "mobx-react";
+import React, {useState } from "react";
+import { observer, inject } from "mobx-react";
+
 import {
   Segment,
   Grid,
@@ -25,6 +26,7 @@ const clearFilters = () => {
     byDataCollectorsViz: [],
     byTagsViz: [],
     activePage: 1,
+    pageSize: 50,
     isGraphsLoading: true,
     isLoading: true,
   });
@@ -32,7 +34,7 @@ const clearFilters = () => {
   this.loadAssetsAndCounts();
 };
 
-  const handlePaginationChange = (e, { activePage }) => {
+const handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage, isLoading: true });
     const { criteria, pageSize, selectedAlert } = this.state;
 
@@ -54,16 +56,36 @@ const clearFilters = () => {
     return assetsPromise;
   };
 
-
 //******************************************************* */
+// const { activePage, pageSize, criteria } = this.state;
+const loadAssets = (props) => {
+  const assetsPromise = props.resourceUssageStore.getAssets(
+    {},
+    //{ page: activePage, size: pageSize },
+    {}
+    //criteria
+  );
+  Promise.all([assetsPromise]).then(
+        (responses) => {
+          console.log(responses[0].data);
+          //this.setState({data: responses[0].data});
+      }
+  );
+}
+
 const ResourceUsageComponent = (props) => {
   const [showFilters, setShowFilters] = React.useState(true);
-  
   const [criteria, setCriteria] = React.useState({
     type: null,
   });
+  
+  loadAssets(props);
 
-  const [listState, setListState] = React.useState({
+  const [loading, setLoading] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [perPage, setPerPage] = React.useState(20);
+  
+  const [list, setList] = React.useState({
     activePage: 1,
     pagesCount: 1,
     isLoading: false,
@@ -80,7 +102,7 @@ const ResourceUsageComponent = (props) => {
         sended_p: 50.4,
         lost: 789,
         lost_p: 39.1,
-        signal_strength: 50
+        signal_strength: 50,
       },
       {
         hex_id: "0000000000",
@@ -93,13 +115,13 @@ const ResourceUsageComponent = (props) => {
         sended_p: 50.4,
         lost: 789,
         lost_p: 39.1,
-        signal_strength: 20
+        signal_strength: 20,
       },
     ],
   });
-  
+
   return (
-    <div className="app-body-container-view">
+    <div className="app-body-container-view">      
       <div className="animated fadeIn animation-view">
         <div className="view-header">
           <h1 className="mb0">RESOURCES USAGE</h1>
@@ -206,23 +228,26 @@ const ResourceUsageComponent = (props) => {
                     </span>
                   </div>
                 )}
-                {!listState.isLoading && (
-                  <ResourceUsageList listState={listState} criteria={criteria}></ResourceUsageList>
+                {!list.isLoading && (
+                  <ResourceUsageList
+                    list={list}
+                    criteria={criteria}
+                  ></ResourceUsageList>
                 )}
 
-                {listState.isLoading && (
+                {list.isLoading && (
                   <LoaderComponent
                     loadingMessage="Loading resource usage..."
                     style={{ marginBottom: 20 }}
                   />
                 )}
-                {!listState.isLoading && listState.pagesCount > 1 && (
+                {!list.isLoading && list.pagesCount > 1 && (
                   <Grid className="segment centered">
                     <Pagination
                       className=""
-                      activePage={listState.activePage}
+                      activePage={list.activePage}
                       onPageChange={handlePaginationChange}
-                      totalPages={listState.pagesCount}
+                      totalPages={list.pagesCount}
                     />
                   </Grid>
                 )}
@@ -235,4 +260,4 @@ const ResourceUsageComponent = (props) => {
   );
 };
 
-export default ResourceUsageComponent;
+export default inject("resourceUssageStore")(ResourceUsageComponent);
