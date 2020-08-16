@@ -29,7 +29,7 @@ const ResourceUsageList = (props) => {
         </Table.Row>
       </Table.Header>
 
-      {props.listState.count === 0 && (
+      {props.list.count === 0 && (
         <Table.Body>
           <Table.Row>
             <Table.Cell colSpan="100%">
@@ -39,11 +39,11 @@ const ResourceUsageList = (props) => {
         </Table.Body>
       )}
 
-      {props.listState.count > 0 && (
+      {props.list.count > 0 && (
         <Table.Body>
-          {!props.listState.isLoading &&
-            props.listState.data &&
-            props.listState.data.map((item, index) => {
+          {!props.list.isLoading &&
+            props.list.data &&
+            props.list.data.map((item, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
