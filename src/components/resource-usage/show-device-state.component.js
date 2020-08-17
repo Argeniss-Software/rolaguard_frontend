@@ -2,14 +2,13 @@ import * as React from "react";
 import {Icon, Popup} from "semantic-ui-react";
 
 const ShowDeviceState = (state) => {
-  const connectedState = "connected";
-  const dissconectedState = "disconnected";
+  const connectedState = true;
+  const dissconectedState = false;
+  const connectedText = 'connected';
+  const disconnectedText = 'disconnected';
 
-  const statusText =
-    state && state.trim().toLowerCase() === connectedState
-      ? connectedState
-      : dissconectedState;
-  const colorStatus = statusText === connectedState ? "green" : "red";
+  const statusText = state && state === connectedState ? connectedText : disconnectedText;
+  const colorStatus = state && state === connectedState ? "green" : "red";
 
   return (
     <Popup trigger={<Icon color={colorStatus} name="circle" />}>

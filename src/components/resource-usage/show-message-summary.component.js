@@ -1,14 +1,8 @@
 import * as React from "react";
-import {Icon, Popup} from "semantic-ui-react";
+import { Icon, Popup } from "semantic-ui-react";
+import NumberFormat from "react-number-format";
 
-const ShowMessagesSummary = (
-  received,
-  sended,
-  lost,
-  received_p,
-  sended_p,
-  lost_p
-) => {
+const ShowMessagesSummary = (props) => {
   return (
     <span>
       <Popup
@@ -16,14 +10,37 @@ const ShowMessagesSummary = (
           <span>
             <Icon
               color="green"
-              name="arrow alternate circle down "
+              name="arrow alternate circle down"
               type="icon"
             />
-            <strong>{received_p}%</strong> /
+            <strong>
+              <NumberFormat
+                value={props.packets_down.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+            </strong>{" "}
+            /
             <Icon color="orange" name="arrow alternate circle up" type="icon" />
-            <strong>{sended_p}%</strong> /
+            <strong>
+              <NumberFormat
+                value={props.packets_up.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+            </strong>{" "}
+            /
             <Icon color="grey" name="exclamation triangle" type="icon" />
-            <strong>{lost_p}%</strong>
+            <strong>
+              <NumberFormat
+                value={props.packets_lost.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+            </strong>
           </span>
         }
         position="bottom left"
@@ -33,28 +50,70 @@ const ShowMessagesSummary = (
           <div>
             <Icon
               color="green"
-              name="arrow alternate circle down "
+              name="arrow alternate circle down"
               type="icon"
             />
             Received:
             <strong>
-              {received} ({received_p}%)
+              <NumberFormat
+                value={props.packets_down.total}
+                displayType={"text"}
+              />{" "}
+              (
+              <NumberFormat
+                value={props.packets_down.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+              )
             </strong>
           </div>
           <div>
             <Icon color="orange" name="arrow alternate circle up" type="icon" />
             Sent:
             <strong>
-              {sended} ({sended_p}%)
+              <NumberFormat
+                value={props.packets_up.total}
+                displayType={"text"}
+              />{" "}
+              (
+              <NumberFormat
+                value={props.packets_up.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+              )
             </strong>
           </div>
           <div>
             <Icon color="grey" name="exclamation triangle" type="icon" />
             Lost:
             <strong>
-              {lost} ({lost_p}%)
+              <NumberFormat
+                value={props.packets_lost.total}
+                displayType={"text"}
+              />
+              (
+              <NumberFormat
+                value={props.packets_lost.percentage}
+                displayType={"text"}
+                suffix={"%"}
+                decimalScale="1"
+              />
+              )
             </strong>
           </div>
+
+          <div className="empty-container">
+            <h1 className="empty-message">
+              <i className="fas fa-info-circle" />
+              <br />
+              pie chart in progress...
+            </h1>
+          </div>
+
         </Popup.Content>
       </Popup>
     </span>
