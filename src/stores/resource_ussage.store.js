@@ -14,7 +14,8 @@ class ResourceUssageStore {
   @action getAssets(pagination, criteria) {
     const { page, size } = pagination || {};
     const { vendors, gateways, dataCollectors, tags, type } = criteria || {};
-
+    this.assets = [];
+    
     const headers = this.getHeaders();
     const params = {
       ...(vendors && { vendors: vendors }),
@@ -114,5 +115,5 @@ class ResourceUssageStore {
     return API.get(`inventory/count/tag`, { headers, params} );
   }*/
 }
-const store = new ResourceUssageStore;
+const store = new ResourceUssageStore();
 export default store;
