@@ -525,7 +525,7 @@ class InventoryReviewComponent extends React.Component {
                   </Segment>
 
                   {selectedAsset && <InventoryDetailsModal loading={this.state.isLoading} selectedItem={selectedAsset} assets={this.state.assets} onClose={this.closeInventoryDetails} onNavigate={this.goToAlert}/>}
-                  {assignTags && <AssignTagsModal open={assignTags} assets={assets} onClose={() => {this.setState({assignTags: false}); window.location.reload(false);}}/>}
+                  {assignTags && <AssignTagsModal open={assignTags} assets={assets} onClose={() => this.setState({assignTags: false})} onSuccess={() => {this.loadAssetsAndCounts(); this.setState({assignTags: false});}}/>}
                 </div>
               </div>
             </div>

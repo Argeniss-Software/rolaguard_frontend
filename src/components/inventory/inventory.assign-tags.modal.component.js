@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Modal, Button } from "semantic-ui-react";
+import { Modal, Button, Message } from "semantic-ui-react";
 
 import "./inventory.assign-tags.modal.component.css"
 
@@ -25,6 +25,7 @@ const AssignTagsModal = (props) => {
  const [tagsToAssign, setTagsToAssign] = React.useState([]);
  const [assigning, setAssigning] = React.useState(false);
  const [sendDisabled, setSendDisabled] = React.useState(true);
+ const [showError, setShowError] = React.useState(false);
 
 
   const ShowTags = (props) => {
@@ -45,11 +46,25 @@ const AssignTagsModal = (props) => {
     setAssigning(true)
     const tagsAssignPromise = tagsToAssign.map((tag) => tagsStore.assignTagToDevices(tag, props.assets.filter((item) => item.selected)));
 
-    Promise.all(tagsAssignPromise).then(() => {
-      setAssigning(false)
-      if (props.onClose instanceof Function) props.onClose();
-    }
-    );
+    Promise.all(tagsAssignPromise)
+      .then(
+        (responses) => { 
+          if(responses.every((response) => response.status === 200)){
+            setAssigning(false)
+            if (props.onSuccess instanceof Function) props.onSuccess();
+          }
+          else {
+            setAssigning(false);
+            setShowError(true);
+          }
+        }
+      )
+      .catch(
+        () => {
+          setAssigning(false);
+          setShowError(true);
+        }
+      );
   }
 
 
@@ -59,6 +74,13 @@ const AssignTagsModal = (props) => {
     >
       <Modal.Header>ASSIGN TAGS</Modal.Header>
       <Modal.Content className="modal-content-container">
+        {/* Error message in case the assignation fails */}
+        {showError &&
+          <div className="error-message-wrapper">
+            <Message error header='Error' content="Something went wrong. Try again later." className="error-message" onClick={() => setShowError(false)}/>
+          </div>
+        }
+
         <strong>Tags to assign: </strong><ShowTags tags={tagsToAssign}/> <TagSelector alreadyAssignTags={tagsToAssign} onSelection={handleTagSelected} />
         
         <p><strong>Devices affected:</strong></p>
