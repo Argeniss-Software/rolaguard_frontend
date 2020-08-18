@@ -35,36 +35,40 @@ const ResourceUsageComponent = (props) => {
   const { resourceUssageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
   const [criteria, setCriteria] = useState({
-    type: null,
+    type: null
   });
   const [activePage, setActivePage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [totalList, setTotalList] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
+  const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
   const [list, setList] = useState({
     isLoading: true,
     data: [], // resourceUssageStore.getDummyData(),
   });
 
+
+  const toggleDeviceTypeFilter = () => {
+    const order = [null, "gateway", "device"];
+    const nextType = order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
+    const newCriteria = { type: nextType };
+    setActivePage(1);
+    setDeviceTypeFilter(nextType);
+    setCriteria((c)=> {
+      return {...c, ...newCriteria}
+    })
+  }
   
   const handlePaginationChange = (e, { activePage }) => {
-    setList((oldData)=>{
-      return {...oldData, ...{isLoading: true}}
-    })
     setActivePage(activePage);
-    getDataFromApi(activePage);
-    setList((oldData) => {
-      return { ...oldData, ...{ isLoading: false } };
-    });
   };
 
-  const getDataFromApi = (activePage, criteria) => {
+  const getDataFromApi = () => {
     setList((oldData) => {
       return { ...oldData, ...{ isLoading: true } };
     });
     const assetsPromise = resourceUssageStore.getAssets(
-      { page: activePage, size: pageSize },
+      { page: activePage, size: pageSize},
       criteria
     );
     Promise.all([assetsPromise]).then((response) => {
@@ -82,7 +86,7 @@ const ResourceUsageComponent = (props) => {
     });
   }
 
-  useEffect(() => {getDataFromApi();}, []); // only execute when change second parameter
+  useEffect(() => {getDataFromApi();}, [activePage, criteria.type, pageSize]); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -129,6 +133,7 @@ const ResourceUsageComponent = (props) => {
                       list={list}
                       criteria={criteria}
                       isLoading={list.isLoading}
+                      deviceTypeClick={toggleDeviceTypeFilter}
                     ></ResourceUsageList>
                   </div>
                 )}

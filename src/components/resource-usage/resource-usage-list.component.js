@@ -16,7 +16,10 @@ const ResourceUsageList = (props) => {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell style={{ textAlign: "center" }}>
-            <ShowDeviceIcon type={props.criteria.type}></ShowDeviceIcon>
+            <ShowDeviceIcon
+              type={props.criteria.type}
+              clickHandler={props.deviceTypeClick}
+            ></ShowDeviceIcon>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
           <Table.HeaderCell>NAME</Table.HeaderCell>
