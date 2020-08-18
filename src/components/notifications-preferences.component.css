@@ -12,16 +12,15 @@
   margin-top: 0px !important;
 }
 
-#error-message-wrapper {
+#error-message-wrapper, #success-message-wrapper {
   margin-left: auto;
   margin-right: auto;
 }
 
-.error-message {
+.error-message, .success-message {
   max-width: 100%;
   margin-top: 50px;
 }
-
 
 .status-column {
   width: 120px;

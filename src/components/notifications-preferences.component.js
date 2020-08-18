@@ -22,7 +22,8 @@ class NotificationsPreferencesComponent extends React.Component {
         hasError: false,
         preferences: {},
         newEmail: '',
-        newPhone: ''
+        newPhone: '',
+        showMessage: false
       }
 
       this.colors = AlertUtil.getColorsMap();
@@ -101,8 +102,8 @@ class NotificationsPreferencesComponent extends React.Component {
         this.setState({ isSaving: true});
         this.props.notificationStore.savePreferences(this.state.preferences).then(
             () => {
-              this.setState({ isSaving: false});
-              this.props.history.push('/dashboard/notifications')
+              this.setState({ isSaving: false, showMessage: true });
+              //this.props.history.push('/dashboard/events_manager')
             }
           ).catch(err => {
             this.setState({ isSaving: false, hasError: true });
@@ -123,7 +124,7 @@ class NotificationsPreferencesComponent extends React.Component {
     }
 
     render() {
-        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex } = this.state;
+        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage } = this.state;
         const { risks, dataCollectors, destinations } = preferences;
         let emailItem = null, smsItem = null, pushItem;
         if(destinations) {
@@ -140,6 +141,9 @@ class NotificationsPreferencesComponent extends React.Component {
               </div>
               { hasError && (<div id="error-message-wrapper">
                 <Message error header='Oops!' content={'Something went wrong. Try again later.'} className="error-message"/>
+              </div>) }
+              { showMessage && (<div id="success-message-wrapper" onClick= {() => this.setState({showMessage: false})} >
+                <Message success header='Done!' content={'Changes were saved, click to hide.'} className= "success-message"/>
               </div>) }
               {!hasError && isLoading && (
                 <LoaderComponent loadingMessage="Loading preferences..."/>
