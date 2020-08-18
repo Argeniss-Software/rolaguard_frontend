@@ -3,10 +3,6 @@ import AuthStore from "./auth.store";
 import API from "../util/api";
 
 class ResourceUssageStore {
-  @observable assets = [];
-  @observable assetsCount = null;
-  @observable pagesCount = null;
-
   getHeaders() {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
