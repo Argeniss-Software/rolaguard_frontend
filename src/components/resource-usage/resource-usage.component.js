@@ -153,6 +153,11 @@ const ResourceUsageComponent = (props) => {
       setList((oldList) => {
         response[0].data.assets.map((e) => {
           // preprocess data!
+          e.type =
+            e.type &&
+            !["gateway", "device"].includes(e.type.toLowerCase().trim())
+              ? "unknown"
+              : e.type.toLowerCase().trim();
           e.packets_down = {
             ...{
               total: "-",
