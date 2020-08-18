@@ -9,12 +9,11 @@ import Tag from "../utils/tags/tag.component";
 import InventoryDetailsModal from "./inventory.modal.component";
 import AssignTagsModal from "./inventory.assign-tags.modal.component";
 
-
 import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
-import InventoryIdComponent from "./inventory-id.component";
-
+import AssetIdComponent from "../utils/asset-id.component";
+import ShowDeviceIcon from "../utils/show-device-icon.component";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -222,25 +221,7 @@ class InventoryReviewComponent extends React.Component {
     return assetsPromise;
   }
 
-  showIcon(type) {
-    if (type && type.toLowerCase().trim() === 'device' && type.toLowerCase() !== 'unknown') {
-      return <i className="fas fa-microchip" />
-    }
-    if (type && type.toLowerCase().trim() === 'gateway' && type.toLowerCase() !== 'unknown') {
-      return <i className="fas fa-broadcast-tower" />
-    }
-    if (type && type.toLowerCase().trim() === 'unknown') {
-      return <i className="fas fa-question"/>;
-    }
-
-    return(
-      <div>
-          <i style={{verticalAlign: "middle"}} className="fas fa-broadcast-tower fa-xs" />/<i style= {{verticalAlign: "middle"}} className="fas fa-microchip fa-xs" />
-      </div>
-    );
-  }
-
-  toggleDeviceType(type){
+  toggleDeviceType(type) {
     const { criteria, pageSize } = this.state;
 
     /* null stands for both types */
@@ -282,19 +263,35 @@ class InventoryReviewComponent extends React.Component {
 
   showInventoryTable(){
     const {assetsCount, isLoadingTable, assets, criteria, selectAll} = this.state;
-    return(
-      <Table striped selectable className="animated fadeIn" basic="very" compact="very">
+    return (
+      <Table
+        striped
+        selectable
+        className="animated fadeIn"
+        basic="very"
+        compact="very"
+      >
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell collapsing>
               <Popup
-              trigger = {<Checkbox checked={selectAll} onChange={(e) => this.toggleSelection(e)}/>}
+                trigger={
+                  <Checkbox
+                    checked={selectAll}
+                    onChange={(e) => this.toggleSelection(e)}
+                  />
+                }
               >
-                This checkbox will select all items listed on this page, it will not select items on other pages.
+                This checkbox will select all items listed on this page, it will
+                not select items on other pages.
               </Popup>
             </Table.HeaderCell>
-            <Table.HeaderCell style={{cursor: "pointer"}} onClick={() => this.toggleDeviceType(criteria.type)}collapsing>
-                {this.showIcon(criteria.type)}
+            <Table.HeaderCell
+              style={{ cursor: "pointer" }}
+              onClick={() => this.toggleDeviceType(criteria.type)}
+              collapsing
+            >              
+              <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
             <Table.HeaderCell>NAME</Table.HeaderCell>
@@ -305,40 +302,70 @@ class InventoryReviewComponent extends React.Component {
           </Table.Row>
         </Table.Header>
 
-        {assetsCount === 0 &&
+        {assetsCount === 0 && (
           <Table.Row>
-            <Table.Cell colSpan='100%'>
+            <Table.Cell colSpan="100%">
               <EmptyComponent emptyMessage="No assets found" />
             </Table.Cell>
           </Table.Row>
-        }
+        )}
 
-        {assetsCount > 0 &&
+        {assetsCount > 0 && (
           <Table.Body id="inventory-table">
-            {!isLoadingTable && assets && (
+            {!isLoadingTable &&
+              assets &&
               assets.map((item, index) => {
                 return (
-                  <Table.Row key={index}  style={{cursor: 'pointer'}}>
+                  <Table.Row key={index} style={{ cursor: "pointer" }}>
                     <Table.Cell>
-                      <Checkbox checked={item.selected} onChange={(event) => this.toggleSingleSelect(item, index, event)}/>
+                      <Checkbox
+                        checked={item.selected}
+                        onChange={(event) =>
+                          this.toggleSingleSelect(item, index, event)
+                        }
+                      />
                     </Table.Cell>
-                    <Table.Cell style={{textAlign:"center"}} onClick={() => this.showAssetDetails(index)}>{this.showIcon(item.type)}</Table.Cell>
-                    <Table.Cell className="id-cell upper"  onClick={() => this.showAssetDetails(index)}>
-                      <InventoryIdComponent type={item.type} id={item.hex_id}/>
+                    <Table.Cell
+                      style={{ textAlign: "center" }}
+                      onClick={() => this.showAssetDetails(index)}
+                      >                      
+                      <ShowDeviceIcon type={(item.type && !["gateway", "device"].includes(item.type.toLowerCase().trim())) ? "unknown" : item.type}></ShowDeviceIcon>
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.name}</Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.vendor}</Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.application}</Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>{item.data_collector}</Table.Cell>
+                    <Table.Cell
+                      className="id-cell upper"
+                      onClick={() => this.showAssetDetails(index)}
+                    >
+                      <AssetIdComponent type={item.type} id={item.hex_id} />
+                    </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                        {item.tags.map( (tag) => {return(<Tag key={tag.id} name={tag.name} color={tag.color} textColor="#FFFFFF"/>)})}
+                      {item.name}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.vendor}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.application}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.data_collector}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.tags.map((tag) => {
+                        return (
+                          <Tag
+                            key={tag.id}
+                            name={tag.name}
+                            color={tag.color}
+                            textColor="#FFFFFF"
+                          />
+                        );
+                      })}
                     </Table.Cell>
                   </Table.Row>
                 );
-              })
-            )}
+              })}
           </Table.Body>
-        }
+        )}
       </Table>
     );
   }

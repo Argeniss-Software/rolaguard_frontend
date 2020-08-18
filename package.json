@@ -16,11 +16,13 @@
     "react-datepicker": "^1.8.0",
     "react-dom": "^16.9.0",
     "react-moment": "^0.8.2",
+    "react-number-format": "^4.4.1",
     "react-recaptcha-google": "^1.1.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.0",
     "react-semantic-toasts": "^0.6.3",
     "react-semantic-ui": "^0.2.0",
+    "react-wifi-indicator": "^1.0.1",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "^1.2.0",
     "socket.io-client": "2.2.0"

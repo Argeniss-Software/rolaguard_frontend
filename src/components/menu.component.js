@@ -80,8 +80,21 @@ class MenuComponent extends React.Component {
                   }
                   style={popupStyle}
                   content="Inventory"
+                /> 
+
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("resources-usage", "/dashboard/resources_usage") }} className={this.state.activeItem === "resources-usage" ? "active" : ""}>
+                      <i className="fas fa-chart-line"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Resources Usage</span>)}
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Resources Usage"
                 />
+
                 <h3></h3>
+
                 <Popup
                   trigger={
                     <a onClick={() => { this.selectedItem("events_manager", "/dashboard/events_manager")}} className={this.state.activeItem === "events_manager" ? "active" : ""}>
