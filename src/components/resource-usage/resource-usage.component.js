@@ -31,34 +31,6 @@ const clearFilters = () => {
   //this.loadAssetsAndCounts();
 };
 
-const handlePaginationChange = (e, { activePage }) => {
-  // this.setState({ activePage, isLoading: true });
-  // const { criteria, pageSize, selectedAlert } = this.state;
-  //
-  // const assetsPromise = this.props.inventoryAssetsStore.getAssets(
-  // { page: activePage, size: pageSize },
-  // criteria
-  // );
-  //
-  // Promise.all([assetsPromise]).then((response) => {
-  // this.setState({
-  // selectAll: false,
-  // assets: response[0].data.assets,
-  // assetsCount: response[0].data.total_items,
-  // pagesCount: response[0].data.total_pages,
-  // isLoading: false,
-  // });
-  // });
-  //
-  // return assetsPromise;
-
-  //debugger;
-  //console.log(e);
-  //this.setActivePage(()=> {activePage});
-  //    setCurrentPage(activePage)
-  // total_items: 92;
-  // total_pages: 5;
-};
 
 //******************************************************* */
 
@@ -75,24 +47,37 @@ const ResourceUsageComponent = (props) => {
 
   const [list, setList] = useState({
     isLoading: false,
-    data: [] // resourceUssageStore.getDummyData(),
+    data: [], // resourceUssageStore.getDummyData(),
   });
-  
-  useEffect(() => {
+
+  const handlePaginationChange = (e, { activePage }) => {
+    setList((oldData)=>{
+      return {...oldData, ...{isLoading: true}}
+    })
+    getDataFromApi(activePage);
+    setList((oldData) => {
+      return { ...oldData, ...{ isLoading: false } };
+    });
+  };
+
+  const getDataFromApi = (activePage, pageSize, criteria) => {
     const assetsPromise = resourceUssageStore.getAssets(
       { page: activePage, size: pageSize },
       criteria
     );
     Promise.all([assetsPromise]).then((response) => {
-
       setTotalList(() => response[0].data.total_items);
       setTotalPages(() => response[0].data.total_pages);
       setList((oldList) => {
-        return { ...oldList, ...(resourceUssageStore.formatApiData(response[0].data.assets)) };
+        return {
+          ...oldList,
+          ...resourceUssageStore.formatApiData(response[0].data.assets),
+        };
       });
-
     });
-  }, []); // only execute when change second parameter
+  }
+
+  useEffect(() => {getDataFromApi();}, []); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -151,7 +136,6 @@ const ResourceUsageComponent = (props) => {
                 {!list.isLoading && totalPages > 1 && (
                   <Grid className="segment centered">
                     <Pagination
-                      className=""
                       activePage={activePage}
                       onPageChange={handlePaginationChange}
                       totalPages={totalPages}
