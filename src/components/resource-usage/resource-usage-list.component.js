@@ -101,7 +101,7 @@ const ResourceUsageList = (props) => {
                     <Grid>
                       <Grid.Row style={{ padding: "0px" }}>
                         <Grid.Column width={8} textAlign="right">
-                          {item.type.toLowerCase().trim() == "device" && (
+                          {item.type.toLowerCase().trim() === "device" && (
                             <WifiIndicator
                               strength={DBMToSignalStrength(item.max_rssi)}
                               style={{

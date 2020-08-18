@@ -54,7 +54,7 @@ const ShowMessagesSummary = (props) => {
       >
         <Popup.Header>Messages on the last 24 hours</Popup.Header>
         <Popup.Content>
-          <div class="eight wide column">
+          <div className="eight wide column">
             <div>
               <Icon
                 color="green"
@@ -119,7 +119,7 @@ const ShowMessagesSummary = (props) => {
               </strong>
             </div>)}
           </div>
-          <div class="eight wide column">
+          <div className="eight wide column">
             <div className="empty-container">
               <h1 className="empty-message">
                 <i className="fas fa-info-circle" />
