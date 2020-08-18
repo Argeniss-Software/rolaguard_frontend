@@ -32,17 +32,22 @@ const ShowMessagesSummary = (props) => {
                 suffix={"%"}
                 decimalScale="1"
               />
-            </strong>{" "}
-            /
-            <Icon color="grey" name="exclamation triangle" type="icon" />
-            <strong>
-              <NumberFormat
-                value={props.packets_lost.percentage}
-                displayType={"text"}
-                suffix={"%"}
-                decimalScale="1"
-              />
             </strong>
+            {props.type == "device" && (
+              <React.Fragment>
+                {" "}
+                /
+                <Icon color="grey" name="exclamation triangle" type="icon" />
+                <strong>
+                  <NumberFormat
+                    value={props.packets_lost.percentage}
+                    displayType={"text"}
+                    suffix={"%"}
+                    decimalScale="1"
+                  />
+                </strong>
+              </React.Fragment>
+            )}
           </span>
         }
         position="bottom left"
@@ -94,6 +99,7 @@ const ShowMessagesSummary = (props) => {
                 )
               </strong>
             </div>
+            {props.type == "device" && (
             <div>
               <Icon color="grey" name="exclamation triangle" type="icon" />
               Lost:
@@ -111,7 +117,7 @@ const ShowMessagesSummary = (props) => {
                 />
                 )
               </strong>
-            </div>
+            </div>)}
           </div>
           <div class="eight wide column">
             <div className="empty-container">
