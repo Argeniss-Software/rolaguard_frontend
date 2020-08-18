@@ -6,6 +6,7 @@
 */
 
 import React from "react";
+import "./show-device-icon.component.css";
 
 function ShowDeviceIcon(props) {
   
@@ -23,8 +24,9 @@ function ShowDeviceIcon(props) {
     return <i className="fas fa-question" title={gatewayTitle} />;
   } else {
     return (
-      <span>
-        <i className="fas fa-broadcast-tower" title={gatewayTitle} />/
+      <span class="pointer">
+        <i className="fas fa-broadcast-tower" title={gatewayTitle} />
+        /
         <i className="fas fa-microchip" title={deviceTitle} />
       </span>
     );
