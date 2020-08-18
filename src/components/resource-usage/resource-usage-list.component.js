@@ -15,7 +15,7 @@ const ResourceUsageList = (props) => {
     <Table striped className="animated fadeIn" basic="very" compact="very">
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>
+          <Table.HeaderCell style={{ textAlign: "center" }}>
             <ShowDeviceIcon type={props.criteria.type}></ShowDeviceIcon>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
@@ -24,15 +24,15 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell>
             MESSAGES <i>(R/S/L)</i>
           </Table.HeaderCell>
-          <Table.HeaderCell>PERIOD</Table.HeaderCell>
-          <Table.HeaderCell>
+          <Table.HeaderCell style={{ textAlign: "center" }}>
+            PERIOD
+          </Table.HeaderCell>
+          <Table.HeaderCell style={{ textAlign: "center" }}>
             <Icon color="blue" name="wifi" type="icon" />
             SIGNAL STRENGTH
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-
-      
 
       {props.list.data.length === 0 && (
         <Table.Body>
@@ -51,9 +51,7 @@ const ResourceUsageList = (props) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
-                    <ShowDeviceIcon
-                      type={item.type}
-                    ></ShowDeviceIcon>
+                    <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
                     <AssetIdComponent type={item.type} id={item.hex_id} />
