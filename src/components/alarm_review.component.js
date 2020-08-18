@@ -514,12 +514,18 @@ class AlarmReviewComponent extends React.Component {
                   <span className="range-select" onClick={() => this.updateRange('DAY')}>Clear</span>
                 </div>
                 {!this.state.isLoading &&
-                  <Table className="animated fadeIn" basic="very" compact="very" sortable>
+                  <Table  
+                  striped
+                  selectable
+                  className="animated fadeIn"
+                  basic="very"
+                  compact="very">
                     <Table.Header>
                       <Table.Row>
                         <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                         <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>IMPORTANCE</Table.HeaderCell>
                         <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
                         <Table.HeaderCell collapsing sorted={orderBy[0] === 'created_at' ? (orderBy[1] === 'ASC' ? 'ascending' : 'descending') : null} onClick={ () => this.handleSort('created_at')}>
                           DATE

@@ -40,6 +40,9 @@ class AlertListComponent extends React.Component {
                   <Label horizontal style={{backgroundColor: this.colorsMap[ alert_types[alert.type].risk ], color: 'white', borderWidth: 1, borderColor: this.colorsMap[ alert_types[alert.type].risk ], width: '100px'}}>{alert_types[alert.type].risk}</Label>
                 </Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>
+                  <Label horizontal style={{backgroundColor: this.colorsMap[alert.asset_importance], color: 'white', borderWidth: 1, borderColor: this.colorsMap[alert.asset_importance], width: '100px'}}>{alert.asset_importance}</Label>
+                </Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}>
                   {alert_types[alert.type].name}
                 </Table.Cell>
                 <Table.Cell singleLine onClick={() => showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}</Table.Cell>
