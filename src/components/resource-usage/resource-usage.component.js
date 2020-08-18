@@ -52,8 +52,8 @@ const handlePaginationChange = (e, { activePage }) => {
   //
   // return assetsPromise;
 
-  debugger;
-  console.log(e);
+  //debugger;
+  //console.log(e);
   //this.setActivePage(()=> {activePage});
   //    setCurrentPage(activePage)
   // total_items: 92;
@@ -75,7 +75,7 @@ const ResourceUsageComponent = (props) => {
 
   const [list, setList] = useState({
     isLoading: false,
-    data: resourceUssageStore.getDummyData(),
+    data: [] // resourceUssageStore.getDummyData(),
   });
   
   useEffect(() => {
@@ -84,11 +84,13 @@ const ResourceUsageComponent = (props) => {
       criteria
     );
     Promise.all([assetsPromise]).then((response) => {
+
       setTotalList(() => response[0].data.total_items);
       setTotalPages(() => response[0].data.total_pages);
       setList((oldList) => {
         return { ...oldList, ...(resourceUssageStore.formatApiData(response[0].data.assets)) };
       });
+
     });
   }, []); // only execute when change second parameter
 
