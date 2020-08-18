@@ -419,12 +419,19 @@ class DashboardComponent extends React.Component {
                     <div className="table-container-box">
                       <h3>LATEST UNRESOLVED ALERTS</h3 >
                       <Loader active={this.state.topAlertsLoading === true} />
-                      {!this.state.topAlertsLoading && <Table className="animated fadeIn" basic="very" compact="very">
+                      {!this.state.topAlertsLoading &&
+                      <Table
+                      striped
+                      selectable
+                      className="animated fadeIn"
+                      basic="very"
+                      compact="very">
                         <Table.Header>
                           <Table.Row>
                             <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                             <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                            <Table.HeaderCell collapsing>IMPORTANCE</Table.HeaderCell>
                             <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                             <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                             <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
