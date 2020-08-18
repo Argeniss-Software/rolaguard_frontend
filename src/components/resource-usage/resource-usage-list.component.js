@@ -1,6 +1,5 @@
 import * as React from "react";
-//import { observer } from "mobx-react";
-import { Icon, Table, Progress, Label, Popup } from "semantic-ui-react";
+import { Icon, Table, Popup, Grid } from "semantic-ui-react";
 
 import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
@@ -105,16 +104,18 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
                   <Table.Cell style={{ padding: "0px" }}>
-                    <div class="aligned pull-right">
-                      {item.type.toLowerCase().trim() == "device" && (
-                        <WifiIndicator
-                          strength={DBMToSignalStrength(item.max_rssi)}
-                          style={{
-                            height: 20,
-                            verticalAlign: "bottom",
-                          }}
-                        />
-                        /*<Progress
+                    <Grid style={{ marginTop: "0px" }}>
+                      <Grid.Row style={{ padding: "0px" }}>
+                        <Grid.Column width={8} textAlign="right">
+                          {item.type.toLowerCase().trim() == "device" && (
+                            <WifiIndicator
+                              strength={DBMToSignalStrength(item.max_rssi)}
+                              style={{
+                                height: 20,
+                                verticalAlign: "bottom",
+                              }}
+                            />
+                            /*<Progress
                         size="medium"
                         color="green"
                         value={item.signal_strength}
@@ -122,16 +123,20 @@ const ResourceUsageList = (props) => {
                         active
                         progress="percent"
                       ></Progress>*/
-                      )}
-                      <strong style={{ marginLeft: "5px" }}>
-                        <NumberFormat
-                          value={item.max_rssi}
-                          displayType={"text"}
-                          suffix={" dBm"}
-                          decimalScale="1"
-                        />
-                      </strong>
-                    </div>
+                          )}
+                        </Grid.Column>
+                        <Grid.Column width={8} textAlign="left">
+                          <strong style={{ marginLeft: "5px" }}>
+                            <NumberFormat
+                              value={item.max_rssi}
+                              displayType={"text"}
+                              suffix={" dBm"}
+                              decimalScale="1"
+                            />
+                          </strong>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
                   </Table.Cell>
                 </Table.Row>
               );
