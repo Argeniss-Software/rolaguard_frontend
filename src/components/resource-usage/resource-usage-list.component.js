@@ -34,7 +34,7 @@ const ResourceUsageList = (props) => {
         </Table.Row>
       </Table.Header>
 
-      {props.list.data.length === 0 && (
+      {props.list.data.length === 0 && !props.isLoading && (
         <Table.Body>
           <Table.Row>
             <Table.Cell colSpan="100%">

@@ -43,7 +43,7 @@ const ResourceUsageComponent = (props) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const [list, setList] = useState({
-    isLoading: false,
+    isLoading: true,
     data: [], // resourceUssageStore.getDummyData(),
   });
 
@@ -60,6 +60,9 @@ const ResourceUsageComponent = (props) => {
   };
 
   const getDataFromApi = (activePage, criteria) => {
+    setList((oldData) => {
+      return { ...oldData, ...{ isLoading: true } };
+    });
     const assetsPromise = resourceUssageStore.getAssets(
       { page: activePage, size: pageSize },
       criteria
@@ -73,6 +76,9 @@ const ResourceUsageComponent = (props) => {
           ...resourceUssageStore.formatApiData(response[0].data.assets),
         };
       });
+    });
+    setList((oldData) => {
+      return { ...oldData, ...{ isLoading: false } };
     });
   }
 
@@ -122,6 +128,7 @@ const ResourceUsageComponent = (props) => {
                     <ResourceUsageList
                       list={list}
                       criteria={criteria}
+                      isLoading={list.isLoading}
                     ></ResourceUsageList>
                   </div>
                 )}
