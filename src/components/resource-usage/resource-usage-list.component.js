@@ -12,7 +12,7 @@ import NumberFormat from "react-number-format";
 import moment from "moment";
 
 const ResourceUsageList = (props) => {
-  return (    
+  return (
     <Table striped className="animated fadeIn" basic="very" compact="very">
       <Table.Header>
         <Table.Row>
@@ -33,7 +33,9 @@ const ResourceUsageList = (props) => {
         </Table.Row>
       </Table.Header>
 
-      {props.list.count === 0 && (
+      
+
+      {props.list.data.length === 0 && (
         <Table.Body>
           <Table.Row>
             <Table.Cell colSpan="100%">
@@ -42,15 +44,13 @@ const ResourceUsageList = (props) => {
           </Table.Row>
         </Table.Body>
       )}
-
-      {props.list.count > 0 && (
+      {props.list.data.length > 0 && (
         <Table.Body>
           {!props.list.isLoading &&
             props.list.data &&
             props.list.data.map((item, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  {console.log(item)}
                   <Table.Cell style={{ textAlign: "center" }}>
                     <ShowDeviceIcon
                       type={
