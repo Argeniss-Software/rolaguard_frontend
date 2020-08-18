@@ -31,9 +31,6 @@ const clearFilters = () => {
   //this.loadAssetsAndCounts();
 };
 
-
-//******************************************************* */
-
 const ResourceUsageComponent = (props) => {
   const { resourceUssageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
@@ -50,17 +47,19 @@ const ResourceUsageComponent = (props) => {
     data: [], // resourceUssageStore.getDummyData(),
   });
 
+  
   const handlePaginationChange = (e, { activePage }) => {
     setList((oldData)=>{
       return {...oldData, ...{isLoading: true}}
     })
+    setActivePage(activePage);
     getDataFromApi(activePage);
     setList((oldData) => {
       return { ...oldData, ...{ isLoading: false } };
     });
   };
 
-  const getDataFromApi = (activePage, pageSize, criteria) => {
+  const getDataFromApi = (activePage, criteria) => {
     const assetsPromise = resourceUssageStore.getAssets(
       { page: activePage, size: pageSize },
       criteria
