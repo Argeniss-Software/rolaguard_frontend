@@ -24,7 +24,7 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell>
             MESSAGES <i>(R/S/L)</i>
           </Table.HeaderCell>
-          <Table.HeaderCell>FREQUENCY</Table.HeaderCell>
+          <Table.HeaderCell>PERIOD</Table.HeaderCell>
           <Table.HeaderCell>
             <Icon color="blue" name="wifi" type="icon" />
             SIGNAL STRENGTH
@@ -52,14 +52,7 @@ const ResourceUsageList = (props) => {
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
                     <ShowDeviceIcon
-                      type={
-                        item.type &&
-                        !["gateway", "device"].includes(
-                          item.type.toLowerCase().trim()
-                        )
-                          ? "unknown"
-                          : item.type
-                      }
+                      type={item.type}
                     ></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
@@ -86,13 +79,14 @@ const ResourceUsageList = (props) => {
                   </Table.Cell>
                   <Table.Cell>
                     <ShowMessagesSummary
+                      type={item.type}
                       packets_down={item.packets_down}
                       packets_lost={item.packets_lost}
                       packets_up={item.packets_up}
                     ></ShowMessagesSummary>
                   </Table.Cell>
                   <Table.Cell
-                    title="frequency between packages"
+                    title="Time between packages"
                     className="aligned pull-right"
                   >
                     <NumberFormat
@@ -104,7 +98,7 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
                   <Table.Cell style={{ padding: "0px" }}>
-                    <Grid style={{ marginTop: "0px" }}>
+                    <Grid>
                       <Grid.Row style={{ padding: "0px" }}>
                         <Grid.Column width={8} textAlign="right">
                           {item.type.toLowerCase().trim() == "device" && (
