@@ -3,7 +3,7 @@ import { Icon, Table, Popup, Grid } from "semantic-ui-react";
 
 import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
-import ShowDeviceState from "./show-device-state.component";
+import ShowDeviceState from "../utils/show-device-state.component";
 import ShowMessagesSummary from "./show-message-summary.component";
 import EmptyComponent from "../utils/empty.component";
 import WifiIndicator, { DBMToSignalStrength } from "react-wifi-indicator";
