@@ -1,5 +1,5 @@
 import React, {useState, useEffect } from "react";
-import { inject, observer } from "mobx-react";
+import { MobXProviderContext } from "mobx-react";
 
 import {
   Segment,
@@ -9,6 +9,7 @@ import {
 import LoaderComponent from "../utils/loader.component";
 
 import "./resource-usage.component.css";
+import ResourceUssageGraph from "./resource-usage.graph.component";
 import ResourceUsageList from "./resource-usage-list.component";
 
 //******************************************************* */
@@ -35,44 +36,51 @@ const clearFilters = () => {
 };
 
 const handlePaginationChange = (e, { activePage }) => {
-    this.setState({ activePage, isLoading: true });
-    const { criteria, pageSize, selectedAlert } = this.state;
-
-    const assetsPromise = this.props.inventoryAssetsStore.getAssets(
-      { page: activePage, size: pageSize },
-      criteria
-    );
-
-    Promise.all([assetsPromise]).then((response) => {
-      this.setState({
-        selectAll: false,
-        assets: response[0].data.assets,
-        assetsCount: response[0].data.total_items,
-        pagesCount: response[0].data.total_pages,
-        isLoading: false,
-      });
-    });
-
-    return assetsPromise;
+    // this.setState({ activePage, isLoading: true });
+    // const { criteria, pageSize, selectedAlert } = this.state;
+// 
+    // const assetsPromise = this.props.inventoryAssetsStore.getAssets(
+      // { page: activePage, size: pageSize },
+      // criteria
+    // );
+// 
+    // Promise.all([assetsPromise]).then((response) => {
+      // this.setState({
+        // selectAll: false,
+        // assets: response[0].data.assets,
+        // assetsCount: response[0].data.total_items,
+        // pagesCount: response[0].data.total_pages,
+        // isLoading: false,
+      // });
+    // });
+// 
+    // return assetsPromise;
+    
+    debugger;
+    console.log(e);
+    //this.setActivePage(()=> {activePage});
+//    setCurrentPage(activePage)
+    // total_items: 92;
+    // total_pages: 5;
   };
 
 //******************************************************* */
 
 const ResourceUsageComponent = (props) => {
-        const [showFilters, setShowFilters] = React.useState(true);
-        const [criteria, setCriteria] = React.useState({
+  
+        const { resourceUssageStore } = React.useContext(MobXProviderContext);
+        const [showFilters, setShowFilters] = useState(true);
+        const [criteria, setCriteria] = useState({
           type: null,
         });
+        const [activePage, setActivePage] = useState(1);
+        const [pageSize, setPageSize] = useState(20);
+        const [totalList, setTotalList] = useState(0);
+        const [totalPages, setTotalPages] = useState(0);
 
-        const [loading, setLoading] = React.useState(false);
-        const [currentPage, setCurrentPage] = React.useState(1);
-        const [perPage, setPerPage] = React.useState(20);
-
-        const [list, setList] = React.useState({
-          activePage: 1,
-          pagesCount: 1,
+        const [list, setList] = useState({          
           isLoading: false,
-          count: 2,
+
           data: [
             {
               hex_id: "FFFFFFFFFF",
@@ -104,12 +112,13 @@ const ResourceUsageComponent = (props) => {
         });
 
         useEffect(() => {
-          const assetsPromise = props.resourceUssageStore.getAssets(
-            {}, //page: activePage, size: pageSize
+          const assetsPromise = resourceUssageStore.getAssets(
+            { page: activePage, size: pageSize },
             criteria
           );
          Promise.all([assetsPromise]).then((response) => {
-           console.log(response[0].data.assets);
+           setTotalList(() => response[0].data.total_items);
+           setTotalPages(() => response[0].data.total_pages);
            setList((oldList) => {
              response[0].data.assets.map(e => { // preprocess data!
                e.packets_down = {...{total:'-', per_minute:'-', per_hour:'-',per_day:'-',percentage:'-'}, ...e.packets_down}
@@ -126,7 +135,7 @@ const ResourceUsageComponent = (props) => {
           <div className="app-body-container-view">
             <div className="animated fadeIn animation-view">
               <div className="view-header">
-                <h1 className="mb0">RESOURCES USAGE</h1>                
+                <h1 className="mb0">RESOURCES USAGE</h1>
                 <div className="view-header-actions">
                   {!showFilters && (
                     <div onClick={() => setShowFilters(true)}>
@@ -145,76 +154,7 @@ const ResourceUsageComponent = (props) => {
                   )}
                 </div>
               </div>
-              {showFilters && (
-                <Segment>
-                  <Grid className="animated fadeIn">
-                    <Grid.Row
-                      id="visualization-container"
-                      className="data-container pl pr"
-                    >
-                      <Grid.Column
-                        className="data-container-box pl0 pr0"
-                        mobile={16}
-                        tablet={8}
-                        computer={4}
-                      >
-                        <div className="box-data">
-                          <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
-                          <i
-                            style={{ color: "gray", align: "middle" }}
-                            className="fas fa-exclamation fa-4x"
-                          ></i>
-                        </div>
-                      </Grid.Column>
-
-                      <Grid.Column
-                        className="data-container-box pl0 pr0"
-                        mobile={16}
-                        tablet={8}
-                        computer={4}
-                      >
-                        <div className="box-data">
-                          <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
-                          <i
-                            style={{ color: "gray", align: "middle" }}
-                            className="fas fa-exclamation fa-4x"
-                          ></i>
-                        </div>
-                      </Grid.Column>
-
-                      <Grid.Column
-                        className="data-container-box pl0 pr0"
-                        mobile={16}
-                        tablet={8}
-                        computer={4}
-                      >
-                        <div className="box-data">
-                          <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
-                          <i
-                            style={{ color: "gray", align: "middle" }}
-                            className="fas fa-exclamation fa-4x"
-                          ></i>
-                        </div>
-                      </Grid.Column>
-
-                      <Grid.Column
-                        className="data-container-box pl0 pr0"
-                        mobile={16}
-                        tablet={8}
-                        computer={4}
-                      >
-                        <div className="box-data">
-                          <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
-                          <i
-                            style={{ color: "gray", align: "middle" }}
-                            className="fas fa-exclamation fa-4x"
-                          ></i>
-                        </div>
-                      </Grid.Column>
-                    </Grid.Row>
-                  </Grid>
-                </Segment>
-              )}
+              {showFilters && <ResourceUssageGraph />}
               <div className="view-body">
                 <div className="table-container">
                   <div className="table-container-box">
@@ -233,10 +173,12 @@ const ResourceUsageComponent = (props) => {
                         </div>
                       )}
                       {!list.isLoading && (
-                        <ResourceUsageList
-                          list={list}
-                          criteria={criteria}
-                        ></ResourceUsageList>
+                        <div>                          
+                          <ResourceUsageList
+                            list={list}
+                            criteria={criteria}
+                          ></ResourceUsageList>
+                        </div>
                       )}
 
                       {list.isLoading && (
@@ -245,13 +187,13 @@ const ResourceUsageComponent = (props) => {
                           style={{ marginBottom: 20 }}
                         />
                       )}
-                      {!list.isLoading && list.pagesCount > 1 && (
+                      {!list.isLoading && totalPages > 1 && (
                         <Grid className="segment centered">
                           <Pagination
                             className=""
-                            activePage={list.activePage}
+                            activePage={activePage}
                             onPageChange={handlePaginationChange}
-                            totalPages={list.pagesCount}
+                            totalPages={totalPages}
                           />
                         </Grid>
                       )}
@@ -263,4 +205,4 @@ const ResourceUsageComponent = (props) => {
           </div>
         );
       };
-export default inject("resourceUssageStore")(ResourceUsageComponent);
+export default ResourceUsageComponent;
