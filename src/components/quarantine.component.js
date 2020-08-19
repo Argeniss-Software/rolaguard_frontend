@@ -5,6 +5,7 @@ import "./quarantine.component.css";
 import AlertUtil from '../util/alert-util';
 import "./quarantine.component.css";
 import Pie from "./visualizations/Pie";
+import ImportanceLabel from "./utils/importance-label.component.js"
 
 import Moment from "react-moment";
 
@@ -366,12 +367,19 @@ class QuarantineComponent extends React.Component {
                     </Grid>
                   )}
                   {quarantineCount > 0 && (
-                    <Table className="animated fadeIn" basic="very" compact="very">
+                    <Table
+                    striped
+                    selectable
+                    className="animated fadeIn"
+                    basic="very"
+                    compact="very"
+                    >
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>IMPORTANCE</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
@@ -394,6 +402,7 @@ class QuarantineComponent extends React.Component {
                                     {item.alert_type.risk}
                                   </Label>
                                 </Table.Cell>
+                                <Table.Cell> <ImportanceLabel importance={item.alert.asset_importance} /> </Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert_type.name}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.last_checked}</Moment>}</Table.Cell>
