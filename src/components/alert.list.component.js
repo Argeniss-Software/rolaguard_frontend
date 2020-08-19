@@ -40,7 +40,7 @@ class AlertListComponent extends React.Component {
                 <Table.Cell onClick={() => showAlertDetails(index)}>
                   <Label horizontal style={{backgroundColor: this.colorsMap[ alert_types[alert.type].risk ], color: 'white', borderWidth: 1, borderColor: this.colorsMap[ alert_types[alert.type].risk ], width: '100px'}}>{alert_types[alert.type].risk}</Label>
                 </Table.Cell>
-                <Table.Cell> <ImportanceLabel importance={alert.asset_importance} /> </Table.Cell>
+                <Table.Cell onClick={() => showAlertDetails(index)}> <ImportanceLabel importance={alert.asset_importance} /> </Table.Cell>
                 <Table.Cell onClick={() => showAlertDetails(index)}>
                   {alert_types[alert.type].name}
                 </Table.Cell>

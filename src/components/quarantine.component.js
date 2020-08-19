@@ -402,7 +402,7 @@ class QuarantineComponent extends React.Component {
                                     {item.alert_type.risk}
                                   </Label>
                                 </Table.Cell>
-                                <Table.Cell> <ImportanceLabel importance={item.alert.asset_importance} /> </Table.Cell>
+                                <Table.Cell onClick={() => this.showAlertDetails(index)}> <ImportanceLabel importance={item.alert.asset_importance} /> </Table.Cell>
                                 <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert_type.name}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
                                 <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.last_checked}</Moment>}</Table.Cell>
