@@ -18,8 +18,6 @@ const ResourceUsageList = (props) => {
     <Table striped className="animated fadeIn" basic="very" compact="very">
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell collapsing></Table.HeaderCell>
-
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
             <ShowDeviceIcon
               type={props.criteria.type}
@@ -71,8 +69,6 @@ const ResourceUsageList = (props) => {
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
                     <ShowDeviceState state={item.connected} />
-                  </Table.Cell>
-                  <Table.Cell style={{ textAlign: "center" }}>
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
