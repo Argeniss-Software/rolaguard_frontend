@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { Accordion , Modal, Icon, Button, Segment, Grid, Table, Divider} from "semantic-ui-react";
-import { withRouter } from 'react-router-dom';
+import { Modal, Button, Grid, Table, Divider} from "semantic-ui-react";
 
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
 import TagSelector from "../utils/tags/tag.selector.component";
 import LoaderComponent from "../utils/loader.component";
 import ItemDetailsIcon from "./inventory.modal.icon.component";
+import ImportanceLabel from "../utils/importance-label.component"
 
 @inject("tagsStore")
 @observer
@@ -127,6 +127,26 @@ class InventoryDetailsModal extends Component {
     });
   }
 
+  ModalTitle = (props) => {
+    /*
+    * porps:
+    *   type: string, ["gateway", "device"]
+    *   hex_id: string, device id
+    *   name: string, device name (optional)
+    */
+
+    return (
+      <div style={{display: "inline-block", verticalAlign: "middle", marginRight: "20px"}}>
+        {(props.name && props.name.toUpperCase()) ||
+          (props.hex_id.toUpperCase() &&
+            props.type &&
+            `${props.type.toUpperCase()}: ${props.hex_id.toUpperCase()}`) ||
+          (props.type && props.type.toUpperCase())}
+      </div>
+    );
+
+  }
+
   render() {
     const { modalOpen, activeIndex } = this.state;
     const { index, itemType, isFirst, isLast } = this.props.selectedItem;
@@ -138,11 +158,15 @@ class InventoryDetailsModal extends Component {
         closeOnEscape={true}
         closeOnDimmerClick={false}
         open={modalOpen}
-        onClose={this.handleClose}>
+        onClose={this.handleClose}
+      >
         <Modal.Header>
-          {(item.name && item.name.toUpperCase()) || (item.hex_id && item.type && `${item.type.toUpperCase()}: ${item.hex_id}`) || (item.type && item.type.toUpperCase())}
-          <div style={{float:"right"}}>
-            {this.props.onNavigate &&
+          <span style={{marginLeft: "10px", verticalAling: "middle"}}>
+            <this.ModalTitle name={item.name} type={item.type} hex_id={item.hex_id} />
+            <ImportanceLabel importance={item.importance}/>
+          </span>
+          <div style={{ display: "inline-block", float: "right" }}>
+            {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
                 floated={"left"}
@@ -150,32 +174,36 @@ class InventoryDetailsModal extends Component {
                 onClick={() => this.handlePrev()}
                 content="Previous"
               />
-            }
+            )}
 
-            {this.props.onNavigate &&
+            {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
                 floated={"left"}
-                disabled={isLast|| this.props.loading}
+                disabled={isLast || this.props.loading}
                 onClick={() => this.handleNext()}
                 content="Next"
               />
-            }
+            )}
           </div>
         </Modal.Header>
         <Modal.Content id="modal-content">
-          {!this.props.loading &&
+          {!this.props.loading && (
             <Grid divided id="modal-content-grid">
               <Grid.Row>
                 <Grid.Column width={5} className="modal-content-grid">
-                    <ItemDetailsIcon item={item} />
-                    <strong>Geolocation:</strong>
-                    {this.showGeolocation(item.location)}
-                  </Grid.Column>
+                  <ItemDetailsIcon item={item} />
+                  <strong>Geolocation:</strong>
+                  {this.showGeolocation(item.location)}
+                </Grid.Column>
                 <Grid.Column width={10}>
                   <Grid.Row className="modal-content-grid">
                     <strong>Tags: </strong>
-                    {this.showTags(item.tags)} <TagSelector alreadyAssignTags={item.tags} onSelection={this.hanldleTagSelected} />
+                    {this.showTags(item.tags)}{" "}
+                    <TagSelector
+                      alreadyAssignTags={item.tags}
+                      onSelection={this.hanldleTagSelected}
+                    />
                   </Grid.Row>
                   <Divider />
                   <Grid.Row className="modal-content-grid">
@@ -191,20 +219,20 @@ class InventoryDetailsModal extends Component {
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-          }
-          {this.props.loading &&
-            <LoaderComponent loadingMessage="Loading details ..." style={{marginBottom: 20}}/>  
-          }
+          )}
+          {this.props.loading && (
+            <LoaderComponent
+              loadingMessage="Loading details ..."
+              style={{ marginBottom: 20 }}
+            />
+          )}
         </Modal.Content>
         <Modal.Actions>
-          <Button
-            onClick={() => this.handleClose()}
-            content="Close"
-          />
+          <Button onClick={() => this.handleClose()} content="Close" />
         </Modal.Actions>
       </Modal>
     );
   }
 }
 
-export default withRouter(InventoryDetailsModal);
+export default InventoryDetailsModal;

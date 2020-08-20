@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Modal, Button, Message } from "semantic-ui-react";
+import { Modal, Button, Message, Divider } from "semantic-ui-react";
 
 import "./inventory.assign-tags.modal.component.css"
 
@@ -34,12 +34,12 @@ const AssignTagsModal = (props) => {
 
   const handleTagRemoval = (tag) => {
     setTagsToAssign((tags) => tags.filter((t) => tag.id !== t.id));
-    setSendDisabled((tagsToAssign.length > 0) && props.assets.some((item) => item.selected))
+    setSendDisabled(!tagsToAssign && props.assets.some((item) => item.selected));
   }
 
   const handleTagSelected = (tag) => {
     setTagsToAssign((tags) => [...tags, tag]);
-    setSendDisabled((tagsToAssign.length > 0) && props.assets.some((item) => item.selected))
+    setSendDisabled(!tagsToAssign && props.assets.some((item) => item.selected));
   }
 
   const handleAssign = () => {
@@ -82,7 +82,7 @@ const AssignTagsModal = (props) => {
         }
 
         <strong>Tags to assign: </strong><ShowTags tags={tagsToAssign}/> <TagSelector alreadyAssignTags={tagsToAssign} onSelection={handleTagSelected} />
-        
+        <Divider/>
         <p><strong>Devices affected:</strong></p>
         <div className="table-wrapper">
           <DevicesTable assets={props.assets} />

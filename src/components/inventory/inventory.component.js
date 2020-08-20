@@ -8,12 +8,15 @@ import Tag from "../utils/tags/tag.component";
 //import Bubble from "../visualizations/Bubble";
 import InventoryDetailsModal from "./inventory.modal.component";
 import AssignTagsModal from "./inventory.assign-tags.modal.component";
+import SetImportanceModal from "./inventory.set-importance.modal.component";
 
 import "./inventory.component.css";
 import LoaderComponent from "../utils/loader.component";
 import EmptyComponent from "../utils/empty.component";
 import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
+import ShowDeviceState from "../utils/show-device-state.component";
+import ImportanceLabel from "../utils/importance-label.component";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -37,6 +40,7 @@ class InventoryReviewComponent extends React.Component {
       selectedAsset: null,
       showFilters: true,
       assignTags: false,
+      setImportance: false,
       criteria: {
         type: null,
         vendors: [],
@@ -295,6 +299,7 @@ class InventoryReviewComponent extends React.Component {
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
             <Table.HeaderCell>NAME</Table.HeaderCell>
+            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
@@ -335,10 +340,13 @@ class InventoryReviewComponent extends React.Component {
                       className="id-cell upper"
                       onClick={() => this.showAssetDetails(index)}
                     >
-                      <AssetIdComponent type={item.type} id={item.hex_id} />
+                      <ShowDeviceState state={item.connected} /> <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.name}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.vendor}
@@ -375,7 +383,7 @@ class InventoryReviewComponent extends React.Component {
     return(
       <React.Fragment>
         <Button 
-          onClick={() => alert("Work in progress")}
+          onClick={() => this.setState({setImportance: true})}
           disabled={!assets.some((asset) => asset.selected)}
         >
           SET IMPORTANCE
@@ -424,61 +432,82 @@ class InventoryReviewComponent extends React.Component {
       selectedAsset,
       selectAll,
       assignTags,
+      setImportance,
     } = this.state;
 
     return (
       <div className="app-body-container-view">
-      <div className="animated fadeIn animation-view">
-        <div className="view-header">
-          <h1 className="mb0">INVENTORY</h1>
-          <div className="view-header-actions">
-            {!showFilters &&
-              <div onClick={() => this.setState({showFilters: true})}>
-                <i className="fas fa-eye" />
-                <span>SHOW SEARCH AND CHARTS</span>
-              </div>
-            }
-            {showFilters &&
-              <div onClick={() => this.setState({showFilters: false})} style={{color: 'gray'}}>
-                <i className="fas fa-eye-slash" />
-                <span>HIDE SEARCH AND CHARTS</span>
-              </div>
-            }
+        <div className="animated fadeIn animation-view">
+          <div className="view-header">
+            <h1 className="mb0">INVENTORY</h1>
+            <div className="view-header-actions">
+              {!showFilters && (
+                <div onClick={() => this.setState({ showFilters: true })}>
+                  <i className="fas fa-eye" />
+                  <span>SHOW SEARCH AND CHARTS</span>
+                </div>
+              )}
+              {showFilters && (
+                <div
+                  onClick={() => this.setState({ showFilters: false })}
+                  style={{ color: "gray" }}
+                >
+                  <i className="fas fa-eye-slash" />
+                  <span>HIDE SEARCH AND CHARTS</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-        {showFilters && 
-          <Segment>
-            <Grid className="animated fadeIn">
+          {showFilters && (
+            <Segment>
+              <Grid className="animated fadeIn">
+                <Grid.Row
+                  id="visualization-container"
+                  className="data-container pl pr"
+                >
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      <h5 className="visualization-title">BY VENDOR</h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      <Pie
+                        isLoading={this.state.isGraphsLoading}
+                        data={byVendorsViz}
+                        type={"byVendorsViz"}
+                        handler={this.handleItemSelected}
+                      />
+                    </div>
+                  </Grid.Column>
 
-              <Grid.Row id="visualization-container" className="data-container pl pr">
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY VENDOR</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Pie 
-                      isLoading={this.state.isGraphsLoading}
-                      data={byVendorsViz}
-                      type={'byVendorsViz'}
-                      handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      <h5 className="visualization-title">BY DATA SOURCE</h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      <Pie
+                        isLoading={this.state.isGraphsLoading}
+                        data={byDataCollectorsViz}
+                        type={"byDataCollectorsViz"}
+                        handler={this.handleItemSelected}
+                      />
+                    </div>
+                  </Grid.Column>
 
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY DATA SOURCE</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Pie
-                      isLoading={this.state.isGraphsLoading}
-                      data={byDataCollectorsViz}
-                      type={'byDataCollectorsViz'}
-                      handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
-
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-               {/* <div className="box-data">
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    {/* <div className="box-data">
                          <BarChart
                           isLoading={this.state.isGraphsLoading}
                           data={this.state.byTagsViz.map((tag) => tag.)}
@@ -486,7 +515,7 @@ class InventoryReviewComponent extends React.Component {
                           barsCount={this.state.barsCount}
                           range={this.state.range}
                         /> */}
-                        {/* <Loader active={this.state.alertsCountLoading === true} />
+                    {/* <Loader active={this.state.alertsCountLoading === true} />
                         <div className="box-data-legend">
                           <i className="fas fa-exclamation-circle" />
                           <div>
@@ -500,14 +529,22 @@ class InventoryReviewComponent extends React.Component {
                         </div>
                       </div> */}
 
-                  <div className="box-data">
-                      <h5 style={{color: "gray"}}>WORK IN PROGRESS</h5>
-                      <i style={{color: "gray", aling: "middle"}} className="fas fa-exclamation fa-4x"></i>
+                    <div className="box-data">
+                      <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
+                      <i
+                        style={{ color: "gray", aling: "middle" }}
+                        className="fas fa-exclamation fa-4x"
+                      ></i>
                     </div>
-                </Grid.Column>
+                  </Grid.Column>
 
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  {/*tagsFeatureFlag &&  
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    {/*tagsFeatureFlag &&  
                     <div className="box-data"> 
                       <h5 className="visualization-title">TAGS</h5>
                       <Loader active={this.state.isGraphsLoading === true} />
@@ -518,46 +555,91 @@ class InventoryReviewComponent extends React.Component {
                       handler={this.handleItemSelected} />
                     </div>
                   */}
-                  <div className="box-data">
-                    <h5 style={{color: "gray"}}>WORK IN PROGRESS</h5>
-                    <i style={{color: "gray", aling: "middle"}} className="fas fa-exclamation fa-4x"></i>
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Segment>}
-            <div className="view-body">
-              <div className="table-container">
-                <div className="table-container-box">
-                  <Segment>
-                    <div className="header-table-container">
-                      <div className={showFilters? "box-data filters-container" : "hide "}>
-                        {this.showFilters()}
-                      </div>
-                      <div className="actions-buttons-container">
-                        {this.showActionsButtons()}
-                      </div>
+                    <div className="box-data">
+                      <h5 style={{ color: "gray" }}>WORK IN PROGRESS</h5>
+                      <i
+                        style={{ color: "gray", aling: "middle" }}
+                        className="fas fa-exclamation fa-4x"
+                      ></i>
                     </div>
-                    {/* Show inventory table */}
-                    {!this.isLoading && this.showInventoryTable()}
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Segment>
+          )}
+          <div className="view-body">
+            <div className="table-container">
+              <div className="table-container-box">
+                <Segment>
+                  <div className="header-table-container">
+                    <div
+                      className={
+                        showFilters ? "box-data filters-container" : "hide "
+                      }
+                    >
+                      {this.showFilters()}
+                    </div>
+                    <div className="actions-buttons-container">
+                      {this.showActionsButtons()}
+                    </div>
+                  </div>
+                  {/* Show inventory table */}
+                  {!this.isLoading && this.showInventoryTable()}
 
-                    {this.state.isLoadingTable && (
-                      <LoaderComponent loadingMessage="Loading inventory ..." style={{marginBottom: 20, height:"320px"}}/>
-                    )}
-                    {!this.state.isLoadingTable && pagesCount > 1 && (
-                      <Grid className="segment centered">
-                        <Pagination className="" activePage={activePage} onPageChange={this.handlePaginationChange} totalPages={pagesCount} />
-                      </Grid>
-                    )}
-                  </Segment>
+                  {this.state.isLoadingTable && (
+                    <LoaderComponent
+                      loadingMessage="Loading inventory ..."
+                      style={{ marginBottom: 20, height: "320px" }}
+                    />
+                  )}
+                  {!this.state.isLoadingTable && pagesCount > 1 && (
+                    <Grid className="segment centered">
+                      <Pagination
+                        className=""
+                        activePage={activePage}
+                        onPageChange={this.handlePaginationChange}
+                        totalPages={pagesCount}
+                      />
+                    </Grid>
+                  )}
+                </Segment>
 
-                  {selectedAsset && <InventoryDetailsModal loading={this.state.isLoading} selectedItem={selectedAsset} assets={this.state.assets} onClose={this.closeInventoryDetails} onNavigate={this.goToAlert}/>}
-                  {assignTags && <AssignTagsModal open={assignTags} assets={assets} onClose={() => this.setState({assignTags: false})} onSuccess={() => {this.loadAssetsAndCounts(); this.setState({assignTags: false});}}/>}
-                </div>
+                {selectedAsset && (
+                  <InventoryDetailsModal
+                    loading={this.state.isLoading}
+                    selectedItem={selectedAsset}
+                    assets={this.state.assets}
+                    onClose={this.closeInventoryDetails}
+                    onNavigate={this.goToAlert}
+                  />
+                )}
+                {assignTags && (
+                  <AssignTagsModal
+                    open={assignTags}
+                    assets={assets}
+                    onClose={() => this.setState({ assignTags: false })}
+                    onSuccess={() => {
+                      this.loadAssetsAndCounts();
+                      this.setState({ assignTags: false });
+                    }}
+                  />
+                )}
+                {setImportance && (
+                  <SetImportanceModal
+                    open={setImportance}
+                    assets={assets}
+                    onClose={() => this.setState({ setImportance: false })}
+                    onSuccess={() => {
+                      this.loadAssetsAndCounts();
+                      this.setState({ setImportance: false });
+                    }}
+                  />
+                )}
               </div>
             </div>
-					</div>
+          </div>
         </div>
+      </div>
     );
   }
 
