@@ -38,7 +38,7 @@ const ResourceUsageComponent = (props) => {
     type: null
   });
   const [activePage, setActivePage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(50);
   const [totalList, setTotalList] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
