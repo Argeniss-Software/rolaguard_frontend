@@ -18,7 +18,7 @@ const SignalStrengthHelp = (props) => {
         <Table.Body>
           {SignalStrengthReferences().map((r) => {
             return (
-              <Table.Row>
+              <Table.Row key={r.value}>
                 <Table.Cell textAlign="left">
                   <Popup
                     basic
