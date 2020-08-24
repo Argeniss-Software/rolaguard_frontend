@@ -9,20 +9,28 @@ class ResourceUssageStore {
 
   @action getAssets(pagination, criteria) {
     const { page, size } = pagination || {};
-    const { vendors, gateways, dataCollectors, tags, type } = criteria || {};
-    this.assets = [];
-    
+    const { status, type, gateways } = criteria || {};
+
     const headers = this.getHeaders();
     const params = {
-      ...(vendors && { vendors: vendors }),
       ...(gateways && { gateway_ids: gateways }),
-      ...(dataCollectors && { data_collector_ids: dataCollectors }),
-      ...(tags && { tag_ids: tags }),
+      ...(status && { asset_status: status }),
       ...(type && { asset_type: type }),
       page,
       size,
     };
     return API.get(`resource_usage/list`, { headers, params });
+  }
+
+  
+  @action getAssetsCountStatus(criteria) {
+    const { status,type } = criteria || {};
+    const headers = this.getHeaders();
+    const params = {
+      ...(status && { asset_status: status }),
+      ...(type && { asset_type: type })
+    };
+    return API.get(`resource_usage/count/status`, { headers, params });
   }
 
   @action formatApiData(data) {
@@ -69,49 +77,46 @@ class ResourceUssageStore {
   @action getDummyDataForGraphs() {
     return {
       byType: {
-        types: [
-          { label: "Gateway", qty: 5 }, 
-          { label: "Device", qty: 95 }
-        ],
+        types: [{ label: "Gateway", qty: 5 }, { label: "Device", qty: 95 }],
         total: 100,
       },
       byStauts: {
         status: [
-          { label: "Connected", qty: 5  },
+          { label: "Connected", qty: 5 },
           { label: "Disconnected", qty: 95 },
         ],
         total: 100,
       },
       bySignalStrength: {
         signalStrengths: [
-          { qty: 17, text: "0 to -50 dBm", additionalText: "EXCELLENT"},
-          { qty: 17, text: "-50 to -75 dBm", additionalText: "GREAT"},
-          { qty: 17, text: "-75 to -100 dBm", additionalText: "OKAY"},
-          { qty: 17, text: "-100 to -110 dBm", additionalText: "WEAK"},
-          { qty: 17, text: "-110 to -120 dBm", additionalText: "UNUSABLE"},
-          { qty: 17, text: "-120 to -130 dBm", additionalText: "DISCONNECTED"}
+          { qty: 17, text: "0 to -50 dBm", additionalText: "EXCELLENT" },
+          { qty: 17, text: "-50 to -75 dBm", additionalText: "GREAT" },
+          { qty: 17, text: "-75 to -100 dBm", additionalText: "OKAY" },
+          { qty: 17, text: "-100 to -110 dBm", additionalText: "WEAK" },
+          { qty: 17, text: "-110 to -120 dBm", additionalText: "UNUSABLE" },
+          { qty: 17, text: "-120 to -130 dBm", additionalText: "DISCONNECTED" },
         ],
         total: 100,
       },
       byPacketLost: {
         packet_losts: [
-          { qty: 10, text: "between 0 and 10%"},
-          { qty: 60, text: "between 10 and 20%"}, 
-          { qty: 110, text: "between 20 and 30%"},
-          { qty: 160, text: "between 30 and 40%"},
-          { qty: 210, text: "between 40 and 50%"},
-          { qty: 260, text: "between 50 and 60%"},
-          { qty: 310, text: "between 60 and 70%"},
-          { qty: 360, text: "between 70 and 80%"},
-          { qty: 410, text: "between 80 and 90%"},
-          { qty: 460, text: "between 90 and 100%"}
+          { qty: 10, text: "between 0 and 10%" },
+          { qty: 60, text: "between 10 and 20%" },
+          { qty: 110, text: "between 20 and 30%" },
+          { qty: 160, text: "between 30 and 40%" },
+          { qty: 210, text: "between 40 and 50%" },
+          { qty: 260, text: "between 50 and 60%" },
+          { qty: 310, text: "between 60 and 70%" },
+          { qty: 360, text: "between 70 and 80%" },
+          { qty: 410, text: "between 80 and 90%" },
+          { qty: 460, text: "between 90 and 100%" },
         ],
-        total: 100
-      }
+        total: 100,
+      },
     };
   }
 
-  @action getDummyData(){
+  @action getDummyData() {
     let data = [
       {
         hex_id: "FFFFFFFFFF",
@@ -175,8 +180,8 @@ class ResourceUssageStore {
           percentage: 43.40979116740842,
         },
       },
-    ]; 
-    return data
+    ];
+    return data;
   }
   /*@action
   getAssets(pagination, criteria) {

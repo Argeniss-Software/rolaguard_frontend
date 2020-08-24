@@ -1,42 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { MobXProviderContext } from "mobx-react";
 
-import { Segment, Grid, Pagination } from "semantic-ui-react";
+import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 
 import "./resource-usage.component.css";
-import ResourceUssageGraph from "./resource-usage.graph.component";
+import ResourceUssageGraph from "./graphs/resource-usage.graph.component";
 import ResourceUsageList from "./resource-usage-list.component";
-
-//******************************************************* */
-const clearFilters = () => {
-  this.setState({
-    criteria: {
-      type: null,
-      vendors: [],
-      gateways: [],
-      dataCollectors: [],
-      tags: [],
-    },
-    byVendorsViz: [],
-    byGatewaysViz: [],
-    byDataCollectorsViz: [],
-    byTagsViz: [],
-    activePage: 1,
-    pageSize: 50,
-    isGraphsLoading: true,
-    isLoading: true,
-  });
-
-  //this.loadAssetsAndCounts();
-};
+import _ from 'lodash';
 
 const ResourceUsageComponent = (props) => {
   const { resourceUssageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
   const [criteria, setCriteria] = useState({
-    type: null
-  });
+    type: null, // device or gateway
+    status: null // connected or disconnected
+  })
   const [activePage, setActivePage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
   const [totalList, setTotalList] = useState(0);
@@ -47,8 +26,40 @@ const ResourceUsageComponent = (props) => {
     data: [], // resourceUssageStore.getDummyData(),
   });
 
+  const clearFilters = () => { // clean all criteria filtering
+    setCriteria({})
+  }
 
-  const toggleDeviceTypeFilter = () => {
+  const deleteFilter = (k,v) => { // delete specific filter applied from criteria
+    setCriteria((oldCriteria) => {
+      let newCriteria = delete oldCriteria[k];
+      return {...oldCriteria, ...newCriteria}
+    })
+  }
+
+  const showAppliedFilters = () => { // show filters applied on filter list
+    let labels = [];
+    for (const [key, value] of Object.entries(criteria)) {
+      if (!_.isEmpty(value)) {
+        labels.push(
+          <Label
+            as="a"
+            key={key}
+            className="text-uppercase"
+            onClick={() => {
+              deleteFilter(key, value)
+            }}
+          >
+            {key}: <strong>{value}</strong>
+            <Icon name="delete" />
+          </Label>
+        );
+      }
+    }
+    return labels;
+  };
+
+  const toggleDeviceTypeFilter = () => { // toggle column device by gateway/device/all
     const order = [null, "gateway", "device"];
     const nextType = order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
     const newCriteria = { type: nextType };
@@ -58,6 +69,12 @@ const ResourceUsageComponent = (props) => {
       return {...c, ...newCriteria}
     })
   }
+
+  const handleStatusFilter = (selectedStatus) => {
+    setCriteria((c) => {
+      return { ...c, ...{ status: selectedStatus } };
+    });
+  };
   
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
@@ -86,7 +103,7 @@ const ResourceUsageComponent = (props) => {
     });
   }
 
-  useEffect(() => {getDataFromApi();}, [activePage, criteria.type, pageSize]); // only execute when change second parameter
+  useEffect(() => {getDataFromApi();}, [activePage, criteria.type, criteria.status, pageSize]); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -111,7 +128,11 @@ const ResourceUsageComponent = (props) => {
             )}
           </div>
         </div>
-        {showFilters && <ResourceUssageGraph />}
+        {showFilters && (
+          <ResourceUssageGraph
+            statusFilterHandler={(p) => handleStatusFilter(p)}
+          />
+        )}
         <div className="view-body">
           <div className="table-container">
             <div className="table-container-box">
@@ -119,6 +140,7 @@ const ResourceUsageComponent = (props) => {
                 {showFilters && (
                   <div>
                     <label style={{ fontWeight: "bolder" }}>Filters: </label>
+                    {showAppliedFilters()}
                     <span
                       className="range-select"
                       onClick={() => clearFilters()}

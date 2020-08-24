@@ -1,25 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Segment, Grid, Loader } from "semantic-ui-react";
-import Pie from "../visualizations/Pie";
-import BarChart from "../visualizations/Bar";
+import Pie from "../../visualizations/Pie";
+import ResourceUsageGraphStatusComponent from "./resource-usage.graph.status.component";
 
 const ResourceUsageGraphComponent = (props) => { 
-  const statuses = [
-    {
-      label: "CONNECTED",
-      percentage: 0.1,
-      value: 50,
-      color: "#21ba45",
-    },
-    {
-      label: "DISCONNECTED",
-      selected: true,
-      percentage: 0.8,
-      value: 8,
-      color: "#db2828",
-    },
-  ];
-
   const types = [
     {
       label: "GATEWAY",
@@ -37,7 +21,6 @@ const ResourceUsageGraphComponent = (props) => {
     },
   ];
   //const storeDummyData=getDummyDataForGraphs();
-  
 
   return (
     <Segment>
@@ -49,9 +32,20 @@ const ResourceUsageGraphComponent = (props) => {
             tablet={8}
             computer={4}
           >
+            <ResourceUsageGraphStatusComponent
+              props={props}
+              statusFilterHandler={(p) => props.statusFilterHandler(p)}
+            ></ResourceUsageGraphStatusComponent>
+          </Grid.Column>
+          <Grid.Column
+            className="data-container-box pl0 pr0"
+            mobile={16}
+            tablet={8}
+            computer={4}
+          >
             <div className="box-data">
               <h5 className="visualization-title">BY TYPE</h5>
-              <Loader active={props.isGraphsLoading === true} />
+              <Loader active={props.isGraphsLoading || props.isStatusLoading} />
               {
                 <Pie
                   isLoading={props.isGraphsLoading}
@@ -69,37 +63,16 @@ const ResourceUsageGraphComponent = (props) => {
             computer={4}
           >
             <div className="box-data">
-              <h5 className="visualization-title">BY STATUS</h5>
-              <Loader active={props.isGraphsLoading || props.isStatusLoading} />
-              {
-                <Pie
-                  isLoading={props.isGraphsLoading}
-                  data={statuses}
-                  type={"types"}
-                  handler={props.handleItemSelected}
-                />
-              }
-            </div>
-          </Grid.Column>
-          <Grid.Column
-            className="data-container-box pl0 pr0"
-            mobile={16}
-            tablet={8}
-            computer={4}
-          >
-            <div className="box-data">
               <h5 className="visualization-title">BY SIGNAL STRENGTH</h5>
               <Loader active={props.isGraphsLoading === true} />
               Weak, Poor, Excellent, etc. HISTOGRAM
-              {
-               /* <BarChart
+              {/* <BarChart
                   isLoading={true}
                   data={this.state.alertsCountArray}
                   domain={this.state.visualizationXDomain}
                   barsCount={this.state.barsCount}
                   range={this.state.range}
-                />*/
-              }
+                />*/}
               {/*<Pie
                 isLoading={props.isGraphsLoading}
                 data={props.types}
