@@ -1,6 +1,8 @@
 import * as React from "react";
 import {Table} from "semantic-ui-react"
 
+import "./devices-affected-table.component.css"
+
 
 const DevicesTable = (props) => {
 
