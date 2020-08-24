@@ -134,14 +134,14 @@ class InventoryDetailsModal extends Component {
     *   hex_id: string, device id
     *   name: string, device name (optional)
     */
-
+    const { name, hex_id, type } = props;
     return (
       <div style={{display: "inline-block", verticalAlign: "middle", marginRight: "20px"}}>
-        {(props.name && props.name.toUpperCase()) ||
-          (props.hex_id.toUpperCase() &&
-            props.type &&
-            `${props.type.toUpperCase()}: ${props.hex_id.toUpperCase()}`) ||
-          (props.type && props.type.toUpperCase())}
+        {(name && name.toUpperCase()) ||
+          ( hex_id && hex_id.toUpperCase() &&
+            type &&
+            `${type.toUpperCase()}: ${hex_id.toUpperCase()}`) ||
+          (type && type.toUpperCase())}
       </div>
     );
 

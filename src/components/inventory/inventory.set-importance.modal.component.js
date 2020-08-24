@@ -8,7 +8,7 @@ import * as HttpStatus from "http-status-codes";
 import DevicesTable from "./inventory-utils/devices-affected-table.component";
 import ImportanceLabel from "../utils/importance-label.component";
 
-const SetImoprtanceModal = (props) => {
+const SetImportanceModal = (props) => {
   /*
     props:
       open: boolean
@@ -96,4 +96,4 @@ const SetImoprtanceModal = (props) => {
   );
 };
 
-export default SetImoprtanceModal;
+export default SetImportanceModal;
