@@ -10,8 +10,8 @@ import WifiIndicator from "react-wifi-indicator";
 import NumberFormat from "react-number-format";
 import moment from "moment";
 import SignalStrengthHelp from "../utils/wifi-signal-indicator/signal-strength-help.component";
-import DBMToSignalStrength from '../utils/wifi-signal-indicator/DBMToSignalStrength';
-import "./resource-usage.component.css"
+import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStrength";
+import "./resource-usage.component.css";
 
 const ResourceUsageList = (props) => {
   return (
@@ -50,7 +50,6 @@ const ResourceUsageList = (props) => {
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-
       {props.list.data.length === 0 && !props.isLoading && (
         <Table.Body>
           <Table.Row>

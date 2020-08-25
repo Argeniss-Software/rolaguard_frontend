@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 
 import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
@@ -12,10 +12,10 @@ import _ from 'lodash';
 const ResourceUsageComponent = (props) => {
   const { resourceUssageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
-  const [criteria, setCriteria] = useState({
+  /*const [criteria, setCriteria] = useState({
     type: null, // device or gateway
     status: null // connected or disconnected
-  })
+  })*/
   const [activePage, setActivePage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
   const [totalList, setTotalList] = useState(0);
@@ -25,21 +25,24 @@ const ResourceUsageComponent = (props) => {
     isLoading: true,
     data: [], // resourceUssageStore.getDummyData(),
   });
-
+  
   const clearFilters = () => { // clean all criteria filtering
-    setCriteria({})
+    resourceUssageStore.deleteCriteria()
   }
 
   const deleteFilter = (k,v) => { // delete specific filter applied from criteria
-    setCriteria((oldCriteria) => {
-      let newCriteria = delete oldCriteria[k];
-      return {...oldCriteria, ...newCriteria}
-    })
+    let criteriaToDelete={}
+    criteriaToDelete[k]=v
+    resourceUssageStore.deleteCriteria(criteriaToDelete);
+    /*resourceUssageStore.setCriteria(()=>{
+      let newCriteria = resourceUssageStore.deleteCriteria(k)
+      return { ...resourceUssageStore.getCriteria(), ...newCriteria };
+    })*/
   }
 
   const showAppliedFilters = () => { // show filters applied on filter list
     let labels = [];
-    for (const [key, value] of Object.entries(criteria)) {
+    for (const [key, value] of Object.entries(resourceUssageStore.getCriteria())) {
       if (!_.isEmpty(value)) {
         labels.push(
           <Label
@@ -65,14 +68,14 @@ const ResourceUsageComponent = (props) => {
     const newCriteria = { type: nextType };
     setActivePage(1);
     setDeviceTypeFilter(nextType);
-    setCriteria((c)=> {
-      return {...c, ...newCriteria}
+    resourceUssageStore.setCriteria(() => {
+      return { ...resourceUssageStore.getCriteria(), ...newCriteria };
     })
   }
 
   const handleStatusFilter = (selectedStatus) => {
-    setCriteria((c) => {
-      return { ...c, ...{ status: selectedStatus } };
+    resourceUssageStore.setCriteria(() => {
+      return { ...resourceUssageStore.getCriteria(), ...{ status: selectedStatus } };
     });
   };
   
@@ -86,7 +89,7 @@ const ResourceUsageComponent = (props) => {
     });
     const assetsPromise = resourceUssageStore.getAssets(
       { page: activePage, size: pageSize},
-      criteria
+      resourceUssageStore.getCriteria()
     );
     Promise.all([assetsPromise]).then((response) => {
       setTotalList(() => response[0].data.total_items);
@@ -102,8 +105,15 @@ const ResourceUsageComponent = (props) => {
       return { ...oldData, ...{ isLoading: false } };
     });
   }
-
-  useEffect(() => {getDataFromApi();}, [activePage, criteria.type, criteria.status, pageSize]); // only execute when change second parameter
+  
+  useEffect(() => {
+    getDataFromApi();
+  }, [
+    activePage,
+    resourceUssageStore.criteria.type,
+    resourceUssageStore.criteria.status,
+    pageSize,
+  ]); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -128,11 +138,7 @@ const ResourceUsageComponent = (props) => {
             )}
           </div>
         </div>
-        {showFilters && (
-          <ResourceUssageGraph
-            statusFilterHandler={(p) => handleStatusFilter(p)}
-          />
-        )}
+        {showFilters && <ResourceUssageGraph />}
         <div className="view-body">
           <div className="table-container">
             <div className="table-container-box">
@@ -149,15 +155,14 @@ const ResourceUsageComponent = (props) => {
                     </span>
                   </div>
                 )}
-                {!list.isLoading && (
-                  <div>
+
+                {!list.isLoading && (                    
                     <ResourceUsageList
                       list={list}
-                      criteria={criteria}
+                      criteria={resourceUssageStore.getCriteria()}
                       isLoading={list.isLoading}
                       deviceTypeClick={toggleDeviceTypeFilter}
                     ></ResourceUsageList>
-                  </div>
                 )}
 
                 {list.isLoading && (
@@ -183,4 +188,4 @@ const ResourceUsageComponent = (props) => {
     </div>
   );
 };
-export default ResourceUsageComponent;
+export default observer(ResourceUsageComponent);

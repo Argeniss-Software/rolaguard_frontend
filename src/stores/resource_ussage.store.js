@@ -1,8 +1,53 @@
 import { observable, action } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
+import _ from "lodash";
 
 class ResourceUssageStore {
+  @observable criteria = {
+    type: null, // device or gateway
+    status: null, // connected or disconnected
+  };
+
+  @observable statusGraph = {
+    // keep status of status graph
+    serieSelected: null,
+  };
+
+  @action getStatusGraphSerieSelected() {
+    return this.statusGraph.serieSelected;
+  }
+  @action setStatusGraphSerieSelected(data) {
+    this.statusGraph.serieSelected = data;
+  }
+
+  @action getCriteria() {
+    return this.criteria;
+  }
+  @action deleteCriteria(data) {
+    let deleteCriteria = {};
+    if (_.isEmpty(data)) {
+      this.setStatusGraphSerieSelected(null); // clean selected status element on status graph!
+      this.criteria = {
+        type: null, // device or gateway
+        status: null, // connected or disconnected
+      };
+    }
+    deleteCriteria[_.keys(data)[0]] = null; //todo: fix this for multiple values
+    if (_.keys(data)[0] === "status") {
+      this.setStatusGraphSerieSelected(null); // clean selected status element on status graph!
+    }
+
+    this.setCriteria(deleteCriteria);
+  }
+
+  @action setCriteria(data) {
+    this.criteria = {
+      ...this.criteria,
+      ...(_.isFunction(data) ? data.call() : data),
+    };
+  }
+
   getHeaders() {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
@@ -22,13 +67,12 @@ class ResourceUssageStore {
     return API.get(`resource_usage/list`, { headers, params });
   }
 
-  
   @action getAssetsCountStatus(criteria) {
-    const { status,type } = criteria || {};
+    const { status, type } = criteria || {};
     const headers = this.getHeaders();
     const params = {
-      ...(status && { asset_status: status }),
-      ...(type && { asset_type: type })
+      ...(status && { asset_status: this.criteria.status }),
+      ...(type && { asset_type: this.criteria.type }),
     };
     return API.get(`resource_usage/count/status`, { headers, params });
   }

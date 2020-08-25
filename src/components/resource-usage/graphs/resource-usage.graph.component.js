@@ -3,21 +3,20 @@ import { Segment, Grid, Loader } from "semantic-ui-react";
 import Pie from "../../visualizations/Pie";
 import ResourceUsageGraphStatusComponent from "./resource-usage.graph.status.component";
 
-const ResourceUsageGraphComponent = (props) => { 
+const ResourceUsageGraphComponent = (props) => {
   const types = [
     {
       label: "GATEWAY",
       percentage: 0.1,
       value: 50,
       color: "#103350",
-
     },
     {
       label: "DEVICES",
       selected: true,
       percentage: 0.8,
       value: 8,
-      color: "#1F77B4"
+      color: "#1F77B4",
     },
   ];
   //const storeDummyData=getDummyDataForGraphs();
@@ -34,7 +33,6 @@ const ResourceUsageGraphComponent = (props) => {
           >
             <ResourceUsageGraphStatusComponent
               props={props}
-              statusFilterHandler={(p) => props.statusFilterHandler(p)}
             ></ResourceUsageGraphStatusComponent>
           </Grid.Column>
           <Grid.Column
@@ -104,6 +102,6 @@ const ResourceUsageGraphComponent = (props) => {
       </Grid>
     </Segment>
   );
-}
+};
 
 export default ResourceUsageGraphComponent;
