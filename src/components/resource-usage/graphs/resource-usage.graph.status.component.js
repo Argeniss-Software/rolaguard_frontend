@@ -7,12 +7,12 @@ import _ from "lodash";
 const ResourceUsageGraphStatusComponent = (props) => {
   const [isLoading, setIsLoading] = useState(null);
 
-  const { resourceUssageStore } = React.useContext(MobXProviderContext);
+  const { resourceUsageStore } = React.useContext(MobXProviderContext);
   const [series, setSeries] = useState([]);
 
   const getDataFromApi = () => {
     setIsLoading(true);
-    const statusPromise = resourceUssageStore.getAssetsCountStatus();
+    const statusPromise = resourceUsageStore.getAssetsCountStatus();
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
@@ -21,12 +21,12 @@ const ResourceUsageGraphStatusComponent = (props) => {
           label: e.name.toUpperCase(),
           id: e.id,
           selected: !_.isEmpty(
-            resourceUssageStore.getStatusGraphSerieSelected()
+            resourceUsageStore.getStatusGraphSerieSelected()
           )
-            ? e.id === resourceUssageStore.getStatusGraphSerieSelected().id
+            ? e.id === resourceUsageStore.getStatusGraphSerieSelected().id
             : false,
           percentage: !_.isEmpty(
-            resourceUssageStore.getStatusGraphSerieSelected()
+            resourceUsageStore.getStatusGraphSerieSelected()
           )
             ? 1
             : total > 0
@@ -36,7 +36,7 @@ const ResourceUsageGraphStatusComponent = (props) => {
           color: index === 0 ? "#21ba45" : "#db2828",
         };
       });
-      if (!_.isEmpty(resourceUssageStore.getStatusGraphSerieSelected())) {
+      if (!_.isEmpty(resourceUsageStore.getStatusGraphSerieSelected())) {
         apiSeries = apiSeries.filter((item) => item.selected);
       }
       setSeries(apiSeries);
@@ -46,52 +46,41 @@ const ResourceUsageGraphStatusComponent = (props) => {
 
   const handleItemSelected = (array, selectedItem, type) => {
     if (
-      resourceUssageStore.getStatusGraphSerieSelected() &&
-      resourceUssageStore.getStatusGraphSerieSelected().id === selectedItem.id
+      resourceUsageStore.getStatusGraphSerieSelected() &&
+      resourceUsageStore.getStatusGraphSerieSelected().id === selectedItem.id
     ) {
-      resourceUssageStore.setStatusGraphSerieSelected({});
-      resourceUssageStore.setCriteria({ status: null });
+      resourceUsageStore.setStatusGraphSerieSelected({});
+      resourceUsageStore.setCriteria({ status: null });
       //props.statusFilterHandler()
     } else {
-      resourceUssageStore.setStatusGraphSerieSelected(selectedItem);
-      resourceUssageStore.setCriteria({ status: selectedItem.id });
+      resourceUsageStore.setStatusGraphSerieSelected(selectedItem);
+      resourceUsageStore.setCriteria({ status: selectedItem.id });
       //props.statusFilterHandler(selectedItem.id)
     }
   };
 
   useEffect(() => {
-    if (!_.isEmpty(resourceUssageStore.getStatusGraphSerieSelected())) {
+    if (!_.isEmpty(resourceUsageStore.getStatusGraphSerieSelected())) {
       setIsLoading(true);
       series.forEach((e) => {
         return (e.selected =
-          e.id === resourceUssageStore.getStatusGraphSerieSelected().id);
+          e.id === resourceUsageStore.getStatusGraphSerieSelected().id);
       });
     }
 
     setIsLoading(true);
-    /*if (_.isEmpty(resourceUssageStore.criteria.status)){
+    /*if (_.isEmpty(resourceUsageStore.criteria.status)){
             setStatusGraphSerieSelected({});
           }*/
     getDataFromApi();
   }, [
-    resourceUssageStore.statusGraph.serieSelected,
-    resourceUssageStore.criteria.status,
+    resourceUsageStore.statusGraph.serieSelected,
+    resourceUsageStore.criteria.status,
   ]); // only execute when change second parameter
 
   return (
     <div className="box-data">
-      <h5 className="visualization-title">BY STATUS</h5>
-      <div style={{ backgroundColor: "black", color: "white" }}>
-        serie: {JSON.stringify(series)}
-      </div>
-      <div style={{ backgroundColor: "black", color: "white" }}>
-        Serie selected:{" "}
-        {JSON.stringify(resourceUssageStore.getStatusGraphSerieSelected())}
-      </div>
-      <div style={{ backgroundColor: "black", color: "white" }}>
-        criteria:
-        {JSON.stringify(resourceUssageStore.criteria)}
-      </div>
+      <h5 className="visualization-title">BY STATUS</h5>      
       <Loader active={isLoading === true} />
       {
         <Pie

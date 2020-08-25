@@ -10,7 +10,7 @@ import ResourceUsageList from "./resource-usage-list.component";
 import _ from 'lodash';
 
 const ResourceUsageComponent = (props) => {
-  const { resourceUssageStore } = React.useContext(MobXProviderContext);
+  const { resourceUsageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
   /*const [criteria, setCriteria] = useState({
     type: null, // device or gateway
@@ -23,26 +23,26 @@ const ResourceUsageComponent = (props) => {
   const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
   const [list, setList] = useState({
     isLoading: true,
-    data: [], // resourceUssageStore.getDummyData(),
+    data: [], // resourceUsageStore.getDummyData(),
   });
   
   const clearFilters = () => { // clean all criteria filtering
-    resourceUssageStore.deleteCriteria()
+    resourceUsageStore.deleteCriteria()
   }
 
   const deleteFilter = (k,v) => { // delete specific filter applied from criteria
     let criteriaToDelete={}
     criteriaToDelete[k]=v
-    resourceUssageStore.deleteCriteria(criteriaToDelete);
-    /*resourceUssageStore.setCriteria(()=>{
-      let newCriteria = resourceUssageStore.deleteCriteria(k)
-      return { ...resourceUssageStore.getCriteria(), ...newCriteria };
+    resourceUsageStore.deleteCriteria(criteriaToDelete);
+    /*resourceUsageStore.setCriteria(()=>{
+      let newCriteria = resourceUsageStore.deleteCriteria(k)
+      return { ...resourceUsageStore.getCriteria(), ...newCriteria };
     })*/
   }
 
   const showAppliedFilters = () => { // show filters applied on filter list
     let labels = [];
-    for (const [key, value] of Object.entries(resourceUssageStore.getCriteria())) {
+    for (const [key, value] of Object.entries(resourceUsageStore.getCriteria())) {
       if (!_.isEmpty(value)) {
         labels.push(
           <Label
@@ -68,14 +68,14 @@ const ResourceUsageComponent = (props) => {
     const newCriteria = { type: nextType };
     setActivePage(1);
     setDeviceTypeFilter(nextType);
-    resourceUssageStore.setCriteria(() => {
-      return { ...resourceUssageStore.getCriteria(), ...newCriteria };
+    resourceUsageStore.setCriteria(() => {
+      return { ...resourceUsageStore.getCriteria(), ...newCriteria };
     })
   }
 
   const handleStatusFilter = (selectedStatus) => {
-    resourceUssageStore.setCriteria(() => {
-      return { ...resourceUssageStore.getCriteria(), ...{ status: selectedStatus } };
+    resourceUsageStore.setCriteria(() => {
+      return { ...resourceUsageStore.getCriteria(), ...{ status: selectedStatus } };
     });
   };
   
@@ -87,9 +87,9 @@ const ResourceUsageComponent = (props) => {
     setList((oldData) => {
       return { ...oldData, ...{ isLoading: true } };
     });
-    const assetsPromise = resourceUssageStore.getAssets(
+    const assetsPromise = resourceUsageStore.getAssets(
       { page: activePage, size: pageSize},
-      resourceUssageStore.getCriteria()
+      resourceUsageStore.getCriteria()
     );
     Promise.all([assetsPromise]).then((response) => {
       setTotalList(() => response[0].data.total_items);
@@ -97,7 +97,7 @@ const ResourceUsageComponent = (props) => {
       setList((oldList) => {
         return {
           ...oldList,
-          ...resourceUssageStore.formatApiData(response[0].data.assets),
+          ...resourceUsageStore.formatApiData(response[0].data.assets),
         };
       });
     });
@@ -110,8 +110,8 @@ const ResourceUsageComponent = (props) => {
     getDataFromApi();
   }, [
     activePage,
-    resourceUssageStore.criteria.type,
-    resourceUssageStore.criteria.status,
+    resourceUsageStore.criteria.type,
+    resourceUsageStore.criteria.status,
     pageSize,
   ]); // only execute when change second parameter
 
@@ -159,7 +159,7 @@ const ResourceUsageComponent = (props) => {
                 {!list.isLoading && (                    
                     <ResourceUsageList
                       list={list}
-                      criteria={resourceUssageStore.getCriteria()}
+                      criteria={resourceUsageStore.getCriteria()}
                       isLoading={list.isLoading}
                       deviceTypeClick={toggleDeviceTypeFilter}
                     ></ResourceUsageList>

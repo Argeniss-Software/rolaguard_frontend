@@ -63,7 +63,13 @@ const ResourceUsageGraphComponent = (props) => {
             <div className="box-data">
               <h5 className="visualization-title">BY SIGNAL STRENGTH</h5>
               <Loader active={props.isGraphsLoading === true} />
-              Weak, Poor, Excellent, etc. HISTOGRAM
+              <div>Histogram</div>
+              <ul>
+                <li>WEAK</li>
+                <li>POOR</li>
+                <li>OKAY</li>
+                <li>EXCELLENT</li>
+              </ul>
               {/* <BarChart
                   isLoading={true}
                   data={this.state.alertsCountArray}
@@ -88,8 +94,12 @@ const ResourceUsageGraphComponent = (props) => {
             <div className="box-data">
               <h5 className="visualization-title">BY PACKAGES LOST</h5>
               <Loader active={props.isGraphsLoading === true} />
-              (tipo histograma): - con pérdida del 10-20%, - con pérdida del
-              20-30%,ETC.
+              <div>Histogram</div>
+              <ul>
+                <li>with lost between 0% and 10%</li>
+                <li>with lost between 10% and 20%</li>
+                <li>etc</li>
+              </ul>
               {/*<Pie
                 isLoading={props.isGraphsLoading}
                 data={props.dataCollectors}

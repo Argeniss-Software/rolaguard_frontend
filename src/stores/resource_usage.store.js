@@ -3,7 +3,7 @@ import AuthStore from "./auth.store";
 import API from "../util/api";
 import _ from "lodash";
 
-class ResourceUssageStore {
+class ResourceUsageStore {
   @observable criteria = {
     type: null, // device or gateway
     status: null, // connected or disconnected
@@ -313,5 +313,5 @@ class ResourceUssageStore {
     return API.get(`inventory/count/tag`, { headers, params} );
   }*/
 }
-const store = new ResourceUssageStore();
+const store = new ResourceUsageStore();
 export default store;
