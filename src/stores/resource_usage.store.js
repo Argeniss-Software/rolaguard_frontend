@@ -5,40 +5,106 @@ import _ from "lodash";
 
 class ResourceUsageStore {
   @observable criteria = {
+    // kepp data related to criteria filtering on resource usage dashboard
     type: null, // device or gateway
     status: null, // connected or disconnected
+    gateways: [],
   };
-
+  /**********************************************************/
+  /**********************************************************/
   @observable statusGraph = {
-    // keep status of status graph
-    serieSelected: null,
+    // keep data related of status graph on resoruce usage dashbaord
+    seriesSelected: null,
+    isLoading: false,
   };
-
-  @action getStatusGraphSerieSelected() {
-    return this.statusGraph.serieSelected;
+  @action getStatusLoading() {
+    return this.statusGraph.isLoading;
   }
-  @action setStatusGraphSerieSelected(data) {
-    this.statusGraph.serieSelected = data;
+  @action setStatusLoading(val) {
+    this.statusGraph.isLoading = val;
   }
-
+  @action getStatusGraphSeriesSelected() {
+    return this.statusGraph.seriesSelected;
+  }
+  @action setStatusGraphSeriesSelected(data) {
+    this.statusGraph.seriesSelected = data;
+  }
+  /**********************************************************/
+  /**********************************************************/
+  @observable gatewaysGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+  };
+  @action getGatewaysLoading() {
+    return this.gatewaysGraph.isLoading;
+  }
+  @action setGatewaysLoading(val) {
+    this.gatewaysGraph.isLoading = val;
+  }
+  @action getGatewayGraphSeriesSelected() {
+    return this.gatewaysGraph.seriesSelected;
+  }
+  @action setGatewayGraphSeriesSelected(data) {
+    let elementFoundIndex = this.gatewaysGraph.seriesSelected.findIndex((e) => {
+      return e.id === data.id;
+    });
+    if (elementFoundIndex != -1) {
+      //remove filter
+      this.gatewaysGraph.seriesSelected.splice(elementFoundIndex, 1);
+      let foundCriteria = this.criteria.gateways.findIndex((e) => {
+        return e.id === data.id;
+      });
+      if (foundCriteria != -1) {
+        this.criteria.gateways.splice(foundCriteria, 1);
+      }
+    } else {
+      // add filter
+      this.gatewaysGraph.seriesSelected.push(data);
+      this.criteria.gateways.push(data);
+    }
+    //    this.gatewaysGraph.seriesSelected = {...this.gatewaysGraph.seriesSelected, ...data}
+  }
+  /**********************************************************/
+  /**********************************************************/
   @action getCriteria() {
     return this.criteria;
   }
+
   @action deleteCriteria(data) {
     let deleteCriteria = {};
+
     if (_.isEmpty(data)) {
-      this.setStatusGraphSerieSelected(null); // clean selected status element on status graph!
+      // clear all
+      this.setStatusGraphSeriesSelected(null); // clean selected status element on status graph!
+      this.setGatewayGraphSeriesSelected(null); // clean selected status element on status graph!
+
       this.criteria = {
         type: null, // device or gateway
         status: null, // connected or disconnected
+        gateway: [],
       };
+    } else {
+      let keyCriteriaToDelete = _.keys(data)[0];
+      switch (keyCriteriaToDelete) {
+        case "status":
+          this.setStatusGraphSeriesSelected(null); // clean selected status element on status graph!
+          this.criteria.status = null;
+          break;
+        case "types":
+          this.criteria.type = null;
+          break;
+        case "gateways":
+          this.setGatewayGraphSeriesSelected(data[keyCriteriaToDelete]);
+          let foundItemToDelete = this.criteria.gateways.findIndex(
+            (e) => e.id === data[keyCriteriaToDelete].id
+          );
+          if (foundItemToDelete != -1) {
+            this.criteria.gateway.slice(foundItemToDelete, 1);
+          }
+          break;
+      }
     }
-    deleteCriteria[_.keys(data)[0]] = null; //todo: fix this for multiple values
-    if (_.keys(data)[0] === "status") {
-      this.setStatusGraphSerieSelected(null); // clean selected status element on status graph!
-    }
-
-    this.setCriteria(deleteCriteria);
   }
 
   @action setCriteria(data) {
@@ -47,36 +113,53 @@ class ResourceUsageStore {
       ...(_.isFunction(data) ? data.call() : data),
     };
   }
-
+  /**********************************************************/
+  /**********************************************************/
   getHeaders() {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
   @action getAssets(pagination, criteria) {
     const { page, size } = pagination || {};
-    const { status, type, gateways } = criteria || {};
+    const { status, type, gateways } = this.criteria || {};
 
     const headers = this.getHeaders();
     const params = {
-      ...(gateways && { gateway_ids: gateways }),
-      ...(status && { asset_status: status }),
-      ...(type && { asset_type: type }),
+      ...(status && { asset_status: this.criteria.status }),
+      ...(type && { asset_type: this.criteria.type }),
+      ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
       page,
       size,
     };
     return API.get(`resource_usage/list`, { headers, params });
   }
 
+  // return resource usage global status (connected/disconnected)
   @action getAssetsCountStatus(criteria) {
-    const { status, type } = criteria || {};
+    const { status, type, gateways } = this.criteria || {};
     const headers = this.getHeaders();
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
+      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
     };
     return API.get(`resource_usage/count/status`, { headers, params });
   }
 
+  // return different gateways associated to resource usage
+  @action getAssetsCountGateways(criteria) {
+    const { status, type, gateways } = this.criteria || {};
+    const headers = this.getHeaders();
+    const params = {
+      ...(status && { asset_status: this.criteria.status }),
+      ...(type && { asset_type: this.criteria.type }),
+      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
+    };
+
+    return API.get(`resource_usage/count/gateway`, { headers, params });
+  }
+  /**********************************************************/
+  /**********************************************************/
   @action formatApiData(data) {
     data.map((e) => {
       // preprocess data!

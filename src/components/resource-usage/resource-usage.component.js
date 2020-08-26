@@ -7,15 +7,11 @@ import LoaderComponent from "../utils/loader.component";
 import "./resource-usage.component.css";
 import ResourceUssageGraph from "./graphs/resource-usage.graph.component";
 import ResourceUsageList from "./resource-usage-list.component";
-import _ from 'lodash';
+import _ from "lodash";
 
 const ResourceUsageComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
-  /*const [criteria, setCriteria] = useState({
-    type: null, // device or gateway
-    status: null // connected or disconnected
-  })*/
   const [activePage, setActivePage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
   const [totalList, setTotalList] = useState(0);
@@ -25,60 +21,90 @@ const ResourceUsageComponent = (props) => {
     isLoading: true,
     data: [], // resourceUsageStore.getDummyData(),
   });
-  
-  const clearFilters = () => { // clean all criteria filtering
-    resourceUsageStore.deleteCriteria()
-  }
 
-  const deleteFilter = (k,v) => { // delete specific filter applied from criteria
-    let criteriaToDelete={}
-    criteriaToDelete[k]=v
+  const clearFilters = () => {
+    // clean all criteria filtering
+    resourceUsageStore.deleteCriteria();
+  };
+
+  const deleteFilter = (k, v) => {
+    // delete specific filter applied from criteria
+    let criteriaToDelete = {};
+    criteriaToDelete[k] = v;
     resourceUsageStore.deleteCriteria(criteriaToDelete);
-    /*resourceUsageStore.setCriteria(()=>{
-      let newCriteria = resourceUsageStore.deleteCriteria(k)
-      return { ...resourceUsageStore.getCriteria(), ...newCriteria };
-    })*/
-  }
+  };
 
-  const showAppliedFilters = () => { // show filters applied on filter list
+  const showAppliedFilters = () => {
+    // show filters applied on filter list
     let labels = [];
-    for (const [key, value] of Object.entries(resourceUsageStore.getCriteria())) {
+    for (const [key, value] of Object.entries(
+      resourceUsageStore.getCriteria()
+    )) {
       if (!_.isEmpty(value)) {
-        labels.push(
-          <Label
-            as="a"
-            key={key}
-            className="text-uppercase"
-            onClick={() => {
-              deleteFilter(key, value)
-            }}
-          >
-            {key}: <strong>{value}</strong>
-            <Icon name="delete" />
-          </Label>
-        );
+        switch (key) {
+          case "status":
+          case "type":
+            labels.push(
+              <Label
+                as="a"
+                key={key}
+                className="text-uppercase"
+                onClick={() => {
+                  deleteFilter(key, value);
+                }}
+              >
+                {key}: <strong>{value}</strong>
+                <Icon name="delete" />
+              </Label>
+            );
+            break;
+          case "gateways":
+            value.forEach((gatewayInfo) => {
+              labels.push(
+                <Label
+                  as="a"
+                  key={gatewayInfo.label}
+                  className="text-uppercase"
+                  onClick={() => {
+                    deleteFilter(key, gatewayInfo);
+                  }}
+                >
+                  {key}: <strong>{gatewayInfo.label}</strong>
+                  <Icon name="delete" />
+                </Label>
+              );
+            });
+            break;
+        }
+        if (key === "status" || key === "type") {
+        }
       }
     }
     return labels;
   };
 
-  const toggleDeviceTypeFilter = () => { // toggle column device by gateway/device/all
+  const toggleDeviceTypeFilter = () => {
+    // toggle column device by gateway/device/all
     const order = [null, "gateway", "device"];
-    const nextType = order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
+    const nextType =
+      order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
     const newCriteria = { type: nextType };
     setActivePage(1);
     setDeviceTypeFilter(nextType);
     resourceUsageStore.setCriteria(() => {
       return { ...resourceUsageStore.getCriteria(), ...newCriteria };
-    })
-  }
+    });
+  };
 
   const handleStatusFilter = (selectedStatus) => {
     resourceUsageStore.setCriteria(() => {
-      return { ...resourceUsageStore.getCriteria(), ...{ status: selectedStatus } };
+      return {
+        ...resourceUsageStore.getCriteria(),
+        ...{ status: selectedStatus },
+      };
     });
   };
-  
+
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
   };
@@ -88,7 +114,7 @@ const ResourceUsageComponent = (props) => {
       return { ...oldData, ...{ isLoading: true } };
     });
     const assetsPromise = resourceUsageStore.getAssets(
-      { page: activePage, size: pageSize},
+      { page: activePage, size: pageSize },
       resourceUsageStore.getCriteria()
     );
     Promise.all([assetsPromise]).then((response) => {
@@ -104,16 +130,11 @@ const ResourceUsageComponent = (props) => {
     setList((oldData) => {
       return { ...oldData, ...{ isLoading: false } };
     });
-  }
-  
+  };
+
   useEffect(() => {
     getDataFromApi();
-  }, [
-    activePage,
-    resourceUsageStore.criteria.type,
-    resourceUsageStore.criteria.status,
-    pageSize,
-  ]); // only execute when change second parameter
+  }, [resourceUsageStore.criteria, activePage, pageSize]); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -156,13 +177,13 @@ const ResourceUsageComponent = (props) => {
                   </div>
                 )}
 
-                {!list.isLoading && (                    
-                    <ResourceUsageList
-                      list={list}
-                      criteria={resourceUsageStore.getCriteria()}
-                      isLoading={list.isLoading}
-                      deviceTypeClick={toggleDeviceTypeFilter}
-                    ></ResourceUsageList>
+                {!list.isLoading && (
+                  <ResourceUsageList
+                    list={list}
+                    criteria={resourceUsageStore.getCriteria()}
+                    isLoading={list.isLoading}
+                    deviceTypeClick={toggleDeviceTypeFilter}
+                  ></ResourceUsageList>
                 )}
 
                 {list.isLoading && (
