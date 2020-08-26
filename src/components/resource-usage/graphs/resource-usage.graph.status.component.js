@@ -5,13 +5,11 @@ import { MobXProviderContext, observer } from "mobx-react";
 import _ from "lodash";
 
 const ResourceUsageGraphStatusComponent = (props) => {
-  const [isLoading, setIsLoading] = useState(null);
-
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
   const [series, setSeries] = useState([]);
 
   const getDataFromApi = () => {
-    setIsLoading(true);
+    resourceUsageStore.setStatusLoading(true);
     const statusPromise = resourceUsageStore.getAssetsCountStatus();
 
     Promise.all([statusPromise]).then((response) => {
@@ -20,71 +18,62 @@ const ResourceUsageGraphStatusComponent = (props) => {
         return {
           label: e.name.toUpperCase(),
           id: e.id,
-          selected: !_.isEmpty(
-            resourceUsageStore.getStatusGraphSerieSelected()
-          )
-            ? e.id === resourceUsageStore.getStatusGraphSerieSelected().id
+          selected: !_.isEmpty(resourceUsageStore.getStatusGraphSeriesSelected())
+            ? e.id === resourceUsageStore.getStatusGraphSeriesSelected().id
             : false,
           percentage: !_.isEmpty(
-            resourceUsageStore.getStatusGraphSerieSelected()
+            resourceUsageStore.getStatusGraphSeriesSelected()
           )
             ? 1
             : total > 0
             ? e.count / total
             : e.count,
           value: e.count,
-          color: index === 0 ? "#21ba45" : "#db2828",
+          color: index === 0 ? "#21ba45" : "#F05050",
         };
       });
-      if (!_.isEmpty(resourceUsageStore.getStatusGraphSerieSelected())) {
+      if (!_.isEmpty(resourceUsageStore.getStatusGraphSeriesSelected())) {
         apiSeries = apiSeries.filter((item) => item.selected);
       }
       setSeries(apiSeries);
     });
-    setIsLoading(false);
+    resourceUsageStore.setStatusLoading(false);
   };
 
   const handleItemSelected = (array, selectedItem, type) => {
     if (
-      resourceUsageStore.getStatusGraphSerieSelected() &&
-      resourceUsageStore.getStatusGraphSerieSelected().id === selectedItem.id
+      resourceUsageStore.getStatusGraphSeriesSelected() &&
+      resourceUsageStore.getStatusGraphSeriesSelected().id === selectedItem.id
     ) {
-      resourceUsageStore.setStatusGraphSerieSelected({});
+      resourceUsageStore.setStatusGraphSeriesSelected({});
       resourceUsageStore.setCriteria({ status: null });
-      //props.statusFilterHandler()
     } else {
-      resourceUsageStore.setStatusGraphSerieSelected(selectedItem);
+      resourceUsageStore.setStatusGraphSeriesSelected(selectedItem);
       resourceUsageStore.setCriteria({ status: selectedItem.id });
-      //props.statusFilterHandler(selectedItem.id)
     }
   };
 
   useEffect(() => {
-    if (!_.isEmpty(resourceUsageStore.getStatusGraphSerieSelected())) {
-      setIsLoading(true);
+    if (!_.isEmpty(resourceUsageStore.getStatusGraphSeriesSelected())) {      
       series.forEach((e) => {
         return (e.selected =
-          e.id === resourceUsageStore.getStatusGraphSerieSelected().id);
+          e.id === resourceUsageStore.getStatusGraphSeriesSelected().id);
       });
     }
-
-    setIsLoading(true);
-    /*if (_.isEmpty(resourceUsageStore.criteria.status)){
-            setStatusGraphSerieSelected({});
-          }*/
     getDataFromApi();
   }, [
-    resourceUsageStore.statusGraph.serieSelected,
-    resourceUsageStore.criteria.status,
+    resourceUsageStore.statusGraph.seriesSelected,
+    resourceUsageStore.criteria,
   ]); // only execute when change second parameter
 
   return (
     <div className="box-data">
-      <h5 className="visualization-title">BY STATUS</h5>      
-      <Loader active={isLoading === true} />
+      <h5 className="visualization-title">BY STATUS</h5>
+      <Loader active={resourceUsageStore.getStatusLoading()} />
+
       {
         <Pie
-          isLoading={isLoading}
+          isLoading={resourceUsageStore.getStatusLoading()}
           data={series}
           type={"types"}
           handler={handleItemSelected}
