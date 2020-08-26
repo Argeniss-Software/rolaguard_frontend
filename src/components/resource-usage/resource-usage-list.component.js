@@ -6,35 +6,51 @@ import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ShowMessagesSummary from "./show-message-summary.component";
 import EmptyComponent from "../utils/empty.component";
-import WifiIndicator, { DBMToSignalStrength } from "react-wifi-indicator";
+import WifiIndicator from "react-wifi-indicator";
 import NumberFormat from "react-number-format";
 import moment from "moment";
+import SignalStrengthHelp from "../utils/wifi-signal-indicator/signal-strength-help.component";
+import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStrength";
+import "./resource-usage.component.css";
 
 const ResourceUsageList = (props) => {
   return (
     <Table striped className="animated fadeIn" basic="very" compact="very">
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>
-            <ShowDeviceIcon type={props.criteria.type}></ShowDeviceIcon>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <ShowDeviceIcon
+              type={props.criteria.type}
+              clickHandler={props.deviceTypeClick}
+            ></ShowDeviceIcon>
           </Table.HeaderCell>
+
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-          <Table.HeaderCell>NAME</Table.HeaderCell>
-          <Table.HeaderCell>LAST MESSAGE</Table.HeaderCell>
-          <Table.HeaderCell>
+          <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
+          <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
+          <Table.HeaderCell collapsing>
             MESSAGES <i>(R/S/L)</i>
           </Table.HeaderCell>
-          <Table.HeaderCell>PERIOD</Table.HeaderCell>
-          <Table.HeaderCell>
-            <Icon color="blue" name="wifi" type="icon" />
-            SIGNAL STRENGTH
+          <Table.HeaderCell collapsing>FREQUENCY</Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Popup
+              trigger={
+                <span style={{ cursor: "pointer" }}>
+                  <Icon color="blue" name="wifi" type="icon" />
+                  SIGNAL STRENGTH
+                </span>
+              }
+              basic
+            >
+              <Popup.Header>Signal strength references</Popup.Header>
+              <Popup.Content>
+                <SignalStrengthHelp></SignalStrengthHelp>
+              </Popup.Content>
+            </Popup>
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-
-      
-
-      {props.list.data.length === 0 && (
+      {props.list.data.length === 0 && !props.isLoading && (
         <Table.Body>
           <Table.Row>
             <Table.Cell colSpan="100%">
@@ -51,17 +67,13 @@ const ResourceUsageList = (props) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
-                    <ShowDeviceIcon
-                      type={item.type}
-                    ></ShowDeviceIcon>
+                    <ShowDeviceState state={item.connected} />
+                    <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
                     <AssetIdComponent type={item.type} id={item.hex_id} />
                   </Table.Cell>
-                  <Table.Cell>
-                    <ShowDeviceState state={item.connected} />
-                    {item.name}
-                  </Table.Cell>
+                  <Table.Cell>{item.name}</Table.Cell>
                   <Table.Cell>
                     <Popup
                       trigger={
@@ -77,7 +89,7 @@ const ResourceUsageList = (props) => {
                       </Popup.Content>
                     </Popup>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell width={3}>
                     <ShowMessagesSummary
                       type={item.type}
                       packets_down={item.packets_down}
@@ -86,40 +98,60 @@ const ResourceUsageList = (props) => {
                     ></ShowMessagesSummary>
                   </Table.Cell>
                   <Table.Cell
-                    title="Time between packages"
-                    className="aligned pull-right"
+                    className={`aligned pull-left ${
+                      item.connected ? "" : "lightgray"
+                    }`}
                   >
-                    <NumberFormat
-                      value={item.activity_freq}
-                      displayType={"text"}
-                      prefix={"every "}
-                      suffix={" s."}
-                      decimalScale="1"
-                    />
+                    {item.activity_freq !== null && (
+                      <Popup
+                        trigger={
+                          <span>
+                            {moment
+                              .duration(item.activity_freq || 0, "seconds")
+                              .humanize()}
+                          </span>
+                        }
+                        position="bottom left"
+                      >
+                        <Popup.Header>Frequency of messages</Popup.Header>
+                        <Popup.Content>
+                          <NumberFormat
+                            value={(item.activity_freq || 0).toFixed(1)}
+                            displayType={"text"}
+                            suffix={" s."}
+                            decimalScale="1"
+                          />
+                        </Popup.Content>
+                      </Popup>
+                    )}
                   </Table.Cell>
-                  <Table.Cell style={{ padding: "0px" }}>
+                  <Table.Cell
+                    collapsing
+                    style={{ padding: "0px" }}
+                    className={`aligned pull-left ${
+                      item.connected ? "" : "lightgray"
+                    }`}
+                  >
                     <Grid>
                       <Grid.Row style={{ padding: "0px" }}>
-                        <Grid.Column width={8} textAlign="right">
+                        <Grid.Column width={2} floated="right">
                           {item.type.toLowerCase().trim() === "device" && (
-                            <WifiIndicator
-                              strength={DBMToSignalStrength(item.max_rssi)}
-                              style={{
-                                height: 20,
-                                verticalAlign: "bottom",
-                              }}
-                            />
-                            /*<Progress
-                        size="medium"
-                        color="green"
-                        value={item.signal_strength}
-                        total={100}
-                        active
-                        progress="percent"
-                      ></Progress>*/
+                            <Popup
+                              basic
+                              trigger={
+                                <WifiIndicator
+                                  strength={DBMToSignalStrength(item.max_rssi)}
+                                  style={{
+                                    height: 20,
+                                    verticalAlign: "bottom",
+                                  }}
+                                />
+                              }
+                              content={DBMToSignalStrength(item.max_rssi)}
+                            ></Popup>
                           )}
                         </Grid.Column>
-                        <Grid.Column width={8} textAlign="left">
+                        <Grid.Column width={4} floated="left">
                           <strong style={{ marginLeft: "5px" }}>
                             <NumberFormat
                               value={item.max_rssi}

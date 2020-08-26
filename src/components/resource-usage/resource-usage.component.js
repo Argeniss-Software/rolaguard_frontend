@@ -1,68 +1,121 @@
 import React, { useState, useEffect } from "react";
-import { MobXProviderContext } from "mobx-react";
+import { MobXProviderContext, observer } from "mobx-react";
 
-import { Segment, Grid, Pagination } from "semantic-ui-react";
+import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 
 import "./resource-usage.component.css";
-import ResourceUssageGraph from "./resource-usage.graph.component";
+import ResourceUssageGraph from "./graphs/resource-usage.graph.component";
 import ResourceUsageList from "./resource-usage-list.component";
-
-//******************************************************* */
-const clearFilters = () => {
-  this.setState({
-    criteria: {
-      type: null,
-      vendors: [],
-      gateways: [],
-      dataCollectors: [],
-      tags: [],
-    },
-    byVendorsViz: [],
-    byGatewaysViz: [],
-    byDataCollectorsViz: [],
-    byTagsViz: [],
-    activePage: 1,
-    pageSize: 50,
-    isGraphsLoading: true,
-    isLoading: true,
-  });
-
-  //this.loadAssetsAndCounts();
-};
+import _ from "lodash";
 
 const ResourceUsageComponent = (props) => {
-  const { resourceUssageStore } = React.useContext(MobXProviderContext);
+  const { resourceUsageStore } = React.useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
-  const [criteria, setCriteria] = useState({
-    type: null,
-  });
   const [activePage, setActivePage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(50);
   const [totalList, setTotalList] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-
+  const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
   const [list, setList] = useState({
-    isLoading: false,
-    data: [], // resourceUssageStore.getDummyData(),
+    isLoading: true,
+    data: [], // resourceUsageStore.getDummyData(),
   });
 
-  
-  const handlePaginationChange = (e, { activePage }) => {
-    setList((oldData)=>{
-      return {...oldData, ...{isLoading: true}}
-    })
-    setActivePage(activePage);
-    getDataFromApi(activePage);
-    setList((oldData) => {
-      return { ...oldData, ...{ isLoading: false } };
+  const clearFilters = () => {
+    // clean all criteria filtering
+    resourceUsageStore.deleteCriteria();
+  };
+
+  const deleteFilter = (k, v) => {
+    // delete specific filter applied from criteria
+    let criteriaToDelete = {};
+    criteriaToDelete[k] = v;
+    resourceUsageStore.deleteCriteria(criteriaToDelete);
+  };
+
+  const showAppliedFilters = () => {
+    // show filters applied on filter list
+    let labels = [];
+    for (const [key, value] of Object.entries(
+      resourceUsageStore.getCriteria()
+    )) {
+      if (!_.isEmpty(value)) {
+        switch (key) {
+          case "status":
+          case "type":
+            labels.push(
+              <Label
+                as="a"
+                key={key}
+                className="text-uppercase"
+                onClick={() => {
+                  deleteFilter(key, value);
+                }}
+              >
+                {key}: <strong>{value}</strong>
+                <Icon name="delete" />
+              </Label>
+            );
+            break;
+          case "gateways":
+            value.forEach((gatewayInfo) => {
+              labels.push(
+                <Label
+                  as="a"
+                  key={gatewayInfo.label}
+                  className="text-uppercase"
+                  onClick={() => {
+                    deleteFilter(key, gatewayInfo);
+                  }}
+                >
+                  {key}: <strong>{gatewayInfo.label}</strong>
+                  <Icon name="delete" />
+                </Label>
+              );
+            });
+            break;
+        }
+        if (key === "status" || key === "type") {
+        }
+      }
+    }
+    return labels;
+  };
+
+  const toggleDeviceTypeFilter = () => {
+    // toggle column device by gateway/device/all
+    const order = [null, "gateway", "device"];
+    const nextType =
+      order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
+    const newCriteria = { type: nextType };
+    setActivePage(1);
+    setDeviceTypeFilter(nextType);
+    resourceUsageStore.setCriteria(() => {
+      return { ...resourceUsageStore.getCriteria(), ...newCriteria };
     });
   };
 
-  const getDataFromApi = (activePage, criteria) => {
-    const assetsPromise = resourceUssageStore.getAssets(
+  const handleStatusFilter = (selectedStatus) => {
+    resourceUsageStore.setCriteria(() => {
+      return {
+        ...resourceUsageStore.getCriteria(),
+        ...{ status: selectedStatus },
+      };
+    });
+  };
+
+  const handlePaginationChange = (e, { activePage }) => {
+    setActivePage(activePage);
+  };
+
+  const getDataFromApi = () => {
+    setList((oldData) => {
+      return { ...oldData, ...{ isLoading: true } };
+    });
+    const assetsPromise = resourceUsageStore.getAssets(
       { page: activePage, size: pageSize },
-      criteria
+      resourceUsageStore.getCriteria()
     );
     Promise.all([assetsPromise]).then((response) => {
       setTotalList(() => response[0].data.total_items);
@@ -70,13 +123,18 @@ const ResourceUsageComponent = (props) => {
       setList((oldList) => {
         return {
           ...oldList,
-          ...resourceUssageStore.formatApiData(response[0].data.assets),
+          ...resourceUsageStore.formatApiData(response[0].data.assets),
         };
       });
     });
-  }
+    setList((oldData) => {
+      return { ...oldData, ...{ isLoading: false } };
+    });
+  };
 
-  useEffect(() => {getDataFromApi();}, []); // only execute when change second parameter
+  useEffect(() => {
+    getDataFromApi();
+  }, [resourceUsageStore.criteria, activePage, pageSize]); // only execute when change second parameter
 
   return (
     <div className="app-body-container-view">
@@ -109,6 +167,7 @@ const ResourceUsageComponent = (props) => {
                 {showFilters && (
                   <div>
                     <label style={{ fontWeight: "bolder" }}>Filters: </label>
+                    {showAppliedFilters()}
                     <span
                       className="range-select"
                       onClick={() => clearFilters()}
@@ -117,13 +176,14 @@ const ResourceUsageComponent = (props) => {
                     </span>
                   </div>
                 )}
+
                 {!list.isLoading && (
-                  <div>
-                    <ResourceUsageList
-                      list={list}
-                      criteria={criteria}
-                    ></ResourceUsageList>
-                  </div>
+                  <ResourceUsageList
+                    list={list}
+                    criteria={resourceUsageStore.getCriteria()}
+                    isLoading={list.isLoading}
+                    deviceTypeClick={toggleDeviceTypeFilter}
+                  ></ResourceUsageList>
                 )}
 
                 {list.isLoading && (
@@ -149,4 +209,4 @@ const ResourceUsageComponent = (props) => {
     </div>
   );
 };
-export default ResourceUsageComponent;
+export default observer(ResourceUsageComponent);
