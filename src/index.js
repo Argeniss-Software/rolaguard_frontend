@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom'
 import { unregister } from './registerServiceWorker';
-import "mobx-react/batchingForReactDom";
 import { Provider } from "mobx-react"
 import stores from "./stores"
 
