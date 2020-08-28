@@ -21,7 +21,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
   useEffect(() => {
     resourceUsageStore.getDataPacketsLostFromApi();
   }, []); // only execute when change second parameter
-  
+
   const data = {
     data: [
       { xValue: 0, yValue: 13, color: "#f05050" },
@@ -34,97 +34,97 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     ],
     domain: { from: 0, to: 100 },
     barsCount: 7,
-    range: "day"
-  }
+    range: "day",
+  };
 
   const marks = {
-      0: {
-        style: {
-          color: "black",
-          fontSize: "10px"
-        },
-        label: <strong>0%</strong>
+    0: {
+      style: {
+        color: "black",
+        fontSize: "10px",
       },
-      10: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "10"
+      label: <strong>0%</strong>,
+    },
+    10: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      20: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "20"
+      label: "10",
+    },
+    20: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      30: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "30"
+      label: "20",
+    },
+    30: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      40: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "40"
+      label: "30",
+    },
+    40: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      50: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "50"
+      label: "40",
+    },
+    50: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      60: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "60"
+      label: "50",
+    },
+    60: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      70: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "70"
+      label: "60",
+    },
+    70: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      80: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "80"
+      label: "70",
+    },
+    80: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      90: {
-        style: {
-          color: "black",
-          fontSize: "10px",
-          bottom: "-15px"
-        },
-        label: "90"
+      label: "80",
+    },
+    90: {
+      style: {
+        color: "black",
+        fontSize: "10px",
+        bottom: "-15px",
       },
-      100: {
-        style: {
-          color: "black",
-          fontSize: "9px"
-        },
-        label: <strong>100%</strong>,
+      label: "90",
+    },
+    100: {
+      style: {
+        color: "black",
+        fontSize: "9px",
       },
-    };
+      label: <strong>100%</strong>,
+    },
+  };
 
   const defaultPropsRange = {
     width: 90,
@@ -140,7 +140,17 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     marks: marks,
   };
 
-  const [valueState,setValueState] = useState([0,100]);
+  const [valueState, setValueState] = useState([0, 100]);
+
+  useEffect(() => { // update slide when reset from and to range
+    setValueState([
+      resourceUsageStore.criteria.packet_lost_range.from,
+      resourceUsageStore.criteria.packet_lost_range.to,
+    ]);
+  }, [
+    resourceUsageStore.criteria.packet_lost_range.from,
+    resourceUsageStore.criteria.packet_lost_range.to,
+  ]);
 
   const resetRange = () => {
     setValueState([0, 100]);
@@ -152,23 +162,23 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
       <h5 className="visualization-title">BY PACKAGES LOST</h5>
       <Loader active={resourceUsageStore.getStatusLoading()} />
       <div>Histogram</div>
-        <Range
-          width={defaultPropsRange.width}
-          defaultValue={defaultPropsRange.defaultValue}
-          allowCross={defaultPropsRange.allowCross}
-          step={defaultPropsRange.step}
-          dots
-          min={defaultPropsRange.min}
-          max={defaultPropsRange.max}
-          value={valueState}
-          onChange={(value) => setValueState(value)}
-          onAfterChange={handleAfterChange}
-          pushable={defaultPropsRange.pushable}
-          marks={defaultPropsRange.marks}
-        ></Range>
-        <Divider/>
+      <Range
+        width={defaultPropsRange.width}
+        defaultValue={defaultPropsRange.defaultValue}
+        allowCross={defaultPropsRange.allowCross}
+        step={defaultPropsRange.step}
+        dots
+        min={defaultPropsRange.min}
+        max={defaultPropsRange.max}
+        value={valueState}
+        onChange={(value) => setValueState(value)}
+        onAfterChange={handleAfterChange}
+        pushable={defaultPropsRange.pushable}
+        marks={defaultPropsRange.marks}
+      ></Range>
+      <Divider />
       <button onClick={resetRange}>Reset</button>
     </div>
   );
-}
+};
 export default observer(ResourceUsageGraphPacketsLostComponent);

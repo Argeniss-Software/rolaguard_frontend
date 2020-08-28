@@ -10,7 +10,7 @@ class ResourceUsageStore {
     type: null, // device or gateway
     status: null, // connected or disconnected
     gateways: [],
-    signal_strength: [],
+    signal_strength: { from: -1000, to: 0 },
     packet_lost_range: { from: 0, to: 100 },
   };
 
@@ -92,7 +92,7 @@ class ResourceUsageStore {
 
   @action getDataStatusFromApi = () => {
     this.setStatusLoading(true);
-    const statusPromise = this.getAssetsCountStatus();
+    const statusPromise = this.getAssetsCount("status");
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
@@ -132,7 +132,7 @@ class ResourceUsageStore {
   @action getDataGatewaysFromApi = () => {
     debugger;
     this.setGatewaysLoading(true);
-    const statusPromise = this.getAssetsCountGateways();
+    const statusPromise = this.getAssetsCount("gateways");
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
@@ -176,7 +176,7 @@ class ResourceUsageStore {
   @action getDataPacketsLostFromApi = () => {
     // @ todo: to implement!
     this.setStatusLoading(true);
-    const statusPromise = this.getAssetsCountStatus();
+    const statusPromise = this.getAssetsCount("status");
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
@@ -271,12 +271,12 @@ class ResourceUsageStore {
         type: null, // device or gateway
         status: null, // connected or disconnected
         gateways: [],
-        signal_strength: [],
+        signal_strength: { from: 1, to: -1000 },
         packet_lost_range: { from: 0, to: 100 },
       });
     } else {
       let keyCriteriaToDelete = _.keys(data)[0];
-      debugger
+      debugger;
       switch (keyCriteriaToDelete) {
         case "status":
           this.setStatusGraphSeriesSelected({}); // clean selected status element on status graph!
@@ -337,9 +337,11 @@ class ResourceUsageStore {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
-  @action getAssets(pagination, criteria) {
+  /* used it on list */
+  @action getAssets(pagination) {
     const { page, size } = pagination || {};
-    const { status, type, gateways, packet_lost_range } = this.criteria || {};
+    const { status, type, gateways, packet_lost_range, signal_strength } =
+      this.criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -350,16 +352,20 @@ class ResourceUsageStore {
         min_packet_loss: packet_lost_range.from,
         max_packet_loss: packet_lost_range.to,
       }),
-
+      ...(signal_strength && {
+        mix_signal_strength: signal_strength.from,
+        max_signal_strength: signal_strength.to,
+      }),
       page,
       size,
     };
     return API.get(`resource_usage/list`, { headers, params });
   }
 
-  // return resource usage global status (connected/disconnected)
-  @action getAssetsCountStatus(criteria) {
-    const { status, type, gateways, packet_lost_range } = this.criteria || {};
+  // return for graphs associated to resource usage
+  @action getAssetsCount(criteria) {
+    const { status, type, gateways, packet_lost_range, signal_strength } =
+      this.criteria || {};
     const headers = this.getHeaders();
     const params = {
       ...(status && { asset_status: this.criteria.status }),
@@ -369,25 +375,29 @@ class ResourceUsageStore {
         min_packet_loss: packet_lost_range.from,
         max_packet_loss: packet_lost_range.to,
       }),
-    };
-    return API.get(`resource_usage/count/status`, { headers, params });
-  }
-
-  // return different gateways associated to resource usage
-  @action getAssetsCountGateways(criteria) {
-    const { status, type, gateways, packet_lost_range } = this.criteria || {};
-    const headers = this.getHeaders();
-    const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
-      ...(packet_lost_range && {
-        min_packet_loss: packet_lost_range.from,
-        max_packet_loss: packet_lost_range.to,
+      ...(signal_strength && {
+        mix_signal_strength: signal_strength.from,
+        max_signal_strength: signal_strength.to,
       }),
     };
-
-    return API.get(`resource_usage/count/gateway`, { headers, params });
+    let uri = null;
+    switch (criteria) {
+      case "status":
+        uri = `resource_usage/count/status`;
+        break;
+      case "gateways":
+        uri = `resource_usage/count/gateway`;
+        break;
+      case "signal_strength":
+        uri = `resource_usage/count/signal`;
+        break;
+      case "packet_lost":
+        uri = `resource_usage/count/loss`;
+        break;
+      default:
+        break;
+    }
+    return API.get(uri, { headers, params });
   }
   /**********************************************************/
   /**********************************************************/
