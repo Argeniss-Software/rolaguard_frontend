@@ -78,7 +78,17 @@ const Validation = {
   isValidTagName: (tagName) => {
     const regex = new RegExp("^[a-zA-Z0-9_. ]+$");
     return regex.test(tagName);
-  }
+  },
+
+  isValidKey: (key) => {
+    const regex = new RegExp("^[A-F0-9]{32}$");
+    return regex.test(key.toUpperCase());
+  },
+
+  isValidKeyIncomplete: (key) => {
+    const regex = new RegExp("^[A-F0-9]{0,32}$");
+    return regex.test(key.toUpperCase());
+  },
 };
 
 export default Validation;

@@ -12,6 +12,7 @@ import notificationStore from './notification.store'
 import inventoryAssetsStore from './inventory.store'
 import tagsStore from './tag.store'
 import resourceUsageStore from './resource_usage.store'
+import keysStore from './keys.store'
 
 const stores = {
     authStore,
@@ -27,7 +28,8 @@ const stores = {
     notificationStore,
     inventoryAssetsStore,
     tagsStore,
-    resourceUsageStore
+    resourceUsageStore,
+    keysStore
 };
 
 export default stores
