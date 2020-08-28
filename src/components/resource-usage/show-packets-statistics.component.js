@@ -87,7 +87,7 @@ const ShowPacketsStatistics = (props) => {
               name="arrow alternate circle down"
               type="icon"
             />
-            Received
+            Downstream
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
@@ -119,7 +119,7 @@ const ShowPacketsStatistics = (props) => {
         <Table.Row>
           <Table.Cell>
             <Icon color="orange" name="arrow alternate circle up" type="icon" />
-            Sent
+            Upstream
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
