@@ -352,7 +352,7 @@ class InventoryReviewComponent extends React.Component {
                       {item.vendor}
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.application}
+                      {item.app_name}
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.data_collector}
