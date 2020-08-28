@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
-import { Loader } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Loader, Divider } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
 import _ from "lodash";
-import SliderComponent from "../../utils/slider.component"
+import Slider, { Range } from "rc-slider";
+import "rc-slider/assets/index.css";
+import "./resource-usage.graph.packets-lost.component.css";
+
 
 const ResourceUsageGraphPacketsLostComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
 
-  const handleChange = (data) => {
+  const handleAfterChange = (data) => {
     if (!_.isEmpty(data)) {
       resourceUsageStore.setCriteria({
         packet_lost_range: { from: data[0], to: data[1] },
@@ -34,14 +37,138 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     range: "day"
   }
 
+  const marks = {
+      0: {
+        style: {
+          color: "black",
+          fontSize: "10px"
+        },
+        label: <strong>0%</strong>
+      },
+      10: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "10"
+      },
+      20: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "20"
+      },
+      30: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "30"
+      },
+      40: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "40"
+      },
+      50: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "50"
+      },
+      60: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "60"
+      },
+      70: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "70"
+      },
+      80: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "80"
+      },
+      90: {
+        style: {
+          color: "black",
+          fontSize: "10px",
+          bottom: "-15px"
+        },
+        label: "90"
+      },
+      100: {
+        style: {
+          color: "black",
+          fontSize: "9px"
+        },
+        label: <strong>100%</strong>,
+      },
+    };
+
+  const defaultPropsRange = {
+    width: 90,
+    defaultValue: [
+      resourceUsageStore.criteria.packet_lost_range.from,
+      resourceUsageStore.criteria.packet_lost_range.to,
+    ],
+    allowCross: false,
+    step: 10,
+    min: 0,
+    max: 100,
+    pushable: true,
+    marks: marks,
+  };
+
+  const [valueState,setValueState] = useState([0,100]);
+
+  const resetRange = () => {
+    setValueState([0, 100]);
+    handleAfterChange([0, 100]);
+  };
+
   return (
     <div className="box-data">
       <h5 className="visualization-title">BY PACKAGES LOST</h5>
       <Loader active={resourceUsageStore.getStatusLoading()} />
       <div>Histogram</div>
-      
-      <SliderComponent onChange={handleChange}></SliderComponent>
+        <Range
+          width={defaultPropsRange.width}
+          defaultValue={defaultPropsRange.defaultValue}
+          allowCross={defaultPropsRange.allowCross}
+          step={defaultPropsRange.step}
+          dots
+          min={defaultPropsRange.min}
+          max={defaultPropsRange.max}
+          value={valueState}
+          onChange={(value) => setValueState(value)}
+          onAfterChange={handleAfterChange}
+          pushable={defaultPropsRange.pushable}
+          marks={defaultPropsRange.marks}
+        ></Range>
+        <Divider/>
+      <button onClick={resetRange}>Reset</button>
     </div>
-  )
+  );
 }
 export default observer(ResourceUsageGraphPacketsLostComponent);
