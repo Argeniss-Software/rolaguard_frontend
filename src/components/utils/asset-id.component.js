@@ -5,7 +5,7 @@ const AssetIdComponent = (props) => {
   const { id, type } = props;
   const normalizedType = type && type.toLowerCase().trim();
 
-  const normalizedId = id ? id : "ID UNDEFINED";
+  const normalizedId = id ? id.toUpperCase() : "ID UNDEFINED";
   const deviceEUIText = "Device EUI";
   const deviceGatewayText = "Gateway ID";
 
