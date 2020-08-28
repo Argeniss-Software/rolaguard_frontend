@@ -1,0 +1,35 @@
+.keys-table {
+  padding: 10px;
+}
+
+.keys-manager-top {
+  display: flex;
+  align-items: center;
+}
+
+.keys-manager-wrapper {
+  display: flexbox;
+  margin: auto;
+}
+
+.keys-manager-wrapper h3 {
+  color: #37B9DC;
+}
+
+.icon-cell {
+  padding: 10px!important;
+  text-align: center!important;
+}
+
+.key-cell, .key-cell input {
+  text-align: center!important;
+  font-family: 'Courier New', Courier, monospace!important;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+
+.action-cell {
+  text-align: center!important;
+}
+
