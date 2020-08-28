@@ -12,6 +12,7 @@ import moment from "moment";
 import SignalStrengthHelp from "../utils/wifi-signal-indicator/signal-strength-help.component";
 import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStrength";
 import "./resource-usage.component.css";
+import {observer} from 'mobx-react';
 
 const ResourceUsageList = (props) => {
   return (
@@ -29,7 +30,7 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
           <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
           <Table.HeaderCell collapsing>
-            MESSAGES <i>(R/S/L)</i>
+            MESSAGES <i>(D/U/L)</i>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing>FREQUENCY</Table.HeaderCell>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
@@ -50,18 +51,22 @@ const ResourceUsageList = (props) => {
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
-      {props.list.data.length === 0 && !props.isLoading && (
+      {props &&
+        props.list &&
+        props.list.data &&
+        props.list.data.length === 0 &&
+        !props.isLoading && (
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell colSpan="100%">
+                <EmptyComponent emptyMessage="No assets found" />
+              </Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        )}
+      {props && props.list && props.list.data && props.list.data.length > 0 && (
         <Table.Body>
-          <Table.Row>
-            <Table.Cell colSpan="100%">
-              <EmptyComponent emptyMessage="No assets found" />
-            </Table.Cell>
-          </Table.Row>
-        </Table.Body>
-      )}
-      {props.list.data.length > 0 && (
-        <Table.Body>
-          {!props.list.isLoading &&
+          {!props.isLoading &&
             props.list.data &&
             props.list.data.map((item, index) => {
               return (
@@ -173,4 +178,4 @@ const ResourceUsageList = (props) => {
   );
 };
 
-export default ResourceUsageList;
+export default observer(ResourceUsageList);
