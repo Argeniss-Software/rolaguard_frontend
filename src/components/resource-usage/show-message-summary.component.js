@@ -15,19 +15,6 @@ const ShowMessagesSummary = (props) => {
               <Grid.Row>
                 <Grid.Column width={4}>
                   <Icon
-                    color="green"
-                    name="arrow alternate circle down"
-                    type="icon"
-                  />
-                  <strong>
-                    <NumberFormat
-                      value={props.packets_down.total}
-                      displayType={"text"}
-                    />
-                  </strong>
-                </Grid.Column>
-                <Grid.Column width={4}>
-                  <Icon
                     color="orange"
                     name="arrow alternate circle up"
                     type="icon"
@@ -35,6 +22,19 @@ const ShowMessagesSummary = (props) => {
                   <strong>
                     <NumberFormat
                       value={props.packets_up.total}
+                      displayType={"text"}
+                    />
+                  </strong>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  <Icon
+                    color="green"
+                    name="arrow alternate circle down"
+                    type="icon"
+                  />
+                  <strong>
+                    <NumberFormat
+                      value={props.packets_down.total}
                       displayType={"text"}
                     />
                   </strong>

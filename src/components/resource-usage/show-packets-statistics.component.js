@@ -82,17 +82,13 @@ const ShowPacketsStatistics = (props) => {
       <Table.Body>
         <Table.Row>
           <Table.Cell>
-            <Icon
-              color="green"
-              name="arrow alternate circle down"
-              type="icon"
-            />
-            Downstream
+            <Icon color="orange" name="arrow alternate circle up" type="icon" />
+            Uplink
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_down.total}
+                value={props.packets_up.total}
                 displayType={"text"}
               />
             </strong>
@@ -100,7 +96,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_down.percentage}
+                value={props.packets_up.percentage}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"
@@ -118,13 +114,17 @@ const ShowPacketsStatistics = (props) => {
         </Table.Row>
         <Table.Row>
           <Table.Cell>
-            <Icon color="orange" name="arrow alternate circle up" type="icon" />
-            Upstream
+            <Icon
+              color="green"
+              name="arrow alternate circle down"
+              type="icon"
+            />
+            Downlink
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_up.total}
+                value={props.packets_down.total}
                 displayType={"text"}
               />
             </strong>
@@ -132,7 +132,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_up.percentage}
+                value={props.packets_down.percentage}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"

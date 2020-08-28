@@ -30,7 +30,7 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
           <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
           <Table.HeaderCell collapsing>
-            MESSAGES <i>(D/U/L)</i>
+            MESSAGES <i>(U/D/L)</i>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing>FREQUENCY</Table.HeaderCell>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
