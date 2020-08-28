@@ -10,7 +10,7 @@ class ResourceUsageStore {
     type: null, // device or gateway
     status: null, // connected or disconnected
     gateways: [],
-    signal_strength: { from: -1000, to: 0 },
+    signal_strength: { from: -150, to: 0 },
     packet_lost_range: { from: 0, to: 100 },
   };
 
@@ -118,7 +118,6 @@ class ResourceUsageStore {
       runInAction(() => {
         this.statusGraph.series = apiSeries;
       });
-      //this.setStatusGraphSeries(apiSeries);
     });
     this.setStatusLoading(false);
 
@@ -130,46 +129,39 @@ class ResourceUsageStore {
   };
 
   @action getDataGatewaysFromApi = () => {
-    debugger;
     this.setGatewaysLoading(true);
-    const statusPromise = this.getAssetsCount("gateways");
+    const gatewayPromise = this.getAssetsCount("gateways");
 
-    Promise.all([statusPromise]).then((response) => {
+    Promise.all([gatewayPromise]).then((response) => {
       let total = response[0].data.total_count;
+      let selectedTotal = 0
+      if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
+        let seriesSelected = this.getGatewayGraphSeriesSelected()
+        selectedTotal = _.sumBy(seriesSelected, "value");
+      }
+      total -= selectedTotal;     
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
           label: e.name.toUpperCase(),
           id: e.id,
           selected: !_.isEmpty(this.getGatewayGraphSeriesSelected())
-            ? e.id === this.getGatewayGraphSeriesSelected().id
+            ? this.getGatewayGraphSeriesSelected()
+                .map((i) => i.id)
+                .includes(e.id)
             : false,
-          percentage: !_.isEmpty(this.getGatewayGraphSeriesSelected())
-            ? 1
-            : total > 0
-            ? e.count / total
-            : e.count,
+          percentage: total > 0 ? e.count / total : e.count,
           value: e.count,
           color: ColorUtil.getByIndex(index),
         };
       });
       if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
-        apiSeries = apiSeries.filter((item) => item.selected);
+        apiSeries = apiSeries.filter((item) => !item.selected);
       }
-      //this.setGatewayGraphSeries(apiSeries);
       runInAction(() => {
         this.gatewaysGraph.series = apiSeries;
       });
     });
-
-    if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
-      //_.pluck(this.getGatewayGraphSeriesSelected(), "id")
-      if (!_.isEmpty(this.criteria.gateways)) {
-        let gatewaysIdSelected = this.criteria.gateways.map((e) => e.id);
-        this.gatewaysGraph.series.forEach((e) => {
-          return (e.selected = gatewaysIdSelected.includes(e.id));
-        });
-      }
-    }
+    
     this.setGatewaysLoading(false);
   };
 
@@ -202,7 +194,6 @@ class ResourceUsageStore {
       runInAction(() => {
         this.statusGraph.series = apiSeries;
       });
-      //this.setStatusGraphSeries(apiSeries);
     });
     this.setStatusLoading(false);
 
@@ -211,6 +202,46 @@ class ResourceUsageStore {
         return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
       });
     }
+  };
+
+  @action getDataSignalStrengthFromApi = () => {
+    // @ todo: to implement!
+    this.setStatusLoading(true);
+    const statusPromise = this.getAssetsCount("status");
+
+    Promise.all([statusPromise]).then((response) => {
+      let total = response[0].data.total_count;
+      let apiSeries = response[0].data.groups.map((e, index) => {
+        return {
+          label: e.name.toUpperCase(),
+          id: e.id,
+          selected: !_.isEmpty(this.getStatusGraphSeriesSelected())
+            ? e.id === this.getStatusGraphSeriesSelected().id
+            : false,
+          percentage: !_.isEmpty(this.getStatusGraphSeriesSelected())
+            ? 1
+            : total > 0
+            ? e.count / total
+            : e.count,
+          value: e.count,
+          color: index === 0 ? "#21ba45" : "#F05050",
+        };
+      });
+      /*if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
+        apiSeries = apiSeries.filter((item) => item.selected);
+      }
+      runInAction(() => {
+        this.statusGraph.series = apiSeries;
+      });*/
+      //this.setStatusGraphSeries(apiSeries);
+    });
+    this.setStatusLoading(false);
+/*
+    if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
+      this.statusGraph.series.forEach((e) => {
+        return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
+      });
+    }*/
   };
   /**********************************************************/
   /**********************************************************/
@@ -227,7 +258,7 @@ class ResourceUsageStore {
     this.gatewaysGraph.isLoading = val;
   }
   @action getGatewayGraphSeriesSelected() {
-    return this.gatewaysGraph.seriesSelected;
+    return this.criteria.gateways;
   }
   @action setGatewayGraphSeries(series) {
     this.gatewaysGraph.series = series;
@@ -241,8 +272,6 @@ class ResourceUsageStore {
       });
     }
     if (elementFoundIndex != -1) {
-      //remove filter
-      this.gatewaysGraph.seriesSelected.splice(elementFoundIndex, 1);
       let foundCriteria = this.criteria.gateways.findIndex((e) => {
         return e.id === data.id;
       });
@@ -254,7 +283,6 @@ class ResourceUsageStore {
       this.gatewaysGraph.seriesSelected.push(data);
       this.setCriteria({ gateways: data });
     }
-    //    this.gatewaysGraph.seriesSelected = {...this.gatewaysGraph.seriesSelected, ...data}
   }
   /**********************************************************/
   /**********************************************************/
@@ -266,7 +294,6 @@ class ResourceUsageStore {
     if (_.isEmpty(data)) {
       // clear all
       this.setStatusGraphSeriesSelected({}); // clean selected status element on status graph!
-      this.setGatewayGraphSeriesSelected({}); // clean selected status element on status graph!
       this.setCriteria({
         type: null, // device or gateway
         status: null, // connected or disconnected
@@ -276,18 +303,15 @@ class ResourceUsageStore {
       });
     } else {
       let keyCriteriaToDelete = _.keys(data)[0];
-      debugger;
       switch (keyCriteriaToDelete) {
         case "status":
           this.setStatusGraphSeriesSelected({}); // clean selected status element on status graph!
-          this.setStatusGraphSeriesSelected({});
           this.setCriteria({ status: null });
           break;
         case "type":
           this.setCriteria({ type: null });
           break;
         case "gateways":
-          this.setGatewayGraphSeriesSelected(data[keyCriteriaToDelete]);
           this.setCriteria({ gateways: data.gateways });
           break;
         case "packet_lost_range":
@@ -301,10 +325,12 @@ class ResourceUsageStore {
     this.getDataListFromApi();
     this.getDataStatusFromApi();
     this.getDataGatewaysFromApi();
+    // this.getDataPacketsLostFromApi();
+    // this.getDataSignalStrengthFromApi();
   }
+  
   @action setCriteria(data) {
     let keyCriteriaToDelete = _.keys(data)[0];
-    debugger;
     switch (keyCriteriaToDelete) {
       case "status":
       case "type":
@@ -317,17 +343,20 @@ class ResourceUsageStore {
         let foundItemToDelete = this.criteria.gateways.findIndex(
           (e) => e.id === data[_.keys(data)[0]].id
         );
-        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {
-          // delete gateway to filter
-          this.criteria.gateways.remove(_.keys(data)[0]);
-        } else {
-          // add gateway to filter
+        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {// delete gateway from criteria
+          this.criteria.gateways.splice(foundItemToDelete,1);
+        } else { // add gateway to criteria
           this.criteria.gateways.push(data.gateways);
         }
         break;
       case "packet_lost_range":
         this.criteria.packet_lost_range.from = data.packet_lost_range.from;
         this.criteria.packet_lost_range.to = data.packet_lost_range.to;
+        break
+      case "signal_strength":
+        this.criteria.signal_strength.from = data.signal_strength.from;
+        this.criteria.signal_strength.to = data.signal_strength.to;
+        break
     }
     this.loadDataFromApis();
   }
@@ -337,7 +366,7 @@ class ResourceUsageStore {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
-  /* used it on list */
+  /* used it on list device and gateway on resrouce ussages */
   @action getAssets(pagination) {
     const { page, size } = pagination || {};
     const { status, type, gateways, packet_lost_range, signal_strength } =
@@ -367,10 +396,11 @@ class ResourceUsageStore {
     const { status, type, gateways, packet_lost_range, signal_strength } =
       this.criteria || {};
     const headers = this.getHeaders();
+    
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
+      ...(gateways && { gateways_ids: this.criteria.gateways.map((e) => e.id) }),
       ...(packet_lost_range && {
         min_packet_loss: packet_lost_range.from,
         max_packet_loss: packet_lost_range.to,
@@ -551,91 +581,6 @@ class ResourceUsageStore {
     ];
     return data;
   }
-  /*@action
-  getAssets(pagination, criteria) {
-    const { page, size } = pagination || {};
-    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
-
-    const headers = this.getHeaders();
-    const params = {
-      ...vendors && {'vendors': vendors},
-      ...gateways && {'gateway_ids': gateways},
-      ...dataCollectors && {'data_collector_ids': dataCollectors},
-      ...tags && {'tag_ids': tags},
-      ...type && {'asset_type': type},
-      page,
-      size
-    };
-    return API.get(`resource_usage/list`, { headers, params} );
-  }*/
-
-  /*getAsstesCount(){
-    return this.assetsCount;
-  }
-
-  getPagesCount(){
-    return this.pagesCount;
-  }*/
-
-  /*getDataCollectorsCount(criteria){
-    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
-
-    const headers = this.getHeaders();
-    const params = {
-      ...vendors && {'vendors': vendors},
-      ...gateways && {'gateway_ids': gateways},
-      ...dataCollectors && {'data_collector_ids': dataCollectors},
-      ...tags && {'tag_ids': tags},
-      ...type && {'asset_type': type},
-    };
-
-    return API.get(`inventory/count/data_collector`, { headers, params} );
-  }
-
-  getGatewaysCount(criteria){
-    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
-
-    const headers = this.getHeaders();
-    const params = {
-      ...vendors && {'vendors': vendors},
-      ...gateways && {'gateway_ids': gateways},
-      ...dataCollectors && {'data_collector_ids': dataCollectors},
-      ...tags && {'tag_ids': tags},
-      ...type && {'asset_type': type},
-    };
-
-    return API.get(`inventory/count/gateway`, { headers, params} );
-  }
-
-  getVendorsCount(criteria){
-    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
-
-    const headers = this.getHeaders();
-    const params = {
-      ...vendors && {'vendors': vendors},
-      ...gateways && {'gateway_ids': gateways},
-      ...dataCollectors && {'data_collector_ids': dataCollectors},
-      ...tags && {'tag_ids': tags},
-      ...type && {'asset_type': type},
-    };
-
-    return API.get(`inventory/count/vendor`, { headers, params} );
-  }
-
-  getTagsCount(criteria){
-    const { vendors, gateways, dataCollectors, tags, type} = criteria || {};
-
-    const headers = this.getHeaders();
-    const params = {
-      ...vendors && {'vendors': vendors},
-      ...gateways && {'gateway_ids': gateways},
-      ...dataCollectors && {'data_collector_ids': dataCollectors},
-      ...tags && {'tag_ids': tags},
-      ...type && {'asset_type': type},
-    };
-
-    return API.get(`inventory/count/tag`, { headers, params} );
-  }*/
 }
 const store = new ResourceUsageStore();
 export default store;

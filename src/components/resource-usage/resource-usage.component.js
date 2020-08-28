@@ -103,14 +103,14 @@ const ResourceUsageComponent = (props) => {
     resourceUsageStore.setCriteria(newCriteria);
   };
 
-  const handleStatusFilter = (selectedStatus) => {
+  /*const handleStatusFilter = (selectedStatus) => {
     resourceUsageStore.setCriteria(() => {
       return {
         ...resourceUsageStore.getCriteria(),
         ...{ status: selectedStatus },
       };
     });
-  };
+  };*/
 
   const handlePaginationChange = (e, { activePage }) => {
     resourceUsageStore.setActivePage(activePage);
@@ -166,7 +166,7 @@ const ResourceUsageComponent = (props) => {
                         </Grid.Column>
                         <Grid.Column width={4}>
                           {" "}
-                          <div class="right pull-right aligned">
+                          <div className="right pull-right aligned">
                             Page{" "}
                             <strong>
                               {resourceUsageStore.model.activePage}

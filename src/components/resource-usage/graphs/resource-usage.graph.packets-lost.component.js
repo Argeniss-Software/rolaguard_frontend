@@ -152,10 +152,10 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     resourceUsageStore.criteria.packet_lost_range.to,
   ]);
 
-  const resetRange = () => {
+  /*const resetRange = () => {
     setValueState([0, 100]);
     handleAfterChange([0, 100]);
-  };
+  };*/
 
   return (
     <div className="box-data">
@@ -177,7 +177,6 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
         marks={defaultPropsRange.marks}
       ></Range>
       <Divider />
-      <button onClick={resetRange}>Reset</button>
     </div>
   );
 };

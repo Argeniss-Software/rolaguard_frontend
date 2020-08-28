@@ -8,7 +8,7 @@ const ResourceUsageGraphGatewaysComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
 
   const handleItemSelected = (array, selectedItem, type) => {
-    resourceUsageStore.setGatewayGraphSeriesSelected(selectedItem);
+    resourceUsageStore.setCriteria({ gateways: selectedItem });
   };
  
   useEffect(() => {  
@@ -18,9 +18,6 @@ const ResourceUsageGraphGatewaysComponent = (props) => {
   return (
     <div className="box-data">
       <h5 className="visualization-title">BY GATEWAYS</h5>
-      <div style={{ backgroundColor: "black", color: "white" }}>
-        {JSON.stringify(resourceUsageStore.criteria)}
-      </div>
       <Loader active={resourceUsageStore.getGatewaysLoading()} />
       {
         <Pie
