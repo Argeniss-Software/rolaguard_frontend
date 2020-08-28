@@ -16,7 +16,13 @@ import {observer} from 'mobx-react';
 
 const ResourceUsageList = (props) => {
   return (
-    <Table striped className="animated fadeIn" basic="very" compact="very">
+    <Table
+      striped
+      selectable 
+      className="animated fadeIn"
+      basic="very"
+      compact="very"
+    >
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
