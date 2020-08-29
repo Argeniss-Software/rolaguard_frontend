@@ -44,6 +44,13 @@ class ResourceUsageStore {
     series: [],
   };
 
+  @observable signalStrengthGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
   @action setModelLoading(val) {
     this.model.isLoading = val;
   }
@@ -188,11 +195,11 @@ class ResourceUsageStore {
       let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
-          x: e.name+"%",
-          y: e.count
+          x: e.name + "%",
+          y: e.count,
         };
       });
-       
+
       runInAction(() => {
         this.packetLostsGraph.series = apiSeries;
       });
@@ -200,43 +207,21 @@ class ResourceUsageStore {
   };
 
   @action getDataSignalStrengthFromApi = () => {
-    // @ todo: to implement!
-    this.setStatusLoading(true);
-    const statusPromise = this.getAssetsCount("status");
+    const statusPromise = this.getAssetsCount("signal_strength");
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
-          label: e.name.toUpperCase(),
-          id: e.id,
-          selected: !_.isEmpty(this.getStatusGraphSeriesSelected())
-            ? e.id === this.getStatusGraphSeriesSelected().id
-            : false,
-          percentage: !_.isEmpty(this.getStatusGraphSeriesSelected())
-            ? 1
-            : total > 0
-            ? e.count / total
-            : e.count,
-          value: e.count,
-          color: index === 0 ? "#21ba45" : "#F05050",
+          x: e.name,
+          y: e.count,
         };
       });
-      /*if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
-        apiSeries = apiSeries.filter((item) => item.selected);
-      }
+
       runInAction(() => {
-        this.statusGraph.series = apiSeries;
-      });*/
-      //this.setStatusGraphSeries(apiSeries);
-    });
-    this.setStatusLoading(false);
-    /*
-    if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
-      this.statusGraph.series.forEach((e) => {
-        return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
+        this.signalStrengthGraph.series = apiSeries;
       });
-    }*/
+    });
   };
   /**********************************************************/
   /**********************************************************/
@@ -288,7 +273,7 @@ class ResourceUsageStore {
         type: null, // device or gateway
         status: null, // connected or disconnected
         gateways: [],
-        signal_strength: { from: 1, to: -1000 },
+        signal_strength: { from: -150, to: 0 },
         packet_lost_range: { from: 0, to: 100 },
       });
     } else {
@@ -307,6 +292,9 @@ class ResourceUsageStore {
         case "packet_lost_range":
           this.setCriteria({ packet_lost_range: { from: 0, to: 100 } });
           break;
+        case "signal_strength":
+          this.setCriteria({ signal_strength: { from: -150, to: 0 } });
+          break;
       }
     }
   }
@@ -316,7 +304,7 @@ class ResourceUsageStore {
     this.getDataStatusFromApi();
     this.getDataGatewaysFromApi();
     this.getDataPacketsLostFromApi();
-    // this.getDataSignalStrengthFromApi();
+    this.getDataSignalStrengthFromApi();
   }
 
   @action setCriteria(data) {
@@ -374,7 +362,7 @@ class ResourceUsageStore {
         max_packet_loss: packet_lost_range.to,
       }),
       ...(signal_strength && {
-        mix_signal_strength: signal_strength.from,
+        min_signal_strength: signal_strength.from,
         max_signal_strength: signal_strength.to,
       }),
       page,
@@ -400,7 +388,8 @@ class ResourceUsageStore {
         max_packet_loss: packet_lost_range.to,
       }),
       ...(signal_strength && {
-        mix_signal_strength: signal_strength.from,
+        min_signal_strength:
+          signal_strength.from === -150 ? -1000 : signal_strength.from,
         max_signal_strength: signal_strength.to,
       }),
     };

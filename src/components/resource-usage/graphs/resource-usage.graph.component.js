@@ -41,9 +41,9 @@ const ResourceUsageGraphComponent = (props) => {
             computer={4}
           >
             {
-              /*<ResourceUsageGraphSignalStrengthComponent
+              <ResourceUsageGraphSignalStrengthComponent
                 props={props}
-              ></ResourceUsageGraphSignalStrengthComponent>*/
+              ></ResourceUsageGraphSignalStrengthComponent>
             }
           </Grid.Column>
           <Grid.Column

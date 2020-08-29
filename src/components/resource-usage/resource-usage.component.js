@@ -87,6 +87,26 @@ const ResourceUsageComponent = (props) => {
               );
             }
             break;
+          case "signal_strength":
+            if (value.from != -150 || value.to != 0) {
+              labels.push(
+                <Label
+                  as="a"
+                  key={key}
+                  className="text-uppercase"
+                  onClick={() => {
+                    deleteFilter(key, value);
+                  }}
+                >
+                  {key.replace(/\_+/gm, ` `)}:{" "}
+                  <strong>
+                    {value.from} to {value.to} dBm
+                  </strong>
+                  <Icon name="delete" />
+                </Label>
+              );
+            }
+            break
         }
       }
     }
