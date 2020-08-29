@@ -3,7 +3,7 @@ import { Icon, Table } from "semantic-ui-react";
 import NumberFormat from "react-number-format";
 
 import Chart from "react-apexcharts";
-import _ from 'lodash';
+import _ from "lodash";
 const getDataSeries = (data) => {
   return [
     _.get(data, "packets_up.percentage", "-") === "-"
@@ -16,7 +16,7 @@ const getDataSeries = (data) => {
       ? 0
       : data.packets_lost.percentage,
   ];
-}
+};
 
 const ShowPacketsStatistics = (props) => {
   const data = {
@@ -48,6 +48,13 @@ const ShowPacketsStatistics = (props) => {
           return val.toFixed(1);
         },
       },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: "55%",
+          },
+        },
+      },
       legend: {
         show: false,
         position: "bottom",
@@ -55,16 +62,16 @@ const ShowPacketsStatistics = (props) => {
         fontFamily: "Helvetica, Arial",
         fontWeight: 400,
       },
-      labels: ["Sent", "Received", "Lost"],
+      labels: ["Uplink", "Downlink", "Lost"],
       colors: ["#f2711c", "#21ba45", "#767676"],
       fill: {
         type: "gradient",
       },
     },
-    series: getDataSeries(props)
+    series: getDataSeries(props),
   };
   const colorHeaderTable =
-    (props.headerColorLine === null || props.headerColorLine === undefined)
+    props.headerColorLine === null || props.headerColorLine === undefined
       ? "black"
       : props.headerColorLine;
 
@@ -107,8 +114,8 @@ const ShowPacketsStatistics = (props) => {
             <Chart
               options={data.options}
               series={data.series}
-              type="pie"
-              width="150"
+              type="donut"
+              width="120"
             />
           </Table.Cell>
         </Table.Row>
