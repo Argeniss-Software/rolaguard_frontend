@@ -5,7 +5,7 @@ import _ from "lodash";
 import Slider, { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./resource-usage.graph.packets-lost.component.css";
-
+import Chart from "react-apexcharts";
 
 const ResourceUsageGraphPacketsLostComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
@@ -22,7 +22,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     resourceUsageStore.getDataPacketsLostFromApi();
   }, []); // only execute when change second parameter
 
-  const data = {
+  /*const data = {
     data: [
       { xValue: 0, yValue: 13, color: "#f05050" },
       { xValue: 10, yValue: 10, color: "#ff902b" },
@@ -35,7 +35,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     domain: { from: 0, to: 100 },
     barsCount: 7,
     range: "day",
-  };
+  };*/
 
   const marks = {
     0: {
@@ -142,7 +142,8 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
 
   const [valueState, setValueState] = useState([0, 100]);
 
-  useEffect(() => { // update slide when reset from and to range
+  useEffect(() => {
+    // update slide when reset from and to range
     setValueState([
       resourceUsageStore.criteria.packet_lost_range.from,
       resourceUsageStore.criteria.packet_lost_range.to,
@@ -152,16 +153,72 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     resourceUsageStore.criteria.packet_lost_range.to,
   ]);
 
+  useEffect(() => {
+    resourceUsageStore.getDataPacketsLostFromApi();
+  }, []); // only execute when change second parameter
+
   /*const resetRange = () => {
     setValueState([0, 100]);
     handleAfterChange([0, 100]);
   };*/
+  const data = {
+    options: {
+      chart: {
+        id: "basic-bar",
+        animations: {
+          enabled: false,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: "45%",
+        distributed: true,
+      },
+    },
 
+    dataLabels: {
+      enabled: true,
+      dropShadow: {
+        enabled: true,
+        left: 2,
+        top: 2,
+        opacity: 0.5,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: "35%",
+        distributed: true,
+      },
+    },
+    series: [
+      {
+        name: "Lost packages:",
+        data: resourceUsageStore.packetLostsGraph.series,
+      },
+    ],
+    xaxis: {
+      type: "category",
+    },
+  };
   return (
     <div className="box-data">
       <h5 className="visualization-title">BY PACKAGES LOST</h5>
       <Loader active={resourceUsageStore.getStatusLoading()} />
-      <div>Histogram</div>
+      <Chart
+        options={data.options}
+        series={data.series}
+        type="bar"
+        width="120%"
+        height="100%"
+      />
       <Range
         width={defaultPropsRange.width}
         defaultValue={defaultPropsRange.defaultValue}

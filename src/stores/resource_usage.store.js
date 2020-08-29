@@ -23,6 +23,27 @@ class ResourceUsageStore {
     pageSize: 20,
   };
 
+  @observable statusGraph = {
+    // keep data related of status graph on resoruce usage dashbaord
+    seriesSelected: null,
+    isLoading: false,
+    series: [],
+  };
+
+  @observable gatewaysGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
+  @observable packetLostsGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
   @action setModelLoading(val) {
     this.model.isLoading = val;
   }
@@ -52,12 +73,7 @@ class ResourceUsageStore {
   }
   /**********************************************************/
   /**********************************************************/
-  @observable statusGraph = {
-    // keep data related of status graph on resoruce usage dashbaord
-    seriesSelected: null,
-    isLoading: false,
-    series: [],
-  };
+
   @action getStatusLoading() {
     return this.statusGraph.isLoading;
   }
@@ -134,12 +150,12 @@ class ResourceUsageStore {
 
     Promise.all([gatewayPromise]).then((response) => {
       let total = response[0].data.total_count;
-      let selectedTotal = 0
+      let selectedTotal = 0;
       if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
-        let seriesSelected = this.getGatewayGraphSeriesSelected()
+        let seriesSelected = this.getGatewayGraphSeriesSelected();
         selectedTotal = _.sumBy(seriesSelected, "value");
       }
-      total -= selectedTotal;     
+      total -= selectedTotal;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
           label: e.name.toUpperCase(),
@@ -161,47 +177,26 @@ class ResourceUsageStore {
         this.gatewaysGraph.series = apiSeries;
       });
     });
-    
+
     this.setGatewaysLoading(false);
   };
 
   @action getDataPacketsLostFromApi = () => {
-    // @ todo: to implement!
-    this.setStatusLoading(true);
-    const statusPromise = this.getAssetsCount("status");
+    const statusPromise = this.getAssetsCount("packet_lost");
 
     Promise.all([statusPromise]).then((response) => {
       let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
-          label: e.name.toUpperCase(),
-          id: e.id,
-          selected: !_.isEmpty(this.getStatusGraphSeriesSelected())
-            ? e.id === this.getStatusGraphSeriesSelected().id
-            : false,
-          percentage: !_.isEmpty(this.getStatusGraphSeriesSelected())
-            ? 1
-            : total > 0
-            ? e.count / total
-            : e.count,
-          value: e.count,
-          color: index === 0 ? "#21ba45" : "#F05050",
+          x: e.name,
+          y: e.count
         };
       });
-      if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
-        apiSeries = apiSeries.filter((item) => item.selected);
-      }
+       
       runInAction(() => {
-        this.statusGraph.series = apiSeries;
+        this.packetLostsGraph.series = apiSeries;
       });
     });
-    this.setStatusLoading(false);
-
-    if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
-      this.statusGraph.series.forEach((e) => {
-        return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
-      });
-    }
   };
 
   @action getDataSignalStrengthFromApi = () => {
@@ -236,7 +231,7 @@ class ResourceUsageStore {
       //this.setStatusGraphSeries(apiSeries);
     });
     this.setStatusLoading(false);
-/*
+    /*
     if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
       this.statusGraph.series.forEach((e) => {
         return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
@@ -245,12 +240,7 @@ class ResourceUsageStore {
   };
   /**********************************************************/
   /**********************************************************/
-  @observable gatewaysGraph = {
-    // keep data related of gateway graph on resoruce usage dashbaord
-    seriesSelected: [],
-    isLoading: false,
-    series: [],
-  };
+
   @action getGatewaysLoading() {
     return this.gatewaysGraph.isLoading;
   }
@@ -325,10 +315,10 @@ class ResourceUsageStore {
     this.getDataListFromApi();
     this.getDataStatusFromApi();
     this.getDataGatewaysFromApi();
-    // this.getDataPacketsLostFromApi();
+    this.getDataPacketsLostFromApi();
     // this.getDataSignalStrengthFromApi();
   }
-  
+
   @action setCriteria(data) {
     let keyCriteriaToDelete = _.keys(data)[0];
     switch (keyCriteriaToDelete) {
@@ -343,20 +333,22 @@ class ResourceUsageStore {
         let foundItemToDelete = this.criteria.gateways.findIndex(
           (e) => e.id === data[_.keys(data)[0]].id
         );
-        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {// delete gateway from criteria
-          this.criteria.gateways.splice(foundItemToDelete,1);
-        } else { // add gateway to criteria
+        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {
+          // delete gateway from criteria
+          this.criteria.gateways.splice(foundItemToDelete, 1);
+        } else {
+          // add gateway to criteria
           this.criteria.gateways.push(data.gateways);
         }
         break;
       case "packet_lost_range":
         this.criteria.packet_lost_range.from = data.packet_lost_range.from;
         this.criteria.packet_lost_range.to = data.packet_lost_range.to;
-        break
+        break;
       case "signal_strength":
         this.criteria.signal_strength.from = data.signal_strength.from;
         this.criteria.signal_strength.to = data.signal_strength.to;
-        break
+        break;
     }
     this.loadDataFromApis();
   }
@@ -396,11 +388,13 @@ class ResourceUsageStore {
     const { status, type, gateways, packet_lost_range, signal_strength } =
       this.criteria || {};
     const headers = this.getHeaders();
-    
+
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateways_ids: this.criteria.gateways.map((e) => e.id) }),
+      ...(gateways && {
+        gateways_ids: this.criteria.gateways.map((e) => e.id),
+      }),
       ...(packet_lost_range && {
         min_packet_loss: packet_lost_range.from,
         max_packet_loss: packet_lost_range.to,
