@@ -188,7 +188,7 @@ class ResourceUsageStore {
       let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
-          x: e.name,
+          x: e.name+"%",
           y: e.count
         };
       });

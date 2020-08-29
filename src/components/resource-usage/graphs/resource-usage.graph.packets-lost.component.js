@@ -200,7 +200,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
     },
     series: [
       {
-        name: "Lost packages:",
+        name: "Devices with lost packages:",
         data: resourceUsageStore.packetLostsGraph.series,
       },
     ],
