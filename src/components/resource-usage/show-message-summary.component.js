@@ -7,8 +7,6 @@ const ShowMessagesSummary = (props) => {
   return (
     <span>
       <Popup
-        position="left center"
-        flowing
         trigger={
           <span>
             <Grid divided>
@@ -60,7 +58,6 @@ const ShowMessagesSummary = (props) => {
             </Grid>
           </span>
         }
-        position="bottom left"
       >
         <Popup.Header>Messages on the last 24 hours</Popup.Header>
         <Popup.Content>
