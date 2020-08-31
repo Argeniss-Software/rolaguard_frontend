@@ -42,6 +42,8 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell collapsing>FREQUENCY</Table.HeaderCell>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
             <Popup
+              flowing
+              size="mini"
               trigger={
                 <span style={{ cursor: "pointer" }}>
                   <Icon color="blue" name="wifi" type="icon" />
