@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext, observer } from "mobx-react";
 
 import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
@@ -10,17 +10,9 @@ import ResourceUsageList from "./resource-usage-list.component";
 import _ from "lodash";
 
 const ResourceUsageComponent = (props) => {
-  const { resourceUsageStore } = React.useContext(MobXProviderContext);
+  const { resourceUsageStore } = useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
-  const [activePage, setActivePage] = useState(1);
-  const [pageSize, setPageSize] = useState(50);
-  const [totalList, setTotalList] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
   const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
-  const [list, setList] = useState({
-    isLoading: true,
-    data: [], // resourceUsageStore.getDummyData(),
-  });
 
   const clearFilters = () => {
     // clean all criteria filtering
@@ -75,8 +67,46 @@ const ResourceUsageComponent = (props) => {
               );
             });
             break;
-        }
-        if (key === "status" || key === "type") {
+          case "packet_lost_range":
+            if (value.from != 0 || value.to != 100) {
+              labels.push(
+                <Label
+                  as="a"
+                  key={key}
+                  className="text-uppercase"
+                  onClick={() => {
+                    deleteFilter(key, value);
+                  }}
+                >
+                  {key.replace(/\_+/gm, ` `)}:{" "}
+                  <strong>
+                    {value.from}-{value.to}%
+                  </strong>
+                  <Icon name="delete" />
+                </Label>
+              );
+            }
+            break;
+          case "signal_strength":
+            if (value.from != -150 || value.to != 0) {
+              labels.push(
+                <Label
+                  as="a"
+                  key={key}
+                  className="text-uppercase"
+                  onClick={() => {
+                    deleteFilter(key, value);
+                  }}
+                >
+                  {key.replace(/\_+/gm, ` `)}:{" "}
+                  <strong>
+                    {value.from} to {value.to} dBm
+                  </strong>
+                  <Icon name="delete" />
+                </Label>
+              );
+            }
+            break
         }
       }
     }
@@ -89,52 +119,16 @@ const ResourceUsageComponent = (props) => {
     const nextType =
       order[(order.indexOf(deviceTypeFilter) + 1) % order.length];
     const newCriteria = { type: nextType };
-    setActivePage(1);
     setDeviceTypeFilter(nextType);
-    resourceUsageStore.setCriteria(() => {
-      return { ...resourceUsageStore.getCriteria(), ...newCriteria };
-    });
+    resourceUsageStore.setCriteria(newCriteria);
   };
-
-  const handleStatusFilter = (selectedStatus) => {
-    resourceUsageStore.setCriteria(() => {
-      return {
-        ...resourceUsageStore.getCriteria(),
-        ...{ status: selectedStatus },
-      };
-    });
-  };
-
   const handlePaginationChange = (e, { activePage }) => {
-    setActivePage(activePage);
-  };
-
-  const getDataFromApi = () => {
-    setList((oldData) => {
-      return { ...oldData, ...{ isLoading: true } };
-    });
-    const assetsPromise = resourceUsageStore.getAssets(
-      { page: activePage, size: pageSize },
-      resourceUsageStore.getCriteria()
-    );
-    Promise.all([assetsPromise]).then((response) => {
-      setTotalList(() => response[0].data.total_items);
-      setTotalPages(() => response[0].data.total_pages);
-      setList((oldList) => {
-        return {
-          ...oldList,
-          ...resourceUsageStore.formatApiData(response[0].data.assets),
-        };
-      });
-    });
-    setList((oldData) => {
-      return { ...oldData, ...{ isLoading: false } };
-    });
+    resourceUsageStore.setActivePage(activePage);
   };
 
   useEffect(() => {
-    getDataFromApi();
-  }, [resourceUsageStore.criteria, activePage, pageSize]); // only execute when change second parameter
+    resourceUsageStore.getDataListFromApi();
+  }, []);
 
   return (
     <div className="app-body-container-view">
@@ -165,42 +159,68 @@ const ResourceUsageComponent = (props) => {
             <div className="table-container-box">
               <Segment>
                 {showFilters && (
-                  <div>
-                    <label style={{ fontWeight: "bolder" }}>Filters: </label>
-                    {showAppliedFilters()}
-                    <span
-                      className="range-select"
-                      onClick={() => clearFilters()}
-                    >
-                      Clear
-                    </span>
-                  </div>
+                  <React.Fragment>
+                    <Grid>
+                      <Grid.Row>
+                        <Grid.Column width={12}>
+                          <label style={{ fontWeight: "bolder" }}>
+                            Filters:{" "}
+                          </label>
+                          {showAppliedFilters()}
+                          <span
+                            className="range-select"
+                            onClick={() => clearFilters()}
+                          >
+                            Clear
+                          </span>
+                        </Grid.Column>
+                        <Grid.Column width={4}>
+                          {" "}
+                          <div className="right pull-right aligned">
+                            Page{" "}
+                            <strong>
+                              {resourceUsageStore.model.activePage}
+                            </strong>{" "}
+                            of{" "}
+                            <strong>
+                              {resourceUsageStore.model.totalPages}
+                            </strong>{" "}
+                            - Total Results:{" "}
+                            <strong>
+                              {resourceUsageStore.model.totalList}
+                            </strong>
+                          </div>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
+                  </React.Fragment>
                 )}
 
-                {!list.isLoading && (
+                {!resourceUsageStore.model.isLoading && (
                   <ResourceUsageList
-                    list={list}
+                    list={resourceUsageStore.model.list}
                     criteria={resourceUsageStore.getCriteria()}
-                    isLoading={list.isLoading}
+                    isLoading={resourceUsageStore.model.isLoading}
                     deviceTypeClick={toggleDeviceTypeFilter}
                   ></ResourceUsageList>
                 )}
 
-                {list.isLoading && (
+                {resourceUsageStore.model.isLoading && (
                   <LoaderComponent
                     loadingMessage="Loading resource usage..."
                     style={{ marginBottom: 20 }}
                   />
                 )}
-                {!list.isLoading && totalPages > 1 && (
-                  <Grid className="segment centered">
-                    <Pagination
-                      activePage={activePage}
-                      onPageChange={handlePaginationChange}
-                      totalPages={totalPages}
-                    />
-                  </Grid>
-                )}
+                {!resourceUsageStore.model.isLoading &&
+                  resourceUsageStore.model.totalPages > 1 && (
+                    <Grid className="segment centered">
+                      <Pagination
+                        activePage={resourceUsageStore.model.activePage}
+                        onPageChange={handlePaginationChange}
+                        totalPages={resourceUsageStore.model.totalPages}
+                      />
+                    </Grid>
+                  )}
               </Segment>
             </div>
           </div>

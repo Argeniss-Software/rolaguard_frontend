@@ -1,7 +1,8 @@
-import { observable, action } from "mobx";
+import { observable, action, runInAction, computed } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
 import _ from "lodash";
+import ColorUtil from "../util/colors";
 
 class ResourceUsageStore {
   @observable criteria = {
@@ -9,14 +10,77 @@ class ResourceUsageStore {
     type: null, // device or gateway
     status: null, // connected or disconnected
     gateways: [],
+    signal_strength: { from: -150, to: 0 },
+    packet_lost_range: { from: 0, to: 100 },
   };
-  /**********************************************************/
-  /**********************************************************/
+
+  @observable model = {
+    list: [],
+    isLoading: false,
+    totalList: 0,
+    totalPages: 0,
+    activePage: 1,
+    pageSize: 50,
+  };
+
   @observable statusGraph = {
     // keep data related of status graph on resoruce usage dashbaord
     seriesSelected: null,
     isLoading: false,
+    series: [],
   };
+
+  @observable gatewaysGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
+  @observable packetLostsGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
+  @observable signalStrengthGraph = {
+    // keep data related of gateway graph on resoruce usage dashbaord
+    seriesSelected: [],
+    isLoading: false,
+    series: [],
+  };
+
+  @action setModelLoading(val) {
+    this.model.isLoading = val;
+  }
+
+  @action setTotalList(val) {
+    this.model.totalList = val;
+  }
+
+  @action setTotalPages(val) {
+    this.model.totalPages = val;
+  }
+
+  @action setActivePage(val) {
+    this.model.activePage = val;
+    this.getDataListFromApi();
+  }
+  @action setPageSize(val) {
+    this.model.pageSize = val;
+  }
+
+  @action setList(data) {
+    this.model.list = data;
+  }
+
+  @computed get getTotalList() {
+    return this.model.list.length;
+  }
+  /**********************************************************/
+  /**********************************************************/
+
   @action getStatusLoading() {
     return this.statusGraph.isLoading;
   }
@@ -29,13 +93,138 @@ class ResourceUsageStore {
   @action setStatusGraphSeriesSelected(data) {
     this.statusGraph.seriesSelected = data;
   }
-  /**********************************************************/
-  /**********************************************************/
-  @observable gatewaysGraph = {
-    // keep data related of gateway graph on resoruce usage dashbaord
-    seriesSelected: [],
-    isLoading: false,
+  @action setStatusGraphSeries(series) {
+    this.statusGraph.series = series;
+  }
+
+  @action getDataListFromApi = () => {
+    // get list of resource usage by criteria
+    this.setModelLoading(true);
+    const self = this;
+    const assetsPromise = this.getAssets(
+      { page: this.model.activePage, size: this.model.pageSize },
+      this.getCriteria()
+    );
+    Promise.all([assetsPromise]).then((response) => {
+      self.setTotalList(response[0].data.total_items);
+      self.setTotalPages(response[0].data.total_pages);
+      self.setList(this.formatApiData(response[0].data.assets));
+    });
+    this.setModelLoading(false);
   };
+
+  @action getDataStatusFromApi = () => {
+    this.setStatusLoading(true);
+    const statusPromise = this.getAssetsCount("status");
+
+    Promise.all([statusPromise]).then((response) => {
+      let total = response[0].data.total_count;
+      let apiSeries = response[0].data.groups.map((e, index) => {
+        return {
+          label: e.name.toUpperCase(),
+          id: e.id,
+          selected: !_.isEmpty(this.getStatusGraphSeriesSelected())
+            ? e.id === this.getStatusGraphSeriesSelected().id
+            : false,
+          percentage: !_.isEmpty(this.getStatusGraphSeriesSelected())
+            ? 1
+            : total > 0
+            ? e.count / total
+            : e.count,
+          value: e.count,
+          color: index === 0 ? "#21ba45" : "#F05050",
+        };
+      });
+      if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
+        apiSeries = apiSeries.filter((item) => item.selected);
+      }
+      runInAction(() => {
+        this.statusGraph.series = apiSeries;
+      });
+    });
+    this.setStatusLoading(false);
+
+    if (!_.isEmpty(this.getStatusGraphSeriesSelected())) {
+      this.statusGraph.series.forEach((e) => {
+        return (e.selected = e.id === this.getStatusGraphSeriesSelected().id);
+      });
+    }
+  };
+
+  @action getDataGatewaysFromApi = () => {
+    this.setGatewaysLoading(true);
+    const gatewayPromise = this.getAssetsCount("gateways");
+
+    Promise.all([gatewayPromise]).then((response) => {
+      let total = response[0].data.total_count;
+      let selectedTotal = 0;
+      if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
+        let seriesSelected = this.getGatewayGraphSeriesSelected();
+        selectedTotal = _.sumBy(seriesSelected, "value");
+      }
+      total -= selectedTotal;
+      let apiSeries = response[0].data.groups.map((e, index) => {
+        return {
+          label: e.name.toUpperCase(),
+          id: e.id,
+          selected: !_.isEmpty(this.getGatewayGraphSeriesSelected())
+            ? this.getGatewayGraphSeriesSelected()
+                .map((i) => i.id)
+                .includes(e.id)
+            : false,
+          percentage: total > 0 ? e.count / total : e.count,
+          value: e.count,
+          color: ColorUtil.getByIndex(index),
+        };
+      });
+      if (!_.isEmpty(this.getGatewayGraphSeriesSelected())) {
+        apiSeries = apiSeries.filter((item) => !item.selected);
+      }
+      runInAction(() => {
+        this.gatewaysGraph.series = apiSeries;
+      });
+    });
+
+    this.setGatewaysLoading(false);
+  };
+
+  @action getDataPacketsLostFromApi = () => {
+    const statusPromise = this.getAssetsCount("packet_lost");
+
+    Promise.all([statusPromise]).then((response) => {
+      let total = response[0].data.total_count;
+      let apiSeries = response[0].data.groups.map((e, index) => {
+        return {
+          x: e.name,
+          y: e.count,
+        };
+      });
+      runInAction(() => {
+        this.packetLostsGraph.series = apiSeries;
+      });
+    });
+  };
+
+  @action getDataSignalStrengthFromApi = () => {
+    const statusPromise = this.getAssetsCount("signal_strength");
+
+    Promise.all([statusPromise]).then((response) => {
+      let total = response[0].data.total_count;
+      let apiSeries = response[0].data.groups.map((e, index) => {
+        return {
+          x: e.name,
+          y: e.count,
+        };
+      });
+
+      runInAction(() => {
+        this.signalStrengthGraph.series = apiSeries;
+      });
+    });
+  };
+  /**********************************************************/
+  /**********************************************************/
+
   @action getGatewaysLoading() {
     return this.gatewaysGraph.isLoading;
   }
@@ -43,15 +232,20 @@ class ResourceUsageStore {
     this.gatewaysGraph.isLoading = val;
   }
   @action getGatewayGraphSeriesSelected() {
-    return this.gatewaysGraph.seriesSelected;
+    return this.criteria.gateways;
   }
+  @action setGatewayGraphSeries(series) {
+    this.gatewaysGraph.series = series;
+  }
+
   @action setGatewayGraphSeriesSelected(data) {
-    let elementFoundIndex = this.gatewaysGraph.seriesSelected.findIndex((e) => {
-      return e.id === data.id;
-    });
+    let elementFoundIndex = -1;
+    if (!_.isEmpty(this.gatewaysGraph.seriesSelected) && !_.isEmpty(data)) {
+      elementFoundIndex = this.gatewaysGraph.seriesSelected.findIndex((e) => {
+        return e.id === data.id;
+      });
+    }
     if (elementFoundIndex != -1) {
-      //remove filter
-      this.gatewaysGraph.seriesSelected.splice(elementFoundIndex, 1);
       let foundCriteria = this.criteria.gateways.findIndex((e) => {
         return e.id === data.id;
       });
@@ -61,9 +255,8 @@ class ResourceUsageStore {
     } else {
       // add filter
       this.gatewaysGraph.seriesSelected.push(data);
-      this.criteria.gateways.push(data);
+      this.setCriteria({ gateways: data });
     }
-    //    this.gatewaysGraph.seriesSelected = {...this.gatewaysGraph.seriesSelected, ...data}
   }
   /**********************************************************/
   /**********************************************************/
@@ -72,46 +265,80 @@ class ResourceUsageStore {
   }
 
   @action deleteCriteria(data) {
-    let deleteCriteria = {};
-
     if (_.isEmpty(data)) {
       // clear all
-      this.setStatusGraphSeriesSelected(null); // clean selected status element on status graph!
-      this.setGatewayGraphSeriesSelected(null); // clean selected status element on status graph!
-
-      this.criteria = {
+      this.setStatusGraphSeriesSelected({}); // clean selected status element on status graph!
+      this.setCriteria({
         type: null, // device or gateway
         status: null, // connected or disconnected
-        gateway: [],
-      };
+        gateways: [],
+        signal_strength: { from: -150, to: 0 },
+        packet_lost_range: { from: 0, to: 100 },
+      });
     } else {
       let keyCriteriaToDelete = _.keys(data)[0];
       switch (keyCriteriaToDelete) {
         case "status":
-          this.setStatusGraphSeriesSelected(null); // clean selected status element on status graph!
-          this.criteria.status = null;
+          this.setStatusGraphSeriesSelected({}); // clean selected status element on status graph!
+          this.setCriteria({ status: null });
           break;
-        case "types":
-          this.criteria.type = null;
+        case "type":
+          this.setCriteria({ type: null });
           break;
         case "gateways":
-          this.setGatewayGraphSeriesSelected(data[keyCriteriaToDelete]);
-          let foundItemToDelete = this.criteria.gateways.findIndex(
-            (e) => e.id === data[keyCriteriaToDelete].id
-          );
-          if (foundItemToDelete != -1) {
-            this.criteria.gateway.slice(foundItemToDelete, 1);
-          }
+          this.setCriteria({ gateways: data.gateways });
+          break;
+        case "packet_lost_range":
+          this.setCriteria({ packet_lost_range: { from: 0, to: 100 } });
+          break;
+        case "signal_strength":
+          this.setCriteria({ signal_strength: { from: -150, to: 0 } });
           break;
       }
     }
   }
 
+  @action loadDataFromApis() {
+    this.setActivePage(1); // Automatic call getDataListFromApi
+    this.getDataStatusFromApi();
+    this.getDataGatewaysFromApi();
+    this.getDataPacketsLostFromApi();
+    this.getDataSignalStrengthFromApi();
+
+  }
+
   @action setCriteria(data) {
-    this.criteria = {
-      ...this.criteria,
-      ...(_.isFunction(data) ? data.call() : data),
-    };
+    let keyCriteriaToDelete = _.keys(data)[0];
+    switch (keyCriteriaToDelete) {
+      case "status":
+      case "type":
+        this.criteria = {
+          ...this.criteria,
+          ...(_.isFunction(data) ? data.call() : data),
+        };
+        break;
+      case "gateways":
+        let foundItemToDelete = this.criteria.gateways.findIndex(
+          (e) => e.id === data[_.keys(data)[0]].id
+        );
+        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {
+          // delete gateway from criteria
+          this.criteria.gateways.splice(foundItemToDelete, 1);
+        } else {
+          // add gateway to criteria
+          this.criteria.gateways.push(data.gateways);
+        }
+        break;
+      case "packet_lost_range":
+        this.criteria.packet_lost_range.from = data.packet_lost_range.from;
+        this.criteria.packet_lost_range.to = data.packet_lost_range.to;
+        break;
+      case "signal_strength":
+        this.criteria.signal_strength.from = data.signal_strength.from;
+        this.criteria.signal_strength.to = data.signal_strength.to;
+        break;
+    }
+    this.loadDataFromApis();
   }
   /**********************************************************/
   /**********************************************************/
@@ -119,44 +346,71 @@ class ResourceUsageStore {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
-  @action getAssets(pagination, criteria) {
+  /* used it on list device and gateway on resrouce ussages */
+  @action getAssets(pagination) {
     const { page, size } = pagination || {};
-    const { status, type, gateways } = this.criteria || {};
+    const { status, type, gateways, packet_lost_range, signal_strength } =
+      this.criteria || {};
 
     const headers = this.getHeaders();
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
       ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
+      ...(packet_lost_range && {
+        min_packet_loss: packet_lost_range.from,
+        max_packet_loss: packet_lost_range.to,
+      }),
+      ...(signal_strength && {
+        min_signal_strength: signal_strength.from,
+        max_signal_strength: signal_strength.to,
+      }),
       page,
       size,
     };
     return API.get(`resource_usage/list`, { headers, params });
   }
 
-  // return resource usage global status (connected/disconnected)
-  @action getAssetsCountStatus(criteria) {
-    const { status, type, gateways } = this.criteria || {};
+  // return for graphs associated to resource usage
+  @action getAssetsCount(criteria) {
+    const { status, type, gateways, packet_lost_range, signal_strength } =
+      this.criteria || {};
     const headers = this.getHeaders();
+
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
+      ...(gateways && {
+        gateways_ids: this.criteria.gateways.map((e) => e.id),
+      }),
+      ...(packet_lost_range && {
+        min_packet_loss: packet_lost_range.from,
+        max_packet_loss: packet_lost_range.to,
+      }),
+      ...(signal_strength && {
+        min_signal_strength:
+          signal_strength.from === -150 ? -1000 : signal_strength.from,
+        max_signal_strength: signal_strength.to,
+      }),
     };
-    return API.get(`resource_usage/count/status`, { headers, params });
-  }
-
-  // return different gateways associated to resource usage
-  @action getAssetsCountGateways(criteria) {
-    const { status, type, gateways } = this.criteria || {};
-    const headers = this.getHeaders();
-    const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: this.criteria.gateways.map((e) => e.id) }),
-    };
-
-    return API.get(`resource_usage/count/gateway`, { headers, params });
+    let uri = null;
+    switch (criteria) {
+      case "status":
+        uri = `resource_usage/count/status`;
+        break;
+      case "gateways":
+        uri = `resource_usage/count/gateway`;
+        break;
+      case "signal_strength":
+        uri = `resource_usage/count/signal`;
+        break;
+      case "packet_lost":
+        uri = `resource_usage/count/loss`;
+        break;
+      default:
+        break;
+    }
+    return API.get(uri, { headers, params });
   }
   /**********************************************************/
   /**********************************************************/

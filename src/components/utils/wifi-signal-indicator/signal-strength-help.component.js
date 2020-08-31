@@ -3,11 +3,12 @@ import { Table, Popup } from "semantic-ui-react";
 import WifiIndicator from "react-wifi-indicator";
 import DBMToSignalStrength from "./DBMToSignalStrength";
 import SignalStrengthReferences from "./SignalStrengthReferences";
+import statusImages from "./images";
 
 const SignalStrengthHelp = (props) => {
   return (
     <React.Fragment>
-      <Table compact="tiny" celled color="black">
+      <Table compact="very" size="large" flowing celled color="black">
         <Table.Header>
           <Table.Row textAlign="center">
             <Table.HeaderCell textAlign="center"></Table.HeaderCell>
@@ -22,9 +23,11 @@ const SignalStrengthHelp = (props) => {
                 <Table.Cell textAlign="left">
                   <Popup
                     basic
+                    size="mini"
                     trigger={
                       <WifiIndicator
                         strength={DBMToSignalStrength(r.value)}
+                        statusImages={statusImages}
                         style={{
                           height: 20,
                           verticalAlign: "bottom",
@@ -32,7 +35,8 @@ const SignalStrengthHelp = (props) => {
                       />
                     }
                     content={r.text}
-                  ></Popup>
+                  ></Popup>{" "}
+                  <small>{r.text}</small>
                 </Table.Cell>
                 <Table.Cell textAlign="left">
                   > {r.value} {r.unit}

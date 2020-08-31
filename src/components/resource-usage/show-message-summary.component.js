@@ -7,25 +7,10 @@ const ShowMessagesSummary = (props) => {
   return (
     <span>
       <Popup
-        position="left center"
-        flowing
         trigger={
           <span>
             <Grid divided>
               <Grid.Row>
-                <Grid.Column width={4}>
-                  <Icon
-                    color="green"
-                    name="arrow alternate circle down"
-                    type="icon"
-                  />
-                  <strong>
-                    <NumberFormat
-                      value={props.packets_down.total}
-                      displayType={"text"}
-                    />
-                  </strong>
-                </Grid.Column>
                 <Grid.Column width={4}>
                   <Icon
                     color="orange"
@@ -35,6 +20,19 @@ const ShowMessagesSummary = (props) => {
                   <strong>
                     <NumberFormat
                       value={props.packets_up.total}
+                      displayType={"text"}
+                    />
+                  </strong>
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  <Icon
+                    color="green"
+                    name="arrow alternate circle down"
+                    type="icon"
+                  />
+                  <strong>
+                    <NumberFormat
+                      value={props.packets_down.total}
                       displayType={"text"}
                     />
                   </strong>
@@ -60,7 +58,6 @@ const ShowMessagesSummary = (props) => {
             </Grid>
           </span>
         }
-        position="bottom left"
       >
         <Popup.Header>Messages on the last 24 hours</Popup.Header>
         <Popup.Content>
