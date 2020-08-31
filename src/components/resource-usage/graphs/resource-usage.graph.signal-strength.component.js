@@ -127,6 +127,26 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
           show: false,
         },
       },
+      xaxis: {
+        type: "category",
+        labels: {
+          trim: true,
+          minHeight: 70,
+          maxHeight: 70,
+        },
+        style: {
+          colors: [],
+          fontSize: "9px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          cssClass: "apexcharts-xaxis-label",
+        },
+        /*labels: {
+          formatter: function(value) {
+            if (value.length)
+            return value.slice(0,5);
+          },
+        },*/
+      },
     },
     plotOptions: {
       bar: {
@@ -159,19 +179,19 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         data: resourceUsageStore.signalStrengthGraph.series,
       },
     ],
-    xaxis: {
-      type: "category",
-    },
   };
   return (
     <div className="box-data">
       <h5 className="visualization-title">BY SIGNAL STRENGTH</h5>
-      <Chart
-        options={data.options}
-        series={data.series}
-        type="bar"
-        width="120%"
-      />
+      <div style={{height: "240px"}}>
+        <Chart
+          options={data.options}
+          series={data.series}
+          type="bar"
+          width="120%"
+          height="100%"
+        />
+      </div>
 
       <Range
         width={defaultPropsRange.width}
