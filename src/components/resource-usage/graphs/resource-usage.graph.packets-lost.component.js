@@ -148,13 +148,60 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
         toolbar: {
           show: false,
         },
+        events: {
+          dataPointSelection: (event, chartContext, config) => {
+            let from = config.dataPointIndex * 10;
+            let to = (from + 1) * 10;
+            to = to > 100 ? 100 : to;
+
+            if (
+              resourceUsageStore.criteria.packet_lost_range.from != 0 ||
+              resourceUsageStore.criteria.packet_lost_range.to != 100
+            ) {
+              resourceUsageStore.deleteCriteria({
+                packet_lost_range: { from: 0, to: 100 },
+              });
+            } else {
+              resourceUsageStore.setCriteria({
+                packet_lost_range: { from: from, to: to },
+              });
+            }
+          },
+        },
+      },
+      tooltip: {
+        custom: function({ series, seriesIndex, dataPointIndex, w }) {
+          return (
+            '<div class="arrow_box">' +
+            "<span>" +
+            `From ${dataPointIndex * 10}% to ${(dataPointIndex + 1) * 10}%` +
+            "</span>" +
+            "</div>"
+          );
+        },
       },
       xaxis: {
-        type: "category",
+        type: "numeric",
+        //tickPlacement: "between",
+        categories: [
+          "0%",
+          "10%",
+          "20%",
+          "30%",
+          "40%",
+          "50%",
+          "60%",
+          "70%",
+          "80%",
+          "90%",
+        ],
+        max: 5,
         labels: {
           trim: true,
           minHeight: 70,
           maxHeight: 70,
+          offsetX: -4,
+          max: 99,
         },
         style: {
           colors: [],
@@ -162,15 +209,17 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
           fontFamily: "Helvetica, Arial, sans-serif",
           cssClass: "apexcharts-xaxis-label",
         },
-      }
-    },
-    dataLabels: {
-      enabled: true,
-      dropShadow: {
+      },
+      dataLabels: {
         enabled: true,
-        left: 2,
-        top: 2,
-        opacity: 0.5,
+        formatter: function(val) {
+          return val; //+ "%";
+        },
+        // offsetY: -30,
+        style: {
+          fontSize: "12px",
+          colors: ["#304758"],
+        },
       },
     },
     legend: {
