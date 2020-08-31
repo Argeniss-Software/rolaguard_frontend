@@ -122,23 +122,13 @@ const ResourceUsageComponent = (props) => {
     setDeviceTypeFilter(nextType);
     resourceUsageStore.setCriteria(newCriteria);
   };
-
-  /*const handleStatusFilter = (selectedStatus) => {
-    resourceUsageStore.setCriteria(() => {
-      return {
-        ...resourceUsageStore.getCriteria(),
-        ...{ status: selectedStatus },
-      };
-    });
-  };*/
-
   const handlePaginationChange = (e, { activePage }) => {
     resourceUsageStore.setActivePage(activePage);
   };
 
   useEffect(() => {
     resourceUsageStore.getDataListFromApi();
-  }, []); // only execute when change second parameter
+  }, []);
 
   return (
     <div className="app-body-container-view">

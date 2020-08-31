@@ -13,7 +13,7 @@ const ResourceUsageGraphGatewaysComponent = (props) => {
  
   useEffect(() => {  
     resourceUsageStore.getDataGatewaysFromApi()
-  }, []); // only execute when change second parameter
+  }, []);
 
   return (
     <div className="box-data">
