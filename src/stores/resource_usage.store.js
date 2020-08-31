@@ -20,7 +20,7 @@ class ResourceUsageStore {
     totalList: 0,
     totalPages: 0,
     activePage: 1,
-    pageSize: 20,
+    pageSize: 50,
   };
 
   @observable statusGraph = {
@@ -195,11 +195,10 @@ class ResourceUsageStore {
       let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
-          x: e.name + "%",
+          x: e.name,
           y: e.count,
         };
       });
-
       runInAction(() => {
         this.packetLostsGraph.series = apiSeries;
       });
@@ -300,11 +299,12 @@ class ResourceUsageStore {
   }
 
   @action loadDataFromApis() {
-    this.getDataListFromApi();
+    this.setActivePage(1); // Automatic call getDataListFromApi
     this.getDataStatusFromApi();
     this.getDataGatewaysFromApi();
     this.getDataPacketsLostFromApi();
     this.getDataSignalStrengthFromApi();
+
   }
 
   @action setCriteria(data) {
