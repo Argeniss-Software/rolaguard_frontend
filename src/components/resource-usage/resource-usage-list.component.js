@@ -11,6 +11,7 @@ import NumberFormat from "react-number-format";
 import moment from "moment";
 import SignalStrengthHelp from "../utils/wifi-signal-indicator/signal-strength-help.component";
 import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStrength";
+import statusImages from "../utils/wifi-signal-indicator/images";
 import "./resource-usage.component.css";
 import {observer} from 'mobx-react';
 
@@ -152,6 +153,7 @@ const ResourceUsageList = (props) => {
                               trigger={
                                 <WifiIndicator
                                   strength={DBMToSignalStrength(item.max_rssi)}
+                                  statusImages={statusImages}
                                   style={{
                                     height: 20,
                                     verticalAlign: "bottom",

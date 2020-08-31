@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 255.73 255.47"
+   version="1.1"
+   sodipodi:docname="GREAT.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata949">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="768"
+     id="namedview947"
+     showgrid="false"
+     inkscape:zoom="0.92378752"
+     inkscape:cx="-160.62125"
+     inkscape:cy="127.735"
+     inkscape:window-x="0"
+     inkscape:window-y="275"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs932">
+    <style
+       id="style930">.cls-1{fill:none;}.cls-2{fill:#d2d2d2;}.cls-3{fill:#9abc22;}</style>
+  </defs>
+  <title
+     id="title934">wifi4</title>
+  <rect
+     class="cls-1"
+     width="255.73"
+     height="255.47"
+     id="rect936" />
+  <path
+     class="cls-2"
+     d="M252.84,79.93a10.42,10.42,0,0,1-4,14.67l-.12.06c-4.48,2.2-8.6,1.43-12.53-1.69-7.82-6.2-15.41-12.79-23.72-18.25-45.46-29.88-93-31.71-142-9.61A194.49,194.49,0,0,0,21.5,96.64C16,101.5,9.33,101.42,5.1,96.5s-3.72-11.35,1.67-16C44.22,48.44,86.67,28.4,136.88,28.7c38.62.22,72.26,14.73,102.31,38.32a111,111,0,0,1,11,9.36A18.94,18.94,0,0,1,252.84,79.93Z"
+     transform="translate(0.08 -0.12)"
+     id="path938"
+     style="fill:#b3b3b3" />
+  <path
+     class="cls-3"
+     d="M131.62,81.43c33,.71,62.18,11.33,86.47,34.2,5.48,5.15,6.31,11.64,2.07,16.26s-10.27,4.49-16-.37c-17.44-14.89-37-25.31-60-28.33C116.3,99.52,91.56,107.53,69,123.42c-3.67,2.58-7.11,5.5-10.56,8.36C53,136.29,47,136.4,42.8,132c-4.31-4.61-3.79-10.82,1.53-15.89C64.4,97,88.28,85.91,115.7,82.38c2.81-.36,5.61-.75,8.43-.92C126.62,81.3,129.12,81.43,131.62,81.43Z"
+     transform="translate(0.08 -0.12)"
+     id="path940"
+     style="fill:#2185d0;fill-opacity:1" />
+  <path
+     class="cls-3"
+     d="M129.68,130.88c21.71.76,41.27,7.21,56.6,23.7a10.34,10.34,0,0,1,0,14.47c-3.88,4-9.81,4.4-14.37.46-8.81-7.62-18.41-13.7-30-16.08-17.59-3.61-32.79,1.84-46.55,12.53-1.71,1.33-3.26,2.85-5,4.15-4.84,3.62-10.45,3.12-14.35-1.19-3.7-4.09-3.76-9.55.23-14,11.25-12.44,25.48-19.48,41.81-22.49C121.81,131.77,125.63,131.42,129.68,130.88Z"
+     transform="translate(0.08 -0.12)"
+     id="path942"
+     style="fill:#2185d0;fill-opacity:1" />
+  <path
+     class="cls-3"
+     d="M131.42,181.25a27.2,27.2,0,0,1,27.09,26.89c.07,14.58-12.33,27.18-26.84,27.27-14.69.1-27.19-12.12-27.33-26.71A27.3,27.3,0,0,1,131.42,181.25Zm8.38,27a8,8,0,0,0-15.92-.24,8,8,0,1,0,15.92.24Z"
+     transform="translate(0.08 -0.12)"
+     id="path944"
+     style="fill:#2185d0;fill-opacity:1" />
+</svg>

@@ -3,6 +3,7 @@ import { Table, Popup } from "semantic-ui-react";
 import WifiIndicator from "react-wifi-indicator";
 import DBMToSignalStrength from "./DBMToSignalStrength";
 import SignalStrengthReferences from "./SignalStrengthReferences";
+import statusImages from "./images";
 
 const SignalStrengthHelp = (props) => {
   return (
@@ -25,6 +26,7 @@ const SignalStrengthHelp = (props) => {
                     trigger={
                       <WifiIndicator
                         strength={DBMToSignalStrength(r.value)}
+                        statusImages={statusImages}
                         style={{
                           height: 20,
                           verticalAlign: "bottom",
