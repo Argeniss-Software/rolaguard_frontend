@@ -7,6 +7,7 @@ const ShowMessagesSummary = (props) => {
   return (
     <span>
       <Popup
+        flowing
         trigger={
           <span>
             <Grid divided>
