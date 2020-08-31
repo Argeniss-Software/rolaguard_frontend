@@ -18,7 +18,7 @@ const ResourceUsageGraphComponent = (props) => {
             tablet={8}
             computer={4}
           >
-            <ResourceUsageGraphStatusComponent props={props}/>
+            <ResourceUsageGraphStatusComponent props={props} />
           </Grid.Column>
           <Grid.Column
             className="data-container-box pl0 pr0"
@@ -34,7 +34,7 @@ const ResourceUsageGraphComponent = (props) => {
             tablet={8}
             computer={4}
           >
-            <ResourceUsageGraphSignalStrengthComponent props={props} />
+            <ResourceUsageGraphPacketsLostComponent props={props} />
           </Grid.Column>
           <Grid.Column
             className="data-container-box pl0 pr0"
@@ -42,7 +42,7 @@ const ResourceUsageGraphComponent = (props) => {
             tablet={8}
             computer={4}
           >
-            <ResourceUsageGraphPacketsLostComponent props={props}/>
+            <ResourceUsageGraphSignalStrengthComponent props={props} />
           </Grid.Column>
         </Grid.Row>
       </Grid>
