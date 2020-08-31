@@ -6,6 +6,7 @@ import Slider, { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./resource-usage.graph.packets-lost.component.css";
 import Chart from "react-apexcharts";
+import SignalStrengthReferences from "../../utils/wifi-signal-indicator/SignalStrengthReferences"
 
 const ResourceUsageGraphSignalStrengthComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);
@@ -22,6 +23,8 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
     resourceUsageStore.getDataSignalStrengthFromApi();
   }, []); // only execute when change second parameter
 
+  const signalStrengthsReferences = !_.isEmpty(SignalStrengthReferences()) ? SignalStrengthReferences().reverse() : []
+    
   const marks = {
     0: {
       style: {
@@ -126,6 +129,34 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         toolbar: {
           show: false,
         },
+        events: {
+          dataPointSelection: (event, chartContext, config) => {
+            debugger
+            let from = 0
+            let to = 0
+            switch (config.dataPointIndex) {
+              case 0:
+                from = -150
+                to = signalStrengthsReferences[config.dataPointIndex].value
+                break;
+              case 1:
+              case 2:
+              case 3:
+              case 4:
+                from = signalStrengthsReferences[config.dataPointIndex].value;
+                to = signalStrengthsReferences[config.dataPointIndex+1].value;
+                break;
+              case 5:
+                from = signalStrengthsReferences[config.dataPointIndex].value
+                to = 0
+              default:
+                break;
+            }
+            resourceUsageStore.setCriteria({
+              signal_strength: { from: from, to: to },
+            })
+          },
+        },
       },
       xaxis: {
         type: "category",
@@ -147,21 +178,22 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
           },
         },*/
       },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val) {
+          return val; //+ "%";
+        },
+        // offsetY: -30,
+        style: {
+          fontSize: "12px",
+          colors: ["#304758"],
+        },
+      },
     },
     plotOptions: {
       bar: {
         columnWidth: "45%",
         distributed: true,
-      },
-    },
-
-    dataLabels: {
-      enabled: true,
-      dropShadow: {
-        enabled: true,
-        left: 2,
-        top: 2,
-        opacity: 0.5,
       },
     },
     legend: {
