@@ -14,6 +14,7 @@ import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStren
 import statusImages from "../utils/wifi-signal-indicator/images";
 import "./resource-usage.component.css";
 import {observer} from 'mobx-react';
+import ModalResourceUsage from './resource-usage-modal.component'
 
 const ResourceUsageList = (props) => {
   return (
@@ -87,7 +88,15 @@ const ResourceUsageList = (props) => {
                   <Table.Cell>
                     <AssetIdComponent type={item.type} id={item.hex_id} />
                   </Table.Cell>
-                  <Table.Cell>{item.name}</Table.Cell>
+                  <Table.Cell>
+                    {item.name}
+                    <ModalResourceUsage
+                      asset={item}
+                      id={item.id}
+                      type={item.type}
+                      tabIndexActive={0}
+                    />
+                  </Table.Cell>
                   <Table.Cell>
                     <Popup
                       trigger={
@@ -162,7 +171,15 @@ const ResourceUsageList = (props) => {
                                   }}
                                 />
                               }
-                              content={DBMToSignalStrength(item.max_rssi)}
+                              content={
+                                DBMToSignalStrength(item.max_rssi) ===
+                                "DISCONNECTED"
+                                  ? "UNUSABLE"
+                                  : DBMToSignalStrength(item.max_rssi) ===
+                                    "UNUSABLE"
+                                  ? "VERY WEAK"
+                                  : DBMToSignalStrength(item.max_rssi)
+                              }
                             ></Popup>
                           )}
                         </Grid.Column>

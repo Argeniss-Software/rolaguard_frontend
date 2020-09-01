@@ -36,10 +36,14 @@ const SignalStrengthHelp = (props) => {
                     }
                     content={r.text}
                   ></Popup>{" "}
-                  <small>{r.text}</small>
+                  <small>
+                    {r.text === "DISCONNECTED"
+                      ? "UNUSABLE"
+                      : (r.text === "UNUSABLE" ? 'VERY WEAK' : r.text)}
+                  </small>
                 </Table.Cell>
                 <Table.Cell textAlign="left">
-                  {index > 4 ? '<' : '>'} {r.value} {r.unit}
+                  {index > 4 ? "<" : ">"} {r.value} {r.unit}
                 </Table.Cell>
               </Table.Row>
             );
