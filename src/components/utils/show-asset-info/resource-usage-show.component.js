@@ -106,15 +106,6 @@ const ShowResourceUssage = (props) => {
               </Table.Header>
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell>
-                    <ShowPacketsStatistics
-                      packets_down={props.asset.packets_down}
-                      packets_up={props.asset.packets_up}
-                      packets_lost={props.asset.packets_lost}
-                      headerColorLine=""
-                      type={props.asset.type}
-                    ></ShowPacketsStatistics>
-                  </Table.Cell>
                   <Table.Row>
                     <Table.Cell>LAST MESSAGE RECEIVED</Table.Cell>
                     <Table.Cell className="bold">
@@ -146,6 +137,15 @@ const ShowResourceUssage = (props) => {
                     </Table.Cell>
                   </Table.Row>
                 </Table.Row>
+                <Table.Cell>
+                  <ShowPacketsStatistics
+                    packets_down={props.asset.packets_down}
+                    packets_up={props.asset.packets_up}
+                    packets_lost={props.asset.packets_lost}
+                    headerColorLine=""
+                    type={props.asset.type}
+                  ></ShowPacketsStatistics>
+                </Table.Cell>
               </Table.Body>
             </Table>
             <div></div>
