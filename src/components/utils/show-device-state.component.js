@@ -3,8 +3,8 @@ import {Icon, Popup} from "semantic-ui-react";
 
 const ShowDeviceState = (props) => {
   const connectedState = true;
-  const connectedText = 'connected';
-  const disconnectedText = 'disconnected';
+  const connectedText = 'transmitting';
+  const disconnectedText = 'not transmitting';
 
   const statusText = props.state && props.state === connectedState ? connectedText : disconnectedText;
   const colorStatus = props.state && props.state === connectedState ? "green" : "red";
