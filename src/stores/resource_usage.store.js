@@ -356,7 +356,7 @@ class ResourceUsageStore {
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
+      ...(gateways && { gateways_ids: gateways.map((e) => e.id) }),
       ...(packet_lost_range && {
         min_packet_loss: packet_lost_range.from,
         max_packet_loss: packet_lost_range.to,
