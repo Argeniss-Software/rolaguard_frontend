@@ -72,7 +72,7 @@ const AssignTagsModal = (props) => {
     <Modal
     open={open} 
     >
-      <Modal.Header>ASSIGN TAGS</Modal.Header>
+      <Modal.Header>ASSIGN LABELS</Modal.Header>
       <Modal.Content className="modal-content-container">
         {/* Error message in case the assignation fails */}
         {showError &&
@@ -81,7 +81,7 @@ const AssignTagsModal = (props) => {
           </div>
         }
 
-        <strong>Tags to assign: </strong><ShowTags tags={tagsToAssign}/> <TagSelector alreadyAssignTags={tagsToAssign} onSelection={handleTagSelected} />
+        <strong>Labels to assign: </strong><ShowTags tags={tagsToAssign}/> <TagSelector alreadyAssignTags={tagsToAssign} onSelection={handleTagSelected} />
         <Divider/>
         <p><strong>Devices affected:</strong></p>
         <div className="table-wrapper">

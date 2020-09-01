@@ -303,7 +303,7 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
-            <Table.HeaderCell>TAGS</Table.HeaderCell>
+            <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -393,7 +393,7 @@ class InventoryReviewComponent extends React.Component {
           onClick={() => this.setState({assignTags: true})}
           disabled={!assets.some((asset) => asset.selected)}
         >
-          ASSIGN TAGS
+          ASSIGN LABELS
         </Button>
       </React.Fragment>
     );
