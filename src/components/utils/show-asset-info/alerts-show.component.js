@@ -4,11 +4,12 @@ import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component"
 import Moment from "react-moment";
 import _ from "lodash";
+import EmptyComponent from "../../utils/empty.component";
 
 const ShowAlerts = (props) => {
-  return (
-    props.totalItems > 0 && (
-      <React.Fragment>
+    if (props.totalItems > 0) {
+      return (
+         <React.Fragment>
         <div>
           <strong>Last 5 alerts:</strong>
         </div>
@@ -64,8 +65,11 @@ const ShowAlerts = (props) => {
           </Table.Body>
         </Table>
       </React.Fragment>
-    )
-  );
-};
+      )
+    } else {
+      return (<EmptyComponent emptyMessage="There are no events to show" />)
+    }
+  
+}
 
 export default ShowAlerts;

@@ -1,13 +1,15 @@
 import * as React from "react";
-import { Table, Label} from "semantic-ui-react";
+import { Table, Label } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component";
 import Moment from "react-moment";
-import AlertUtil from "../../../util/alert-util"
+import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
+import EmptyComponent from "../../utils/empty.component";
+
 const ShowCurrentIssues = (props) => {
-  return (
-    props.currentIssues.total_items > 0 && (
+  if (props.currentIssues.total_items > 0) {
+    return (
       <React.Fragment>
         <div>
           <strong>Last 5 current issues:</strong>
@@ -89,8 +91,10 @@ const ShowCurrentIssues = (props) => {
           </Table.Body>
         </Table>
       </React.Fragment>
-    )
-  );
+    );
+  } else {
+    return <EmptyComponent emptyMessage="There are no current issues to show" />;
+  }
 };
 
 export default ShowCurrentIssues;
