@@ -59,6 +59,7 @@ const ResourceUsageList = (props) => {
               </Popup.Content>
             </Popup>
           </Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{textAlign: "center"}}>ACTIONS</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       {props &&
@@ -88,15 +89,7 @@ const ResourceUsageList = (props) => {
                   <Table.Cell>
                     <AssetIdComponent type={item.type} id={item.hex_id} />
                   </Table.Cell>
-                  <Table.Cell>
-                    {item.name}
-                    <ModalResourceUsage
-                      asset={item}
-                      id={item.id}
-                      type={item.type}
-                      tabIndexActive={0}
-                    />
-                  </Table.Cell>
+                  <Table.Cell>{item.name}</Table.Cell>
                   <Table.Cell>
                     <Popup
                       trigger={
@@ -195,6 +188,16 @@ const ResourceUsageList = (props) => {
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
+                  </Table.Cell>
+                  <Table.Cell style={{textAlign: 'center'}}>
+                    <div class="td-actions">
+                      <ModalResourceUsage
+                        asset={item}
+                        id={item.id}
+                        type={item.type}
+                        tabIndexActive={0}
+                      />
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               );
