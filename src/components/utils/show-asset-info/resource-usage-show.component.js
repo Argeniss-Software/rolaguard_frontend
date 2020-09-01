@@ -1,16 +1,16 @@
 import * as React from "react";
-import { Icon, Grid, Table, Divider } from "semantic-ui-react";
+import { Grid, Table } from "semantic-ui-react";
 import NumberFormat from "react-number-format";
-import AssetIdComponent from "../utils/asset-id.component";
-import ShowDeviceIcon from "../utils/show-device-icon.component";
-import ShowDeviceState from "../utils/show-device-state.component";
+import AssetIdComponent from "../asset-id.component";
+import ShowDeviceIcon from "../show-device-icon.component"
+import ShowDeviceState from "../show-device-state.component";
 import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
-import SignalStrengthHelp from "../utils/wifi-signal-indicator/signal-strength-help.component";
-import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStrength";
-import ShowPacketsStatistics from "./show-packets-statistics.component";
+import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
+import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
 import _ from "lodash";
 import "./resource-usage-show.component.css"
+import statusImages from "../../utils/wifi-signal-indicator/images"
 
 const ShowResourceUssage = (props) => {
   return (
@@ -22,7 +22,7 @@ const ShowResourceUssage = (props) => {
               <Table.Row>
                 <Table.HeaderCell colSpan="2" className="bold">
                   <ShowDeviceIcon type={props.asset.type}></ShowDeviceIcon>{" "}
-                  {_.get(props, "asset.type", "").toUpperCase()} <span>-</span>
+                  {_.get(props.asset, "type", "").toUpperCase()} <span>-</span>
                   {props.asset.hex_id}
                 </Table.HeaderCell>
               </Table.Row>
@@ -73,6 +73,7 @@ const ShowResourceUssage = (props) => {
                     props.asset.type.toLowerCase().trim() === "device" && (
                       <WifiIndicator
                         strength={DBMToSignalStrength(props.asset.max_rssi)}
+                        statusImages={statusImages}
                         style={{
                           height: 20,
                           verticalAlign: "bottom",
