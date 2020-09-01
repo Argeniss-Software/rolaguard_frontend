@@ -50,7 +50,7 @@ class CommonStore {
       default:
         break;
     }
-    const params = {};
+    const params = {size: 5};
     return API.get(uri, { headers, params });
   }
 }
