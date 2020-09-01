@@ -13,23 +13,25 @@ import inventoryAssetsStore from './inventory.store'
 import tagsStore from './tag.store'
 import resourceUsageStore from './resource_usage.store'
 import keysStore from './keys.store'
+import commonStore from "./common.store";
 
 const stores = {
-    authStore,
-    deviceStore,
-    alarmStore,
-    usersStore,
-    messageStore,
-    generalDataStore,
-    rolesStore,
-    alertStore,
-    dataCollectorStore,
-    policyStore,
-    notificationStore,
-    inventoryAssetsStore,
-    tagsStore,
-    resourceUsageStore,
-    keysStore
+  authStore,
+  deviceStore,
+  alarmStore,
+  usersStore,
+  messageStore,
+  generalDataStore,
+  rolesStore,
+  alertStore,
+  dataCollectorStore,
+  policyStore,
+  notificationStore,
+  inventoryAssetsStore,
+  tagsStore,
+  resourceUsageStore,
+  keysStore,
+  commonStore,
 };
 
 export default stores
