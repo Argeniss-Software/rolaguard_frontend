@@ -28,7 +28,7 @@ const TagsCreatorModal = (props) => {
     const { tagsStore } = React.useContext(MobXProviderContext);
 
     const [open, setOpen] = React.useState(!!props.open);
-    const [name, setName] = React.useState("tag name");
+    const [name, setName] = React.useState("label name");
     const [validTagName, setValidTagName] = React.useState(false);
     const [color, setColor] = React.useState("#AAAAAA");
     const [colorDefault, setColorDefault] = React.useState(true);
@@ -37,7 +37,7 @@ const TagsCreatorModal = (props) => {
 
 
     const handleInput = (field) => {
-        setName(field.target.value? field.target.value : "tag name");
+        setName(field.target.value? field.target.value : "label name");
         setValidTagName(field.target.value && Validation.isValidTagName(field.target.value));
     }
 
@@ -71,7 +71,7 @@ const TagsCreatorModal = (props) => {
         open={open}
         size='tiny'>
             <Modal.Header>
-                CREATE NEW TAG
+                CREATE NEW LABEL
             </Modal.Header>
 
             <Modal.Content>
@@ -85,7 +85,7 @@ const TagsCreatorModal = (props) => {
                             opacity={validTagName? "1" : "0.5"}
                         />
                     </div>
-                    <Input disabled={sended} nameClass="" placeholder="tag name" onChange={handleInput}/>
+                    <Input disabled={sended} nameClass="" placeholder="label name" onChange={handleInput}/>
                     <div style={{textAlign:"center", margin: "15px"}}>
                             {colors.map((col, index) => <ColorPicker disabled={sended} selected={color} color={col} onColorSelect={handleColorSelect}/>)}
                     </div>

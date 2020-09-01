@@ -198,7 +198,7 @@ class InventoryDetailsModal extends Component {
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Grid.Row className="modal-content-grid">
-                    <strong>Tags: </strong>
+                    <strong>Labels: </strong>
                     {this.showTags(item.tags)}{" "}
                     <TagSelector
                       alreadyAssignTags={item.tags}

@@ -463,8 +463,8 @@ class ResourceUsageStore {
       },
       byStauts: {
         status: [
-          { label: "Connected", qty: 5 },
-          { label: "Disconnected", qty: 95 },
+          { label: "Transmitting", qty: 5 },
+          { label: "Not transmitting", qty: 95 },
         ],
         total: 100,
       },

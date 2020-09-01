@@ -346,23 +346,6 @@ class DashboardComponent extends React.Component {
                   <div id="visualizations" className="data-container ui grid">
                     <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
                       <div className="box-data">
-                        <BarChart isLoading={this.state.alertsCountLoading} data={this.state.alertsCountArray} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
-                        <Loader active={this.state.alertsCountLoading === true} />
-                        <div className="box-data-legend">
-                          <i className="fas fa-exclamation-circle" />
-                          <div>
-                            <h3>ALERTS</h3>
-                            {
-                              this.state.alertsCountLoading === true ? 
-                              <div className="ui active inline loader"></div> :
-                              <h2>{alertsCount}</h2>
-                            }
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
-                      <div className="box-data">
                         <BarChart isLoading={this.state.quarantineCountLoading} data={this.props.deviceStore.quarantineDeviceCountGrouped} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
                         <Loader active={this.state.quarantineCountLoading === true} />
                         <div className="box-data-legend">
@@ -373,6 +356,23 @@ class DashboardComponent extends React.Component {
                               this.state.quarantineDeviceCountLoading === true ? 
                               <div className="ui active inline loader"></div> :
                               <h2>{this.props.deviceStore.quarantineDeviceCount}</h2>
+                            }
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
+                      <div className="box-data">
+                        <BarChart isLoading={this.state.alertsCountLoading} data={this.state.alertsCountArray} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
+                        <Loader active={this.state.alertsCountLoading === true} />
+                        <div className="box-data-legend">
+                          <i className="fas fa-exclamation-circle" />
+                          <div>
+                            <h3>ALERTS</h3>
+                            {
+                              this.state.alertsCountLoading === true ? 
+                              <div className="ui active inline loader"></div> :
+                              <h2>{alertsCount}</h2>
                             }
                             </div>
                         </div>
@@ -417,7 +417,7 @@ class DashboardComponent extends React.Component {
                 <Segment>
                   <div className="table-container">
                     <div className="table-container-box">
-                      <h3>LATEST UNRESOLVED ALERTS</h3 >
+                      <h3>LATEST ALERTS</h3 >
                       <Loader active={this.state.topAlertsLoading === true} />
                       {!this.state.topAlertsLoading &&
                       <Table

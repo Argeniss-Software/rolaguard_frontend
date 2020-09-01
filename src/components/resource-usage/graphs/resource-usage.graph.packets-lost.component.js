@@ -241,7 +241,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
 
   return (
     <div className="box-data">
-      <h5 className="visualization-title">BY PACKAGES LOST</h5>
+      <h5 className="visualization-title">BY MESSAGES LOST</h5>
       <Loader active={resourceUsageStore.getStatusLoading()} />
       <div style={{ height: "240px" }}>
         <Chart
