@@ -11,7 +11,6 @@ import _ from 'lodash'
 import ShowInventory from "./inventory-show.component"
 
 const ShowAssetInfo = (props) => {
-  
 
   const tabIndexActive = props.defaultActiveIndex
     ? props.defaultActiveIndex
