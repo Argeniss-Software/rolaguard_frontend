@@ -124,7 +124,6 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         },
         events: {
           dataPointSelection: (event, chartContext, config) => {
-            debugger
             let from = 0
             let to = 0
             switch (config.dataPointIndex) {
