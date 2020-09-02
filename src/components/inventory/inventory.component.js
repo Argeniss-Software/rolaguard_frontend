@@ -298,11 +298,11 @@ class InventoryReviewComponent extends React.Component {
               <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-            <Table.HeaderCell>NAME</Table.HeaderCell>
-            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
+            <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
             <Table.HeaderCell>JOINEUI/APPEUI</Table.HeaderCell>
+            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
@@ -322,7 +322,11 @@ class InventoryReviewComponent extends React.Component {
               assets &&
               assets.map((item, index) => {
                 return (
-                  <Table.Row key={index} style={{ cursor: "pointer" }}>
+                  <Table.Row
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => this.showAssetDetails(index)}
+                  >
                     <Table.Cell>
                       <Checkbox
                         checked={item.selected}
@@ -331,10 +335,8 @@ class InventoryReviewComponent extends React.Component {
                         }
                       />
                     </Table.Cell>
-                    <Table.Cell
-                      style={{ textAlign: "center" }}
-                      onClick={() => this.showAssetDetails(index)}
-                    >
+                    <Table.Cell style={{ textAlign: "center" }} collapsing>
+                      <ShowDeviceState state={item.connected} />
                       <ShowDeviceIcon
                         type={
                           item.type &&
@@ -346,30 +348,18 @@ class InventoryReviewComponent extends React.Component {
                         }
                       ></ShowDeviceIcon>
                     </Table.Cell>
-                    <Table.Cell
-                      className="id-cell upper"
-                      onClick={() => this.showAssetDetails(index)}
-                    >
-                      <ShowDeviceState state={item.connected} />{" "}
+                    <Table.Cell className="id-cell upper">
                       <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.name}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                    <Table.Cell collapsing>{item.name}</Table.Cell>
+                    <Table.Cell>{item.vendor}</Table.Cell>
+                    <Table.Cell collapsing>{item.app_name}</Table.Cell>
+                    <Table.Cell>{item.join_eui}</Table.Cell>
+                    <Table.Cell>
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.vendor}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.app_name}
-                    </Table.Cell>
-                    <Table.Cell>{item.join_eui}</Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.data_collector}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                    <Table.Cell collapsing>{item.data_collector}</Table.Cell>
+                    <Table.Cell>
                       {item.tags.map((tag) => {
                         return (
                           <Tag
