@@ -43,7 +43,7 @@ const ShowAssetInfo = (props) => {
 
   const panes = [
     {
-      menuItem: "Resource Usage",
+      menuItem: "Network overview",
       render: () => (
         <Tab.Pane>
           <ShowResourceUsage asset={props.asset} />

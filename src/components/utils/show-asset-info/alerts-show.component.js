@@ -67,7 +67,7 @@ const ShowAlerts = (props) => {
       </React.Fragment>
       )
     } else {
-      return (<EmptyComponent emptyMessage="There are no events to show" />)
+      return (<EmptyComponent emptyMessage="There are no alerts to show" />)
     }
   
 }

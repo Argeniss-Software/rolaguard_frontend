@@ -248,7 +248,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
           options={data.options}
           series={data.series}
           type="bar"
-          width="120%"
+          width="100%"
           height="100%"
         />
       </div>
