@@ -93,10 +93,10 @@ class AlarmReviewComponent extends React.Component {
         const alertsCount = responses[2].data.count;
         const unresolvedAlertsCount = responses[3].data.count;
         const resolvedAlertsCount = alertsCount - unresolvedAlertsCount;
-        const statuses = [
+        /*const statuses = [
           {label: 'RESOLVED', percentage: alertsCount ? resolvedAlertsCount/alertsCount : 0, value: resolvedAlertsCount, color: '#5d9cec'},
           {label: 'UNRESOLVED', selected: true, percentage: alertsCount ? unresolvedAlertsCount/alertsCount : 0, value: unresolvedAlertsCount, color: '#f05050'},
-        ];
+        ];*/
         const types = responses[1].map(type => {return {label: type.name, description: type.description, percentage: alertsCount ? type.count/alertsCount : 0, value: type.count, code: type.code }});
         const dataCollectors = responses[4].map(dc => {return {label: dc.name, percentage: alertsCount ? dc.count/alertsCount : 0, value: dc.count, id: dc.id }});
 
@@ -124,7 +124,7 @@ class AlarmReviewComponent extends React.Component {
           isGraphsLoading: false,
           alertsCount: unresolvedAlertsCount,
           count: alertsCount,
-          statuses,
+          //statuses,
           dataCollectors: filteredDataCollectors,
           types: filteredTypes,
           risks: filteredRisks,
@@ -368,57 +368,89 @@ class AlarmReviewComponent extends React.Component {
           <div className="view-header">
             <h1 className="mb0">ALERTS</h1>
             <div className="view-header-actions">
-              {!showFilters &&
-                <div onClick={() => this.setState({showFilters: true})}>
+              {!showFilters && (
+                <div onClick={() => this.setState({ showFilters: true })}>
                   <i className="fas fa-eye" />
                   <span>SHOW SEARCH AND CHARTS</span>
                 </div>
-              }
-              {showFilters &&
-                <div onClick={() => this.setState({showFilters: false})} style={{color: 'gray'}}>
+              )}
+              {showFilters && (
+                <div
+                  onClick={() => this.setState({ showFilters: false })}
+                  style={{ color: "gray" }}
+                >
                   <i className="fas fa-eye-slash" />
                   <span>HIDE SEARCH AND CHARTS</span>
                 </div>
-              }
+              )}
             </div>
           </div>
-          {showFilters && 
+          {showFilters && (
             <Segment>
               <Grid className="animated fadeIn">
                 <Grid.Row columns={16} className="data-container pl pr">
-                  <Grid.Column id="datepicker-container" floated="left" mobile={16} tablet={16} computer={12}  className="tablet-no-margin-top">
+                  <Grid.Column
+                    id="datepicker-container"
+                    floated="left"
+                    mobile={16}
+                    tablet={16}
+                    computer={12}
+                    className="tablet-no-margin-top"
+                  >
                     <Grid className="animated fadeIn">
                       <Grid.Row columns={16} className="data-container pl pr">
-                        <Grid.Column className="pr0" floated="left" mobile={15} tablet={15} computer={7}>
+                        <Grid.Column
+                          className="pr0"
+                          floated="left"
+                          mobile={15}
+                          tablet={15}
+                          computer={7}
+                        >
                           <div className="search-box input-box">
                             <i className="fas fa-calendar-alt" />
                             <DatePicker
-                                selectsStart
-                                startDate={criteria.from ? moment(criteria.from) : null}
-                                endDate={criteria.to ? moment(criteria.to) : null}
-                                maxDate={criteria.to ? moment(criteria.to) : null}
-                                placeholderText="Select a start date"
-                                selected={criteria.from ? moment(criteria.from) : null}
-                                onChange={this.handleFromDateChange}
-                                showTimeSelect
-                                timeFormat="HH:mm"
-                                timeIntervals={15}
-                                isClearable={true}
-                                dateFormat="MMMM D YYYY hh:mm a"
+                              selectsStart
+                              startDate={
+                                criteria.from ? moment(criteria.from) : null
+                              }
+                              endDate={criteria.to ? moment(criteria.to) : null}
+                              maxDate={criteria.to ? moment(criteria.to) : null}
+                              placeholderText="Select a start date"
+                              selected={
+                                criteria.from ? moment(criteria.from) : null
+                              }
+                              onChange={this.handleFromDateChange}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              isClearable={true}
+                              dateFormat="MMMM D YYYY hh:mm a"
                             />
                           </div>
                         </Grid.Column>
-                        <Grid.Column className="pr0" floated="left" mobile={15} tablet={15} computer={7}>
+                        <Grid.Column
+                          className="pr0"
+                          floated="left"
+                          mobile={15}
+                          tablet={15}
+                          computer={7}
+                        >
                           <div className="search-box input-box">
                             <i className="fas fa-calendar-alt" />
                             <DatePicker
                               fluid
                               selectsEnd
-                              startDate={criteria.from ? moment(criteria.from) : null}
+                              startDate={
+                                criteria.from ? moment(criteria.from) : null
+                              }
                               endDate={criteria.to ? moment(criteria.to) : null}
-                              minDate={criteria.from ? moment(criteria.from) : null}
+                              minDate={
+                                criteria.from ? moment(criteria.from) : null
+                              }
                               placeholderText="Select a finish date"
-                              selected={criteria.to ? moment(criteria.to) : null}
+                              selected={
+                                criteria.to ? moment(criteria.to) : null
+                              }
                               onChange={this.handleToDateChange}
                               showTimeSelect
                               timeFormat="HH:mm"
@@ -428,138 +460,340 @@ class AlarmReviewComponent extends React.Component {
                             />
                           </div>
                         </Grid.Column>
-                        <Grid.Column className="pl0" floated="left" mobile={1} tablet={1} computer={2}>
-                          <Button disabled={this.state.isGraphsLoading || this.state.isLoading} loading={this.state.isGraphsLoading} onClick={this.handleDateFilterClick} icon>
-                            <Icon name='check circle' />
+                        <Grid.Column
+                          className="pl0"
+                          floated="left"
+                          mobile={1}
+                          tablet={1}
+                          computer={2}
+                        >
+                          <Button
+                            disabled={
+                              this.state.isGraphsLoading || this.state.isLoading
+                            }
+                            loading={this.state.isGraphsLoading}
+                            onClick={this.handleDateFilterClick}
+                            icon
+                          >
+                            <Icon name="check circle" />
                           </Button>
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
                   </Grid.Column>
                   <div id="range-container">
-                    <Button.Group basic size='mini'>
-                      <Button active={this.state.range === 'MONTH'} onClick={() => {this.updateRange('MONTH')}}>Last month</Button>
-                      <Button active={this.state.range === 'WEEK'} onClick={() => {this.updateRange('WEEK')}}>Last week</Button>
-                      <Button active={this.state.range === 'DAY'} onClick={() => {this.updateRange('DAY')}}>Last day</Button>
+                    <Button.Group basic size="mini">
+                      <Button
+                        active={this.state.range === "MONTH"}
+                        onClick={() => {
+                          this.updateRange("MONTH");
+                        }}
+                      >
+                        Last month
+                      </Button>
+                      <Button
+                        active={this.state.range === "WEEK"}
+                        onClick={() => {
+                          this.updateRange("WEEK");
+                        }}
+                      >
+                        Last week
+                      </Button>
+                      <Button
+                        active={this.state.range === "DAY"}
+                        onClick={() => {
+                          this.updateRange("DAY");
+                        }}
+                      >
+                        Last day
+                      </Button>
                     </Button.Group>
                   </div>
                 </Grid.Row>
-                <Grid.Row id="visualization-container" className="data-container pl pr">
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY RISK</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Pie 
-                      isLoading={this.state.isGraphsLoading}
-                      data={risks}
-                      type={'risks'}
-                      handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY STATUS</h5>
+                <Grid.Row
+                  id="visualization-container"
+                  className="data-container pl pr"
+                >
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      <h5 className="visualization-title">BY RISK</h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      <Pie
+                        isLoading={this.state.isGraphsLoading}
+                        data={risks}
+                        type={"risks"}
+                        handler={this.handleItemSelected}
+                      />
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      {/*<h5 className="visualization-title">BY STATUS</h5>
                     <Loader active={this.state.isGraphsLoading || this.state.isStatusLoading } />
                     <Pie
                       isLoading={this.state.isGraphsLoading}
                       data={statuses}
                       type={'statuses'}
                       handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY ALERT DESCRIPTION</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Pie 
-                      isLoading={this.state.isGraphsLoading}
-                      data={types}
-                      type={'types'}
-                      handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
-                <Grid.Column className="data-container-box pl0 pr0" mobile={16} tablet={8} computer={4}>
-                  <div className="box-data">
-                    <h5 className="visualization-title">BY DATA SOURCE</h5>
-                    <Loader active={this.state.isGraphsLoading === true} />
-                    <Pie
-                      isLoading={this.state.isGraphsLoading}
-                      data={dataCollectors}
-                      type={'dataCollectors'}
-                      handler={this.handleItemSelected}
-                    />
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Segment>}
-          <div className="view-body">            
+                    />*/}
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      <h5 className="visualization-title">
+                        BY ALERT DESCRIPTION
+                      </h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      <Pie
+                        isLoading={this.state.isGraphsLoading}
+                        data={types}
+                        type={"types"}
+                        handler={this.handleItemSelected}
+                      />
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+                  >
+                    <div className="box-data">
+                      <h5 className="visualization-title">BY DATA SOURCE</h5>
+                      <Loader active={this.state.isGraphsLoading === true} />
+                      <Pie
+                        isLoading={this.state.isGraphsLoading}
+                        data={dataCollectors}
+                        type={"dataCollectors"}
+                        handler={this.handleItemSelected}
+                      />
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Segment>
+          )}
+          <div className="view-body">
             <div className="table-container">
               <div className="table-container-box">
-              <Segment>
-                <div>
-                  <label style={{fontWeight: 'bolder'}}>Filters: </label>
-                  {range && <Label as='a'>{'LAST ' + range}</Label>}
+                <Segment>
+                  <div>
+                    <label style={{ fontWeight: "bolder" }}>Filters: </label>
+                    {range && <Label as="a">{"LAST " + range}</Label>}
 
-                  {customRange && criteria.from && criteria.to && <Label as='a' onClick={() => {this.clearDateRange()}}>FROM <Moment format="YYYY-MM-DD HH:mm">{criteria.from}</Moment> TO <Moment format="YYYY-MM-DD HH:mm">{criteria.to}</Moment> <Icon name='delete'/> </Label>}
+                    {customRange && criteria.from && criteria.to && (
+                      <Label
+                        as="a"
+                        onClick={() => {
+                          this.clearDateRange();
+                        }}
+                      >
+                        FROM{" "}
+                        <Moment format="YYYY-MM-DD HH:mm">
+                          {criteria.from}
+                        </Moment>{" "}
+                        TO{" "}
+                        <Moment format="YYYY-MM-DD HH:mm">{criteria.to}</Moment>{" "}
+                        <Icon name="delete" />{" "}
+                      </Label>
+                    )}
 
-                  {filteredStatuses.map( (status, index) => <Label as='a' key={'status'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(statuses, status, 'statuses')}}>{status.label}<Icon name='delete'/></Label>)}
-                  {filteredRisks.map( (risk, index) => <Label as='a' key={'risk'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(risks, risk, 'risks')}}>{risk.label}<Icon name='delete'/></Label>)}
-                  {filteredTypes.map( (type, index) => <Popup
-                  trigger={<Label as='a' key={'type'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(types, type, 'types')}}>{type.label.length < 15 ? type.label : `${type.label.substring(0,15)}...`}<Icon name='delete'/></Label>}><Popup.Content>{type.label}</Popup.Content></Popup>)}
-                  {filteredDataCollectors.map( (dc, index) => <Label as='a' key={'dc'+index} className="text-uppercase" onClick={() => {this.handleItemSelected(dataCollectors, dc, 'dataCollectors')}}>{dc.label}<Icon name='delete'/></Label>)}
-                  <span className="range-select" onClick={() => this.updateRange('DAY')}>Clear</span>
-                </div>
-                {!this.state.isLoading &&
-                  <Table  
-                  striped
-                  selectable
-                  className="animated fadeIn"
-                  basic="very"
-                  compact="very">
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>IMPORTANCE</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
-                        <Table.HeaderCell collapsing sorted={orderBy[0] === 'created_at' ? (orderBy[1] === 'ASC' ? 'ascending' : 'descending') : null} onClick={ () => this.handleSort('created_at')}>
-                          DATE
-                        </Table.HeaderCell>
-                        <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
-                        <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    {!this.state.isLoading && 
-                      <Table.Body>
-                        {newAlerts && 
+                    {filteredStatuses.map((status, index) => (
+                      <Label
+                        as="a"
+                        key={"status" + index}
+                        className="text-uppercase"
+                        onClick={() => {
+                          this.handleItemSelected(statuses, status, "statuses");
+                        }}
+                      >
+                        {status.label}
+                        <Icon name="delete" />
+                      </Label>
+                    ))}
+                    {filteredRisks.map((risk, index) => (
+                      <Label
+                        as="a"
+                        key={"risk" + index}
+                        className="text-uppercase"
+                        onClick={() => {
+                          this.handleItemSelected(risks, risk, "risks");
+                        }}
+                      >
+                        {risk.label}
+                        <Icon name="delete" />
+                      </Label>
+                    ))}
+                    {filteredTypes.map((type, index) => (
+                      <Popup
+                        trigger={
+                          <Label
+                            as="a"
+                            key={"type" + index}
+                            className="text-uppercase"
+                            onClick={() => {
+                              this.handleItemSelected(types, type, "types");
+                            }}
+                          >
+                            {type.label.length < 15
+                              ? type.label
+                              : `${type.label.substring(0, 15)}...`}
+                            <Icon name="delete" />
+                          </Label>
+                        }
+                      >
+                        <Popup.Content>{type.label}</Popup.Content>
+                      </Popup>
+                    ))}
+                    {filteredDataCollectors.map((dc, index) => (
+                      <Label
+                        as="a"
+                        key={"dc" + index}
+                        className="text-uppercase"
+                        onClick={() => {
+                          this.handleItemSelected(
+                            dataCollectors,
+                            dc,
+                            "dataCollectors"
+                          );
+                        }}
+                      >
+                        {dc.label}
+                        <Icon name="delete" />
+                      </Label>
+                    ))}
+                    <span
+                      className="range-select"
+                      onClick={() => this.updateRange("DAY")}
+                    >
+                      Clear
+                    </span>
+                  </div>
+                  {!this.state.isLoading && (
+                    <Table
+                      striped
+                      selectable
+                      className="animated fadeIn"
+                      basic="very"
+                      compact="very"
+                    >
+                      <Table.Header>
                         <Table.Row>
-                          <Table.Cell colSpan='9' verticalAlign='middle' style={{textAlign: 'center'}}>
-                            <Message info compact>
-                              <Icon name='bell'/>
-                              There're new alerts.&nbsp;&nbsp;<Button circular positive size='mini' icon='fas fa-sync' onClick={() => {this.updateRange('DAY');this.setState({newAlerts: false})}} content='Reload now'/>
-                            </Message>
-                          </Table.Cell>
-                        </Table.Row>}
-                        <AlertListComponent alerts={this.state.alerts} alert_types={this.state.alarmsTypesMap} handleAlertResolution={this.handleAlertResolution} showAlertDetails={this.showAlertDetails}/>
-                      </Table.Body>
-                    }
-                  </Table>}
-                  <Grid className="segment centered">
-                  {this.state.isLoading && (
-                    <LoaderComponent loadingMessage="Loading alerts ..." style={{marginBottom: 20}}/>
+                          <Table.HeaderCell collapsing>
+                            ID/ADDRESS
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            DEVICE NAME
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            IMPORTANCE
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            DESCRIPTION
+                          </Table.HeaderCell>
+                          <Table.HeaderCell
+                            collapsing
+                            sorted={
+                              orderBy[0] === "created_at"
+                                ? orderBy[1] === "ASC"
+                                  ? "ascending"
+                                  : "descending"
+                                : null
+                            }
+                            onClick={() => this.handleSort("created_at")}
+                          >
+                            DATE
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            GATEWAY
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            DATA SOURCE
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            ACTIONS
+                          </Table.HeaderCell>
+                        </Table.Row>
+                      </Table.Header>
+                      {!this.state.isLoading && (
+                        <Table.Body>
+                          {newAlerts && (
+                            <Table.Row>
+                              <Table.Cell
+                                colSpan="9"
+                                verticalAlign="middle"
+                                style={{ textAlign: "center" }}
+                              >
+                                <Message info compact>
+                                  <Icon name="bell" />
+                                  There're new alerts.&nbsp;&nbsp;
+                                  <Button
+                                    circular
+                                    positive
+                                    size="mini"
+                                    icon="fas fa-sync"
+                                    onClick={() => {
+                                      this.updateRange("DAY");
+                                      this.setState({ newAlerts: false });
+                                    }}
+                                    content="Reload now"
+                                  />
+                                </Message>
+                              </Table.Cell>
+                            </Table.Row>
+                          )}
+                          <AlertListComponent
+                            alerts={this.state.alerts}
+                            alert_types={this.state.alarmsTypesMap}
+                            handleAlertResolution={this.handleAlertResolution}
+                            showAlertDetails={this.showAlertDetails}
+                          />
+                        </Table.Body>
+                      )}
+                    </Table>
                   )}
-                  {totalPages > 1 && !this.state.isLoading &&
-                    <Pagination className="" activePage={activePage} onPageChange={this.handlePaginationChange} totalPages={totalPages} />}
+                  <Grid className="segment centered">
+                    {this.state.isLoading && (
+                      <LoaderComponent
+                        loadingMessage="Loading alerts ..."
+                        style={{ marginBottom: 20 }}
+                      />
+                    )}
+                    {totalPages > 1 && !this.state.isLoading && (
+                      <Pagination
+                        className=""
+                        activePage={activePage}
+                        onPageChange={this.handlePaginationChange}
+                        totalPages={totalPages}
+                      />
+                    )}
                   </Grid>
                 </Segment>
 
-                {selectedAlert && <DetailsAlertModal loading={this.state.isLoading} alert={selectedAlert} onClose={this.closeAlertDetails} onNavigate={this.goToAlert}/>}
+                {selectedAlert && (
+                  <DetailsAlertModal
+                    loading={this.state.isLoading}
+                    alert={selectedAlert}
+                    onClose={this.closeAlertDetails}
+                    onNavigate={this.goToAlert}
+                  />
+                )}
               </div>
             </div>
           </div>
