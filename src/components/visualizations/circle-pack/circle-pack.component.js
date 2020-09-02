@@ -18,6 +18,7 @@ const CirclePack = (props) => {
         width: refElement.current.parentNode.parentNode.clientWidth * 0.9,
         height: refElement.current.parentNode.parentNode.clientWidth * 0.6,
         handler: props.handler,
+        type: props.type
       });
 
       setViz(aux);

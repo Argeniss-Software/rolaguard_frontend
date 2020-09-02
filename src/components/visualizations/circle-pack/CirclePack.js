@@ -16,8 +16,6 @@ class CirclePackD3 {
 
     const root = pack({name: root, children: props.data});
 
-    console.log(root)
-
     this.svg = d3.select(containerEl)
     .append("svg")
       .attr("width", props.width)
@@ -35,10 +33,12 @@ class CirclePackD3 {
           .append("circle")
             .attr("fill", item.data.color)
             .attr("r", item.r)
-            .on("click", (event) => alert("click node"))
+            .on("click", () => {
+              console.log(props.data.find((i) => i.code === item.code));
+              props.handler(props.data, item.data, props.type)
+            })
             .attr("transform", `translate(${item.x},${item.y})`)
             .style("cursor", "pointer")
-            .on("click", props.handler)
 
       circle
         .on("mouseover", (d) => {
@@ -73,7 +73,7 @@ class CirclePackD3 {
           
           tooltipContent
             .append("span")
-            .text(`${item.data.name? item.data.name : "unknown"} `)
+            .text(`${item.data.label? item.data.label : "unknown"} `)
             .style("font-weight", "bold")
           
           tooltipContent
@@ -94,7 +94,6 @@ class CirclePackD3 {
   }
 
   remove = () => {
-    console.log("inside remove")
     this.svg.remove();
   }
 
