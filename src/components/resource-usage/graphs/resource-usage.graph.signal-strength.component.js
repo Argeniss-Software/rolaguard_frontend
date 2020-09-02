@@ -31,7 +31,7 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         color: "black",
         fontSize: "10px",
       },
-      label: <strong>+Inf</strong>,
+      label: <strong>0 dBm</strong>,
     },
     50: {
       style: {

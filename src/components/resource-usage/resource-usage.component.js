@@ -100,7 +100,7 @@ const ResourceUsageComponent = (props) => {
                 >
                   {key.replace(/\_+/gm, ` `)}:{" "}
                   <strong>
-                    {value.from <-120 ? '-Inf' : value.from} to {value.to > -50 ? 'Inf' : value.to} dBm 
+                    {value.from <-120 ? '-Inf' : value.from} to {value.to > -50 ? '0' : value.to} dBm 
                   </strong>
                   <Icon name="delete" />
                 </Label>
