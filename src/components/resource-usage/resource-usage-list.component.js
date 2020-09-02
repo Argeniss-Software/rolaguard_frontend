@@ -20,7 +20,7 @@ const ResourceUsageList = (props) => {
   return (
     <Table
       striped
-      selectable 
+      selectable
       className="animated fadeIn"
       basic="very"
       compact="very"
@@ -33,7 +33,6 @@ const ResourceUsageList = (props) => {
               clickHandler={props.deviceTypeClick}
             ></ShowDeviceIcon>
           </Table.HeaderCell>
-
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
           <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
           <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
@@ -59,7 +58,9 @@ const ResourceUsageList = (props) => {
               </Popup.Content>
             </Popup>
           </Table.HeaderCell>
-          <Table.HeaderCell collapsing style={{textAlign: "center"}}>ACTIONS</Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            LSNR
+          </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       {props &&
@@ -189,15 +190,8 @@ const ResourceUsageList = (props) => {
                       </Grid.Row>
                     </Grid>
                   </Table.Cell>
-                  <Table.Cell style={{textAlign: 'center'}}>
-                    <div class="td-actions">
-                      <ModalResourceUsage
-                        asset={item}
-                        id={item.id}
-                        type={item.type}
-                        tabIndexActive={0}
-                      />
-                    </div>
+                  <Table.Cell style={{ textAlign: "center" }}>
+                    LSNR
                   </Table.Cell>
                 </Table.Row>
               );
