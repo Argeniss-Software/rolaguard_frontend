@@ -136,7 +136,7 @@ class AlarmReviewComponent extends React.Component {
 
   }
   
-  handleAlertResolution = () => {
+  /*handleAlertResolution = () => {
     const { alertsCount, pageSize, criteria, statuses, orderBy } = this.state;
     this.setState({activePage: 1, isLoading: true, isStatusLoading: true});
     const resolvedItem = statuses.find(item => item.label === 'RESOLVED');
@@ -157,7 +157,7 @@ class AlarmReviewComponent extends React.Component {
         });
       }
     );
-  }
+  }*/
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage, isLoading: true });
@@ -725,9 +725,6 @@ class AlarmReviewComponent extends React.Component {
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             DATA SOURCE
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            ACTIONS
                           </Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
