@@ -294,7 +294,7 @@ class InventoryReviewComponent extends React.Component {
               style={{ cursor: "pointer" }}
               onClick={() => this.toggleDeviceType(criteria.type)}
               collapsing
-            >              
+            >
               <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
@@ -302,6 +302,7 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
+            <Table.HeaderCell>JOINEUI/APPEUI</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
@@ -333,14 +334,24 @@ class InventoryReviewComponent extends React.Component {
                     <Table.Cell
                       style={{ textAlign: "center" }}
                       onClick={() => this.showAssetDetails(index)}
-                      >                      
-                      <ShowDeviceIcon type={(item.type && !["gateway", "device"].includes(item.type.toLowerCase().trim())) ? "unknown" : item.type}></ShowDeviceIcon>
+                    >
+                      <ShowDeviceIcon
+                        type={
+                          item.type &&
+                          !["gateway", "device"].includes(
+                            item.type.toLowerCase().trim()
+                          )
+                            ? "unknown"
+                            : item.type
+                        }
+                      ></ShowDeviceIcon>
                     </Table.Cell>
                     <Table.Cell
                       className="id-cell upper"
                       onClick={() => this.showAssetDetails(index)}
                     >
-                      <ShowDeviceState state={item.connected} /> <AssetIdComponent type={item.type} id={item.hex_id} />
+                      <ShowDeviceState state={item.connected} />{" "}
+                      <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.name}
@@ -354,6 +365,7 @@ class InventoryReviewComponent extends React.Component {
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.app_name}
                     </Table.Cell>
+                    <Table.Cell>{item.join_eui}</Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.data_collector}
                     </Table.Cell>
