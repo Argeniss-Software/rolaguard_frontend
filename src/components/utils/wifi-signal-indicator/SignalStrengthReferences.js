@@ -11,7 +11,7 @@ const SignalStrengthReferences = () => {
       { value: -100, unit: "dBm", text: SignalStrength.OKAY, default:false },
       { value: -110, unit: "dBm", text: SignalStrength.WEAK, default:false },
       { value: -120, unit: "dBm", text: SignalStrength.UNUSABLE, default:false },
-      { value: -130, unit: "dBm", text: SignalStrength.DISCONNECTED, default: true }
+      { value: -120, unit: "dBm", text: SignalStrength.DISCONNECTED, default: true }
     ]
 }
 
