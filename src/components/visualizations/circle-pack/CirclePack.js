@@ -25,11 +25,15 @@ class CirclePackD3 {
       .style("background", "white")
       .style("cursor", "default")
 
-    this.group = this.svg.append("g")
+    this.mainGroup = this.svg.append("g")
+
+    
 
     for(const item of root.children) {
+      const group = this.mainGroup.append("g")
+
       const circle =
-        this.group
+        group
           .append("circle")
             .attr("fill", item.data.color)
             .attr("r", item.r)
@@ -40,15 +44,34 @@ class CirclePackD3 {
             .attr("transform", `translate(${item.x},${item.y})`)
             .style("cursor", "pointer")
 
-      circle
-        .on("mouseover", (d) => {
-          // Define the div for the tooltip
+      const text =
+        group
+          .append("text")
+          .style("fill", "white")
+          .style("font-weight", "bold")
+          .style("font-size", "10px")
+          .style("cursor", "pointer")
+          .text(item.data.label)
+          .style("pointer-events", "none")
+
+      if(text.node().getBoundingClientRect().width < (2 * item.r) * 0.8){
+        text
+          .attr("transform", `translate(${item.x - text.node().getBoundingClientRect().width/2},${item.y + text.node().getBoundingClientRect().height/4})`)
+      } else {
+        text.remove();
+      }
+
+      const showTooltip = () => 
+      {
+        d3.select(containerEl).selectAll("div").remove()
+        if(!this.tooltip){
+
           this.tooltip = d3.select(containerEl)
             .append("div")
             .attr("class", "tooltip")
             .style("opacity", 0)
             .style("padding", "0px");
-  
+
           this.tooltip
             .style("text-align", "center")
             .style("width", "200px")
@@ -84,17 +107,27 @@ class CirclePackD3 {
             .style("position", "fixed")
             .style("left", circle.node().getBoundingClientRect().left - (tooltipDiv.node().getBoundingClientRect().width * 0.5) + item.r + "px")
             .style("top", circle.node().getBoundingClientRect().top + 1.5 * item.r + "px")
+        }
 
-        })
-        .on("mouseout", (d) => {
-          this.tooltip
-            .remove();
-        });
+      }
+
+      const removeTooltip =(d) => {
+        this.tooltip
+          .remove();
+        this.tooltip = null;
+      }
+      
+      group
+        .on("mouseover", showTooltip)
+        .on("mouseleave", removeTooltip)
     }
+
   }
 
   remove = () => {
     this.svg.remove();
+    if(!this.tooltip === null){this.tooltip.remove();}
+    
   }
 
   

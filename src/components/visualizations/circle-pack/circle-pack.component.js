@@ -12,7 +12,8 @@ const CirclePack = (props) => {
       viz.remove();
     }
     setShow(false);
-    if (props.data && props.data.length && refElement && refElement.current) {
+    if (props.data && props.data.length > 0 && refElement && refElement.current) {
+      console.log(props.data)
       const aux = new CirclePackD3(refElement.current, {
         data: props.data,
         width: refElement.current.parentNode.parentNode.clientWidth * 0.9,
@@ -28,7 +29,14 @@ const CirclePack = (props) => {
 
   return (
     <React.Fragment>
-      { show && 
+      { show && props.data.length > 0 && 
+        <div
+          className={props.isLoading ? "hide" : "animated fadeIn"}
+          id="vis-container"
+          ref={refElement}
+        />
+      }
+      { show && props.data.length > 0 && 
         <div
           className={props.isLoading ? "hide" : "animated fadeIn"}
           id="vis-container"
