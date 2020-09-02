@@ -702,8 +702,19 @@ class AlarmReviewComponent extends React.Component {
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            IMPORTANCE
+                            <Popup
+                              trigger={
+                                <span style={{ cursor: "pointer" }}>
+                                  IMPORTANCE
+                                </span>
+                              }
+                            >
+                              The importance value indicates the user-defined relevance of the device
+                              into the organization. Can be set for each
+                              asset in the Inventory section.
+                            </Popup>
                           </Table.HeaderCell>
+
                           <Table.HeaderCell collapsing>
                             DESCRIPTION
                           </Table.HeaderCell>
