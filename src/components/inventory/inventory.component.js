@@ -17,6 +17,7 @@ import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ImportanceLabel from "../utils/importance-label.component";
+import TruncateMarkup from "react-truncate-markup";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -264,9 +265,19 @@ class InventoryReviewComponent extends React.Component {
       assets: assets,
     });
   }
-
-  showInventoryTable(){
+  
+    showInventoryTable(){
     const {assetsCount, isLoadingTable, assets, criteria, selectAll} = this.state;
+    
+    const tagsLeftEllipsis = (node) => {
+      const tagsRendered = node.props.children;
+      return (
+        <Label circular color="black" key="black">
+          + {node.props.dataCount - tagsRendered.length}
+        </Label>
+      )
+    }
+
     return (
       <Table
         striped
@@ -359,17 +370,30 @@ class InventoryReviewComponent extends React.Component {
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
                     <Table.Cell collapsing>{item.data_collector}</Table.Cell>
-                    <Table.Cell>
-                      {item.tags.map((tag) => {
-                        return (
-                          <Tag
-                            key={tag.id}
-                            name={tag.name}
-                            color={tag.color}
-                            textColor="#FFFFFF"
-                          />
-                        );
-                      })}
+                    <Table.Cell style={{ maxWidth: "15%", width: "15%" }}>
+                      <TruncateMarkup
+                        lines={1}
+                        lineHeight="30px"
+                        ellipsis={tagsLeftEllipsis}
+                      >
+                        <div
+                          style={{ width: "250px" }}
+                          dataCount={item.tags.length}
+                        >
+                          {item.tags.map((tag) => {
+                            return (
+                              <TruncateMarkup.Atom>
+                                <Tag
+                                  key={tag.id}
+                                  name={tag.name}
+                                  color={tag.color}
+                                  textColor="#FFFFFF"
+                                />
+                              </TruncateMarkup.Atom>
+                            );
+                          })}
+                        </div>
+                      </TruncateMarkup>
                     </Table.Cell>
                   </Table.Row>
                 );
