@@ -595,7 +595,7 @@ class InventoryReviewComponent extends React.Component {
                     </div>
                   </div>
                   {/* Show inventory table */}
-                  {!this.isLoading && <this.ShowInventoryTable />}
+                  {!this.isLoading && (<ShowInventoryTable />)}
 
                   { isLoading && (
                     <LoaderComponent
