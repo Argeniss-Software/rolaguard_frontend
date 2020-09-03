@@ -33,9 +33,7 @@ const CirclePack = (props) => {
   return (
     <React.Fragment>
       { show && filteredData.length === 0 && 
-        <React.Fragment>
-          <EmptyComponent emptyMessage="No tags to show" />
-        </React.Fragment>
+          (<EmptyComponent emptyMessage="No tags to show" />)
       }
       { show && props.data.length > 0 && 
         <div
