@@ -580,7 +580,7 @@ class InventoryReviewComponent extends React.Component {
                     tablet={8}
                     computer={4}
                   ><div className="box-data"> 
-                  <h5 className="visualization-title">TAGS</h5>
+                  <h5 className="visualization-title">LABELS</h5>
                   <Loader active={this.state.isGraphsLoading === true} />
                   {!this.state.isGraphsLoading &&
                     <CirclePack
@@ -622,7 +622,7 @@ class InventoryReviewComponent extends React.Component {
                     </div>
                   </div>
                   {/* Show inventory table */}
-                  {!this.isLoading && (<ShowInventoryTable />)}
+                  {!this.isLoading && (<this.ShowInventoryTable />)}
 
                   { isLoading && (
                     <LoaderComponent
