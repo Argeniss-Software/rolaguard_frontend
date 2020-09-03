@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import CirclePackD3 from "./CirclePack";
+import EmptyComponent from "../../utils/empty.component";
 
 const CirclePack = (props) => {
   const refElement = useRef(null);
@@ -7,12 +8,14 @@ const CirclePack = (props) => {
   const [viz, setViz] = useState(null)
   const size = useWindowSize();
 
+  const filteredData = props.data.filter((item) => !item.selected);
+
   useEffect(() => {
     if (viz !== null) {
       viz.remove();
     }
     setShow(false);
-    if (props.data && props.data.length > 0 && refElement && refElement.current) {
+    if (props.data && filteredData.length && refElement && refElement.current) {
       console.log(props.data)
       const aux = new CirclePackD3(refElement.current, {
         data: props.data,
@@ -29,12 +32,10 @@ const CirclePack = (props) => {
 
   return (
     <React.Fragment>
-      { show && props.data.length > 0 && 
-        <div
-          className={props.isLoading ? "hide" : "animated fadeIn"}
-          id="vis-container"
-          ref={refElement}
-        />
+      { show && filteredData.length === 0 && 
+        <React.Fragment>
+          <EmptyComponent emptyMessage="No tags to show" />
+        </React.Fragment>
       }
       { show && props.data.length > 0 && 
         <div

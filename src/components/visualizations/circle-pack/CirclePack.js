@@ -14,7 +14,7 @@ class CirclePackD3 {
     .sum(d => d.value)
     .sort((a, b) => b.value - a.value))
 
-    const root = pack({name: root, children: props.data});
+    const root = pack({name: root, children: props.data.filter((item) => !item.selected)});
 
     this.svg = d3.select(containerEl)
     .append("svg")
