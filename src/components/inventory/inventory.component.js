@@ -318,7 +318,15 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
             <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
-            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
+            <Table.HeaderCell>
+              <Popup
+                trigger={<span style={{ cursor: "pointer" }}>IMPORTANCE</span>}
+              >
+                The importance value indicates the user-defined relevance of the
+                device into the organization. Can be set for each asset in the
+                Inventory section.
+              </Popup>
+            </Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
@@ -334,14 +342,10 @@ class InventoryReviewComponent extends React.Component {
 
         {!isLoading && assetsCount > 0 && (
           <Table.Body id="inventory-table">
-            { assets &&
+            {assets &&
               assets.map((item, index) => {
                 return (
-                  <Table.Row
-                    key={index}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => this.showAssetDetails(index)}
-                  >
+                  <Table.Row key={index} style={{ cursor: "pointer" }}>
                     <Table.Cell>
                       <Checkbox
                         checked={item.selected}
@@ -350,7 +354,11 @@ class InventoryReviewComponent extends React.Component {
                         }
                       />
                     </Table.Cell>
-                    <Table.Cell style={{ textAlign: "center" }} collapsing>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      style={{ textAlign: "center" }}
+                      collapsing
+                    >
                       <ShowDeviceState state={item.connected} />
                       <ShowDeviceIcon
                         type={
@@ -363,18 +371,43 @@ class InventoryReviewComponent extends React.Component {
                         }
                       ></ShowDeviceIcon>
                     </Table.Cell>
-                    <Table.Cell className="id-cell upper">
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      className="id-cell upper"
+                    >
                       <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
-                    <Table.Cell collapsing>{item.name}</Table.Cell>
-                    <Table.Cell>{item.vendor}</Table.Cell>
-                    <Table.Cell collapsing>{item.app_name}</Table.Cell>
-                    <Table.Cell>{item.join_eui}</Table.Cell>
-                    <Table.Cell>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      collapsing
+                    >
+                      {item.name}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.vendor}
+                    </Table.Cell>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      collapsing
+                    >
+                      {item.app_name}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.join_eui}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
-                    <Table.Cell collapsing>{item.data_collector}</Table.Cell>
-                    <Table.Cell style={{ maxWidth: "15%", width: "15%" }}>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      collapsing
+                    >
+                      {item.data_collector}
+                    </Table.Cell>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      style={{ maxWidth: "15%", width: "15%" }}
+                    >
                       <TruncateMarkup
                         lines={1}
                         lineHeight="30px"
