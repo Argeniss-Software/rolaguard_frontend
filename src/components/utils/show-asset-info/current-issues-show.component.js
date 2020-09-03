@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, Label } from "semantic-ui-react";
+import { Table, Label, Popup } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component";
 import Moment from "react-moment";
@@ -27,7 +27,17 @@ const ShowCurrentIssues = (props) => {
               <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
               <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
               <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-              <Table.HeaderCell collapsing>IMPORTANCE</Table.HeaderCell>
+              <Table.HeaderCell collapsing><Popup
+                              trigger={
+                                <span style={{ cursor: "pointer" }}>
+                                  IMPORTANCE
+                                </span>
+                              }
+                            >
+                              The importance value indicates the user-defined
+                              relevance of the device into the organization. Can
+                              be set for each asset in the Inventory section.
+                            </Popup></Table.HeaderCell>
               <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
               <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
               <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>

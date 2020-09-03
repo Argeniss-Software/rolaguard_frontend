@@ -538,6 +538,7 @@ class AlarmReviewComponent extends React.Component {
                     computer={4}
                   >
                     <div className="box-data">
+                      <h5 className="visualization-title">BY IMPORTANCE</h5>
                       {/*<h5 className="visualization-title">BY STATUS</h5>
                     <Loader active={this.state.isGraphsLoading || this.state.isStatusLoading } />
                     <Pie
@@ -694,28 +695,8 @@ class AlarmReviewComponent extends React.Component {
                     >
                       <Table.Header>
                         <Table.Row>
-                          <Table.HeaderCell collapsing>
-                            ID/ADDRESS
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            DEVICE NAME
-                          </Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            <Popup
-                              trigger={
-                                <span style={{ cursor: "pointer" }}>
-                                  IMPORTANCE
-                                </span>
-                              }
-                            >
-                              The importance value indicates the user-defined relevance of the device
-                              into the organization. Can be set for each
-                              asset in the Inventory section.
-                            </Popup>
-                          </Table.HeaderCell>
-
-                          <Table.HeaderCell collapsing>
+                          <Table.HeaderCell>
                             DESCRIPTION
                           </Table.HeaderCell>
                           <Table.HeaderCell
@@ -732,9 +713,28 @@ class AlarmReviewComponent extends React.Component {
                             DATE
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            GATEWAY
+                            DEVICE ID/ADDRESS
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
+                            DEVICE NAME
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            <Popup
+                              trigger={
+                                <span style={{ cursor: "pointer" }}>
+                                  IMPORTANCE
+                                </span>
+                              }
+                            >
+                              The importance value indicates the user-defined
+                              relevance of the device into the organization. Can
+                              be set for each asset in the Inventory section.
+                            </Popup>
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            GATEWAY
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
                             DATA SOURCE
                           </Table.HeaderCell>
                         </Table.Row>

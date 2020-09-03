@@ -37,19 +37,7 @@ class AlertListComponent extends React.Component {
               style={{ cursor: "pointer" }}
               positive={alert.resolved_at}
             >
-              <Table.Cell
-                className="id-cell upper"
-                onClick={() => showAlertDetails(index)}
-              >
-                <DeviceIdComponent
-                  parameters={alert.parameters}
-                  alertType={alert.type}
-                />
-              </Table.Cell>
-              <Table.Cell onClick={() => showAlertDetails(index)}>
-                {alert.parameters.dev_name}
-              </Table.Cell>
-              <Table.Cell onClick={() => showAlertDetails(index)}>
+              <Table.Cell onClick={() => showAlertDetails(index)} collapsing>
                 <Label
                   horizontal
                   style={{
@@ -65,15 +53,28 @@ class AlertListComponent extends React.Component {
                   {alert_types[alert.type].risk}
                 </Label>
               </Table.Cell>
-              <Table.Cell onClick={() => showAlertDetails(index)}>
-                {" "}
-                <ImportanceLabel importance={alert.asset_importance} />{" "}
-              </Table.Cell>
+
               <Table.Cell onClick={() => showAlertDetails(index)}>
                 {alert_types[alert.type].name}
               </Table.Cell>
               <Table.Cell singleLine onClick={() => showAlertDetails(index)}>
                 {<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}
+              </Table.Cell>
+              <Table.Cell
+                className="id-cell upper"
+                onClick={() => showAlertDetails(index)}
+              >
+                <DeviceIdComponent
+                  parameters={alert.parameters}
+                  alertType={alert.type}
+                />
+              </Table.Cell>
+              <Table.Cell onClick={() => showAlertDetails(index)}>
+                {alert.parameters.dev_name}
+              </Table.Cell>
+              <Table.Cell onClick={() => showAlertDetails(index)} collapsing>
+                {" "}
+                <ImportanceLabel importance={alert.asset_importance} />{" "}
               </Table.Cell>
               <Table.Cell
                 onClick={() => showAlertDetails(index)}
