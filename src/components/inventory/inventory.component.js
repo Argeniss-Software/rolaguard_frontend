@@ -272,7 +272,7 @@ class InventoryReviewComponent extends React.Component {
     const tagsLeftEllipsis = (node) => {
       const tagsRendered = node.props.children;
       return (
-        <Label circular color="black" key="black">
+        <Label circular color="grey" key="grey">
           + {node.props.dataCount - tagsRendered.length}
         </Label>
       )
@@ -312,7 +312,7 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
-            <Table.HeaderCell>JOINEUI/APPEUI</Table.HeaderCell>
+            <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
             <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
