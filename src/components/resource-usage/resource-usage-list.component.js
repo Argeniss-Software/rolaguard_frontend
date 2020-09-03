@@ -14,12 +14,13 @@ import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStren
 import statusImages from "../utils/wifi-signal-indicator/images";
 import "./resource-usage.component.css";
 import {observer} from 'mobx-react';
+import ModalResourceUsage from './resource-usage-modal.component'
 
 const ResourceUsageList = (props) => {
   return (
     <Table
       striped
-      selectable 
+      selectable
       className="animated fadeIn"
       basic="very"
       compact="very"
@@ -32,7 +33,6 @@ const ResourceUsageList = (props) => {
               clickHandler={props.deviceTypeClick}
             ></ShowDeviceIcon>
           </Table.HeaderCell>
-
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
           <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
           <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
@@ -57,6 +57,9 @@ const ResourceUsageList = (props) => {
                 <SignalStrengthHelp></SignalStrengthHelp>
               </Popup.Content>
             </Popup>
+          </Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            LSNR
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -162,7 +165,15 @@ const ResourceUsageList = (props) => {
                                   }}
                                 />
                               }
-                              content={DBMToSignalStrength(item.max_rssi)}
+                              content={
+                                DBMToSignalStrength(item.max_rssi) ===
+                                "DISCONNECTED"
+                                  ? "UNUSABLE"
+                                  : DBMToSignalStrength(item.max_rssi) ===
+                                    "UNUSABLE"
+                                  ? "VERY WEAK"
+                                  : DBMToSignalStrength(item.max_rssi)
+                              }
                             ></Popup>
                           )}
                         </Grid.Column>
@@ -178,6 +189,9 @@ const ResourceUsageList = (props) => {
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
+                  </Table.Cell>
+                  <Table.Cell style={{ textAlign: "center" }}>
+                    LSNR
                   </Table.Cell>
                 </Table.Row>
               );

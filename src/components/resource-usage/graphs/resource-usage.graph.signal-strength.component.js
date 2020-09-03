@@ -31,7 +31,7 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         color: "black",
         fontSize: "10px",
       },
-      label: <strong>0dBm</strong>,
+      label: <strong>0 dBm</strong>,
     },
     50: {
       style: {
@@ -73,26 +73,19 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
       },
       label: "-120",
     },
-    130: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-130",
-    },
     150: {
       style: {
         color: "black",
         fontSize: "10px",
         bottom: "-15px",
+        width: "150px"
       },
-      label: <strong>-150dBm</strong>,
+      label: <strong>-Inf</strong>,
     },
   };
 
   const defaultPropsRange = {
-    width: 90,
+    width: 95,
     defaultValue: [
       Math.abs(resourceUsageStore.criteria.signal_strength.from),
       Math.abs(resourceUsageStore.criteria.signal_strength.to),
@@ -131,7 +124,6 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         },
         events: {
           dataPointSelection: (event, chartContext, config) => {
-            debugger
             let from = 0
             let to = 0
             switch (config.dataPointIndex) {
@@ -220,7 +212,7 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
           options={data.options}
           series={data.series}
           type="bar"
-          width="120%"
+          width="100%"
           height="100%"
         />
       </div>

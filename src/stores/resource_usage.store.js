@@ -356,14 +356,18 @@ class ResourceUsageStore {
     const params = {
       ...(status && { asset_status: this.criteria.status }),
       ...(type && { asset_type: this.criteria.type }),
-      ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
+      ...(gateways && { gateways_ids: gateways.map((e) => e.id) }),
       ...(packet_lost_range && {
-        min_packet_loss: packet_lost_range.from,
-        max_packet_loss: packet_lost_range.to,
+        min_packet_loss:
+          packet_lost_range.from === 0 ? null : packet_lost_range.from,
+        max_packet_loss:
+          packet_lost_range.to === 100 ? null : packet_lost_range.to,
       }),
       ...(signal_strength && {
-        min_signal_strength: signal_strength.from,
-        max_signal_strength: signal_strength.to,
+        min_signal_strength:
+          signal_strength.from === -150 ? null : signal_strength.from,
+        max_signal_strength:
+          signal_strength.to === 0 ? null : signal_strength.to,
       }),
       page,
       size,
@@ -384,13 +388,16 @@ class ResourceUsageStore {
         gateways_ids: this.criteria.gateways.map((e) => e.id),
       }),
       ...(packet_lost_range && {
-        min_packet_loss: packet_lost_range.from,
-        max_packet_loss: packet_lost_range.to,
+        min_packet_loss:
+          packet_lost_range.from === 0 ? null : packet_lost_range.from,
+        max_packet_loss:
+          packet_lost_range.to === 100 ? null : packet_lost_range.to,
       }),
       ...(signal_strength && {
         min_signal_strength:
-          signal_strength.from === -150 ? -1000 : signal_strength.from,
-        max_signal_strength: signal_strength.to,
+          signal_strength.from === -150 ? null : signal_strength.from,
+        max_signal_strength:
+          signal_strength.to === 0 ? null : signal_strength.to,
       }),
     };
     let uri = null;

@@ -17,6 +17,7 @@ import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ImportanceLabel from "../utils/importance-label.component";
+import TruncateMarkup from "react-truncate-markup";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -269,8 +270,19 @@ class InventoryReviewComponent extends React.Component {
     });
   }
 
+
   ShowInventoryTable = (props) => {
     const {assetsCount, isLoading, assets, criteria, selectAll} = this.state;
+    
+    const tagsLeftEllipsis = (node) => {
+      const tagsRendered = node.props.children;
+      return (
+        <Label circular color="grey" key="grey">
+          + {node.props.dataCount - tagsRendered.length}
+        </Label>
+      )
+    }
+    
     return (
       <Table
         striped
@@ -298,14 +310,15 @@ class InventoryReviewComponent extends React.Component {
               style={{ cursor: "pointer" }}
               onClick={() => this.toggleDeviceType(criteria.type)}
               collapsing
-            >              
+            >
               <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-            <Table.HeaderCell>NAME</Table.HeaderCell>
-            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
+            <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
             <Table.HeaderCell>VENDOR</Table.HeaderCell>
             <Table.HeaderCell>APPLICATION</Table.HeaderCell>
+            <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
+            <Table.HeaderCell>IMPORTANCE</Table.HeaderCell>
             <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
@@ -324,7 +337,11 @@ class InventoryReviewComponent extends React.Component {
             { assets &&
               assets.map((item, index) => {
                 return (
-                  <Table.Row key={index} style={{ cursor: "pointer" }}>
+                  <Table.Row
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => this.showAssetDetails(index)}
+                  >
                     <Table.Cell>
                       <Checkbox
                         checked={item.selected}
@@ -333,44 +350,54 @@ class InventoryReviewComponent extends React.Component {
                         }
                       />
                     </Table.Cell>
-                    <Table.Cell
-                      style={{ textAlign: "center" }}
-                      onClick={() => this.showAssetDetails(index)}
-                      >                      
-                      <ShowDeviceIcon type={(item.type && !["gateway", "device"].includes(item.type.toLowerCase().trim())) ? "unknown" : item.type}></ShowDeviceIcon>
+                    <Table.Cell style={{ textAlign: "center" }} collapsing>
+                      <ShowDeviceState state={item.connected} />
+                      <ShowDeviceIcon
+                        type={
+                          item.type &&
+                          !["gateway", "device"].includes(
+                            item.type.toLowerCase().trim()
+                          )
+                            ? "unknown"
+                            : item.type
+                        }
+                      ></ShowDeviceIcon>
                     </Table.Cell>
-                    <Table.Cell
-                      className="id-cell upper"
-                      onClick={() => this.showAssetDetails(index)}
-                    >
-                      <ShowDeviceState state={item.connected} /> <AssetIdComponent type={item.type} id={item.hex_id} />
+                    <Table.Cell className="id-cell upper">
+                      <AssetIdComponent type={item.type} id={item.hex_id} />
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.name}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                    <Table.Cell collapsing>{item.name}</Table.Cell>
+                    <Table.Cell>{item.vendor}</Table.Cell>
+                    <Table.Cell collapsing>{item.app_name}</Table.Cell>
+                    <Table.Cell>{item.join_eui}</Table.Cell>
+                    <Table.Cell>
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.vendor}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.app_name}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.data_collector}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.tags.map((tag) => {
-                        return (
-                          <Tag
-                            key={tag.id}
-                            name={tag.name}
-                            color={tag.color}
-                            textColor="#FFFFFF"
-                          />
-                        );
-                      })}
+                    <Table.Cell collapsing>{item.data_collector}</Table.Cell>
+                    <Table.Cell style={{ maxWidth: "15%", width: "15%" }}>
+                      <TruncateMarkup
+                        lines={1}
+                        lineHeight="30px"
+                        ellipsis={tagsLeftEllipsis}
+                      >
+                        <div
+                          style={{ width: "250px" }}
+                          dataCount={item.tags.length}
+                        >
+                          {item.tags.map((tag) => {
+                            return (
+                              <TruncateMarkup.Atom>
+                                <Tag
+                                  key={tag.id}
+                                  name={tag.name}
+                                  color={tag.color}
+                                  textColor="#FFFFFF"
+                                />
+                              </TruncateMarkup.Atom>
+                            );
+                          })}
+                        </div>
+                      </TruncateMarkup>
                     </Table.Cell>
                   </Table.Row>
                 );

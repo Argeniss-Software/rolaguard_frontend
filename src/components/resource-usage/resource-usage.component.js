@@ -100,7 +100,7 @@ const ResourceUsageComponent = (props) => {
                 >
                   {key.replace(/\_+/gm, ` `)}:{" "}
                   <strong>
-                    {value.from} to {value.to} dBm
+                    {value.from <-120 ? '-Inf' : value.from} to {value.to > -50 ? '0' : value.to} dBm 
                   </strong>
                   <Icon name="delete" />
                 </Label>
@@ -128,13 +128,16 @@ const ResourceUsageComponent = (props) => {
 
   useEffect(() => {
     resourceUsageStore.getDataListFromApi();
+    return () => {
+      resourceUsageStore.deleteCriteria();
+    };
   }, []);
 
   return (
     <div className="app-body-container-view">
       <div className="animated fadeIn animation-view">
         <div className="view-header">
-          <h1 className="mb0">RESOURCES USAGE</h1>
+          <h1 className="mb0">NETWORK OVERVIEW</h1>
           <div className="view-header-actions">
             {!showFilters && (
               <div onClick={() => setShowFilters(true)}>
@@ -207,7 +210,7 @@ const ResourceUsageComponent = (props) => {
 
                 {resourceUsageStore.model.isLoading && (
                   <LoaderComponent
-                    loadingMessage="Loading resource usage..."
+                    loadingMessage="Loading network overview..."
                     style={{ marginBottom: 20 }}
                   />
                 )}
