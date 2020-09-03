@@ -128,6 +128,9 @@ const ResourceUsageComponent = (props) => {
 
   useEffect(() => {
     resourceUsageStore.getDataListFromApi();
+    return () => {
+      resourceUsageStore.deleteCriteria();
+    };
   }, []);
 
   return (
