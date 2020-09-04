@@ -512,7 +512,7 @@ class DashboardComponent extends React.Component {
                               <Table.HeaderCell collapsing>
                                 ID/ADDRESS
                               </Table.HeaderCell>
-                              <Table.HeaderCell collapsing>
+                              <Table.HeaderCell>
                                 DEVICE NAME
                               </Table.HeaderCell>
                               <Table.HeaderCell collapsing>
@@ -529,10 +529,10 @@ class DashboardComponent extends React.Component {
                                   Inventory section.
                                 </Popup>
                               </Table.HeaderCell>
-                              <Table.HeaderCell collapsing>
+                              <Table.HeaderCell style={{maxWidth: "160px"}}>
                                 GATEWAY
                               </Table.HeaderCell>
-                              <Table.HeaderCell collapsing>
+                              <Table.HeaderCell>
                                 DATA SOURCE
                               </Table.HeaderCell>
                             </Table.Row>
