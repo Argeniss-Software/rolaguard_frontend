@@ -539,6 +539,7 @@ class QuarantineComponent extends React.Component {
                                     </Moment>
                                   }
                                 </Table.Cell>
+
                                 <Table.Cell
                                   singleLine
                                   onClick={() => this.showAlertDetails(index)}

@@ -16,7 +16,6 @@ const CirclePack = (props) => {
     }
     setShow(false);
     if (props.data && filteredData.length && refElement && refElement.current) {
-      console.log(props.data)
       const aux = new CirclePackD3(refElement.current, {
         data: props.data,
         width: refElement.current.parentNode.parentNode.clientWidth * 0.9,
@@ -33,7 +32,7 @@ const CirclePack = (props) => {
   return (
     <React.Fragment>
       { show && filteredData.length === 0 && 
-          (<EmptyComponent emptyMessage="No labels to show" />)
+          (<EmptyComponent emptyMessage="No more items to show" />)
       }
       { show && props.data.length > 0 && 
         <div

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { Modal, Button, Grid, Table, Divider} from "semantic-ui-react";
+import { Modal, Button, Grid, Table, Divider } from "semantic-ui-react";
+import Skeleton from 'react-loading-skeleton';
 
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
@@ -31,15 +32,11 @@ class InventoryDetailsModal extends Component {
   };
 
   handleNext = e => {
-    this.setState({
-      item: this.props.onNavigate(+1).item
-    });
+    this.props.onNavigate(+1);
   };
 
   handlePrev = e => {
-    this.setState({
-      item: this.props.onNavigate(-1).item
-    });
+    this.props.onNavigate(-1);
   };
   
   getPArameterValue(parameters, parameterName) {
@@ -60,7 +57,8 @@ class InventoryDetailsModal extends Component {
         { title: "DevEUI", value: item.hex_id? item.hex_id.toUpperCase() : null},
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
-        { title: "Application", value: item.application },
+        { title: "Application", value: item.app_name },
+        { title: "join_eui/app_eui", value: item.join_eui? item.join_eui.toUpperCase() :null},
         { title: "Data Source", value: item.data_collector }
       ]
     }
@@ -70,8 +68,9 @@ class InventoryDetailsModal extends Component {
         { title: "Gateway ID",value: item.hex_id? item.hex_id.toUpperCase() : null },
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
-        { title: "Application", value: item.application },
-        { title: "Data Source", value: item.data_collector }
+        { title: "Application", value: item.app_name },
+        { title: "join_eui/app_eui", value: item.join_eui? item.join_eui.toUpperCase() :null},
+        { title: "Data Source", value: item.data_collector },
       ]
     }
 
@@ -161,10 +160,18 @@ class InventoryDetailsModal extends Component {
         onClose={this.handleClose}
       >
         <Modal.Header>
-          <span style={{marginLeft: "10px", verticalAling: "middle"}}>
-            <this.ModalTitle name={item.name} type={item.type} hex_id={item.hex_id} />
-            <ImportanceLabel importance={item.importance}/>
-          </span>
+            <span style={{marginLeft: "10px", verticalAling: "middle"}}>
+              {this.props.loading &&
+                <Skeleton width="30%"/>
+              }
+              {!this.props.loading &&
+                <React.Fragment>
+                  <this.ModalTitle name={item.name} type={item.type} hex_id={item.hex_id} />
+                  <ImportanceLabel importance={item.importance}/>
+                </React.Fragment>
+              }
+            </span>
+
           <div style={{ display: "inline-block", float: "right" }}>
             {this.props.onNavigate && (
               <Button

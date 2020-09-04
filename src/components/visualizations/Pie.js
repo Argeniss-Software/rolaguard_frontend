@@ -182,7 +182,7 @@ class Pie extends Component {
       .on("click", d => this.props.handler(this.props.data, d.data, this.props.type))
       .on("mouseover", (d) => {
         // Define the div for the tooltip
-        this.tooltip = d3.select("body").append("div")
+        this.tooltip = d3.select(this.refs.child).append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
@@ -194,12 +194,33 @@ class Pie extends Component {
           .duration(200)
           .style("opacity", 1);
 
-        let tooltipContent = `<div><strong>${d.data.label? d.data.label : "unknown"}</strong> (${d.data.label? d.data.label : "unknown"})</div>`;
-        tooltipContent = `<div class="ui bottom left popup transition visible" style="width:100%"><div class="content">${tooltipContent}</div></div>`;
+          const tooltipDiv =
+          this.tooltip
+            .append("div")
+              .attr("class", "ui bottom left popup transition visible")
+              .style("display", "inline-block")
+              .style("width", "200px")
+              .style("margin-left", "auto")
+              .style("margin-right", "auto")
 
-        this.tooltip.html(tooltipContent)
-          .style("left", (d3.event.pageX-20) + "px")
-          .style("top", (d3.event.pageY) + "px");
+        const tooltipContent =
+          tooltipDiv
+            .append("div")
+              .attr("class", "content")
+        
+        tooltipContent
+          .append("span")
+          .text(`${d.data.label? d.data.label : "unknown"} `)
+          .style("font-weight", "bold")
+        
+        tooltipContent
+          .append("span")
+          .text(`(${d.data.percentage? this.format(d.data.percentage) : "unknown"})`);
+       
+        this.tooltip	
+          .style("position", "fixed")
+          .style("left", (d3.event.x - 20) + "px")		
+          .style("top", (d3.event.y) + "px");
       })
       .on("mouseout", (d) => {
         this.tooltip
@@ -344,7 +365,7 @@ class Pie extends Component {
       .attr('y', 10)
       .on("click", d => this.props.handler(this.props.data, d, this.props.type))
       .on("mouseover", (d) => {
-        this.tooltip = d3.select("body").append("div")
+        this.tooltip = d3.select(this.refs.child).append("div")
           .attr("class", "tooltip")
           .style("opacity", 0);
 
@@ -356,12 +377,33 @@ class Pie extends Component {
           .duration(200)
           .style("opacity", 1);
 
-        let tooltipContent = `<div><strong>${d.label? d.label : "unknown"}</strong> (${this.format(d.percentage)})</div>`;
-        tooltipContent = `<div class="ui bottom left popup transition visible" style="width:100%"><div class="content">${tooltipContent}</div></div>`
+        const tooltipDiv =
+          this.tooltip
+            .append("div")
+              .attr("class", "ui bottom left popup transition visible")
+              .style("display", "inline-block")
+              .style("width", "200px")
+              .style("margin-left", "auto")
+              .style("margin-right", "auto")
+
+        const tooltipContent =
+          tooltipDiv
+            .append("div")
+              .attr("class", "content")
         
-        this.tooltip.html(tooltipContent)	
-          .style("left", (d3.event.pageX-20) + "px")		
-          .style("top", (d3.event.pageY) + "px");	
+        tooltipContent
+          .append("span")
+          .text(`${d.label? d.label : "unknown"} `)
+          .style("font-weight", "bold")
+        
+        tooltipContent
+          .append("span")
+          .text(`(${d.percentage? this.format(d.percentage) : "unknown"})`);
+       
+        this.tooltip	
+          .style("position", "fixed")
+          .style("left", (d3.event.x - 20) + "px")		
+          .style("top", (d3.event.y) + "px");	
 
         this.svg.selectAll(".arc")
           .attr('opacity', 1)
