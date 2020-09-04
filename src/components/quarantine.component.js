@@ -227,11 +227,11 @@ class QuarantineComponent extends React.Component {
     this.loadQuarantineData(1);
   }
 
-  handleQuarantineRemoval = () => {
+  /*handleQuarantineRemoval = () => {
     this.setState({ activePage: 1 } );
     this.loadViz();
     this.loadQuarantineData(1)  
-  }
+  }*/
 
   showAlertDetails = (index) => {
     const quarantine = this.props.deviceStore.quarantine[index];
@@ -470,14 +470,12 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            DEVICE ID/ADDRESS
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            DEVICE NAME
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
                             LAST CHECKED
                           </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            DEVICE ID/ADDRESS
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             <Popup
                               trigger={
@@ -491,15 +489,14 @@ class QuarantineComponent extends React.Component {
                               be set for each asset in the Inventory section.
                             </Popup>
                           </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
+                          <Table.HeaderCell>
                             GATEWAY
                           </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            DATA SOURCE
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
+                          <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
+                          {/*<Table.HeaderCell collapsing>
                             ACTIONS
                           </Table.HeaderCell>
+                          */}
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
@@ -542,7 +539,16 @@ class QuarantineComponent extends React.Component {
                                     </Moment>
                                   }
                                 </Table.Cell>
-
+                                <Table.Cell
+                                  singleLine
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {
+                                    <Moment format="YYYY-MM-DD HH:mm">
+                                      {item.last_checked}
+                                    </Moment>
+                                  }
+                                </Table.Cell>
                                 <Table.Cell
                                   className="id-cell upper"
                                   onClick={() => this.showAlertDetails(index)}
@@ -559,16 +565,6 @@ class QuarantineComponent extends React.Component {
                                 </Table.Cell>
 
                                 <Table.Cell
-                                  singleLine
-                                  onClick={() => this.showAlertDetails(index)}
-                                >
-                                  {
-                                    <Moment format="YYYY-MM-DD HH:mm">
-                                      {item.last_checked}
-                                    </Moment>
-                                  }
-                                </Table.Cell>
-                                <Table.Cell
                                   onClick={() => this.showAlertDetails(index)}
                                 >
                                   {" "}
@@ -579,6 +575,7 @@ class QuarantineComponent extends React.Component {
                                 <Table.Cell
                                   onClick={() => this.showAlertDetails(index)}
                                   className="upper"
+                                  style={{ maxWidth: "180px" }}
                                 >
                                   {item.alert.parameters.gateway +
                                     (item.alert.parameters.gw_name
@@ -590,7 +587,7 @@ class QuarantineComponent extends React.Component {
                                 >
                                   {item.data_collector_name}
                                 </Table.Cell>
-                                <Table.Cell>
+                                {/*<Table.Cell>
                                   <div className="td-actions">
                                     <QuarantineRemoveModal
                                       item={item}
@@ -599,7 +596,7 @@ class QuarantineComponent extends React.Component {
                                       }
                                     ></QuarantineRemoveModal>
                                   </div>
-                                </Table.Cell>
+                                </Table.Cell>*/}
                               </Table.Row>
                             );
                           })}
