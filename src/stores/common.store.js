@@ -11,7 +11,7 @@ class CommonStore {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
-  /* used it on list device and gateway on resrouce ussages */
+  /* used it on list device and gateway on resource usages */
   @action getData(type, asset_params) {
     const headers = this.getHeaders();
     let uri = `inventory/${asset_params.type}/${asset_params.id}`;
@@ -46,6 +46,7 @@ class CommonStore {
         uri = uri + "/issues";
         break;
       case "resource_usage":
+        uri = `resource_usage/${asset_params.type}/${asset_params.id}`;
         break;
       default:
         break;
