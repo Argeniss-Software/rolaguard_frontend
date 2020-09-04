@@ -57,19 +57,21 @@ const ShowCurrentIssues = (props) => {
                   </Table.Cell>
                   <Table.Cell>{item.alert.parameters.dev_name}</Table.Cell>
                   <Table.Cell>
-                    <Label
-                      horizontal
-                      style={{
-                        backgroundColor: AlertUtil.getColorsMap()[
-                          item.alert_type.risk
-                        ],
-                        color: "white",
-                        borderWidth: 1,
-                        width: "100px",
-                      }}
-                    >
-                      {item.alert_type.risk}
-                    </Label>
+                    {
+                      /*<Label
+                        horizontal
+                        style={{
+                          backgroundColor: AlertUtil.getColorsMap()[
+                            item.alert_type.risk
+                          ],
+                          color: "white",
+                          borderWidth: 1,
+                          width: "100px",
+                        }}
+                      >
+                        {item.alert_type.risk}
+                      </Label>*/
+                    }
                   </Table.Cell>
                   <Table.Cell>
                     {" "}
@@ -77,7 +79,7 @@ const ShowCurrentIssues = (props) => {
                       importance={item.alert.asset_importance}
                     />{" "}
                   </Table.Cell>
-                  <Table.Cell>{item.alert_type.name}</Table.Cell>
+                  <Table.Cell>{/*item.alert_type.name*/}</Table.Cell>
                   <Table.Cell singleLine>
                     {<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}
                   </Table.Cell>

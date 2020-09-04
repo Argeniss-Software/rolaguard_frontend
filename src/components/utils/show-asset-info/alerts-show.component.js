@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Table, Popup} from "semantic-ui-react";
+import {Table, Popup, Label} from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component"
 import Moment from "react-moment";
@@ -22,8 +22,25 @@ const ShowAlerts = (props) => {
           >
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                 <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                <Table.HeaderCell
+                  collapsing
+                  /*  sorted={
+                    orderBy[0] === "created_at"
+                      ? orderBy[1] === "ASC"
+                        ? "ascending"
+                        : "descending"
+                      : null
+                  }
+                  onClick={() => this.handleSort("created_at")}*/
+                >
+                  DATE
+                </Table.HeaderCell>
+                <Table.HeaderCell collapsing>
+                  DEVICE ID/ADDRESS
+                </Table.HeaderCell>
+                <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                 <Table.HeaderCell collapsing>
                   <Popup
                     trigger={
@@ -35,41 +52,92 @@ const ShowAlerts = (props) => {
                     in the Inventory section.
                   </Popup>
                 </Table.HeaderCell>
-                <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
-                <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
-                <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
+                <Table.HeaderCell>GATEWAY</Table.HeaderCell>
+                <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
             <Table.Body>
-              {props.alerts.map((alert) => (
-                <Table.Row>
-                  <Table.Cell className="id-cell upper">
-                    <DeviceIdComponent
-                      parameters={alert.parameters}
-                      alertType={alert.type}
-                    />
+              {props.alerts.map((alert, index) => (
+                <Table.Row
+                  key={index}
+                  style={{ cursor: "pointer" }}
+                  positive={alert.resolved_at}
+                >
+                  <Table.Cell
+                    /*onClick={() => showAlertDetails(index)}*/ collapsing
+                  >
+                    {console.log(alert)}
                   </Table.Cell>
-                  <Table.Cell>risk</Table.Cell>
-                  <Table.Cell>
-                    <ImportanceLabel importance={alert.asset_importance} />{" "}
+
+                  <Table.Cell /*onClick={() => showAlertDetails(index)}*/>
+                    {/*alert_types[alert.type].name*/}
                   </Table.Cell>
-                  <Table.Cell>description</Table.Cell>
-                  <Table.Cell singleLine>
+                  <Table.Cell
+                    singleLine
+                    /*onClick={() => showAlertDetails(index)}*/
+                  >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
                         {alert.created_at}
                       </Moment>
                     }
                   </Table.Cell>
-                  <Table.Cell className="upper">
+                  <Table.Cell
+                    className="id-cell upper"
+                    /*onClick={() => showAlertDetails(index)}*/
+                  >
+                    <DeviceIdComponent
+                      parameters={alert.parameters}
+                      alertType={alert.type}
+                    />
+                  </Table.Cell>
+                  <Table.Cell /*onClick={() => showAlertDetails(index)}*/>
+                    {alert.parameters.dev_name}
+                  </Table.Cell>
+                  <Table.Cell
+                    /*onClick={() => showAlertDetails(index)}*/
+                    collapsing
+                  >
+                    {" "}
+                    <ImportanceLabel importance={alert.asset_importance} />{" "}
+                  </Table.Cell>
+                  <Table.Cell
+                    /*onClick={() => showAlertDetails(index)}*/
+                    className="upper"
+                    style={{ maxWidth: "180px" }}
+                  >
                     {alert.parameters.gateway +
                       (alert.parameters.gw_name
                         ? `(${alert.parameters.gw_name})`
                         : "")}
                   </Table.Cell>
-                  <Table.Cell>{alert.data_collector_name}</Table.Cell>
+                  <Table.Cell /*onClick={() => showAlertDetails(index)}*/>
+                    {alert.data_collector_name}
+                  </Table.Cell>
+                  {/*
+                <Table.Cell className="td-actions">
+                  {!alert.resolved_at && (
+                    <ResolveAlarmModal
+                      alarm={{
+                        alert: alert,
+                        alert_type: alert_types[alert.type],
+                      }}
+                      handleAlertResolution={handleAlertResolution}
+                    />
+                  )}
+                  {alert.resolved_at && (
+                    <Popup
+                      trigger={
+                        <button onClick={() => showAlertDetails(index)}>
+                          <i className="fas fa-eye" />
+                        </button>
+                      }
+                      content="View alert"
+                    />
+                  )}
+                </Table.Cell>
+                    */}
                 </Table.Row>
               ))}
             </Table.Body>
