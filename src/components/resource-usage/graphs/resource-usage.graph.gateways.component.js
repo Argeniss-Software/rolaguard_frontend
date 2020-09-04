@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Pie from "../../visualizations/Pie";
+import CirclePack from "../../visualizations/circle-pack/circle-pack.component";
 import { Loader } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
 import _ from "lodash";
@@ -20,7 +20,7 @@ const ResourceUsageGraphGatewaysComponent = (props) => {
       <h5 className="visualization-title">BY GATEWAYS</h5>
       <Loader active={resourceUsageStore.getGatewaysLoading()} />
       {
-        <Pie
+        <CirclePack
           isLoading={resourceUsageStore.getGatewaysLoading()}
           data={resourceUsageStore.gatewaysGraph.series}
           type={"types"}

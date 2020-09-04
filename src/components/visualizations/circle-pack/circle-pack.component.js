@@ -32,7 +32,7 @@ const CirclePack = (props) => {
   return (
     <React.Fragment>
       { show && filteredData.length === 0 && 
-          (<EmptyComponent emptyMessage="No labels to show" />)
+          (<EmptyComponent emptyMessage="No more items to show" />)
       }
       { show && props.data.length > 0 && 
         <div
