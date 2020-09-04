@@ -470,13 +470,13 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
+                            LAST CHECKED
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
                             DEVICE ID/ADDRESS
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             DEVICE NAME
-                          </Table.HeaderCell>
-                          <Table.HeaderCell collapsing>
-                            LAST CHECKED
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             <Popup
@@ -542,7 +542,16 @@ class QuarantineComponent extends React.Component {
                                     </Moment>
                                   }
                                 </Table.Cell>
-
+                                <Table.Cell
+                                  singleLine
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {
+                                    <Moment format="YYYY-MM-DD HH:mm">
+                                      {item.last_checked}
+                                    </Moment>
+                                  }
+                                </Table.Cell>
                                 <Table.Cell
                                   className="id-cell upper"
                                   onClick={() => this.showAlertDetails(index)}
@@ -558,16 +567,6 @@ class QuarantineComponent extends React.Component {
                                   {item.alert.parameters.dev_name}
                                 </Table.Cell>
 
-                                <Table.Cell
-                                  singleLine
-                                  onClick={() => this.showAlertDetails(index)}
-                                >
-                                  {
-                                    <Moment format="YYYY-MM-DD HH:mm">
-                                      {item.last_checked}
-                                    </Moment>
-                                  }
-                                </Table.Cell>
                                 <Table.Cell
                                   onClick={() => this.showAlertDetails(index)}
                                 >
