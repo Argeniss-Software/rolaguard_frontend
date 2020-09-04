@@ -38,7 +38,6 @@ class CirclePackD3 {
             .attr("fill", item.data.color)
             .attr("r", item.r)
             .on("click", () => {
-              console.log(props.data.find((i) => i.code === item.code));
               props.handler(props.data, item.data, props.type)
             })
             .attr("transform", `translate(${item.x},${item.y})`)

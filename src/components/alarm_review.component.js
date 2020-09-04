@@ -1,7 +1,7 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
 import Moment from "react-moment";
-import { Table, Pagination, Grid, Segment, Button, Loader, Label, Icon, Popup, Message } from "semantic-ui-react";
+import { Table, Pagination, Grid, Segment, Button, Loader, Label, Icon, Popup, Message, Divider} from "semantic-ui-react";
 import AlertUtil from '../util/alert-util';
 import Pie from "./visualizations/Pie";
 
@@ -355,6 +355,25 @@ class AlarmReviewComponent extends React.Component {
   }
 
   render() {
+    const { isLoading, isGraphsLoading, isStatusLoading } = this.state;
+    if( !isLoading && !isGraphsLoading ) {
+      return this.renderPage();
+    } else {
+      return (
+        <div className="app-body-container-view">
+          <div className="animated fadeIn animation-view">
+            <div className="view-header">
+              <h1 className="mb0">ALERTS</h1>
+            </div>
+            <LoaderComponent loadingMessage="Loading Alerts..." />
+          </div>
+        </div>
+      );
+    }
+
+  }
+
+  renderPage() {
     let { activePage, alertsCount, count, pageSize, statuses, risks, types, dataCollectors, criteria, orderBy, showFilters, range, selectedAlert, newAlerts, customRange } = this.state;
     let totalPages = Math.ceil(alertsCount/pageSize);
     const filteredStatuses = statuses.filter(status => status.selected);
@@ -538,24 +557,6 @@ class AlarmReviewComponent extends React.Component {
                     computer={4}
                   >
                     <div className="box-data">
-                      <h5 className="visualization-title">BY IMPORTANCE</h5>
-                      {/*<h5 className="visualization-title">BY STATUS</h5>
-                    <Loader active={this.state.isGraphsLoading || this.state.isStatusLoading } />
-                    <Pie
-                      isLoading={this.state.isGraphsLoading}
-                      data={statuses}
-                      type={'statuses'}
-                      handler={this.handleItemSelected}
-                    />*/}
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column
-                    className="data-container-box pl0 pr0"
-                    mobile={16}
-                    tablet={8}
-                    computer={4}
-                  >
-                    <div className="box-data">
                       <h5 className="visualization-title">
                         BY ALERT DESCRIPTION
                       </h5>
@@ -584,6 +585,25 @@ class AlarmReviewComponent extends React.Component {
                         handler={this.handleItemSelected}
                       />
                     </div>
+                  </Grid.Column>
+                  <Grid.Column
+                    className="data-container-box pl0 pr0"
+                    mobile={16}
+                    tablet={8}
+                    computer={4}
+
+                    style={{display: "flex", verticalAlign: "middle"}}
+                  >
+                    <Segment basic textAlign="center" style={{margin: "auto"}}>
+                      <i className="fas fa-exclamation-circle fa-2x" />
+                      <Divider horizontal></Divider>
+                      <div>
+                        <h3>ALERTS</h3>
+                        <h2>
+                          {this.state.count}
+                        </h2>
+                      </div>
+                    </Segment>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
