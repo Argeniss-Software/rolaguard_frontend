@@ -79,6 +79,7 @@ class AlertListComponent extends React.Component {
               <Table.Cell
                 onClick={() => showAlertDetails(index)}
                 className="upper"
+                style={{ maxWidth: "180px" }}
               >
                 {alert.parameters.gateway +
                   (alert.parameters.gw_name
