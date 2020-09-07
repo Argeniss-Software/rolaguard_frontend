@@ -6,6 +6,7 @@ import Moment from "react-moment";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
 import AlertUtil from "../../../util/alert-util"
+import AssetLink from "../../utils/asset-link.component"
 
 const ShowAlerts = (props) => {
     const colorsMap = AlertUtil.getColorsMap();
@@ -86,10 +87,16 @@ const ShowAlerts = (props) => {
                     className="upper"
                     style={{ maxWidth: "180px" }}
                   >
-                    {alert.parameters.gateway +
-                      (alert.parameters.gw_name
-                        ? `(${alert.parameters.gw_name})`
-                        : "")}
+                    <AssetLink
+                      id={alert.gateway_id}
+                      title={
+                        alert.parameters.gateway +
+                        (alert.parameters.gw_name
+                          ? `(${alert.parameters.gw_name})`
+                          : "")
+                      }
+                      type="gateway"
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))}
