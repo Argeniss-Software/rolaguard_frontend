@@ -24,7 +24,7 @@ const ShowInventory = (props) => {
     <div class="column">
       <h5
         class="ui black inverted top attached header"
-        style={{ backgroundColor: "black", fontSize: "20px" }}
+        style={{ backgroundColor: "black", fontSize: "16px" }}
       >
         <div>
           <ShowDeviceState state={props.inventory.connected} />
@@ -45,7 +45,9 @@ const ShowInventory = (props) => {
             : ""}
           <AssetIdComponent
             type={props.inventory.type}
-            id={props.inventory.hex_id}
+            id={props.inventory.id}
+            hexId={props.inventory.hex_id}
+            showAsLink={false}
           />
           &nbsp;&nbsp;&nbsp;
           <Popup
@@ -62,7 +64,7 @@ const ShowInventory = (props) => {
       <Segment attached>
         <Grid columns={16} columns="equal">
           <Grid.Column flex key={5}>
-            <Table striped style={{ height: "100%" }}>
+            <Table compact striped style={{ height: "100%" }}>
               <Table.Body>
                 <Table.Row>
                   <Table.Cell collapsing>NAME:</Table.Cell>
@@ -107,60 +109,6 @@ const ShowInventory = (props) => {
                     <strong>{props.inventory.data_collector}</strong>
                   </Table.Cell>
                 </Table.Row>
-
-                {/*<Table.Row>
-          <Table.Cell>LAST ACTIVITY:</Table.Cell>
-          <Table.Cell>
-            {" "}
-            <Popup
-              trigger={
-                <strong>
-                  {moment(props.inventory.last_activity).fromNow()}
-                </strong>
-              }
-              position="bottom left"
-            >
-              <Popup.Header>Last activity</Popup.Header>
-              <Popup.Content>
-                {moment(props.inventory.last_activity).format(
-                  "dddd, MMMM Do, YYYY h:mm:ss A"
-                )}
-              </Popup.Content>
-            </Popup>
-          </Table.Cell>
-        </Table.Row>
-
-        <Table.Row>
-          <Table.Cell>ACTIVITY FREQ:</Table.Cell>
-          <Table.Cell>
-            <Popup
-              trigger={
-                <strong>
-                  {moment
-                    .duration(props.inventory.activity_freq || 0, "seconds")
-                    .humanize()}
-                </strong>
-              }
-              position="bottom left"
-            >
-              <Popup.Header>FREQUENCY OF MESSAGES</Popup.Header>
-              <Popup.Content>
-                <NumberFormat
-                  value={(props.inventory.activity_freq || 0).toFixed(1)}
-                  displayType={"text"}
-                  suffix={" s."}
-                  decimalScale="1"
-                />
-              </Popup.Content>
-            </Popup>
-          </Table.Cell>
-            </Table.Row>*/}
-              </Table.Body>
-            </Table>
-          </Grid.Column>
-          <Grid.Column flex key={5}>
-            <Table style={{ height: "100%" }}>
-              <Table.Body>
                 <Table.Row>
                   <Table.Cell collapsing>LABELS:</Table.Cell>
                   <Table.Cell>
@@ -191,21 +139,20 @@ const ShowInventory = (props) => {
                     )}
                   </Table.Cell>
                 </Table.Row>
-
-                <Table.Row>
-                  <Table.Cell>GEOLOCATION:</Table.Cell>
-                  <Table.Cell>
-                    {JSON.stringify(props.inventory.location)}
-                    here a map!
-                  </Table.Cell>
-                </Table.Row>
               </Table.Body>
             </Table>
           </Grid.Column>
           <Grid.Column flex key={5}>
-            <Table style={{ height: "100%" }}>
-              <Table.Body>a Graph?</Table.Body>
-            </Table>
+            <div className="aligned text-center">
+              GEOLOCATION INFO
+              {/*JSON.stringify(props.inventory.location)*/}
+            </div>
+          </Grid.Column>
+          <Grid.Column flex key={5}>
+            <div className="aligned text-center">
+              OTHER DATA
+              {/*JSON.stringify(props.inventory.location)*/}
+            </div>
           </Grid.Column>
         </Grid>
       </Segment>
