@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 
-import { Tab, Label, Menu, Grid, Segment} from "semantic-ui-react";
+import { Label, Icon, Grid, Segment, Popup} from "semantic-ui-react";
 import ShowAlerts from "./alerts-show.component";
 import ShowCurrentIssues from "./current-issues-show.component";
 
@@ -9,6 +9,8 @@ import ShowResourceUsage from "./resource-usage-show.component"
 
 import _ from 'lodash'
 import ShowInventory from "./inventory-show.component"
+import { CopyToClipboard } from "react-copy-to-clipboard"
+import AssetLink from "../../utils/asset-link.component"
 
 const ShowAssetInfo = (props) => {
 
@@ -18,7 +20,7 @@ const ShowAssetInfo = (props) => {
   const [inventory, setInventory] = useState({});
   const [current_issues, setCurrentIssues] = useState({});
   const [resource_usage, setResourceUsage] = useState({});
-
+  const [copied, setCopied] = useState(false);
   useEffect(() => {
       let paramsId = {
         type: props.type,
@@ -45,8 +47,31 @@ const ShowAssetInfo = (props) => {
 
   return (
     <React.Fragment>
-      <Grid columns={16} columns="equal" style={{marginTop: "1em"}}>
-        <ShowInventory inventory={inventory} />
+      <Grid columns={16} columns="equal" style={{ marginTop: "1em" }}>
+        <ShowInventory
+          inventory={inventory}
+          LayoutHeaderRight={
+            <div class="pull-right">
+              <span style={{color: 'white', fontStyle: 'italic',fontSize: '12px'}}>{copied ? 'copied to clipboard... ' : ""}</span>
+              <Popup
+                basic
+                trigger={
+                  <CopyToClipboard
+                    text={window.location.href}
+                    onCopy={() => setCopied(true)}
+                  >
+                    <Icon
+                      name="external share"
+                      inverted
+                      style={{ cursor: "pointer" }}
+                    />
+                  </CopyToClipboard>
+                }
+                content="Press here to copy the link to clipboard for sharing"
+              />
+            </div>
+          }
+        />
       </Grid>
       <Grid columns={16} columns="equal">
         <Grid.Row>
