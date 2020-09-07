@@ -83,15 +83,12 @@ const ResourceUsageList = (props) => {
             props.list.data.map((item, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  <Table.Cell style={{ textAlign: "center" }}>
-                    <a href={`/dashboard/assets/${item.type}/${item.id}/view`}>
-                      link
-                    </a>
+                  <Table.Cell style={{ textAlign: "center" }}>                    
                     <ShowDeviceState state={item.connected} />
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
-                    <AssetIdComponent type={item.type} id={item.hex_id} />
+                    <AssetIdComponent type={item.type} hexId={item.hex_id} id={item.id} />
                   </Table.Cell>
                   <Table.Cell>{item.name}</Table.Cell>
                   <Table.Cell>

@@ -482,10 +482,9 @@ class InventoryReviewComponent extends React.Component {
                       ></ShowDeviceIcon>
                     </Table.Cell>
                     <Table.Cell
-                      onClick={() => this.showAssetDetails(index)}
                       className="id-cell upper"
                     >
-                      <AssetIdComponent type={item.type} id={item.hex_id} />
+                      <AssetIdComponent type={item.type} id={item.id} hexId={item.hex_id} />
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}

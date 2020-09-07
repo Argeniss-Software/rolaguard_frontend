@@ -160,7 +160,7 @@ class InventoryDetailsModal extends Component {
               }
               {!this.props.loading &&
                 <React.Fragment>
-                  <this.ModalTitle name={item.name} type={item.type} hex_id={item.hex_id} />
+                  <this.ModalTitle name={item.name} type={item.type} hexId={item.hex_id} />
                   <ImportanceLabel importance={item.importance}/>
                 </React.Fragment>
               }

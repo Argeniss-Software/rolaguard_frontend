@@ -62,11 +62,12 @@ class AlertListComponent extends React.Component {
               </Table.Cell>
               <Table.Cell
                 className="id-cell upper"
-                onClick={() => showAlertDetails(index)}
               >
                 <DeviceIdComponent
                   parameters={alert.parameters}
                   alertType={alert.type}
+                  deviceId={alert.device_id}
+                  gatewayId={alert.gateway_id}
                 />
               </Table.Cell>
               <Table.Cell onClick={() => showAlertDetails(index)}>
