@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Popup } from "semantic-ui-react";
+import AssetLink from '../utils/asset-link.component'
 
 const AssetIdComponent = (props) => {
   const { id, type, hexId, showAsLink } = props;
@@ -16,18 +17,14 @@ const AssetIdComponent = (props) => {
       : normalizedType === "gateway"
       ? deviceGatewayText
       : "";
-
+      
   if (normalizedType !== "unknown") {
     return (
       <Popup
         trigger={
           <span>
-            {showLink && 
-              <a href={`/dashboard/assets/${normalizedType}/${id}/view`}>
-                {normalizedHexId}
-              </a>
-            }
-            {!showLink && normalizedHexId}          
+            {showLink && <AssetLink title={normalizedHexId} id={id} type={normalizedType} />}
+            {!showLink && normalizedHexId}
           </span>
         }
         content={popupContent}

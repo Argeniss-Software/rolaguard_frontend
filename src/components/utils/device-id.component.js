@@ -2,6 +2,8 @@ import * as React from "react";
 import { Popup } from "semantic-ui-react";
 import AlertUtil from '../../util/alert-util';
 import _ from 'lodash'
+import AssetLink from '../utils/asset-link.component'
+
 class DeviceIdComponent extends React.Component {
   getPopup(text, textDescription, styleClass) {
     return (
@@ -16,13 +18,9 @@ class DeviceIdComponent extends React.Component {
     );
   }
   getLinkToDevice(name, deviceId, type = "device") {
-    if (!_.isNull(deviceId) && !_.isUndefined(deviceId)) {
-      return <a href={`/dashboard/assets/${type}/${deviceId}/view`}>{name}</a>;
-    } else {
-      return name
-    }
-      
+    return <AssetLink title={name} id={deviceId} type={type}/>
   }
+
   render() {
     const { parameters, alertType, deviceId} = this.props;
     const showNotAplicable = AlertUtil.alertTypes.notAplicableDescription.includes(
