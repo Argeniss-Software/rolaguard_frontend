@@ -734,7 +734,6 @@ class AlarmReviewComponent extends React.Component {
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             DEVICE ID/ADDRESS
-
                           </Table.HeaderCell>
                           <Table.HeaderCell>
                             DEVICE NAME
