@@ -48,8 +48,29 @@ const ShowAssetInfo = (props) => {
       <ShowInventory inventory={inventory} />
       <Grid columns={16} columns="equal">
         <Grid.Row>
+          <Grid.Column flex key={16}>
+              <h5 class="ui inverted top attached header">NETWORK OVERVIEW</h5>
+              <Segment attached>
+                <ShowResourceUsage asset={resource_usage} />
+              </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+      <Grid columns={16} columns="equal">
+        <Grid.Row>
           <Grid.Column flex key={8}>
-            <div class="column">
+              <h5 class="ui inverted top attached header">
+                CURRENT ISSUES{" "}
+                {current_issues && current_issues.total_items > 0 && (
+                  <Label color="yellow">{current_issues.total_items}</Label>
+                )}
+              </h5>
+              <Segment attached>
+                <ShowCurrentIssues currentIssues={current_issues} />
+              </Segment>
+          </Grid.Column>
+
+          <Grid.Column flex key={8}>
               <h5 class="ui inverted top attached header">
                 ALERTS{" "}
                 {alerts && alerts.total_items > 0 && (
@@ -62,49 +83,9 @@ const ShowAssetInfo = (props) => {
                   totalItems={alerts.total_items}
                 />
               </Segment>
-            </div>
-          </Grid.Column>
-
-          <Grid.Column flex key={8}>
-            <div class="column">
-              <h5 class="ui inverted top attached header">
-                CURRENT ISSUES{" "}
-                {current_issues && current_issues.total_items > 0 && (
-                  <Label color="yellow">{current_issues.total_items}</Label>
-                )}
-              </h5>
-              <Segment attached>
-                <ShowCurrentIssues currentIssues={current_issues} />
-              </Segment>
-            </div>
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Grid columns={16} columns="equal">
-        <Grid.Row>
-          <Grid.Column flex key={8}>
-            <div class="column">
-              <h5 class="ui inverted top attached header">NETWORK OVERVIEW</h5>
-              <Segment attached>
-                <ShowResourceUsage asset={resource_usage} />
-              </Segment>
-            </div>
-          </Grid.Column>
-
-          <Grid.Column flex key={8}>
-            <div class="column">
-              <h5 class="ui inverted top attached header">OTHER</h5>
-              <Segment attached>OTHER</Segment>
-            </div>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      <div class="row">
-        <div class="column">
-          <div class="ui eight column grid"></div>
-          <div class="ui eight column grid"></div>
-        </div>
-      </div>
     </React.Fragment>
   );
 };

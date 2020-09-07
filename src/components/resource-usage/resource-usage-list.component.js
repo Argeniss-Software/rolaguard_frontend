@@ -27,7 +27,7 @@ const ResourceUsageList = (props) => {
     >
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>            
             <ShowDeviceIcon
               type={props.criteria.type}
               clickHandler={props.deviceTypeClick}
@@ -84,6 +84,9 @@ const ResourceUsageList = (props) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell style={{ textAlign: "center" }}>
+                    <a href={`/dashboard/assets/${item.type}/${item.id}/view`}>
+                      link
+                    </a>
                     <ShowDeviceState state={item.connected} />
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
@@ -190,9 +193,7 @@ const ResourceUsageList = (props) => {
                       </Grid.Row>
                     </Grid>
                   </Table.Cell>
-                  <Table.Cell style={{ textAlign: "center" }}>
-                    LSNR
-                  </Table.Cell>
+                  <Table.Cell style={{ textAlign: "center" }}>LSNR</Table.Cell>
                 </Table.Row>
               );
             })}
