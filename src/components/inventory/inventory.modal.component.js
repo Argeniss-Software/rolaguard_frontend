@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { Modal, Button, Grid, Table, Divider } from "semantic-ui-react";
+import { Modal, Button, Grid, Table, Divider, Icon } from "semantic-ui-react";
 import Skeleton from 'react-loading-skeleton';
 
 import "./inventory.modal.component.css";
@@ -10,7 +10,7 @@ import LoaderComponent from "../utils/loader.component";
 import ItemDetailsIcon from "./inventory.modal.icon.component";
 import ImportanceLabel from "../utils/importance-label.component"
 import Geolocation from "../utils/geolocation/geolocation.component";
-
+import AssetLink from "../utils/asset-link.component"
 @inject("tagsStore")
 @observer
 class InventoryDetailsModal extends Component {
@@ -23,7 +23,6 @@ class InventoryDetailsModal extends Component {
       item: this.props.selectedItem.item,
       activeIndex: this.props.selectedItem.index 
     };
-
     this.hanldleTagSelected = this.hanldleTagSelected.bind(this)
   }
 
@@ -154,19 +153,37 @@ class InventoryDetailsModal extends Component {
         onClose={this.handleClose}
       >
         <Modal.Header>
-            <span style={{marginLeft: "10px", verticalAling: "middle"}}>
-              {this.props.loading &&
-                <Skeleton width="30%"/>
-              }
-              {!this.props.loading &&
-                <React.Fragment>
-                  <this.ModalTitle name={item.name} type={item.type} hexId={item.hex_id} />
-                  <ImportanceLabel importance={item.importance}/>
-                </React.Fragment>
-              }
-            </span>
+          <span style={{ marginLeft: "10px", verticalAling: "middle" }}>
+            {this.props.loading && <Skeleton width="30%" />}
+            {!this.props.loading && (
+              <React.Fragment>
+                <this.ModalTitle
+                  name={item.name}
+                  type={item.type}
+                  hexId={item.hex_id}
+                />
+                <ImportanceLabel importance={item.importance} />
+              </React.Fragment>
+            )}
+          </span>
 
           <div style={{ display: "inline-block", float: "right" }}>
+            <Button
+              icon
+              color="blue"
+              basic
+              labelPosition="left"
+              floated={"left"}
+              style={{ marginRight: "3em" }}
+            >
+              <AssetLink
+                id={this.state.item.id}
+                type={this.state.item.type}
+                title="VIEW ASSET 360"
+              />
+              <Icon name="linkify" />
+            </Button>
+
             {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
