@@ -76,7 +76,7 @@ const ShowPacketsStatistics = (props) => {
       : props.headerColorLine;
 
   return (
-    <Table compact="very" celled color={colorHeaderTable} collapsing>
+    <Table compact="very" celled color={colorHeaderTable}>
       <Table.Header>
         <Table.Row textAlign="center">
           <Table.HeaderCell textAlign="center">Type</Table.HeaderCell>
