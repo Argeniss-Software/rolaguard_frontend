@@ -9,6 +9,7 @@ import TagSelector from "../utils/tags/tag.selector.component";
 import LoaderComponent from "../utils/loader.component";
 import ItemDetailsIcon from "./inventory.modal.icon.component";
 import ImportanceLabel from "../utils/importance-label.component"
+import Geolocation from "../utils/geolocation/geolocation.component";
 
 @inject("tagsStore")
 @observer
@@ -96,13 +97,6 @@ class InventoryDetailsModal extends Component {
       </Table.Row>
       )
     }));
-  }
-
-  showGeolocation(location){
-    return (<div style={{backgroundColor: "#e0e1e2", textAlign:"center", width: "100%", borderRadius: "5px", marginTop:"10px"}}>
-      <h5 style={{color: "gray", alignSelf:"center", paddingTop: "10px"}}>WORK IN PROGRESS</h5>
-      <i className="fas fa-exclamation fa-4x" style={{color: "gray", alignContent:"center", paddingBottom: "10px"}}></i>
-    </div>);
   }
 
   hanldleTagSelected(tag){
@@ -201,7 +195,7 @@ class InventoryDetailsModal extends Component {
                 <Grid.Column width={5} className="modal-content-grid">
                   <ItemDetailsIcon item={item} />
                   <strong>Geolocation:</strong>
-                  {this.showGeolocation(item.location)}
+                  <Geolocation location={item.location} />
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Grid.Row className="modal-content-grid">
