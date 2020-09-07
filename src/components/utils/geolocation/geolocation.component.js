@@ -31,7 +31,7 @@ const Geolocation = (props) => {
     iconAnchor: [12.5, 41],
   });
   return (
-    <div>
+    <div style={{width: "100%", height: "200px"}}>
       {positionDefined && (
         <Map center={position} zoom={10}>
           <TileLayer
@@ -47,7 +47,7 @@ const Geolocation = (props) => {
             backgroundColor: "#e0e1e2",
             textAlign: "center",
             width: "100%",
-            height: "200px",
+            height: "100%",
           }}
         >
           <h5
