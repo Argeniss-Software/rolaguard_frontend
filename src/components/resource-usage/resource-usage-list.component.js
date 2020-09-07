@@ -27,7 +27,7 @@ const ResourceUsageList = (props) => {
     >
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>            
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
             <ShowDeviceIcon
               type={props.criteria.type}
               clickHandler={props.deviceTypeClick}
@@ -61,6 +61,19 @@ const ResourceUsageList = (props) => {
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
             LSNR
           </Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            Payload
+          </Table.HeaderCell>
+          <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Popup
+              flowing
+              size="mini"
+              trigger={<span style={{ cursor: "pointer" }}># GW</span>}
+              basic
+              content="Number of gateways connected to"
+            >
+            </Popup>
+          </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       {props &&
@@ -83,12 +96,16 @@ const ResourceUsageList = (props) => {
             props.list.data.map((item, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  <Table.Cell style={{ textAlign: "center" }}>                    
+                  <Table.Cell style={{ textAlign: "center" }}>
                     <ShowDeviceState state={item.connected} />
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
                   </Table.Cell>
                   <Table.Cell>
-                    <AssetIdComponent type={item.type} hexId={item.hex_id} id={item.id} />
+                    <AssetIdComponent
+                      type={item.type}
+                      hexId={item.hex_id}
+                      id={item.id}
+                    />
                   </Table.Cell>
                   <Table.Cell>{item.name}</Table.Cell>
                   <Table.Cell>
@@ -190,7 +207,30 @@ const ResourceUsageList = (props) => {
                       </Grid.Row>
                     </Grid>
                   </Table.Cell>
-                  <Table.Cell style={{ textAlign: "center" }}>LSNR</Table.Cell>
+                  <Table.Cell style={{ textAlign: "center" }}>
+                    <NumberFormat
+                      value={item.max_lsnr}
+                      displayType={"text"}
+                      decimalScale="1"
+                    />
+                  </Table.Cell>
+
+                  <Table.Cell style={{ textAlign: "center" }}>
+                    <NumberFormat
+                      value={item.payload_size}
+                      displayType={"text"}
+                      suffix=" bytes"
+                      decimalScale="1"
+                    />
+                  </Table.Cell>
+
+                  <Table.Cell style={{ textAlign: "center" }}>
+                    <NumberFormat
+                      value={item.ngateways_connected_to}
+                      displayType={"text"}
+                      decimalScale="1"
+                    />
+                  </Table.Cell>
                 </Table.Row>
               );
             })}
