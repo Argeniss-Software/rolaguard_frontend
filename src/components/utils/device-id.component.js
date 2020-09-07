@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Popup } from "semantic-ui-react";
 import AlertUtil from '../../util/alert-util';
-
+import _ from 'lodash'
 class DeviceIdComponent extends React.Component {
   getPopup(text, textDescription, styleClass) {
     return (
@@ -16,7 +16,12 @@ class DeviceIdComponent extends React.Component {
     );
   }
   getLinkToDevice(name, deviceId, type = "device") {
-    return <a href={`/dashboard/assets/${type}/${deviceId}/view`}>{name}</a>;
+    if (!_.isNull(deviceId) && !_.isUndefined(deviceId)) {
+      return <a href={`/dashboard/assets/${type}/${deviceId}/view`}>{name}</a>;
+    } else {
+      return name
+    }
+      
   }
   render() {
     const { parameters, alertType, deviceId} = this.props;
