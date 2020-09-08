@@ -82,16 +82,15 @@ class DetailsAlertModal extends Component {
         }
         value = value.toString();
       }
-      if (value) {
-        messageTable.push(
-          <Table.Row key={messageParameter}>
-            <Table.Cell width="3" 
-              className="technical-details-table-row-left" 
-              style={{"borderTop": "1px solid lightgray !important"}}><i>{header}</i></Table.Cell>
-            <Table.Cell width="3" className={parameterToUpper? "technical-details-table-row-right upper": "technical-details-table-row-right"}><b>{value}</b></Table.Cell>
-          </Table.Row>
-          );
-      }
+
+      messageTable.push(
+        <Table.Row key={messageParameter}>
+          <Table.Cell width="3" 
+            className="technical-details-table-row-left" 
+            style={{"borderTop": "1px solid lightgray !important"}}><i>{header}</i></Table.Cell>
+          <Table.Cell width="3" className={parameterToUpper? "technical-details-table-row-right upper": "technical-details-table-row-right"}><b>{value}</b></Table.Cell>
+        </Table.Row>
+        );
     }
 
     const resolution = alert.resolved_by ? `This alert was resolved by ${alert.resolved_by.full_name}, ${moment(alert.resolved_by).calendar().toLowerCase()}.` : null
