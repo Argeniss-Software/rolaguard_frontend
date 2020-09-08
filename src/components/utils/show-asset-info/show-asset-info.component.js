@@ -85,7 +85,7 @@ const ShowAssetInfo = (props) => {
         <Grid.Row>
           <Grid.Column flex key={16}>
             <h5
-              class="ui inverted top attached header"
+              class="ui inverted top attached header blue segment"
               style={{ height: "44px" }}
             >
               NETWORK OVERVIEW
