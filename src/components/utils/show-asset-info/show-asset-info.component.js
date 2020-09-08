@@ -10,7 +10,6 @@ import ShowResourceUsage from "./resource-usage-show.component"
 import _ from 'lodash'
 import ShowInventory from "./inventory-show.component"
 import { CopyToClipboard } from "react-copy-to-clipboard"
-import AssetLink from "../../utils/asset-link.component"
 
 const ShowAssetInfo = (props) => {
 

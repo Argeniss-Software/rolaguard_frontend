@@ -1,7 +1,5 @@
 import React, {useState} from "react";
-import {Table, Popup, Label} from "semantic-ui-react";
-import ImportanceLabel from "../../utils/importance-label.component";
-import DeviceIdComponent from "../device-id.component"
+import {Table, Label} from "semantic-ui-react";
 import Moment from "react-moment";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
