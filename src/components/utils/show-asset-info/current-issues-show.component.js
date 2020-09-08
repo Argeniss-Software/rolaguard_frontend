@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import { Table, Label, Popup } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component";
@@ -7,8 +7,19 @@ import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
 import AssetLink from "../../utils/asset-link.component";
+import DetailsAlertModal from "../../../components/details.alert.modal.component";
 
 const ShowCurrentIssues = (props) => {
+    const [selectedAlert, setSelectedAlert] = useState({alert: {}, alert_type: {}})
+    
+    const showAlertDetails = (data) => {
+      setSelectedAlert({ alert: data.alert, alert_type: data.alert.type })
+    }
+    
+    const closeAlertDetails = () => {
+      setSelectedAlert({alert: {}, alert_type: {}})
+    }
+
   if (props.currentIssues.total_items > 0) {
     return (
       <React.Fragment>
@@ -32,7 +43,7 @@ const ShowCurrentIssues = (props) => {
             {props.currentIssues.issues.map((current_issue, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  <Table.Cell /*onClick={() => this.showAlertDetails(index)}*/>
+                  <Table.Cell onClick={() => showAlertDetails(current_issue)}>
                     <Label
                       horizontal
                       style={{
@@ -47,12 +58,12 @@ const ShowCurrentIssues = (props) => {
                       {current_issue.alert.type.risk}
                     </Label>
                   </Table.Cell>
-                  <Table.Cell /*onClick={() => this.showAlertDetails(index)}*/>
+                  <Table.Cell onClick={() => showAlertDetails(current_issue)}>
                     {current_issue.alert.type.name}
                   </Table.Cell>
                   <Table.Cell
                     singleLine
-                    /*onClick={() => this.showAlertDetails(index)}*/
+                    onClick={() => showAlertDetails(current_issue)}
                   >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
@@ -63,7 +74,7 @@ const ShowCurrentIssues = (props) => {
 
                   <Table.Cell
                     singleLine
-                    /*onClick={() => this.showAlertDetails(index)}*/
+                    onClick={() => showAlertDetails(current_issue)}
                   >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
@@ -72,7 +83,7 @@ const ShowCurrentIssues = (props) => {
                     }
                   </Table.Cell>
                   <Table.Cell
-                    /*onClick={() => showAlertDetails(index)}*/
+                    /*onClick={() => showAlertDetails(current_issue)}*/
                     className="upper"
                     style={{ maxWidth: "180px" }}
                     collapsing
@@ -87,10 +98,17 @@ const ShowCurrentIssues = (props) => {
                       }
                       type="gateway"
                     />
+                    {!_.isEmpty(selectedAlert.alert) && (
+                      <DetailsAlertModal
+                        loading={false}
+                        alert={selectedAlert}
+                        onClose={closeAlertDetails}
+                      />
+                    )}                    
                   </Table.Cell>
                 </Table.Row>
               );
-            })}
+            })}          
           </Table.Body>
         </Table>
       </React.Fragment>
