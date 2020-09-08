@@ -3,15 +3,15 @@ import * as ReactLeaflet from "react-leaflet";
 import L from "leaflet";
 import "./geolocation.component.css";
 import "leaflet/dist/leaflet.css";
-
+import _ from 'lodash'
 import mark from "../../../img/map-marker.png";
 
 const { Map, TileLayer, Marker } = ReactLeaflet;
 
 const Geolocation = (props) => {
   const [position, setPosition] = React.useState([
-    props.location.latitude,
-    props.location.longitude,
+    _.get(props, 'location.latitude'),
+    _.get(props, 'location.longitude'),
   ]);
   const [positionDefined, setPositionDefined] = React.useState(false);
 
@@ -21,8 +21,7 @@ const Geolocation = (props) => {
         props.location.latitude !== null &&
         props.location.longitude !== null
     );
-    setPosition([props.location.latitude, props.location.longitude]);
-    console.log(positionDefined);
+    setPosition([_.get(props, 'location.latitude'), _.get(props, 'location.longitude')]);
   }, [props]);
 
   const icon = L.icon({
