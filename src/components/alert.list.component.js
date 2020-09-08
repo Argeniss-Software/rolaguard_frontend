@@ -4,9 +4,10 @@ import { Table, Label, Popup } from "semantic-ui-react";
 import "./alert.list.component.css";
 import AlertUtil from '../util/alert-util';
 import EmptyComponent from "./utils/empty.component";
-import ResolveAlarmModal from "./resolve.alarm.modal.component";
+// import ResolveAlarmModal from "./resolve.alarm.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
 import ImportanceLabel from "./utils/importance-label.component.js"
+import AssetLink from "./utils/asset-link.component"
 
 class AlertListComponent extends React.Component {
 
@@ -60,9 +61,7 @@ class AlertListComponent extends React.Component {
               <Table.Cell singleLine onClick={() => showAlertDetails(index)}>
                 {<Moment format="YYYY-MM-DD HH:mm">{alert.created_at}</Moment>}
               </Table.Cell>
-              <Table.Cell
-                className="id-cell upper"
-              >
+              <Table.Cell className="id-cell upper">
                 <DeviceIdComponent
                   parameters={alert.parameters}
                   alertType={alert.type}
@@ -78,14 +77,14 @@ class AlertListComponent extends React.Component {
                 <ImportanceLabel importance={alert.asset_importance} />{" "}
               </Table.Cell>
               <Table.Cell
-                onClick={() => showAlertDetails(index)}
+                // onClick={() => showAlertDetails(index)}
                 className="upper"
                 style={{ maxWidth: "180px" }}
               >
-                {alert.parameters.gateway +
+                <AssetLink title={alert.parameters.gateway +
                   (alert.parameters.gw_name
                     ? `(${alert.parameters.gw_name})`
-                    : "")}
+                    : "")} id={alert.gateway_id} type="gateway"/>
               </Table.Cell>
               <Table.Cell onClick={() => showAlertDetails(index)}>
                 {alert.data_collector_name}
