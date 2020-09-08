@@ -54,7 +54,8 @@ const AlertUtil = {
     "old_latitude": "Old Latitude",
     "new_latitude": "New Latitude",
     "old_longitude": "Old Longitude",
-    "new_longitude": "New Longitude"
+    "new_longitude": "New Longitude",
+    "rssi": "Signal strenght (dBm)"
   },
 
   getParameterHeader(key){

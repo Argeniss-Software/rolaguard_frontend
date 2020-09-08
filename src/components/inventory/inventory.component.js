@@ -703,10 +703,10 @@ class InventoryReviewComponent extends React.Component {
             </div>
           </div>
 
-          {firstLoad && (
+          {isLoading && (
             <LoaderComponent loadingMessage="Loading Inventory ..." />
           )}
-          {!firstLoad && (
+          {!isLoading && (
             <React.Fragment>
               {showFilters && (
                 <Segment>
