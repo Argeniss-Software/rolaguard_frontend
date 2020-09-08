@@ -52,7 +52,15 @@ const ShowAssetInfo = (props) => {
           inventory={inventory}
           LayoutHeaderRight={
             <div class="pull-right">
-              <span style={{color: 'white', fontStyle: 'italic',fontSize: '12px'}}>{copied ? 'copied to clipboard... ' : ""}</span>
+              <span
+                style={{
+                  color: "white",
+                  fontStyle: "italic",
+                  fontSize: "12px",
+                }}
+              >
+                {copied ? "copied to clipboard... " : ""}
+              </span>
               <Popup
                 basic
                 trigger={
@@ -76,7 +84,12 @@ const ShowAssetInfo = (props) => {
       <Grid columns={16} columns="equal">
         <Grid.Row>
           <Grid.Column flex key={16}>
-            <h5 class="ui inverted top attached header">NETWORK OVERVIEW</h5>
+            <h5
+              class="ui inverted top attached header"
+              style={{ height: "44px" }}
+            >
+              NETWORK OVERVIEW
+            </h5>
             <Segment attached>
               <ShowResourceUsage asset={resource_usage} />
             </Segment>
@@ -86,7 +99,10 @@ const ShowAssetInfo = (props) => {
       <Grid columns={16} columns="equal">
         <Grid.Row>
           <Grid.Column flex key={8}>
-            <h5 class="ui inverted top attached header">
+            <h5
+              class="ui inverted top attached header"
+              style={{ height: "44px" }}
+            >
               CURRENT ISSUES{" "}
               {current_issues && current_issues.total_items > 0 && (
                 <Label color="yellow">{current_issues.total_items}</Label>
@@ -98,7 +114,10 @@ const ShowAssetInfo = (props) => {
           </Grid.Column>
 
           <Grid.Column flex key={8}>
-            <h5 class="ui inverted top attached header">
+            <h5
+              class="ui inverted top attached header"
+              style={{ height: "44px" }}
+            >
               ALERTS{" "}
               {alerts && alerts.total_items > 0 && (
                 <Label color="red">{alerts.total_items}</Label>

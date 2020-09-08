@@ -6,6 +6,7 @@ import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
+import AssetLink from "../../utils/asset-link.component";
 
 const ShowCurrentIssues = (props) => {
   if (props.currentIssues.total_items > 0) {
@@ -73,11 +74,19 @@ const ShowCurrentIssues = (props) => {
                   <Table.Cell
                     /*onClick={() => showAlertDetails(index)}*/
                     className="upper"
+                    style={{ maxWidth: "180px" }}
+                    collapsing
                   >
-                    {current_issue.alert.parameters.gateway +
-                      (current_issue.alert.parameters.gw_name
-                        ? `(${current_issue.alert.parameters.gw_name})`
-                        : "")}
+                    <AssetLink
+                      id={current_issue.alert.gateway_id}
+                      title={
+                        current_issue.alert.parameters.gateway +
+                        (current_issue.alert.parameters.gw_name
+                          ? `(${current_issue.alert.parameters.gw_name})`
+                          : "")
+                      }
+                      type="gateway"
+                    />
                   </Table.Cell>
                 </Table.Row>
               );

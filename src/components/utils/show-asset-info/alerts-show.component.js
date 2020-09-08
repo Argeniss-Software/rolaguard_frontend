@@ -38,7 +38,7 @@ const ShowAlerts = (props) => {
                 >
                   DATE
                 </Table.HeaderCell>
-                <Table.HeaderCell>GATEWAY</Table.HeaderCell>
+                <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
@@ -86,6 +86,7 @@ const ShowAlerts = (props) => {
                     /*onClick={() => showAlertDetails(index)}*/
                     className="upper"
                     style={{ maxWidth: "180px" }}
+                    collapsing
                   >
                     <AssetLink
                       id={alert.gateway_id}
