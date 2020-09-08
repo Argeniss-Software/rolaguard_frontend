@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import {Table, Popup, Label} from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component"
@@ -7,10 +7,20 @@ import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
 import AlertUtil from "../../../util/alert-util"
 import AssetLink from "../../utils/asset-link.component"
+import DetailsAlertModal from "../../../components/details.alert.modal.component"
 
 const ShowAlerts = (props) => {
     const colorsMap = AlertUtil.getColorsMap();
-
+    const [selectedAlert, setSelectedAlert] = useState({alert: {}, alert_type: {}})
+    
+    const showAlertDetails = (data) => {
+      setSelectedAlert({ alert: data, alert_type: data.type })
+    }
+    
+    const closeAlertDetails = () => {
+      setSelectedAlert({alert: {}, alert_type: {}})
+    }
+    
     if (props.totalItems > 0) {
       return (
         <React.Fragment>
@@ -50,7 +60,8 @@ const ShowAlerts = (props) => {
                   positive={alert.resolved_at}
                 >
                   <Table.Cell
-                    /*onClick={() => showAlertDetails(index)}*/ collapsing
+                    onClick={() => showAlertDetails(alert)}
+                    collapsing
                   >
                     {_.get(alert, "type.risk") && (
                       <Label
@@ -67,14 +78,12 @@ const ShowAlerts = (props) => {
                       </Label>
                     )}
                   </Table.Cell>
-
-                  <Table.Cell /*onClick={() => showAlertDetails(index)}*/>
+                  <Table.Cell onClick={() => showAlertDetails(alert)}>
                     {alert.type.name}
                   </Table.Cell>
-
                   <Table.Cell
                     singleLine
-                    /*onClick={() => showAlertDetails(index)}*/
+                    onClick={() => showAlertDetails(alert)}
                   >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
@@ -82,8 +91,16 @@ const ShowAlerts = (props) => {
                       </Moment>
                     }
                   </Table.Cell>
+
+                  {!_.isEmpty(selectedAlert.alert) && (
+                    <DetailsAlertModal
+                      loading={false}
+                      alert={selectedAlert}
+                      onClose={closeAlertDetails}
+                    />
+                  )}
                   <Table.Cell
-                    /*onClick={() => showAlertDetails(index)}*/
+                    /*onClick={() => showAlertDetails(alert)}*/
                     className="upper"
                     style={{ maxWidth: "180px" }}
                     collapsing
