@@ -6,9 +6,8 @@ import ImportanceLabel from "../../utils/importance-label.component";
 import ShowDeviceState from "../show-device-state.component";
 import ShowDeviceIcon from "../show-device-icon.component";
 import AssetIdComponent from "../asset-id.component";
-import NumberFormat from "react-number-format";
-import moment from "moment";
 import TruncateMarkup from "react-truncate-markup";
+import Geolocation from "../geolocation/geolocation.component"
 
 const ShowInventory = (props) => {
   const tagsLeftEllipsis = (node) => {
@@ -66,7 +65,7 @@ const ShowInventory = (props) => {
           </Grid.Column>
         </Grid>
       </h5>
-      <Segment attached>        
+      <Segment attached>
         <Grid columns={16} columns="equal">
           <Grid.Column flex key={5}>
             <Table compact striped style={{ height: "100%" }}>
@@ -149,14 +148,13 @@ const ShowInventory = (props) => {
           </Grid.Column>
           <Grid.Column flex key={5}>
             <div className="aligned text-center">
-              GEOLOCATION INFO
-              {/*JSON.stringify(props.inventory.location)*/}
+              <strong>Geolocation:</strong>
+              <Geolocation location={props.inventory.location} />
             </div>
           </Grid.Column>
           <Grid.Column flex key={5}>
             <div className="aligned text-center">
               OTHER DATA
-              {/*JSON.stringify(props.inventory.location)*/}
             </div>
           </Grid.Column>
         </Grid>
