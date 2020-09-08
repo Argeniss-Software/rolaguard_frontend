@@ -17,14 +17,6 @@ const ShowResourceUssage = (props) => {
         <Grid.Column width={6}>
           <Table compact="very">
             <Table.Body>
-              {
-                <Table.Row>
-                  <Table.Cell>DATA SOURCE</Table.Cell>
-                  <Table.Cell className="bold">
-                    {props.asset.data_collector}
-                  </Table.Cell>
-                </Table.Row>
-              }
               <Table.Row>
                 <Table.Cell>LAST MESSAGE RECEIVED:</Table.Cell>
                 <Table.Cell className="bold">
