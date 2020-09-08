@@ -1,18 +1,27 @@
-import * as React from "react";
-import {Table, Popup} from "semantic-ui-react";
-import ImportanceLabel from "../../utils/importance-label.component";
-import DeviceIdComponent from "../device-id.component"
+import React, {useState} from "react";
+import {Table, Label} from "semantic-ui-react";
 import Moment from "react-moment";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
+import AlertUtil from "../../../util/alert-util"
+import AssetLink from "../../utils/asset-link.component"
+import DetailsAlertModal from "../../../components/details.alert.modal.component"
 
 const ShowAlerts = (props) => {
+    const colorsMap = AlertUtil.getColorsMap();
+    const [selectedAlert, setSelectedAlert] = useState({alert: {}, alert_type: {}})
+    
+    const showAlertDetails = (data) => {
+      setSelectedAlert({ alert: data, alert_type: data.type })
+    }
+    
+    const closeAlertDetails = () => {
+      setSelectedAlert({alert: {}, alert_type: {}})
+    }
+    
     if (props.totalItems > 0) {
       return (
         <React.Fragment>
-          <div>
-            <strong>Last 5 alerts:</strong>
-          </div>
           <Table
             striped
             selectable
@@ -22,54 +31,89 @@ const ShowAlerts = (props) => {
           >
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
                 <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                <Table.HeaderCell collapsing>
-                  <Popup
-                    trigger={
-                      <span style={{ cursor: "pointer" }}>IMPORTANCE</span>
-                    }
-                  >
-                    The importance value indicates the user-defined relevance of
-                    the device into the organization. Can be set for each asset
-                    in the Inventory section.
-                  </Popup>
+                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                <Table.HeaderCell
+                  collapsing
+                  /*  sorted={
+                    orderBy[0] === "created_at"
+                      ? orderBy[1] === "ASC"
+                        ? "ascending"
+                        : "descending"
+                      : null
+                  }
+                  onClick={() => this.handleSort("created_at")}*/
+                >
+                  DATE
                 </Table.HeaderCell>
-                <Table.HeaderCell collapsing>DESCRIPTION</Table.HeaderCell>
-                <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                 <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 
             <Table.Body>
-              {props.alerts.map((alert) => (
-                <Table.Row>
-                  <Table.Cell className="id-cell upper">
-                    <DeviceIdComponent
-                      parameters={alert.parameters}
-                      alertType={alert.type}
-                    />
+              {props.alerts.map((alert, index) => (
+                <Table.Row
+                  key={index}
+                  style={{ cursor: "pointer" }}
+                  positive={alert.resolved_at}
+                >
+                  <Table.Cell
+                    onClick={() => showAlertDetails(alert)}
+                    collapsing
+                  >
+                    {_.get(alert, "type.risk") && (
+                      <Label
+                        horizontal
+                        style={{
+                          backgroundColor: colorsMap[alert.type.risk],
+                          color: "white",
+                          borderWidth: 1,
+                          borderColor: colorsMap[alert.type.risk],
+                          width: "100px",
+                        }}
+                      >
+                        {alert.type.risk}
+                      </Label>
+                    )}
                   </Table.Cell>
-                  <Table.Cell>risk</Table.Cell>
-                  <Table.Cell>
-                    <ImportanceLabel importance={alert.asset_importance} />{" "}
+                  <Table.Cell onClick={() => showAlertDetails(alert)}>
+                    {alert.type.name}
                   </Table.Cell>
-                  <Table.Cell>description</Table.Cell>
-                  <Table.Cell singleLine>
+                  <Table.Cell
+                    singleLine
+                    onClick={() => showAlertDetails(alert)}
+                  >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
                         {alert.created_at}
                       </Moment>
                     }
                   </Table.Cell>
-                  <Table.Cell className="upper">
-                    {alert.parameters.gateway +
-                      (alert.parameters.gw_name
-                        ? `(${alert.parameters.gw_name})`
-                        : "")}
+
+                  {!_.isEmpty(selectedAlert.alert) && (
+                    <DetailsAlertModal
+                      loading={false}
+                      alert={selectedAlert}
+                      onClose={closeAlertDetails}
+                    />
+                  )}
+                  <Table.Cell
+                    /*onClick={() => showAlertDetails(alert)}*/
+                    className="upper"
+                    style={{ maxWidth: "180px" }}
+                    collapsing
+                  >
+                    <AssetLink
+                      id={alert.gateway_id}
+                      title={
+                        alert.parameters.gateway +
+                        (alert.parameters.gw_name
+                          ? `(${alert.parameters.gw_name})`
+                          : "")
+                      }
+                      type="gateway"
+                    />
                   </Table.Cell>
-                  <Table.Cell>{alert.data_collector_name}</Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

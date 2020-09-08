@@ -23,6 +23,7 @@ import ListPoliciesComponent from './policies/list-policies.component';
 import ViewPolicyComponent from './policies/view-policy.component';
 import NotificationsPreferencesComponent from './notifications-preferences.component';
 import ListNotificationsComponent from './notifications/list-notifications.component';
+import ViewAssetComponent from './asset/view-asset.component';
 
 class DashBoardRouter extends React.Component {
     render() {
@@ -36,6 +37,7 @@ class DashBoardRouter extends React.Component {
 
                     {/* DEVICES */}
                     <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
+                    <Route path='/dashboard/assets/:type/:id/view' component={ViewAssetComponent}/>
 
                     {/* RESOURCES */}
                     <Route exact path='/dashboard/resources_usage' component={ResourceUsageComponent}/>

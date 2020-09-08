@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState} from "react";
 import { Table, Label, Popup } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import DeviceIdComponent from "../device-id.component";
@@ -6,15 +6,23 @@ import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
+import AssetLink from "../../utils/asset-link.component";
+import DetailsAlertModal from "../../../components/details.alert.modal.component";
 
 const ShowCurrentIssues = (props) => {
+    const [selectedAlert, setSelectedAlert] = useState({alert: {}, alert_type: {}})
+    
+    const showAlertDetails = (data) => {
+      setSelectedAlert({ alert: data.alert, alert_type: data.alert.type })
+    }
+    
+    const closeAlertDetails = () => {
+      setSelectedAlert({alert: {}, alert_type: {}})
+    }
+
   if (props.currentIssues.total_items > 0) {
     return (
       <React.Fragment>
-        <div>
-          <strong>Last 5 current issues:</strong>
-        </div>
-
         <Table
           striped
           selectable
@@ -24,80 +32,83 @@ const ShowCurrentIssues = (props) => {
         >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
-              <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
               <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-              <Table.HeaderCell collapsing><Popup
-                              trigger={
-                                <span style={{ cursor: "pointer" }}>
-                                  IMPORTANCE
-                                </span>
-                              }
-                            >
-                              The importance value indicates the user-defined
-                              relevance of the device into the organization. Can
-                              be set for each asset in the Inventory section.
-                            </Popup></Table.HeaderCell>
               <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
               <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
               <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
               <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-              <Table.HeaderCell collapsing>DATA SOURCE</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {props.currentIssues.issues.map((item, index) => {
+            {props.currentIssues.issues.map((current_issue, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  <Table.Cell className="id-cell upper">
-                    <DeviceIdComponent
-                      parameters={item.alert.parameters}
-                      alertType={alert.type}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>{item.alert.parameters.dev_name}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell onClick={() => showAlertDetails(current_issue)}>
                     <Label
                       horizontal
                       style={{
                         backgroundColor: AlertUtil.getColorsMap()[
-                          item.alert_type.risk
+                          current_issue.alert.type.risk
                         ],
                         color: "white",
                         borderWidth: 1,
                         width: "100px",
                       }}
                     >
-                      {item.alert_type.risk}
+                      {current_issue.alert.type.risk}
                     </Label>
                   </Table.Cell>
-                  <Table.Cell>
-                    {" "}
-                    <ImportanceLabel
-                      importance={item.alert.asset_importance}
-                    />{" "}
+                  <Table.Cell onClick={() => showAlertDetails(current_issue)}>
+                    {current_issue.alert.type.name}
                   </Table.Cell>
-                  <Table.Cell>{item.alert_type.name}</Table.Cell>
-                  <Table.Cell singleLine>
-                    {<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}
-                  </Table.Cell>
-                  <Table.Cell singleLine>
+                  <Table.Cell
+                    singleLine
+                    onClick={() => showAlertDetails(current_issue)}
+                  >
                     {
                       <Moment format="YYYY-MM-DD HH:mm">
-                        {item.last_checked}
+                        {current_issue.since}
                       </Moment>
                     }
                   </Table.Cell>
-                  <Table.Cell className="upper">
-                    {item.alert.parameters.gateway +
-                      (item.alert.parameters.gw_name
-                        ? `(${item.alert.parameters.gw_name})`
-                        : "")}
+
+                  <Table.Cell
+                    singleLine
+                    onClick={() => showAlertDetails(current_issue)}
+                  >
+                    {
+                      <Moment format="YYYY-MM-DD HH:mm">
+                        {current_issue.last_checked}
+                      </Moment>
+                    }
                   </Table.Cell>
-                  <Table.Cell>{item.data_collector_name}</Table.Cell>
+                  <Table.Cell
+                    /*onClick={() => showAlertDetails(current_issue)}*/
+                    className="upper"
+                    style={{ maxWidth: "180px" }}
+                    collapsing
+                  >
+                    <AssetLink
+                      id={current_issue.alert.gateway_id}
+                      title={
+                        current_issue.alert.parameters.gateway +
+                        (current_issue.alert.parameters.gw_name
+                          ? `(${current_issue.alert.parameters.gw_name})`
+                          : "")
+                      }
+                      type="gateway"
+                    />
+                    {!_.isEmpty(selectedAlert.alert) && (
+                      <DetailsAlertModal
+                        loading={false}
+                        alert={selectedAlert}
+                        onClose={closeAlertDetails}
+                      />
+                    )}                    
+                  </Table.Cell>
                 </Table.Row>
               );
-            })}
+            })}          
           </Table.Body>
         </Table>
       </React.Fragment>

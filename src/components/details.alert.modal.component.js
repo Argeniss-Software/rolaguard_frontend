@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { Accordion , Modal, Icon, Button, Label, Popup, Grid, Table } from "semantic-ui-react";
+import { Accordion , Modal, Icon, Button, Label, Table } from "semantic-ui-react";
 import { Markup } from 'interweave';  
 
 import "./details.alert.modal.component.css";
@@ -8,7 +8,8 @@ import AlertUtil from "../util/alert-util";
 import moment from "moment";
 import { withRouter } from 'react-router-dom';
 import AlertDetailTableIcon from "./alert/alert.details.table.icons";
-
+import AssetLink from "./utils/asset-link.component"
+import _ from "lodash"
 @inject("alarmStore", "alertStore", "authStore", "generalDataStore", "usersStore")
 @observer
 class DetailsAlertModal extends Component {
@@ -19,6 +20,7 @@ class DetailsAlertModal extends Component {
       modalOpen: true,
       alertDetails: null
     };
+
   }
 
   handleClose = e => {
@@ -62,6 +64,12 @@ class DetailsAlertModal extends Component {
       return typeof value === 'number' && value % 1 !== 0;
     }
 
+    const typeAsset = !_.isEmpty(this.props.alert.alert.device_id) ? 'device' : 'gateway'
+    const idAsset = !_.isEmpty(this.props.alert.alert.device_id)
+      ? this.props.alert.alert.device_id
+      : this.props.alert.alert.gateway_id;
+    
+
     let message = alert_type.message;
     let alertMessage = alert_type.message.match(/\{.+?\}/g);
     message = `${message}`; 
@@ -104,13 +112,40 @@ class DetailsAlertModal extends Component {
         closeOnEscape={true}
         closeOnDimmerClick={false}
         open={modalOpen}
-        onClose={this.handleClose}>
-        <Modal.Header>{alert_type.name}
-          <Label horizontal style={{float: 'left', backgroundColor: AlertUtil.getColorsMap()[alert_type.risk], color: 'white', borderWidth: 1, width: '80px'}} >
+        onClose={this.handleClose}
+      >
+        <Modal.Header>
+          {alert_type.name}
+          <Label
+            horizontal
+            style={{
+              float: "left",
+              backgroundColor: AlertUtil.getColorsMap()[alert_type.risk],
+              color: "white",
+              borderWidth: 1,
+              width: "80px",
+            }}
+          >
             {alert_type.risk}
           </Label>
-          <div style={{float:"right"}}>
-            {this.props.onNavigate &&
+          <div style={{ float: "right" }}>
+            <Button
+              icon
+              color="blue"
+              basic
+              labelPosition="left"
+              floated={"left"}
+              style={{ marginRight: "3em" }}
+            >
+              <AssetLink
+                id={idAsset}
+                type={typeAsset}
+                title="VIEW ASSET 360"
+              />
+              <Icon name="linkify" />
+            </Button>
+
+            {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
                 floated={"left"}
@@ -118,88 +153,104 @@ class DetailsAlertModal extends Component {
                 onClick={() => this.handlePrev()}
                 content="Next"
               />
-            }
+            )}
 
-            {this.props.onNavigate &&
+            {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
                 floated={"left"}
-                disabled={isLast|| this.props.loading}
+                disabled={isLast || this.props.loading}
                 onClick={() => this.handleNext()}
                 content="Previous"
               />
-            }
+            )}
           </div>
         </Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            <AlertDetailTableIcon parameters={this.props.alert.alert.parameters} />
+            <AlertDetailTableIcon
+              parameters={this.props.alert.alert.parameters}
+            />
             <p>{alert_type.description}</p>
-            <div style={{marginBottom: 15 }}>
-              <p style={{fontWeight: 'bolder', marginBottom: 3 }}>Source</p>
+            <div style={{ marginBottom: 15 }}>
+              <p style={{ fontWeight: "bolder", marginBottom: 3 }}>Source</p>
               Data source <i>{alert.data_collector_name}</i>
             </div>
 
             <Accordion>
-              { alert_type.recommendedAction &&
-              <div>
-                <Accordion.Title active={activeIndex === recommendedActionIndex} 
-                index={recommendedActionIndex} onClick={this.handleAccordionClick}>
-                  <Icon name='dropdown' />
-                  <strong>Recommended Action</strong>
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === recommendedActionIndex} >
-                  <Markup content={alert_type.recommendedAction} />
-                </Accordion.Content>
-              </div>
-              }
-              <Accordion.Title active={activeIndex === technicalDescriptionIndex} 
-              index={technicalDescriptionIndex} onClick={this.handleAccordionClick} ref="technical-detail">
-                <Icon name='dropdown' />
+              {alert_type.recommendedAction && (
+                <div>
+                  <Accordion.Title
+                    active={activeIndex === recommendedActionIndex}
+                    index={recommendedActionIndex}
+                    onClick={this.handleAccordionClick}
+                  >
+                    <Icon name="dropdown" />
+                    <strong>Recommended Action</strong>
+                  </Accordion.Title>
+                  <Accordion.Content
+                    active={activeIndex === recommendedActionIndex}
+                  >
+                    <Markup content={alert_type.recommendedAction} />
+                  </Accordion.Content>
+                </div>
+              )}
+              <Accordion.Title
+                active={activeIndex === technicalDescriptionIndex}
+                index={technicalDescriptionIndex}
+                onClick={this.handleAccordionClick}
+                ref="technical-detail"
+              >
+                <Icon name="dropdown" />
                 <strong>Technical details</strong>
               </Accordion.Title>
-              <Accordion.Content active={activeIndex === technicalDescriptionIndex}>
+              <Accordion.Content
+                active={activeIndex === technicalDescriptionIndex}
+              >
                 <Markup content={alert_type.technicalDescription} />
                 <br />
                 {/* <Markup content={message} /> */}
                 <div className="alert-details-technical-table">
                   <Table compact="very" celled padded>
-                    <Table.Body>
-                      {messageTable}
-                    </Table.Body>
+                    <Table.Body>{messageTable}</Table.Body>
                   </Table>
                 </div>
               </Accordion.Content>
-              { resolution &&
-              <div>
-                <Accordion.Title active={activeIndex === resolutionIndex} index={resolutionIndex} onClick={this.handleAccordionClick}>
-                  <Icon name='dropdown' />
-                  <strong>Resolution</strong>
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === resolutionIndex}>
-                    <Markup content={resolution}/>
-                    {alert.resolution_comment && 
+              {resolution && (
+                <div>
+                  <Accordion.Title
+                    active={activeIndex === resolutionIndex}
+                    index={resolutionIndex}
+                    onClick={this.handleAccordionClick}
+                  >
+                    <Icon name="dropdown" />
+                    <strong>Resolution</strong>
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === resolutionIndex}>
+                    <Markup content={resolution} />
+                    {alert.resolution_comment && (
                       <i>
                         <br />
-                        <Markup content={alert.resolution_comment}/>
+                        <Markup content={alert.resolution_comment} />
                       </i>
-                    }
-                </Accordion.Content>
-              </div>
-              }
+                    )}
+                  </Accordion.Content>
+                </div>
+              )}
             </Accordion>
           </Modal.Description>
         </Modal.Content>
         <Modal.Actions>
-          {this.props.showGoToAlerts && <Button
-              onClick={() => this.props.history.push('/dashboard/alerts_review')}
+          {this.props.showGoToAlerts && (
+            <Button
+              onClick={() =>
+                this.props.history.push("/dashboard/alerts_review")
+              }
               content="Go to Alerts"
-            />}
+            />
+          )}
 
-          <Button
-            onClick={() => this.handleClose()}
-            content="Close"
-          />
+          <Button onClick={() => this.handleClose()} content="Close" />
         </Modal.Actions>
       </Modal>
     );

@@ -12,7 +12,7 @@ const ShowMessagesSummary = (props) => {
           <span>
             <Grid divided>
               <Grid.Row>
-                <Grid.Column width={4}>
+                <Grid.Column width={5}>
                   <Icon
                     color="orange"
                     name="arrow alternate circle up"
@@ -25,7 +25,7 @@ const ShowMessagesSummary = (props) => {
                     />
                   </strong>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={5}>
                   <Icon
                     color="green"
                     name="arrow alternate circle down"
@@ -38,7 +38,7 @@ const ShowMessagesSummary = (props) => {
                     />
                   </strong>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column width={6}>
                   {props.type == "device" && (
                     <React.Fragment>
                       <Icon

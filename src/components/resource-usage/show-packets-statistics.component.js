@@ -76,7 +76,7 @@ const ShowPacketsStatistics = (props) => {
       : props.headerColorLine;
 
   return (
-    <Table compact="very" celled color={colorHeaderTable} collapsing>
+    <Table compact="very" celled color={colorHeaderTable}>
       <Table.Header>
         <Table.Row textAlign="center">
           <Table.HeaderCell textAlign="center">Type</Table.HeaderCell>
@@ -93,17 +93,17 @@ const ShowPacketsStatistics = (props) => {
             Uplink
           </Table.Cell>
           <Table.Cell textAlign="right">
-            <strong>
-              <NumberFormat
-                value={props.packets_up.total}
-                displayType={"text"}
-              />
-            </strong>
+              <strong>
+                <NumberFormat
+                  value={_.get(props, 'packets_up.total')}
+                  displayType={"text"}
+                />
+              </strong>
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_up.percentage}
+                value={_.get(props, 'packets_up.percentage')}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"
@@ -131,7 +131,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_down.total}
+                value={_.get(props, 'packets_down.total')}
                 displayType={"text"}
               />
             </strong>
@@ -139,7 +139,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={props.packets_down.percentage}
+                value={_.get(props, 'packets_down.percentage')}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"
