@@ -20,9 +20,9 @@ const ShowInventory = (props) => {
   };
 
   return (
-    <div class="column">
+    <div className="column">
       <h5
-        class="ui black inverted top attached header"
+        className="ui black inverted top attached header"
         style={{ backgroundColor: "black", fontSize: "18px", padding: "15px" }}
       >
         <Grid>
@@ -49,16 +49,6 @@ const ShowInventory = (props) => {
               hexId={props.inventory.hex_id}
               showAsLink={false}
             />
-            &nbsp;&nbsp;&nbsp;
-            <Popup
-              trigger={
-                <ImportanceLabel importance={props.inventory.importance} />
-              }
-            >
-              The importance value indicates the user-defined relevance of the
-              device into the organization. Can be set for each asset in the
-              Inventory section.
-            </Popup>
           </Grid.Column>
           <Grid.Column floated="right" width={3}>
             {props.LayoutHeaderRight}
@@ -113,6 +103,24 @@ const ShowInventory = (props) => {
                     <strong>{props.inventory.data_collector}</strong>
                   </Table.Cell>
                 </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell collapsing>
+                    <Popup
+                      trigger={
+                        <span style={{ cursor: "pointer" }}>IMPORTANCE</span>
+                      }
+                    >
+                      The importance value indicates the user-defined relevance
+                      of the device into the organization. Can be set for each
+                      asset in the Inventory section.
+                    </Popup>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <ImportanceLabel importance={props.inventory.importance} />
+                  </Table.Cell>
+                </Table.Row>
+
                 <Table.Row>
                   <Table.Cell collapsing>LABELS:</Table.Cell>
                   <Table.Cell>
@@ -153,9 +161,7 @@ const ShowInventory = (props) => {
             </div>
           </Grid.Column>
           <Grid.Column flex key={5}>
-            <div className="aligned text-center">
-              OTHER DATA
-            </div>
+            <div className="aligned text-center">OTHER DATA</div>
           </Grid.Column>
         </Grid>
       </Segment>

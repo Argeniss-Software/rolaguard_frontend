@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Segment, Grid, Loader } from "semantic-ui-react";
+import React, { } from "react";
+import { Segment, Grid } from "semantic-ui-react";
 import ResourceUsageGraphStatusComponent from "./resource-usage.graph.status.component";
 import ResourceUsageGraphGatewaysComponent from "./resource-usage.graph.gateways.component";
 import ResourceUsageGraphPacketsLostComponent from "./resource-usage.graph.packets-lost.component";

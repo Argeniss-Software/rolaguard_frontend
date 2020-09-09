@@ -64,8 +64,8 @@ class DetailsAlertModal extends Component {
       return typeof value === 'number' && value % 1 !== 0;
     }
 
-    const typeAsset = !_.isEmpty(this.props.alert.alert.device_id) ? 'device' : 'gateway'
-    const idAsset = !_.isEmpty(this.props.alert.alert.device_id)
+    const typeAsset = _.isNumber(this.props.alert.alert.device_id) ? 'device' : 'gateway'
+    const idAsset = _.isNumber(this.props.alert.alert.device_id)
       ? this.props.alert.alert.device_id
       : this.props.alert.alert.gateway_id;
     
@@ -137,14 +137,9 @@ class DetailsAlertModal extends Component {
               floated={"left"}
               style={{ marginRight: "3em" }}
             >
-              <AssetLink
-                id={idAsset}
-                type={typeAsset}
-                title="VIEW ASSET 360"
-              />
+              <AssetLink id={idAsset} type={typeAsset} title="VIEW ASSET 360" />
               <Icon name="linkify" />
             </Button>
-
             {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
@@ -154,7 +149,6 @@ class DetailsAlertModal extends Component {
                 content="Next"
               />
             )}
-
             {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}

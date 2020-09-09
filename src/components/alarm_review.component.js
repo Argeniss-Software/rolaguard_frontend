@@ -494,7 +494,7 @@ class AlarmReviewComponent extends React.Component {
                             onClick={this.handleDateFilterClick}
                             icon
                           >
-                            <Icon name="check circle" />
+                            <Icon name="filter" />
                           </Button>
                         </Grid.Column>
                       </Grid.Row>

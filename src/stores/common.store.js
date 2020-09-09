@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from "mobx";
+import { action } from "mobx"; // observable,runInAction, computed
 import AuthStore from "./auth.store";
 import API from "../util/api";
 import _ from "lodash";
@@ -12,7 +12,7 @@ class CommonStore {
   }
 
   /* used it on list device and gateway on resource usages */
-  @action getData(type, asset_params) {
+  @action getData(type, asset_params, filter_params) {
     const headers = this.getHeaders();
     let uri = `inventory/${asset_params.type}/${asset_params.id}`;
     switch (type) {
@@ -51,7 +51,13 @@ class CommonStore {
       default:
         break;
     }
-    const params = {size: 5};
+    
+    const params = {
+      page: _.get(filter_params, "page", 1),
+      size: _.get(filter_params, "size", 5),
+      order_by: _.get(filter_params, "order_by", []),
+      // resolved: _.get(filter_params, "resolved", true),
+    };
     return API.get(uri, { headers, params });
   }
 }

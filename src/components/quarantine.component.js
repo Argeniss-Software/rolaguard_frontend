@@ -14,9 +14,10 @@ import LoaderComponent from "./utils/loader.component";
 import EmptyComponent from "./utils/empty.component";
 import ColorUtil from "../util/colors";
 
-import QuarantineRemoveModal from "./quarantine.remove.modal";
+// import QuarantineRemoveModal from "./quarantine.remove.modal";
 import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
+import AssetLink from "./utils/asset-link.component"
 
 @inject("deviceStore")
 @observer
@@ -556,7 +557,8 @@ class QuarantineComponent extends React.Component {
                                 >
                                   <DeviceIdComponent
                                     parameters={item.alert.parameters}
-                                    alertType={alert.type}
+                                    alertType={item.alert.type}
+                                    deviceId={item.alert.device_id}
                                   />
                                 </Table.Cell>
                                 <Table.Cell
@@ -574,14 +576,19 @@ class QuarantineComponent extends React.Component {
                                   />{" "}
                                 </Table.Cell>
                                 <Table.Cell
-                                  onClick={() => this.showAlertDetails(index)}
                                   className="upper"
                                   style={{ maxWidth: "180px" }}
                                 >
-                                  {item.alert.parameters.gateway +
-                                    (item.alert.parameters.gw_name
-                                      ? `(${item.alert.parameters.gw_name})`
-                                      : "")}
+                                  <AssetLink
+                                    title={
+                                      item.alert.parameters.gateway +
+                                      (item.alert.parameters.gw_name
+                                        ? `(${item.alert.parameters.gw_name})`
+                                        : "")
+                                    }
+                                    id={item.alert.gateway_id}
+                                    type="gateway"
+                                  />
                                 </Table.Cell>
                                 <Table.Cell
                                   onClick={() => this.showAlertDetails(index)}

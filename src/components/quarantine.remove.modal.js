@@ -82,7 +82,7 @@ export default class QuarantineRemoveModal extends Component {
                 <Table.Row>
                   <Table.Cell>ID/ADDRESS</Table.Cell>
                   <Table.Cell className="upper">
-                    <DeviceIdComponent parameters={item.alert.parameters} alertType={alert.type}/>
+                    <DeviceIdComponent parameters={item.alert.parameters} alertType={item.alert.type}/>
                   </Table.Cell>
                 </Table.Row>
                 <Table.Row>

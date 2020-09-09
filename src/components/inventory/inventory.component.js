@@ -14,7 +14,6 @@ import {
 } from "semantic-ui-react";
 import ColorUtil from "../../util/colors.js";
 import Pie from "../visualizations/Pie";
-import BarChart from "../visualizations/Bar";
 import Tag from "../utils/tags/tag.component";
 import CirclePack from "../visualizations/circle-pack/circle-pack.component";
 import InventoryDetailsModal from "./inventory.modal.component";

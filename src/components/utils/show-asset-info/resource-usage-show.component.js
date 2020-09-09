@@ -5,7 +5,6 @@ import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
 import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
 import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
-import _ from "lodash";
 import "./resource-usage-show.component.css"
 import statusImages from "../../utils/wifi-signal-indicator/images"
 import EmptyComponent from "../../utils/empty.component"
@@ -48,7 +47,7 @@ const ShowResourceUssage = (props) => {
                 </Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell>SIGNAL STRENGTH:</Table.Cell>
+                <Table.Cell>SIGNAL STRENGTH (RSSI):</Table.Cell>
                 <Table.Cell className="bold">
                   {props.asset &&
                     props.asset.type &&
@@ -73,11 +72,12 @@ const ShowResourceUssage = (props) => {
                 </Table.Cell>
               </Table.Row>
               <Table.Row>
-                <Table.Cell>MAX LSNR:</Table.Cell>
+                <Table.Cell>SNR:</Table.Cell>
                 <Table.Cell>
                   <strong>
                     <NumberFormat
                       value={props.asset.max_lsnr}
+                      suffix=" dB"
                       displayType={"text"}
                       decimalScale="1"
                     />
@@ -119,7 +119,7 @@ const ShowResourceUssage = (props) => {
           </div>
         </Grid.Column>
         <Grid.Column width={6}>
-          <EmptyComponent emptyMessage="WIP: Signal strength graph and LSNR of last 10 packages" />
+          <EmptyComponent emptyMessage="WIP: Signal strength graph and SNR of last 10 packages" />
         </Grid.Column>
       </Grid.Row>
     </Grid>
