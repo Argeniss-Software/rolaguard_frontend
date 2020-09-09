@@ -8,7 +8,7 @@ const RemovableTagStandalone = (props) => {
   const { tagsStore } = React.useContext(MobXProviderContext);
 
   const handleRemove = () => {
-    const tag = { id: props.id, name:props.name, color:props.color };
+    const tag = { id: props.id, name: props.name, color: props.color };
     const item = { type: props.assetType, id: props.assetId };
 
     tagsStore.removeTag(tag, item).then((response) => {
