@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Pie from "../../visualizations/Pie";
 import { Loader } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
-import _ from "lodash";
 
 const ResourceUsageGraphStatusComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);

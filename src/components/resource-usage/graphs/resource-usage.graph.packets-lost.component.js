@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Loader, Divider } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
 import _ from "lodash";
-import Slider, { Range } from "rc-slider";
+import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./resource-usage.graph.packets-lost.component.css";
 import Chart from "react-apexcharts";
@@ -155,8 +155,8 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
             to = to > 100 ? 100 : to;
 
             if (
-              resourceUsageStore.criteria.packet_lost_range.from != 0 ||
-              resourceUsageStore.criteria.packet_lost_range.to != 100
+              resourceUsageStore.criteria.packet_lost_range.from !== 0 ||
+              resourceUsageStore.criteria.packet_lost_range.to !== 100
             ) {
               resourceUsageStore.deleteCriteria({
                 packet_lost_range: { from: 0, to: 100 },

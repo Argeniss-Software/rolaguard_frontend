@@ -21,7 +21,7 @@ const DBMToSignalStrength = (dBm) => {
         return r.text;
       }
     });
-    return (foundCriteria == undefined) ? defaultValueToReturn : foundCriteria.text
+    return (foundCriteria === undefined) ? defaultValueToReturn : foundCriteria.text
 };
 
 export default DBMToSignalStrength;

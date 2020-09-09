@@ -39,7 +39,7 @@ const ShowMessagesSummary = (props) => {
                   </strong>
                 </Grid.Column>
                 <Grid.Column width={6}>
-                  {props.type == "device" && (
+                  {props.type === "device" && (
                     <React.Fragment>
                       <Icon
                         color="grey"

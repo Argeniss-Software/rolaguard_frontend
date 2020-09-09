@@ -14,7 +14,7 @@ import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStren
 import statusImages from "../utils/wifi-signal-indicator/images";
 import "./resource-usage.component.css";
 import {observer} from 'mobx-react';
-import ModalResourceUsage from './resource-usage-modal.component'
+// import ModalResourceUsage from './resource-usage-modal.component'
 
 const ResourceUsageList = (props) => {
   return (
