@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import CirclePack from "../../visualizations/circle-pack/circle-pack.component";
 import { Loader } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
-import _ from "lodash";
 
 const ResourceUsageGraphGatewaysComponent = (props) => {
   const { resourceUsageStore } = React.useContext(MobXProviderContext);

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Moment from "react-moment";
-import { Table, Label, Popup } from "semantic-ui-react";
+import { Table, Label } from "semantic-ui-react";
 import "./alert.list.component.css";
 import AlertUtil from '../util/alert-util';
 import EmptyComponent from "./utils/empty.component";

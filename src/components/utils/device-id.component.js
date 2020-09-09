@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Popup } from "semantic-ui-react";
 import AlertUtil from '../../util/alert-util';
-import _ from 'lodash'
 import AssetLink from '../utils/asset-link.component'
 
 class DeviceIdComponent extends React.Component {

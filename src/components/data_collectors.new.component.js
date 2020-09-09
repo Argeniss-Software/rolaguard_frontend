@@ -79,7 +79,7 @@ class DataCollectorsNewComponent extends React.Component {
 
     handleSubmit = () => {
         this.setState({isSaving: true});
-        if (this.state.typeForm == "Add") {
+        if (this.state.typeForm === "Add") {
             this.props.dataCollectorStore.saveDataCollector(this.state.dataCollector)
                 .then(() => {
                     this.clearForm();

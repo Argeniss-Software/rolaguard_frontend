@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Label, Icon, Grid, Segment, Popup, Dimmer, Loader} from "semantic-ui-react";
+import { Icon, Grid, Segment, Popup} from "semantic-ui-react";
 import ShowAlerts from "./alerts-show.component";
 import ShowCurrentIssues from "./current-issues-show.component";
 import ShowResourceUsage from "./resource-usage-show.component"
-import _ from 'lodash'
 import ShowInventory from "./inventory-show.component"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import LoaderComponent from "../loader.component"
@@ -39,7 +38,7 @@ const ShowAssetInfo = (props) => {
     } else {
       return (
         <React.Fragment>
-          <Grid columns={16} columns="equal" style={{ marginTop: "1em" }}>
+          <Grid columns="equal" style={{ marginTop: "1em" }}>
             <ShowInventory
               inventory={inventory}
               LayoutHeaderRight={
@@ -73,7 +72,7 @@ const ShowAssetInfo = (props) => {
               }
             />
           </Grid>
-          <Grid columns={16} columns="equal">
+          <Grid columns="equal">
             <Grid.Row>
               <Grid.Column flex key={16}>
                 <h5
@@ -88,7 +87,7 @@ const ShowAssetInfo = (props) => {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-          <Grid columns={16} columns="equal">
+          <Grid columns="equal">
             <Grid.Row>
               <Grid.Column flex key={8}>                
                 <ShowCurrentIssues type={props.type} id={props.id} />

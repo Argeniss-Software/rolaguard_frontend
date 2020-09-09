@@ -74,7 +74,7 @@ class InventoryDetailsModal extends Component {
       ]
     }
 
-    if (table == 0){
+    if (table === 0){
       return (
         <Table.Row>
           <Table.Cell>

@@ -1,4 +1,4 @@
-import { observable, action, runInAction, computed } from "mobx";
+import { action } from "mobx"; // observable,runInAction, computed
 import AuthStore from "./auth.store";
 import API from "../util/api";
 import _ from "lodash";

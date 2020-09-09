@@ -192,7 +192,6 @@ class ResourceUsageStore {
     const statusPromise = this.getAssetsCount("packet_lost");
 
     Promise.all([statusPromise]).then((response) => {
-      let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
           x: e.name,
@@ -209,7 +208,6 @@ class ResourceUsageStore {
     const statusPromise = this.getAssetsCount("signal_strength");
 
     Promise.all([statusPromise]).then((response) => {
-      let total = response[0].data.total_count;
       let apiSeries = response[0].data.groups.map((e, index) => {
         return {
           x: e.name,
@@ -245,11 +243,11 @@ class ResourceUsageStore {
         return e.id === data.id;
       });
     }
-    if (elementFoundIndex != -1) {
+    if (elementFoundIndex !== -1) {
       let foundCriteria = this.criteria.gateways.findIndex((e) => {
         return e.id === data.id;
       });
-      if (foundCriteria != -1) {
+      if (foundCriteria !== -1) {
         this.criteria.gateways.splice(foundCriteria, 1);
       }
     } else {
@@ -294,6 +292,8 @@ class ResourceUsageStore {
         case "signal_strength":
           this.setCriteria({ signal_strength: { from: -150, to: 0 } });
           break;
+        default:
+          break;
       }
     }
   }
@@ -321,7 +321,7 @@ class ResourceUsageStore {
         let foundItemToDelete = this.criteria.gateways.findIndex(
           (e) => e.id === data[_.keys(data)[0]].id
         );
-        if (foundItemToDelete != -1 && this.criteria.gateways.length > 0) {
+        if (foundItemToDelete !== -1 && this.criteria.gateways.length > 0) {
           // delete gateway from criteria
           this.criteria.gateways.splice(foundItemToDelete, 1);
         } else {
@@ -336,6 +336,8 @@ class ResourceUsageStore {
       case "signal_strength":
         this.criteria.signal_strength.from = data.signal_strength.from;
         this.criteria.signal_strength.to = data.signal_strength.to;
+        break;
+      default:
         break;
     }
     this.loadDataFromApis();

@@ -5,7 +5,6 @@ import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
 import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
 import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
-import _ from "lodash";
 import "./resource-usage-show.component.css"
 import statusImages from "../../utils/wifi-signal-indicator/images"
 import EmptyComponent from "../../utils/empty.component"

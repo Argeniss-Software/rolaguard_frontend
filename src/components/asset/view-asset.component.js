@@ -1,12 +1,6 @@
 import React, {useEffect, useState} from "react";
-import _ from "lodash";
 import ShowAssetInfo from "../utils/show-asset-info/show-asset-info.component";
 import { Divider } from "semantic-ui-react";
-
-function Topic() {
-  //let { type, id } = useParams();
-    //return <h3>Requested topic type: {type} - {id}</h3>;
-}
 
 const ViewAsset = (props) => {
   const [id, setId] = useState(null)

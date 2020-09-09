@@ -68,7 +68,7 @@ const ResourceUsageComponent = (props) => {
             });
             break;
           case "packet_lost_range":
-            if (value.from != 0 || value.to != 100) {
+            if (value.from !== 0 || value.to !== 100) {
               labels.push(
                 <Label
                   as="a"
@@ -88,7 +88,7 @@ const ResourceUsageComponent = (props) => {
             }
             break;
           case "signal_strength":
-            if (value.from != -150 || value.to != 0) {
+            if (value.from !== -150 || value.to !== 0) {
               labels.push(
                 <Label
                   as="a"
@@ -106,6 +106,8 @@ const ResourceUsageComponent = (props) => {
                 </Label>
               );
             }
+            break
+          default: 
             break
         }
       }

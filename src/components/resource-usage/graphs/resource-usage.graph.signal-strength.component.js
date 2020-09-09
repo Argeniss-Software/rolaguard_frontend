@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Loader, Divider } from "semantic-ui-react";
+import { Divider } from "semantic-ui-react";
 import { MobXProviderContext, observer } from "mobx-react";
-import _ from "lodash";
-import Slider, { Range } from "rc-slider";
+import _ from 'lodash'
+import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import "./resource-usage.graph.packets-lost.component.css";
 import Chart from "react-apexcharts";
@@ -124,29 +124,30 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
         },
         events: {
           dataPointSelection: (event, chartContext, config) => {
-            let from = 0
-            let to = 0
+            let from = 0;
+            let to = 0;
             switch (config.dataPointIndex) {
               case 0:
-                from = -150
-                to = signalStrengthsReferences[config.dataPointIndex].value
+                from = -150;
+                to = signalStrengthsReferences[config.dataPointIndex].value;
                 break;
               case 1:
               case 2:
               case 3:
               case 4:
                 from = signalStrengthsReferences[config.dataPointIndex].value;
-                to = signalStrengthsReferences[config.dataPointIndex+1].value;
+                to = signalStrengthsReferences[config.dataPointIndex + 1].value;
                 break;
               case 5:
-                from = signalStrengthsReferences[config.dataPointIndex].value
-                to = 0
+                from = signalStrengthsReferences[config.dataPointIndex].value;
+                to = 0;
+                break;
               default:
                 break;
             }
             resourceUsageStore.setCriteria({
               signal_strength: { from: from, to: to },
-            })
+            });
           },
         },
       },
@@ -181,20 +182,24 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
           colors: ["#304758"],
         },
       },
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: "45%",
-        distributed: true,
+
+      plotOptions: {
+        bar: {
+          columnWidth: "65%",
+          distributed: true,
+        },
       },
-    },
-    legend: {
-      show: false,
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: "35%",
-        distributed: true,
+      colors: [
+        "#f05050",
+        "#f0a350",
+        "#dbf050",
+        "#b5f050",
+        "#8bf050",
+        "#6df050",
+        "#21ba45",
+      ],
+      legend: {
+        show: false,
       },
     },
     series: [
