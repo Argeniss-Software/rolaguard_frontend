@@ -211,7 +211,7 @@ const ResourceUsageGraphSignalStrengthComponent = (props) => {
   };
   return (
     <div className="box-data">
-      <h5 className="visualization-title">BY SIGNAL STRENGTH</h5>
+      <h5 className="visualization-title">BY SIGNAL STRENGTH (RSSI)</h5>
       <div style={{height: "240px"}}>
         <Chart
           options={data.options}

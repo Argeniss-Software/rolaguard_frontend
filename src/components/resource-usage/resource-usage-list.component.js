@@ -47,7 +47,7 @@ const ResourceUsageList = (props) => {
               trigger={
                 <span style={{ cursor: "pointer" }}>
                   <Icon color="blue" name="wifi" type="icon" />
-                  SIGNAL STRENGTH
+                  SIGNAL STRENGTH (RSSI)
                 </span>
               }
               basic
@@ -59,7 +59,7 @@ const ResourceUsageList = (props) => {
             </Popup>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
-            LSNR
+            SNR
           </Table.HeaderCell>
           <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
             Payload
@@ -210,6 +210,7 @@ const ResourceUsageList = (props) => {
                   <Table.Cell style={{ textAlign: "center" }}>
                     <NumberFormat
                       value={item.max_lsnr}
+                      suffix=" dB"
                       displayType={"text"}
                       decimalScale="1"
                     />
