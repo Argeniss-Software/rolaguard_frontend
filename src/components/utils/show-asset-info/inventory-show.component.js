@@ -20,9 +20,9 @@ const ShowInventory = (props) => {
   };
 
   return (
-    <div class="column">
+    <div className="column">
       <h5
-        class="ui black inverted top attached header"
+        className="ui black inverted top attached header"
         style={{ backgroundColor: "black", fontSize: "18px", padding: "15px" }}
       >
         <Grid>

@@ -42,7 +42,7 @@ const ShowAssetInfo = (props) => {
             <ShowInventory
               inventory={inventory}
               LayoutHeaderRight={
-                <div class="pull-right">
+                <div className="pull-right">
                   <span
                     style={{
                       color: "white",
@@ -74,9 +74,9 @@ const ShowAssetInfo = (props) => {
           </Grid>
           <Grid columns="equal">
             <Grid.Row>
-              <Grid.Column flex key={16}>
+              <Grid.Column flex columns={16}>
                 <h5
-                  class="ui inverted top attached header blue segment"
+                  className="ui inverted top attached header blue segment"
                   style={{ height: "44px" }}
                 >
                   NETWORK OVERVIEW
@@ -89,11 +89,11 @@ const ShowAssetInfo = (props) => {
           </Grid>
           <Grid columns="equal">
             <Grid.Row>
-              <Grid.Column flex key={8}>                
+              <Grid.Column flex columns={8}>                
                 <ShowCurrentIssues type={props.type} id={props.id} />
               </Grid.Column>
 
-              <Grid.Column flex key={8}>
+              <Grid.Column flex columns={8}>
                 <ShowAlerts type={props.type} id={props.id} />
               </Grid.Column>
             </Grid.Row>
