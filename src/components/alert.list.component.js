@@ -77,7 +77,6 @@ class AlertListComponent extends React.Component {
                 <ImportanceLabel importance={alert.asset_importance} />{" "}
               </Table.Cell>
               <Table.Cell
-                // onClick={() => showAlertDetails(index)}
                 className="upper"
                 style={{ maxWidth: "180px" }}
               >

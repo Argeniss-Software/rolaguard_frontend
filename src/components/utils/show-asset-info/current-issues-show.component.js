@@ -148,7 +148,6 @@ const ShowCurrentIssues = (props) => {
                       }
                     </Table.Cell>
                     <Table.Cell
-                      /*onClick={() => showAlertDetails(current_issue)}*/
                       className="upper"
                       style={{ maxWidth: "180px" }}
                       collapsing

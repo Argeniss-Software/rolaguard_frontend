@@ -576,7 +576,6 @@ class QuarantineComponent extends React.Component {
                                   />{" "}
                                 </Table.Cell>
                                 <Table.Cell
-                                  // onClick={() => this.showAlertDetails(index)}
                                   className="upper"
                                   style={{ maxWidth: "180px" }}
                                 >
