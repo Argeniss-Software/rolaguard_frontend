@@ -1,26 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
-
 import { Label, Icon, Grid, Segment, Popup, Dimmer, Loader} from "semantic-ui-react";
 import ShowAlerts from "./alerts-show.component";
 import ShowCurrentIssues from "./current-issues-show.component";
-
 import ShowResourceUsage from "./resource-usage-show.component"
-
 import _ from 'lodash'
 import ShowInventory from "./inventory-show.component"
 import { CopyToClipboard } from "react-copy-to-clipboard"
+import LoaderComponent from "../loader.component"
 
 const ShowAssetInfo = (props) => {
-
-  const { commonStore } = useContext(MobXProviderContext);
-
-  const [alerts, setAlerts] = useState({});
   const [inventory, setInventory] = useState({});
   const [current_issues, setCurrentIssues] = useState({});
   const [resource_usage, setResourceUsage] = useState({});
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true)
+  const { commonStore } = useContext(MobXProviderContext);
 
   useEffect(() => {
       let paramsId = {
@@ -30,28 +25,21 @@ const ShowAssetInfo = (props) => {
 
       const resourceUsagePromise = commonStore.getData("resource_usage", paramsId)
       const inventoryPromise = commonStore.getData("inventory", paramsId);
-      const alertPromise = commonStore.getData("alerts", paramsId);
       const currentIssuesPromise = commonStore.getData("current_issues", paramsId);
 
       Promise.all([
         inventoryPromise,
-        alertPromise,
         currentIssuesPromise,
         resourceUsagePromise,
       ]).then((response) => {
         setInventory(response[0].data);
-        setAlerts(response[1].data);
-        setCurrentIssues(response[2].data);
-        setResourceUsage(response[3].data);
+        setCurrentIssues(response[1].data);
+        setResourceUsage(response[2].data);
         setIsLoading(false)
       });
     }, [props.id, props.type]);
     if (isLoading) {
-      return (
-      <Dimmer active inverted>
-        <Loader inverted content="Loading" />
-      </Dimmer>
-      )
+      return<LoaderComponent loadingMessage="Loading asset info..." />
     } else {
       return (
         <React.Fragment>
@@ -121,22 +109,8 @@ const ShowAssetInfo = (props) => {
                 </Segment>
               </Grid.Column>
 
-              <Grid.Column flex key={8}>
-                <h5
-                  class="ui inverted top attached header"
-                  style={{ height: "44px" }}
-                >
-                  ALERTS{" "}
-                  {alerts && alerts.total_items > 0 && (
-                    <Label color="red">{alerts.total_items}</Label>
-                  )}
-                </h5>
-                <Segment attached>
-                  <ShowAlerts
-                    alerts={alerts.alerts}
-                    totalItems={alerts.total_items}
-                  />
-                </Segment>
+              <Grid.Column flex key={8}>                
+                  <ShowAlerts type={props.type} id={props.id}/>                                                      
               </Grid.Column>
             </Grid.Row>
           </Grid>
