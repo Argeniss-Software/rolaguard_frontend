@@ -18,7 +18,7 @@ const TagSelectorStandalone = (props) => {
 
   const hanldleTagSelected = (tag) => {
     const item = { type: props.type, id: props.id };
-    console.log(tag);
+
     tagsStore.assignTag(tag, item).then((response) => {
       if (response.status === HttpStatus.OK && _.isFunction(props.callback)) {
         console.log("here");
