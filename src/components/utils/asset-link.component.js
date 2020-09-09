@@ -1,19 +1,31 @@
-import * as React from "react";
+import React, {} from "react";
 import _ from "lodash"
+import './asset-link.component.css'
 
 const AssetLinkComponent = (props) => {
+  const {title, id, type} = props
+  const assetType = type ? type : 'device'
+  const normalizedType = assetType && assetType.toLowerCase().trim();
+  if (
+    !_.isNull(id) &&
+    !_.isUndefined(id) &&
+    ["gateway", "device"].includes(normalizedType)
+  ) {
+    return (
+      <React.Fragment>
+        <a
+          class="hover-underline"
+          target="_blank"
+          href={`/dashboard/assets/${normalizedType}/${id}/view`}
+        >
+          {title}
+        </a>
 
-  const getLinkToDevice = (title, assetId, type = "device") => {
-    const normalizedType = type && type.toLowerCase().trim()
-    if (!_.isNull(assetId) && !_.isUndefined(assetId) && ['gateway', 'device'].includes(normalizedType)) {
-      return <a target="_blank" href={`/dashboard/assets/${normalizedType}/${assetId}/view`}>{title}</a>
-    } else {
-      return title
-    }
+      </React.Fragment>
+    );
+  } else {
+    return title
   }
-
-  const { id, type, title } = props
-  return getLinkToDevice(title, id, type)
 }
 
 export default AssetLinkComponent;
