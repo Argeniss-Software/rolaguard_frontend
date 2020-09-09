@@ -25,6 +25,7 @@ const AlertUtil = {
 
   alertParameters: {
     "alert_solved": "Alert solved",
+    "resolution_reason": "Resolution reason",
     "dev_eui": "DevEUI",
     "dev_addr": "DevAddr",
     "dev_name": "Device Name",
