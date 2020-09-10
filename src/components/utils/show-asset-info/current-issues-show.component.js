@@ -147,7 +147,7 @@ const ShowCurrentIssues = (props) => {
                         onClick={() => showAlertDetails(current_issue)}
                       >
                         {
-                          <Moment format="YYY-MM-DD hh:mm:ss a">
+                          <Moment format="MM/DD/YYYY hh:mm:ss a">
                             {current_issue.since}
                           </Moment>
                         }
@@ -158,7 +158,7 @@ const ShowCurrentIssues = (props) => {
                         onClick={() => showAlertDetails(current_issue)}
                       >
                         {
-                          <Moment format="YYY-MM-DD hh:mm:ss a">
+                          <Moment format="MM/DD/YYYY hh:mm:ss a">
                             {current_issue.last_checked}
                           </Moment>
                         }

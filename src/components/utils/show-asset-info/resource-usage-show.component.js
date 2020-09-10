@@ -22,7 +22,7 @@ const ShowResourceUssage = (props) => {
                   {moment.unix(props.asset.last_activity).fromNow()} (
                   {moment
                     .unix(props.asset.last_activity)
-                    .format("YYYY/MM/d h:mm:ss A")}
+                    .format("MM/DD/YYYY hh:mm:ss a")}
                   )
                 </Table.Cell>
               </Table.Row>
