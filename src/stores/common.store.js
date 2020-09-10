@@ -56,7 +56,8 @@ class CommonStore {
       page: _.get(filter_params, "page", 1),
       size: _.get(filter_params, "size", 5),
       order_by: _.get(filter_params, "order_by", []),
-      // resolved: _.get(filter_params, "resolved", true),
+      'created_at[gte]':  _.get(filter_params, "created_at[gte]",null),
+      'created_at[lte]': _.get(filter_params, "created_at[lte]", null)
     };
     return API.get(uri, { headers, params });
   }
