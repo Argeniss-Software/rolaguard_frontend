@@ -235,7 +235,7 @@ const ShowAlerts = (props) => {
                     }
                   >
                     {
-                      <Moment format="YYYY-MM-DD hh:mm a">
+                      <Moment format="YYYY-MM-DD hh:mm:ss a">
                         {alert.created_at}
                       </Moment>
                     }
