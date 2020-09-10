@@ -14,14 +14,12 @@ const ShowInventory = (props) => {
   const [tags, setTags] = React.useState(
     props.inventory.tags ? props.inventory.tags : []
   );
-  const tagsLeftEllipsis = (node) => {
-    const tagsRendered = node.props.children;
-    return (
-      <Label circular color="grey" key="grey">
-        + {node.props.dataCount - tagsRendered.length}
-      </Label>
-    );
-  };
+  
+  const normalizedType =
+    props.inventory.type &&
+    !["gateway", "device"].includes(props.inventory.type.toLowerCase().trim())
+      ? "unknown"
+      : props.inventory.type.toLowerCase().trim();
 
   return (
     <div className="column">
@@ -34,14 +32,7 @@ const ShowInventory = (props) => {
             <ShowDeviceState state={props.inventory.connected} />
             &nbsp;&nbsp;&nbsp;
             <ShowDeviceIcon
-              type={
-                props.inventory.type &&
-                !["gateway", "device"].includes(
-                  props.inventory.type.toLowerCase().trim()
-                )
-                  ? "unknown"
-                  : props.inventory.type
-              }
+              type={normalizedType}
             ></ShowDeviceIcon>
             &nbsp;
             {_.get(props, "inventory.type")
@@ -90,14 +81,14 @@ const ShowInventory = (props) => {
                 <Table.Row>
                   <Table.Cell collapsing>APPLICATION:</Table.Cell>
                   <Table.Cell>
-                    <strong>{props.inventory.app_name}</strong>
+                    <strong>{(normalizedType==='device') ? props.inventory.app_name : 'N/A' }</strong>
                   </Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                   <Table.Cell collapsing>JOIN EUI/APP EUI:</Table.Cell>
                   <Table.Cell>
-                    <strong>{props.inventory.join_eui}</strong>
+                    <strong>{(normalizedType==='device') ? props.inventory.join_eui : 'N/A' }</strong>
                   </Table.Cell>
                 </Table.Row>
 

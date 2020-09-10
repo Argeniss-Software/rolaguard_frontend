@@ -7,7 +7,7 @@ import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
 import AssetLink from "../../utils/asset-link.component";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
-import LoaderComponent from "../loader.component";
+import DateFilterBar from "./date-filter-bar.component";
 
 const ShowCurrentIssues = (props) => {
     const { commonStore } = useContext(MobXProviderContext);
@@ -21,7 +21,10 @@ const ShowCurrentIssues = (props) => {
     const [totalItems, setTotalItems] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [orderBy, setOrderBy] = useState(["since", "DESC"]);
-
+    const [dateFilter, setDateFilter] = useState({
+      from: null,
+      to: null,
+    });
     const { type, id } = props;
 
     useEffect(() => {
@@ -37,6 +40,8 @@ const ShowCurrentIssues = (props) => {
           page: activePage,
           size: perPage,
           order_by: orderBy,
+          "created_at[gte]": dateFilter.from,
+          "created_at[lte]": dateFilter.to,
         }
       );
       Promise.all([currentIssuePromise]).then((response) => {
@@ -45,7 +50,7 @@ const ShowCurrentIssues = (props) => {
         setTotalPages(response[0].data.total_pages);
         setIsLoading(false);
       });
-    }, [type, id, activePage, perPage, orderBy]);
+    }, [type, id, activePage, perPage, orderBy, dateFilter]);
 
     const handlePaginationChange = (e, { activePage }) => {
       setActivePage(activePage);
@@ -63,118 +68,130 @@ const ShowCurrentIssues = (props) => {
       setSelectedAlert({alert: {}, alert_type: {}})
     }
 
-    if (isLoading) {
-      return <LoaderComponent loadingMessage="Loading current issues..." />
-    } else {
-  if (totalItems > 0) {
+     const handleDateFilterChange = (date) => {
+       setDateFilter((prevDate) => {
+         return { ...prevDate, ...date };
+       });
+     };
+
     return (
       <React.Fragment>
         <h5 class="ui inverted top attached header" style={{ height: "44px" }}>
           CURRENT ISSUES
           {totalItems > 0 && <Label color="yellow">{totalItems}</Label>}
         </h5>
+        <DateFilterBar onDateFilterChange={handleDateFilterChange} />
         <Segment attached>
-          <Table
-            striped
-            selectable
-            className="animated fadeIn"
-            basic="very"
-            compact="very"
-          >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                <Table.HeaderCell
-                  collapsing
-                  onClick={() => toggleSort("since")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Icon
-                    name={`sort content ${
-                      orderBy[1] === "ASC" ? "ascending" : "descending"
-                    }`}
-                    title={`toggle sort order content ${
-                      orderBy[1] === "ASC" ? "descending" : "ascending"
-                    }`}
-                  />
-                  DATE
-                </Table.HeaderCell>
-                <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
-                <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {currentIssues.map((current_issue, index) => {
-                return (
-                  <Table.Row key={index} style={{ cursor: "pointer" }}>
-                    <Table.Cell onClick={() => showAlertDetails(current_issue)}>
-                      <Label
-                        horizontal
-                        style={{
-                          backgroundColor: AlertUtil.getColorsMap()[
-                            current_issue.alert.type.risk
-                          ],
-                          color: "white",
-                          borderWidth: 1,
-                          width: "100px",
-                        }}
+          {totalItems <= 0 && (
+            <EmptyComponent emptyMessage="There are no current issues to show" />
+          )}
+          {totalItems > 0 && (
+            <Table
+              striped
+              selectable
+              className="animated fadeIn"
+              basic="very"
+              compact="very"
+            >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                  <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                  <Table.HeaderCell
+                    collapsing
+                    onClick={() => toggleSort("since")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Icon
+                      name={`sort content ${
+                        orderBy[1] === "ASC" ? "ascending" : "descending"
+                      }`}
+                      title={`toggle sort order content ${
+                        orderBy[1] === "ASC" ? "descending" : "ascending"
+                      }`}
+                    />
+                    DATE
+                  </Table.HeaderCell>
+                  <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {currentIssues.map((current_issue, index) => {
+                  return (
+                    <Table.Row key={index} style={{ cursor: "pointer" }}>
+                      <Table.Cell
+                        onClick={() => showAlertDetails(current_issue)}
                       >
-                        {current_issue.alert.type.risk}
-                      </Label>
-                    </Table.Cell>
-                    <Table.Cell onClick={() => showAlertDetails(current_issue)}>
-                      {current_issue.alert.type.name}
-                    </Table.Cell>
-                    <Table.Cell
-                      singleLine
-                      onClick={() => showAlertDetails(current_issue)}
-                    >
-                      {
-                        <Moment format="YYYY-MM-DD HH:mm">
-                          {current_issue.since}
-                        </Moment>
-                      }
-                    </Table.Cell>
-
-                    <Table.Cell
-                      singleLine
-                      onClick={() => showAlertDetails(current_issue)}
-                    >
-                      {
-                        <Moment format="YYYY-MM-DD HH:mm">
-                          {current_issue.last_checked}
-                        </Moment>
-                      }
-                    </Table.Cell>
-                    <Table.Cell
-                      className="upper"
-                      style={{ maxWidth: "180px" }}
-                      collapsing
-                    >
-                      <AssetLink
-                        id={current_issue.alert.gateway_id}
-                        title={
-                          current_issue.alert.parameters.gateway +
-                          (current_issue.alert.parameters.gw_name
-                            ? `(${current_issue.alert.parameters.gw_name})`
-                            : "")
+                        <Label
+                          horizontal
+                          style={{
+                            backgroundColor: AlertUtil.getColorsMap()[
+                              current_issue.alert.type.risk
+                            ],
+                            color: "white",
+                            borderWidth: 1,
+                            width: "100px",
+                          }}
+                        >
+                          {current_issue.alert.type.risk}
+                        </Label>
+                      </Table.Cell>
+                      <Table.Cell
+                        onClick={() => showAlertDetails(current_issue)}
+                      >
+                        {current_issue.alert.type.name}
+                      </Table.Cell>
+                      <Table.Cell
+                        singleLine
+                        onClick={() => showAlertDetails(current_issue)}
+                      >
+                        {
+                          <Moment format="MM/DD/YYYY hh:mm:ss a">
+                            {current_issue.since}
+                          </Moment>
                         }
-                        type="gateway"
-                      />
-                      {!_.isEmpty(selectedAlert.alert) && (
-                        <DetailsAlertModal
-                          loading={false}
-                          alert={selectedAlert}
-                          onClose={closeAlertDetails}
+                      </Table.Cell>
+
+                      <Table.Cell
+                        singleLine
+                        onClick={() => showAlertDetails(current_issue)}
+                      >
+                        {
+                          <Moment format="MM/DD/YYYY hh:mm:ss a">
+                            {current_issue.last_checked}
+                          </Moment>
+                        }
+                      </Table.Cell>
+                      <Table.Cell
+                        className="upper"
+                        style={{ maxWidth: "180px" }}
+                        collapsing
+                      >
+                        <AssetLink
+                          id={current_issue.alert.gateway_id}
+                          title={
+                            current_issue.alert.parameters.gateway +
+                            (current_issue.alert.parameters.gw_name
+                              ? `(${current_issue.alert.parameters.gw_name})`
+                              : "")
+                          }
+                          type="gateway"
                         />
-                      )}
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table>
+                        {!_.isEmpty(selectedAlert.alert) && (
+                          <DetailsAlertModal
+                            loading={false}
+                            alert={selectedAlert}
+                            onClose={closeAlertDetails}
+                          />
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+          )}
           {totalPages > 1 && (
             <Grid className="segment centered">
               <Pagination
@@ -189,9 +206,6 @@ const ShowCurrentIssues = (props) => {
         </Segment>
       </React.Fragment>
     );
-  } else {
-    return <EmptyComponent emptyMessage="There are no current issues to show" />;
-  }}
-};
+  }
 
 export default ShowCurrentIssues;

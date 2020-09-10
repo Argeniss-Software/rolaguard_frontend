@@ -613,7 +613,7 @@ class QuarantineComponent extends React.Component {
                   )}
                   {this.state.isLoadingTable && (
                     <LoaderComponent
-                      loadingMessage="Loading quarantine ..."
+                      loadingMessage="Loading current issues ..."
                       style={{ marginBottom: 20 }}
                     />
                   )}

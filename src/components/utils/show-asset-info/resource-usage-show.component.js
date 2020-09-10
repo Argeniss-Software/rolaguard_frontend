@@ -8,8 +8,17 @@ import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.
 import "./resource-usage-show.component.css"
 import statusImages from "../../utils/wifi-signal-indicator/images"
 import EmptyComponent from "../../utils/empty.component"
+import _ from "lodash"
 
 const ShowResourceUssage = (props) => {
+  const normalizedType =
+    _.get(props, 'asset.type') &&
+    !["gateway", "device"].includes(props.asset.type.toLowerCase().trim())
+      ? ""
+      : props.asset.type.toLowerCase().trim();
+      
+  const isDevice = normalizedType === "device";
+  
   return (
     <Grid divided>
       <Grid.Row>
@@ -22,7 +31,7 @@ const ShowResourceUssage = (props) => {
                   {moment.unix(props.asset.last_activity).fromNow()} (
                   {moment
                     .unix(props.asset.last_activity)
-                    .format("YYYY/MM/d h:mm:ss A")}
+                    .format("MM/DD/YYYY hh:mm:ss a")}
                   )
                 </Table.Cell>
               </Table.Row>
@@ -49,9 +58,9 @@ const ShowResourceUssage = (props) => {
               <Table.Row>
                 <Table.Cell>SIGNAL STRENGTH (RSSI):</Table.Cell>
                 <Table.Cell className="bold">
-                  {props.asset &&
-                    props.asset.type &&
-                    props.asset.type.toLowerCase().trim() === "device" && (
+                  {!isDevice && "N/A"}
+                  {isDevice && (
+                    <React.Fragment>
                       <WifiIndicator
                         strength={DBMToSignalStrength(props.asset.max_rssi)}
                         statusImages={statusImages}
@@ -60,41 +69,52 @@ const ShowResourceUssage = (props) => {
                           verticalAlign: "bottom",
                         }}
                       />
-                    )}
-                  <span> {DBMToSignalStrength(props.asset.max_rssi)}</span>
-                  &nbsp;&nbsp; {props.asset.max_rssi && "("}
-                  <NumberFormat
-                    value={props.asset.max_rssi}
-                    displayType={"text"}
-                    suffix={" dBm)"}
-                    decimalScale="1"
-                  />
+
+                      <span>{DBMToSignalStrength(props.asset.max_rssi)}</span>
+
+                      {props.asset.max_rssi && (
+                        <NumberFormat
+                          value={props.asset.max_rssi}
+                          displayType={"text"}
+                          prefix={"("}
+                          suffix={" dBm)"}
+                          decimalScale="1"
+                        />
+                      )}
+                    </React.Fragment>
+                  )}
                 </Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>SNR:</Table.Cell>
                 <Table.Cell>
-                  <strong>
-                    <NumberFormat
-                      value={props.asset.max_lsnr}
-                      suffix=" dB"
-                      displayType={"text"}
-                      decimalScale="1"
-                    />
-                  </strong>
+                  {!isDevice && "N/A"}
+                  {isDevice && (
+                    <strong>
+                      <NumberFormat
+                        value={props.asset.max_lsnr}
+                        suffix=" dB"
+                        displayType={"text"}
+                        decimalScale="1"
+                      />
+                    </strong>
+                  )}
                 </Table.Cell>
               </Table.Row>
               <Table.Row>
                 <Table.Cell>PAYLOAD SIZE:</Table.Cell>
                 <Table.Cell>
-                  <strong>
-                    <NumberFormat
-                      value={props.asset.payload_size}
-                      suffix=" bytes"
-                      displayType={"text"}
-                      decimalScale="1"
-                    />
-                  </strong>
+                  {!isDevice && "N/A"}
+                  {isDevice && (
+                    <strong>
+                      <NumberFormat
+                        value={props.asset.payload_size}
+                        suffix=" bytes"
+                        displayType={"text"}
+                        decimalScale="1"
+                      />
+                    </strong>
+                  )}
                 </Table.Cell>
               </Table.Row>
               <Table.Row>

@@ -75,6 +75,9 @@ const ShowPacketsStatistics = (props) => {
       ? "black"
       : props.headerColorLine;
 
+  const normalizedType = props.type && props.type.toLowerCase().trim();
+  const isDevice = normalizedType === 'device'
+
   return (
     <Table compact="very" celled color={colorHeaderTable}>
       <Table.Header>
@@ -93,17 +96,17 @@ const ShowPacketsStatistics = (props) => {
             Uplink
           </Table.Cell>
           <Table.Cell textAlign="right">
-              <strong>
-                <NumberFormat
-                  value={_.get(props, 'packets_up.total')}
-                  displayType={"text"}
-                />
-              </strong>
+            <strong>
+              <NumberFormat
+                value={_.get(props, "packets_up.total")}
+                displayType={"text"}
+              />
+            </strong>
           </Table.Cell>
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={_.get(props, 'packets_up.percentage')}
+                value={_.get(props, "packets_up.percentage")}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"
@@ -131,7 +134,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={_.get(props, 'packets_down.total')}
+                value={_.get(props, "packets_down.total")}
                 displayType={"text"}
               />
             </strong>
@@ -139,7 +142,7 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={_.get(props, 'packets_down.percentage')}
+                value={_.get(props, "packets_down.percentage")}
                 displayType={"text"}
                 suffix={"%"}
                 decimalScale="2"
@@ -147,7 +150,7 @@ const ShowPacketsStatistics = (props) => {
             </strong>
           </Table.Cell>
         </Table.Row>
-        {props.type === "device" && (
+        {isDevice && (
           <Table.Row>
             <Table.Cell>
               <Icon color="grey" name="exclamation triangle" type="icon" />
