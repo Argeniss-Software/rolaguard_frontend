@@ -182,10 +182,7 @@ const ShowCurrentIssues = (props) => {
                             type === "gateway"
                               ? current_issue.alert.parameters.dev_eui ||
                                 current_issue.alert.parameters.dev_addr
-                              : current_issue.alert.parameters.gateway +
-                                (current_issue.alert.parameters.gw_name
-                                  ? `(${current_issue.alert.parameters.gw_name})`
-                                  : "")
+                              : current_issue.alert.parameters.gateway
                           }
                           showAsLink={true}
                         />
