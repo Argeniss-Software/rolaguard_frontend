@@ -8,6 +8,7 @@ import EmptyComponent from "../../utils/empty.component";
 import AssetLink from "../../utils/asset-link.component";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import DateFilterBar from "./date-filter-bar.component";
+import AssetId from "../asset-id.component"
 
 const ShowCurrentIssues = (props) => {
     const { commonStore } = useContext(MobXProviderContext);
@@ -113,7 +114,9 @@ const ShowCurrentIssues = (props) => {
                     DATE
                   </Table.HeaderCell>
                   <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
-                  <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>
+                    {type === "gateway" ? "DEVICE" : "GATEWAY"}
+                  </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -168,16 +171,22 @@ const ShowCurrentIssues = (props) => {
                         style={{ maxWidth: "180px" }}
                         collapsing
                       >
-                        <AssetLink
-                          id={current_issue.alert.gateway_id}
-                          title={
-                            current_issue.alert.parameters.gateway +
-                            (current_issue.alert.parameters.gw_name
-                              ? `(${current_issue.alert.parameters.gw_name})`
-                              : "")
+                        <AssetId
+                          id={
+                            type === "gateway"
+                              ? current_issue.alert.device_id
+                              : current_issue.alert.gateway_id
                           }
-                          type="gateway"
+                          type={type === "gateway" ? "device" : "gateway"}
+                          hexId={
+                            type === "gateway"
+                              ? current_issue.alert.parameters.dev_eui ||
+                                current_issue.alert.parameters.dev_addr
+                              : current_issue.alert.parameters.gateway
+                          }
+                          showAsLink={true}
                         />
+
                         {!_.isEmpty(selectedAlert.alert) && (
                           <DetailsAlertModal
                             loading={false}

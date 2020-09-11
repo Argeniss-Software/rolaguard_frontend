@@ -159,40 +159,42 @@ const DateFilterBar = (props) => {
             </div>
           </Grid.Column>
           <Grid.Column width={4}>
-            <Grid style={{ marginTop: "0px" }}>
+            <Grid style={{ marginTop: "-2px", marginLeft: "2px" }}>
               <Grid.Column width={5}>
-                <Popup
-                  basic
-                  size="mini"
-                  trigger={
-                    <Button
-                      size="mini"
-                      compact
-                      title="Filter by selected dates"
-                      onClick={handleDateFilterClick}
-                      icon
-                    >
-                      <Icon name="filter" />
-                    </Button>
-                  }
-                  content="Apply Filter"
-                />
-                <Popup
-                  basic
-                  size="mini"
-                  trigger={
-                    <Button
-                      size="mini"
-                      compact
-                      title="Clear filters"
-                      onClick={clearDateFilters}
-                      icon
-                    >
-                      <Icon name="trash" color="red" />
-                    </Button>
-                  }
-                  content="Clear date filters"
-                />
+                <Button.Group basic size="mini">
+                  <Popup
+                    basic
+                    size="mini"
+                    trigger={
+                      <Button
+                        size="mini"
+                        compact
+                        title="Filter by selected dates"
+                        onClick={handleDateFilterClick}
+                        icon
+                      >
+                        <Icon name="filter" />
+                      </Button>
+                    }
+                    content="Apply Filter"
+                  />
+                  <Popup
+                    basic
+                    size="mini"
+                    trigger={
+                      <Button
+                        size="mini"
+                        compact
+                        title="Clear filters"
+                        onClick={clearDateFilters}
+                        icon
+                      >
+                        <Icon name="trash" color="red" />
+                      </Button>
+                    }
+                    content="Clear date filters"
+                  />
+                </Button.Group>
               </Grid.Column>
               <Grid.Column width={11} className="centered aligned">
                 <Button.Group basic size="mini">

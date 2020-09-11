@@ -7,7 +7,8 @@ import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
 import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
 import "./resource-usage-show.component.css"
 import statusImages from "../../utils/wifi-signal-indicator/images"
-import EmptyComponent from "../../utils/empty.component"
+import PacketsGraph from "./packets-graph-component"
+
 import _ from "lodash"
 
 const ShowResourceUssage = (props) => {
@@ -20,10 +21,10 @@ const ShowResourceUssage = (props) => {
   const isDevice = normalizedType === "device";
   
   return (
-    <Grid divided>
-      <Grid.Row>
-        <Grid.Column width={6}>
-          <Table compact="very">
+    <Grid divided="vertically">
+      <Grid.Column width={6}>
+        <Grid.Row>
+          <Table basic celled striped compact size="small">
             <Table.Body>
               <Table.Row>
                 <Table.Cell>LAST MESSAGE RECEIVED:</Table.Cell>
@@ -70,7 +71,7 @@ const ShowResourceUssage = (props) => {
                         }}
                       />
 
-                      <span>{DBMToSignalStrength(props.asset.max_rssi)}</span>
+                      <span> {DBMToSignalStrength(props.asset.max_rssi)}</span>
 
                       {props.asset.max_rssi && (
                         <NumberFormat
@@ -125,23 +126,25 @@ const ShowResourceUssage = (props) => {
               </Table.Row>
             </Table.Body>
           </Table>
-        </Grid.Column>
-        <Grid.Column width={4} className="aligned text-center">
-          <h5 class="attached header top">Messages on the last 24 Hours</h5>
-          <div className="aligned text-center">
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column style={{ width: "70%" }}>
             <ShowPacketsStatistics
               packets_down={props.asset.packets_down}
               packets_up={props.asset.packets_up}
               packets_lost={props.asset.packets_lost}
-              headerColorLine=""
+              headerColorLine="black"
               type={props.asset.type}
-            ></ShowPacketsStatistics>
-          </div>
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <EmptyComponent emptyMessage="WIP: Signal strength graph and SNR of last 10 packages" />
-        </Grid.Column>
-      </Grid.Row>
+            >
+              <strong>Messages on the last 24 hours</strong>
+            </ShowPacketsStatistics>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid.Column>
+      <Grid.Column width={10}>
+        <PacketsGraph data={props.asset} />
+      </Grid.Column>
     </Grid>
   );
 };
