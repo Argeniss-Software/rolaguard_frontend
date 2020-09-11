@@ -122,21 +122,11 @@ const ShowAlerts = (props) => {
 
   return (
     <React.Fragment>
-      <h5
-        class="ui inverted top attached header"
-        style={{ height: "44px" }}
-      >
-        ALERTS{" "}
-        {totalItems > 0 && (
-          <Label color="red">{totalItems}</Label>
-        )}
+      <h5 class="ui inverted top attached header" style={{ height: "44px" }}>
+        ALERTS {totalItems > 0 && <Label color="red">{totalItems}</Label>}
       </h5>
 
-      <DateFilterBar
-        onDateFilterChange={
-          handleDateFilterChange
-        }
-      />
+      <DateFilterBar onDateFilterChange={handleDateFilterChange} />
 
       <Segment attached>
         {totalItems > 0 && (
@@ -149,37 +139,25 @@ const ShowAlerts = (props) => {
           >
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell collapsing>
-                  RISK
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                  DESCRIPTION
-                </Table.HeaderCell>
+                <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                 <Table.HeaderCell
                   collapsing
-                  onClick={() =>
-                    toggleSort("created_at")
-                  }
+                  onClick={() => toggleSort("created_at")}
                   style={{ cursor: "pointer" }}
                 >
                   <Icon
                     name={`sort content ${
-                      orderBy[1] === "ASC"
-                        ? "ascending"
-                        : "descending"
+                      orderBy[1] === "ASC" ? "ascending" : "descending"
                     }`}
                     title={`toggle sort order content ${
-                      orderBy[1] === "ASC"
-                        ? "descending"
-                        : "ascending"
+                      orderBy[1] === "ASC" ? "descending" : "ascending"
                     }`}
                   />
                   DATE
                 </Table.HeaderCell>
                 <Table.HeaderCell collapsing>
-                  {type === "gateway"
-                    ? "DEVICE"
-                    : "GATEWAY"}
+                  {type === "gateway" ? "DEVICE" : "GATEWAY"}
                 </Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -192,28 +170,17 @@ const ShowAlerts = (props) => {
                   positive={alert.resolved_at}
                 >
                   <Table.Cell
-                    onClick={() =>
-                      showAlertDetails(alert)
-                    }
+                    onClick={() => showAlertDetails(alert)}
                     collapsing
                   >
-                    {_.get(
-                      alert,
-                      "type.risk"
-                    ) && (
+                    {_.get(alert, "type.risk") && (
                       <Label
                         horizontal
                         style={{
-                          backgroundColor:
-                            colorsMap[
-                              alert.type.risk
-                            ],
+                          backgroundColor: colorsMap[alert.type.risk],
                           color: "white",
                           borderWidth: 1,
-                          borderColor:
-                            colorsMap[
-                              alert.type.risk
-                            ],
+                          borderColor: colorsMap[alert.type.risk],
                           width: "100px",
                         }}
                       >
@@ -221,18 +188,12 @@ const ShowAlerts = (props) => {
                       </Label>
                     )}
                   </Table.Cell>
-                  <Table.Cell
-                    onClick={() =>
-                      showAlertDetails(alert)
-                    }
-                  >
+                  <Table.Cell onClick={() => showAlertDetails(alert)}>
                     {alert.type.name}
                   </Table.Cell>
                   <Table.Cell
                     singleLine
-                    onClick={() =>
-                      showAlertDetails(alert)
-                    }
+                    onClick={() => showAlertDetails(alert)}
                   >
                     {
                       <Moment format="MM/DD/YYYY hh:mm:ss a">
@@ -241,9 +202,7 @@ const ShowAlerts = (props) => {
                     }
                   </Table.Cell>
 
-                  {!_.isEmpty(
-                    selectedAlert.alert
-                  ) && (
+                  {!_.isEmpty(selectedAlert.alert) && (
                     <DetailsAlertModal
                       loading={false}
                       alert={selectedAlert}
@@ -257,27 +216,14 @@ const ShowAlerts = (props) => {
                   >
                     <AssetIdComponent
                       id={
-                        type === "gateway"
-                          ? alert.device_id
-                          : alert.gateway_id
+                        type === "gateway" ? alert.device_id : alert.gateway_id
                       }
-                      type={
-                        type === "gateway"
-                          ? "device"
-                          : "gateway"
-                      }
+                      type={type === "gateway" ? "device" : "gateway"}
                       hexId={
                         type === "gateway"
-                          ? alert.parameters
-                              .dev_eui ||
-                            alert.parameters
-                              .dev_addr
-                          : alert.parameters
-                              .gateway +
-                            (alert.parameters
-                              .gw_name
-                              ? `(${alert.parameters.gw_name})`
-                              : "")
+                          ? alert.parameters.dev_eui ||
+                            alert.parameters.dev_addr
+                          : alert.parameters.gateway
                       }
                       showAsLink={true}
                     />
@@ -297,9 +243,7 @@ const ShowAlerts = (props) => {
               size="mini"
               activePage={activePage}
               const
-              onPageChange={
-                handlePaginationChange
-              }
+              onPageChange={handlePaginationChange}
               totalPages={totalPages}
             />
           </Grid>
