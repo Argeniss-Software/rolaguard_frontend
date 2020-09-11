@@ -9,7 +9,6 @@ const PacketGraph = (props) => {
   const getCategories = () => {
     if (!_.isEmpty(packetList)) {
       return packetList.map((e) => {
-        console.log(e.date)
         return new Date(e.date).getTime();
       });
     }
