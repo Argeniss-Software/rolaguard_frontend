@@ -7,7 +7,8 @@ import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
 import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
 import "./resource-usage-show.component.css"
 import statusImages from "../../utils/wifi-signal-indicator/images"
-import EmptyComponent from "../../utils/empty.component"
+import PacketsGraph from "./packets-graph-component"
+
 import _ from "lodash"
 
 const ShowResourceUssage = (props) => {
@@ -139,7 +140,7 @@ const ShowResourceUssage = (props) => {
           </div>
         </Grid.Column>
         <Grid.Column width={6}>
-          <EmptyComponent emptyMessage="WIP: Signal strength graph and SNR of last 10 packages" />
+          <PacketsGraph data={props.asset.last_packets_list}/>          
         </Grid.Column>
       </Grid.Row>
     </Grid>
