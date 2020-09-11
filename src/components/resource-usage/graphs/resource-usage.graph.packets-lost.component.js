@@ -181,8 +181,7 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
         },
       },
       xaxis: {
-        type: "numeric",
-        //tickPlacement: "between",
+        type: "category",
         categories: [
           "0%",
           "10%",
@@ -204,7 +203,6 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
           max: 99,
         },
         style: {
-          colors: [],
           fontSize: "9px",
           fontFamily: "Helvetica, Arial, sans-serif",
           cssClass: "apexcharts-xaxis-label",
@@ -221,14 +219,27 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
           colors: ["#304758"],
         },
       },
-    },
-    legend: {
-      show: false,
-    },
-    plotOptions: {
-      bar: {
-        columnWidth: "35%",
-        distributed: true,
+      plotOptions: {
+        bar: {
+          columnWidth: "95%",
+          distributed: true,
+        },
+      },
+
+      colors: [
+        "#8CEE43",
+        "#BFEE43",
+        "#D9EE43",
+        "#E9EE43",
+        "#EEDE43",
+        "#EEC543",
+        "#EEA543",
+        "#EE7943",
+        "#EE6243",
+        "#EE4343",
+      ],
+      legend: {
+        show: false,
       },
     },
     series: [
