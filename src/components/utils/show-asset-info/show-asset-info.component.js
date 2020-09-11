@@ -79,7 +79,6 @@ const ShowAssetInfo = (props) => {
         <Grid columns="equal">
           <Grid.Row>
             <Grid.Column flex columns={8}>
-              free
             </Grid.Column>
 
             <Grid.Column flex columns={8}>
