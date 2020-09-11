@@ -207,7 +207,7 @@ const ResourceUsageList = (props) => {
                       </Grid.Row>
                     </Grid>
                   </Table.Cell>
-                  <Table.Cell style={{ textAlign: "center" }}>
+                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
                     <NumberFormat
                       value={item.max_lsnr}
                       suffix=" dB"
@@ -216,7 +216,7 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
 
-                  <Table.Cell style={{ textAlign: "center" }}>
+                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
                     <NumberFormat
                       value={item.payload_size}
                       displayType={"text"}
@@ -225,7 +225,7 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
 
-                  <Table.Cell style={{ textAlign: "center" }}>
+                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
                     <NumberFormat
                       value={item.ngateways_connected_to}
                       displayType={"text"}
