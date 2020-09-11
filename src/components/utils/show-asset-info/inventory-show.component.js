@@ -14,6 +14,7 @@ const ShowInventory = (props) => {
   const [tags, setTags] = React.useState(
     props.inventory.tags ? props.inventory.tags : []
   );
+  const isSetLocation = !_.isEmpty(_.get(props, 'inventory.location'))
   
   const normalizedType =
     props.inventory.type &&
@@ -155,7 +156,8 @@ const ShowInventory = (props) => {
               </Table>
             </Grid.Column>
             <Grid.Column width={3}>
-              <Geolocation location ={props.inventory.location} />
+              GEOLOCATION (Work in progress...)
+              
             </Grid.Column>
             <Grid.Column width={8}>
               <ShowCurrentIssues
