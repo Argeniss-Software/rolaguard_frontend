@@ -142,7 +142,7 @@ const ShowResourceUssage = (props) => {
           </Grid.Column>
         </Grid.Row>
       </Grid.Column>
-      <Grid.Column width={9}>
+      <Grid.Column width={10}>
         <PacketsGraph data={props.asset} />
       </Grid.Column>
     </Grid>
