@@ -8,8 +8,9 @@ import AlertUtil from "../util/alert-util";
 import moment from "moment";
 import { withRouter } from 'react-router-dom';
 import AlertDetailTableIcon from "./alert/alert.details.table.icons";
-import AssetLink from "./utils/asset-link.component"
-import _ from "lodash"
+import AssetLink from "./utils/asset-link.component";
+import PacketViewer from "../components/utils/packet-view/packet-view.component";
+import _ from "lodash";
 @inject("alarmStore", "alertStore", "authStore", "generalDataStore", "usersStore")
 @observer
 class DetailsAlertModal extends Component {
@@ -106,6 +107,7 @@ class DetailsAlertModal extends Component {
     const recommendedActionIndex = 0;
     const technicalDescriptionIndex = 1;
     const resolutionIndex = 2;
+    const packetsIndex = 3;
 
     return (
       <Modal
@@ -210,6 +212,27 @@ class DetailsAlertModal extends Component {
                   </Table>
                 </div>
               </Accordion.Content>
+              {console.log(alert.parameters.packet_data)}
+
+              { _.hasIn(alert, "parameters.packet_data") && 
+
+                <React.Fragment>
+                  <Accordion.Title
+                    active={activeIndex === packetsIndex}
+                    index={packetsIndex}
+                    onClick={this.handleAccordionClick}
+                  >
+                    <Icon name="dropdown" />
+                    <strong>Packets Involved</strong>
+                  </Accordion.Title>
+                  <Accordion.Content
+                    active={activeIndex === packetsIndex}
+                  >
+                    <PacketViewer packetData={alert.parameters.packet_data} previousPacketData={alert.parameters.prev_packet_data}></PacketViewer>
+                  </Accordion.Content>
+                </React.Fragment>
+              }
+
               {resolution && (
                 <div>
                   <Accordion.Title
