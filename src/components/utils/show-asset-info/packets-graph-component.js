@@ -1,25 +1,68 @@
-import * as React from "react";
-import EmptyComponent from "../../utils/empty.component"
+import React, {useEffect, useState, useContext} from "react";
 import Chart from "react-apexcharts"
+import { MobXProviderContext } from "mobx-react";
 import _ from "lodash"
 
+
 const PacketGraph = (props) => {
-  const packetList = _.get(props, "data.last_packets_list")
+  /* 
+  * This component graph a packet list RSSI and SNR(Y) on the time (X). 
+  * You can pass the values to graph as props (data param) or the component 
+  * itself can get the data doing an ajax request (when you pass id and type param):
+  * - by props: pass props.data.last_packets_list array (no ajax call)
+  * - by ajax: pass props.id and props.type of an asset. In this case the component encourage the ajax call for get data
+  * 
+  * @param data [optional if type and id are not empty]: array of package list with the structure defined on resource usage
+  * @param type [optional if data is not empty]: the string type of asset. Possible options: [gateway, device]
+  * @param id [optional if data is not empty]: the id of the asset
+  * 
+  * @return graph
+  */
+ 
+  const { commonStore } = useContext(MobXProviderContext);
+  const packetList = _.get(props, "data.last_packets_list");
+  const [resourceUsagePacketList, setResourceUsagePacketList] = useState([])
   
+  const loadDataForGraph = () => {
+    if (props.type && props.id) {
+      let paramsId = {
+        type: props.type,
+        id: props.id,
+      }
+
+      const resourceUsagePromise = commonStore.getData(
+        "resource_usage",
+        paramsId
+      );
+
+      Promise.all([resourceUsagePromise]).then((response) => {
+        setResourceUsagePacketList(_.get(response, "[0].data.last_packets_list"));
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (_.isEmpty(packetList)) { // load by ajax
+      loadDataForGraph();
+    } else {
+      setResourceUsagePacketList(packetList); // set it by props
+    }
+  }, [props.id, props.type])
+
   const getCategories = () => {
-    if (!_.isEmpty(packetList)) {
-      return packetList.map((e) => {
+    if (!_.isEmpty(resourceUsagePacketList)) {
+      return resourceUsagePacketList.map((e) => {
         return new Date(e.date).getTime();
       });
     }
   }
   
   const getSeries = () => {
-    if (!_.isEmpty(packetList)) {
-      let rssi = packetList.map((e) => {
+    if (!_.isEmpty(resourceUsagePacketList)) {
+      let rssi = resourceUsagePacketList.map((e) => {
         return e.rssi;
       });
-      let snr = packetList.map((e) => {
+      let snr = resourceUsagePacketList.map((e) => {
         return e.lsnr;
       });
       return [
@@ -27,13 +70,13 @@ const PacketGraph = (props) => {
           name: "Signal Strength (RSSI)",
           type: "line",
           data: rssi,
-          other_data: packetList,
+          other_data: resourceUsagePacketList,
         },
         {
           name: "SNR",
           type: "line",
           data: snr,
-          other_data: packetList,
+          other_data: resourceUsagePacketList,
         },
       ];
     }
@@ -144,17 +187,13 @@ const PacketGraph = (props) => {
           show: true,
           format: "MM/dd/yyyy hh:mm:ss TT",
         },
-      },
-      legend: {
-        //horizontalAlign: "left",
-        //offsetX: 40,
-      },
+      }
     },
   };
 
   return (
     <React.Fragment>
-      {!_.isEmpty(packetList) && (
+      {!_.isEmpty(resourceUsagePacketList) && (
         <Chart
           options={graphData.options}
           series={graphData.series}

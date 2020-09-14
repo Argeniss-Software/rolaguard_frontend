@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext, useState, useRef} from "react";
 import { Icon, Table, Popup, Grid } from "semantic-ui-react";
 
 import AssetIdComponent from "../utils/asset-id.component";
@@ -14,9 +14,23 @@ import DBMToSignalStrength from "../utils/wifi-signal-indicator/DBMToSignalStren
 import statusImages from "../utils/wifi-signal-indicator/images";
 import "./resource-usage.component.css";
 import {observer} from 'mobx-react';
-// import ModalResourceUsage from './resource-usage-modal.component'
+import ModalResourceUsage from './resource-usage-modal.component'
+import _ from 'lodash'
 
 const ResourceUsageList = (props) => {
+  const [indexOpenModal, setIndexOpenModal] = useState(null);
+  
+  const closeModal = (index) => {
+    setIndexOpenModal(null)
+  }
+
+  const showModal = (data) => {
+    const {index, type} = data
+    if (type==='device') {
+      setIndexOpenModal(index)
+    }
+  };
+
   return (
     <Table
       striped
@@ -71,8 +85,7 @@ const ResourceUsageList = (props) => {
               trigger={<span style={{ cursor: "pointer" }}># GW</span>}
               basic
               content="Number of gateways connected to"
-            >
-            </Popup>
+            ></Popup>
           </Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -96,9 +109,23 @@ const ResourceUsageList = (props) => {
             props.list.data.map((item, index) => {
               return (
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
-                  <Table.Cell style={{ textAlign: "center" }}>
+                  <Table.Cell
+                    style={{ textAlign: "center" }}
+                    onClick={() => showModal({type: item.type, index: index})}
+                  >
                     <ShowDeviceState state={item.connected} />
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
+
+                    {!_.isEmpty(item) &&
+                      !_.isNull(indexOpenModal) &&
+                      indexOpenModal === index && (
+                        <ModalResourceUsage
+                          type={item.type}
+                          id={item.id}
+                          asset={item}
+                          onClose={closeModal}
+                        />
+                      )}
                   </Table.Cell>
                   <Table.Cell>
                     <AssetIdComponent
@@ -107,8 +134,10 @@ const ResourceUsageList = (props) => {
                       id={item.id}
                     />
                   </Table.Cell>
-                  <Table.Cell>{item.name}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell onClick={() => showModal({type: item.type, index: index})}>
+                    {item.name}
+                  </Table.Cell>
+                  <Table.Cell onClick={() => showModal({type: item.type, index: index})}>
                     <Popup
                       trigger={
                         <span>{moment.unix(item.last_activity).fromNow()}</span>
@@ -123,7 +152,7 @@ const ResourceUsageList = (props) => {
                       </Popup.Content>
                     </Popup>
                   </Table.Cell>
-                  <Table.Cell width={3}>
+                  <Table.Cell width={3} onClick={() => showModal({type: item.type, index: index})}>
                     <ShowMessagesSummary
                       type={item.type}
                       packets_down={item.packets_down}
@@ -132,6 +161,7 @@ const ResourceUsageList = (props) => {
                     ></ShowMessagesSummary>
                   </Table.Cell>
                   <Table.Cell
+                    onClick={() => showModal({type: item.type, index: index})}
                     className={`aligned pull-left ${
                       item.connected ? "" : "lightgray"
                     }`}
@@ -160,6 +190,7 @@ const ResourceUsageList = (props) => {
                     )}
                   </Table.Cell>
                   <Table.Cell
+                    onClick={() => showModal({type: item.type, index: index})}
                     collapsing
                     style={{ padding: "0px" }}
                     className={`aligned pull-left ${
@@ -207,7 +238,11 @@ const ResourceUsageList = (props) => {
                       </Grid.Row>
                     </Grid>
                   </Table.Cell>
-                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
+                  <Table.Cell
+                    style={{ textAlign: "center" }}
+                    className={item.connected ? "" : "lightgray"}
+                    onClick={() => showModal({type: item.type, index: index})}
+                  >
                     <NumberFormat
                       value={item.max_lsnr}
                       suffix=" dB"
@@ -216,7 +251,11 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
 
-                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
+                  <Table.Cell
+                    style={{ textAlign: "center" }}
+                    className={item.connected ? "" : "lightgray"}
+                    onClick={() => showModal({type: item.type, index: index})}
+                  >
                     <NumberFormat
                       value={item.payload_size}
                       displayType={"text"}
@@ -225,7 +264,11 @@ const ResourceUsageList = (props) => {
                     />
                   </Table.Cell>
 
-                  <Table.Cell style={{ textAlign: "center" }} className={item.connected ? '' : 'lightgray'}>
+                  <Table.Cell
+                    style={{ textAlign: "center" }}
+                    className={item.connected ? "" : "lightgray"}
+                    onClick={() => showModal({type: item.type, index: index})}
+                  >
                     <NumberFormat
                       value={item.ngateways_connected_to}
                       displayType={"text"}
