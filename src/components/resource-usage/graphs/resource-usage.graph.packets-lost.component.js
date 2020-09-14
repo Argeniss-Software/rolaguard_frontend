@@ -170,14 +170,10 @@ const ResourceUsageGraphPacketsLostComponent = (props) => {
         },
       },
       tooltip: {
-        custom: function({ series, seriesIndex, dataPointIndex, w }) {
-          return (
-            '<div class="arrow_box">' +
-            "<span>" +
-            `From ${dataPointIndex * 10}% to ${(dataPointIndex + 1) * 10}%` +
-            "</span>" +
-            "</div>"
-          );
+        x: {
+            formatter: (seriesName, index) => {
+              return `From ${index.seriesIndex}% to ${index.seriesIndex+10}% of lost`
+          },
         },
       },
       xaxis: {
