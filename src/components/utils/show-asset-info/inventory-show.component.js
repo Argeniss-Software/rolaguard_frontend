@@ -156,8 +156,10 @@ const ShowInventory = (props) => {
               </Table>
             </Grid.Column>
             <Grid.Column width={3}>
-              GEOLOCATION (Work in progress...)
-              
+              <div className="text-center aligned">
+                <strong>GEOLOCATION</strong>
+                <Geolocation location={props.inventory.location} />
+              </div>
             </Grid.Column>
             <Grid.Column width={8}>
               <ShowCurrentIssues
