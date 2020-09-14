@@ -1,10 +1,13 @@
-import React from "react";
-import { Button, Modal, Popup } from "semantic-ui-react";
-import ShowAssetInfo from "../utils/show-asset-info/show-asset-info.component"
+import React, {useState, useEffect} from "react";
+import { Button, Modal } from "semantic-ui-react";
+import ShowDeviceState from "../utils/show-device-state.component"
+import ShowDeviceIcon  from "../utils/show-device-icon.component";
+import AssetIdComponent from "../utils/asset-id.component";
+import PacketsGraph from "../utils/show-asset-info/packets-graph-component";
+import _ from 'lodash'
 
 const ModalResourceUsage = (props) => {
-  const [open, setOpen] = React.useState(false);
-  const [doRequest, setDoRequest] = React.useState(false);
+  const [open, setOpen] = useState(props.openModal || true);
 
   return (
     <Modal
@@ -14,26 +17,30 @@ const ModalResourceUsage = (props) => {
       onClose={() => setOpen(false)}
       onOpen={() => {
         setOpen(true);
-        setDoRequest(true);
       }}
       size="large"
-      trigger={
-            <button>
-              <i className="fas fa-eye" />
-            </button>
-      }
     >
+      <Modal.Header>
+        <ShowDeviceState state={props.asset.connected} />
+        &nbsp;&nbsp;&nbsp;
+        <ShowDeviceIcon type={props.asset.type}></ShowDeviceIcon>
+        &nbsp;
+        {_.get(props, "asset.type")
+          ? props.asset.type.toUpperCase() + ": "
+          : ""}
+        <AssetIdComponent
+          type={props.asset.type}
+          id={props.asset.id}
+          hexId={props.asset.hex_id}
+          showAsLink={false}
+        />
+      </Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          <ShowAssetInfo
-            defaultActiveIndex="0"
-            id={props.id}
-            type={props.type}
-            asset={props.asset}
-            doRequest={doRequest}
-          ></ShowAssetInfo>
+          <PacketsGraph type={props.asset.type} id={props.asset.id} />
         </Modal.Description>
       </Modal.Content>
+
       <Modal.Actions>
         <Button onClick={() => setOpen(false)}>Close</Button>
       </Modal.Actions>
