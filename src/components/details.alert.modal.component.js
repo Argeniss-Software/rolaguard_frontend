@@ -212,7 +212,6 @@ class DetailsAlertModal extends Component {
                   </Table>
                 </div>
               </Accordion.Content>
-              {console.log(alert.parameters.packet_data)}
 
               { _.hasIn(alert, "parameters.packet_data") && 
 
