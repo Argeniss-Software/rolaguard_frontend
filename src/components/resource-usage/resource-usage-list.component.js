@@ -111,7 +111,7 @@ const ResourceUsageList = (props) => {
                 <Table.Row key={index} style={{ cursor: "pointer" }}>
                   <Table.Cell
                     style={{ textAlign: "center" }}
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                   >
                     <ShowDeviceState state={item.connected} />
                     <ShowDeviceIcon type={item.type}></ShowDeviceIcon>
@@ -134,10 +134,14 @@ const ResourceUsageList = (props) => {
                       id={item.id}
                     />
                   </Table.Cell>
-                  <Table.Cell onClick={() => showModal({type: item.type, index: index})}>
+                  <Table.Cell
+                    onClick={() => showModal({ type: item.type, index: index })}
+                  >
                     {item.name}
                   </Table.Cell>
-                  <Table.Cell onClick={() => showModal({type: item.type, index: index})}>
+                  <Table.Cell
+                    onClick={() => showModal({ type: item.type, index: index })}
+                  >
                     <Popup
                       trigger={
                         <span>{moment.unix(item.last_activity).fromNow()}</span>
@@ -152,7 +156,10 @@ const ResourceUsageList = (props) => {
                       </Popup.Content>
                     </Popup>
                   </Table.Cell>
-                  <Table.Cell width={3} onClick={() => showModal({type: item.type, index: index})}>
+                  <Table.Cell
+                    width={3}
+                    onClick={() => showModal({ type: item.type, index: index })}
+                  >
                     <ShowMessagesSummary
                       type={item.type}
                       packets_down={item.packets_down}
@@ -161,7 +168,7 @@ const ResourceUsageList = (props) => {
                     ></ShowMessagesSummary>
                   </Table.Cell>
                   <Table.Cell
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                     className={`aligned pull-left ${
                       item.connected ? "" : "lightgray"
                     }`}
@@ -190,7 +197,7 @@ const ResourceUsageList = (props) => {
                     )}
                   </Table.Cell>
                   <Table.Cell
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                     collapsing
                     style={{ padding: "0px" }}
                     className={`aligned pull-left ${
@@ -241,7 +248,7 @@ const ResourceUsageList = (props) => {
                   <Table.Cell
                     style={{ textAlign: "center" }}
                     className={item.connected ? "" : "lightgray"}
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                   >
                     <NumberFormat
                       value={item.max_lsnr}
@@ -254,7 +261,7 @@ const ResourceUsageList = (props) => {
                   <Table.Cell
                     style={{ textAlign: "center" }}
                     className={item.connected ? "" : "lightgray"}
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                   >
                     <NumberFormat
                       value={item.payload_size}
@@ -267,7 +274,7 @@ const ResourceUsageList = (props) => {
                   <Table.Cell
                     style={{ textAlign: "center" }}
                     className={item.connected ? "" : "lightgray"}
-                    onClick={() => showModal({type: item.type, index: index})}
+                    onClick={() => showModal({ type: item.type, index: index })}
                   >
                     <NumberFormat
                       value={item.ngateways_connected_to}

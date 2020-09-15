@@ -1,25 +1,25 @@
 import * as React from "react";
-import { Grid, Table } from "semantic-ui-react";
+import { Grid, Table, Segment, Header } from "semantic-ui-react";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
 import DBMToSignalStrength from "../wifi-signal-indicator/DBMToSignalStrength";
 import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.component";
-import "./resource-usage-show.component.css"
-import statusImages from "../../utils/wifi-signal-indicator/images"
-import PacketsGraph from "./packets-graph-component"
-
-import _ from "lodash"
+import "./resource-usage-show.component.css";
+import statusImages from "../../utils/wifi-signal-indicator/images";
+import PacketsGraph from "./packets-graph-component";
+import _ from "lodash";
+import AssociatedAsset from "../../utils/show-asset-info/associated-asset.component";
 
 const ShowResourceUssage = (props) => {
   const normalizedType =
-    _.get(props, 'asset.type') &&
+    _.get(props, "asset.type") &&
     !["gateway", "device"].includes(props.asset.type.toLowerCase().trim())
       ? ""
       : props.asset.type.toLowerCase().trim();
-      
+
   const isDevice = normalizedType === "device";
-  
+
   return (
     <Grid divided="vertically">
       <Grid.Column width={6}>
@@ -118,12 +118,27 @@ const ShowResourceUssage = (props) => {
                   )}
                 </Table.Cell>
               </Table.Row>
-              <Table.Row>
-                <Table.Cell># OF GATEWAYS CONNECTED TO:</Table.Cell>
-                <Table.Cell>
-                  <strong>{props.asset.ngateways_connected_to}</strong>
-                </Table.Cell>
-              </Table.Row>
+              {isDevice && (
+                <Table.Row>
+                  <Table.Cell>
+                    {isDevice && (
+                      <span>
+                        CONNECTED TO{" "}
+                        <strong>{props.asset.ngateways_connected_to} </strong>
+                        GATEWAYS:
+                      </span>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div>
+                      <AssociatedAsset
+                        type={normalizedType}
+                        id={props.asset.id}
+                      />
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
         </Grid.Row>
@@ -143,7 +158,17 @@ const ShowResourceUssage = (props) => {
         </Grid.Row>
       </Grid.Column>
       <Grid.Column width={10}>
-        <PacketsGraph data={props.asset} />
+        {isDevice && <PacketsGraph data={props.asset} />}
+        {!isDevice && (
+          <Segment placeholder>
+            <Header icon>
+              Devices connected to this gateways (list limited to 100):
+            </Header>
+            <Segment.Inline style={{ wordBreak: "break-all" }}>
+              <AssociatedAsset type={normalizedType} id={props.asset.id} />
+            </Segment.Inline>
+          </Segment>
+        )}
       </Grid.Column>
     </Grid>
   );

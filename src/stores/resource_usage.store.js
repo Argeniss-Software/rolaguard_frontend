@@ -351,7 +351,7 @@ class ResourceUsageStore {
   /* used it on list device and gateway on resrouce ussages */
   @action getAssets(pagination) {
     const { page, size } = pagination || {};
-    const { status, type, gateways, packet_lost_range, signal_strength } =
+    const { status, type, gateways, packet_lost_range, signal_strength, devices } =
       this.criteria || {};
 
     const headers = this.getHeaders();
@@ -420,6 +420,26 @@ class ResourceUsageStore {
         break;
     }
     return API.get(uri, { headers, params });
+  }
+
+      
+  /* list associated assets for specific devices or gateways */
+  @action getAssociatedAssets(filterParams) {
+    const { type, id, page, size } = filterParams || {}
+    const headers = this.getHeaders();
+    let params = {}
+    let normalizedType = type.toLowerCase().trim()
+    if (normalizedType === 'device') { // device connected to gateways
+      params["asset_type"] = 'gateway'
+      params['device_ids[]']=id
+    } else { // devices associated to gateway
+      params["asset_type"] = 'device'
+      params['gateways_ids[]']=id
+    }
+    params['page']=page
+    params['size']=size
+
+    return API.get(`resource_usage/list`, { headers, params });
   }
   /**********************************************************/
   /**********************************************************/
