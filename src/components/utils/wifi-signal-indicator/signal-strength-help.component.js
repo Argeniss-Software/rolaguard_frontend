@@ -26,7 +26,9 @@ const SignalStrengthHelp = (props) => {
                     size="mini"
                     trigger={
                       <WifiIndicator
-                        strength={DBMToSignalStrength(r.value)}
+                        strength={DBMToSignalStrength(
+                          index === 5 ? r.value - 1 : r.value
+                        )}
                         statusImages={statusImages}
                         style={{
                           height: 20,
@@ -34,16 +36,29 @@ const SignalStrengthHelp = (props) => {
                         }}
                       />
                     }
-                    content={r.text}
+                    content={
+                      r.text === "DISCONNECTED"
+                        ? "UNUSABLE"
+                        : r.text === "UNUSABLE"
+                        ? "VERY WEAK"
+                        : r.text
+                    }
                   ></Popup>{" "}
                   <small>
                     {r.text === "DISCONNECTED"
                       ? "UNUSABLE"
-                      : (r.text === "UNUSABLE" ? 'VERY WEAK' : r.text)}
+                      : r.text === "UNUSABLE"
+                      ? "VERY WEAK"
+                      : r.text}
                   </small>
                 </Table.Cell>
                 <Table.Cell textAlign="left">
-                  {index > 4 ? "<" : ">"} {r.value} {r.unit}
+                  {index > 4 ? (
+                    <i className="fa fa-less-than"></i>
+                  ) : (
+                    <i className="fa fa-greater-than-equal"></i>
+                  )}{" "}
+                  {r.value} {r.unit}
                 </Table.Cell>
               </Table.Row>
             );
