@@ -434,7 +434,7 @@ class ResourceUsageStore {
       params['device_ids[]']=id
     } else { // devices associated to gateway
       params["asset_type"] = 'device'
-      params['gateways_ids[]']=id
+      params['gateway_ids[]']=id
     }
     params['page']=page
     params['size']=size
