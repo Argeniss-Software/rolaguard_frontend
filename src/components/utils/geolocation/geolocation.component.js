@@ -48,11 +48,9 @@ const Geolocation = (props) => {
         gwDetails.id = key;
         return gwDetails;
       });
-      console.log(gatewaysLocations);
       gatewaysLocations = gatewaysLocations.filter(
         (gw) => !_.isNull(gw.latitude) && !_.isNull(gw.longitude)
       );
-      console.log(gatewaysLocations);
       setGatewaysLocation(gatewaysLocations);
       setgatewaysLocationsAvailable(gatewaysLocations.length > 0);
     }
@@ -63,7 +61,7 @@ const Geolocation = (props) => {
     iconSize: [25, 41],
     iconAnchor: [12.5, 41],
   });
-  
+
   const gwCount = gatewaysLocations.length;
   let mapCenter = null;
 
@@ -78,7 +76,6 @@ const Geolocation = (props) => {
       ])
       .map((e) => e/gwCount);
   }
-  console.log(mapCenter);
 
   return (
     <div style={{ width: "100%", height: "200px" }}>
