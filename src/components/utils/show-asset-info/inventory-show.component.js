@@ -158,7 +158,7 @@ const ShowInventory = (props) => {
             <Grid.Column width={3}>
               <div className="text-center aligned">
                 <strong>GEOLOCATION</strong>
-                <Geolocation location={props.inventory.location} />
+                <Geolocation location={props.inventory.location} gatewaysLocations={props.inventory.gateway_locations}/>
               </div>
             </Grid.Column>
             <Grid.Column width={8}>
