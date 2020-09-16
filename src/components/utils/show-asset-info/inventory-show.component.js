@@ -9,13 +9,13 @@ import AssetIdComponent from "../asset-id.component";
 import Geolocation from "../geolocation/geolocation.component";
 import TagSelectorStandalone from "../tags/tag.selector.standalone.component";
 import RemovableTagStandalone from "../tags/removable-tag.standalone.component";
-import ShowCurrentIssues from "./current-issues-show.component"
+import ShowCurrentIssues from "./current-issues-show.component";
 const ShowInventory = (props) => {
   const [tags, setTags] = React.useState(
     props.inventory.tags ? props.inventory.tags : []
   );
-  const isSetLocation = !_.isEmpty(_.get(props, 'inventory.location'))
-  
+  const isSetLocation = !_.isEmpty(_.get(props, "inventory.location"));
+
   const normalizedType =
     props.inventory.type &&
     !["gateway", "device"].includes(props.inventory.type.toLowerCase().trim())
@@ -158,7 +158,10 @@ const ShowInventory = (props) => {
             <Grid.Column width={3}>
               <div className="text-center aligned">
                 <strong>GEOLOCATION</strong>
-                <Geolocation location={props.inventory.location} gatewaysLocations={props.inventory.gateway_locations}/>
+                <Geolocation
+                  location={props.inventory.location}
+                  gatewaysLocations={props.inventory.gateway_locations}
+                />
               </div>
             </Grid.Column>
             <Grid.Column width={8}>
