@@ -78,7 +78,7 @@ const Geolocation = (props) => {
   }
 
   return (
-    <div style={{ width: "100%", height: "200px" }}>
+    <div style={{ width: "100%", height: "100%" }}>
       {(positionDefined || gatewaysLocationsAvailable) && (
         <Map center={positionDefined ? position : mapCenter} zoom={10}>
           <TileLayer
@@ -95,8 +95,8 @@ const Geolocation = (props) => {
               return (
                 <Circle
                   center={{ lat: gw.latitude, lng: gw.longitude }}
-                  fillColor="blue"
-                  radius={2000}
+                  fillColor={props.circleColor}
+                  radius={props.radius}
                 />
               );
             })}
