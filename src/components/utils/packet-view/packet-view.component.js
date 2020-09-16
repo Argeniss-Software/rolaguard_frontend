@@ -23,8 +23,9 @@ const PacketViewer = (props) => {
   const showSecondPacket = _.get(props, "previousPacketData");
 
   const fieldsToShow = [
-    "id",
     "dev_eui",
+    "dev_addr",
+    "gateway",
     "join_eui",
     "rssi",
     "lsnr",
@@ -41,16 +42,20 @@ const PacketViewer = (props) => {
       title: "Device EUI",
       toUpperCase: true,
     },
+    dev_addr: {
+      title: "Device address",
+      toUpperCase: true,
+    },
     join_eui: {
       title: "Join EUI",
       toUpperCase: true,
     },
     rssi: {
-      title: "Signal Strenght",
+      title: "RSSI",
       suffix: " dBm",
     },
     lsnr: {
-      title: "Signal to noise ratio",
+      title: "SNR",
       suffix: " dB",
     },
     date: {
@@ -60,9 +65,13 @@ const PacketViewer = (props) => {
       title: "Message type",
     },
     mic: {
-      title: "Message integrity check",
+      title: "Message integity check (mic)",
       toUpperCase: true,
     },
+    gateway: {
+      title: "Gateway ID",
+      toUpperCase: true,
+    }
   };
 
   return (
@@ -84,7 +93,7 @@ const PacketViewer = (props) => {
                 className="technical-details-table-row-right"
               >
                 <b>
-                  Involved Packet #1
+                  Message #1
                 </b>
               </Table.Cell>
               {showSecondPacket &&
@@ -93,7 +102,7 @@ const PacketViewer = (props) => {
                   className="technical-details-table-row-right"
                 >
                   <b>
-                    Involved Packet #2
+                    Message #2
                   </b>
                 </Table.Cell>
               }
