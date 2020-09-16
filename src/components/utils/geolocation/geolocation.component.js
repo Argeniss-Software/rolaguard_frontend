@@ -65,7 +65,7 @@ const Geolocation = (props) => {
   const gwCount = gatewaysLocations.length;
   let mapCenter = null;
 
-  if(gwCount > 0){
+  if (gwCount > 0) {
     mapCenter = gatewaysLocations
       .map((gw) => {
         return [gw.latitude, gw.longitude];
@@ -74,13 +74,13 @@ const Geolocation = (props) => {
         position[0] + gwLocation[0],
         position[1] + gwLocation[1],
       ])
-      .map((e) => e/gwCount);
+      .map((e) => e / gwCount);
   }
 
   return (
     <div style={{ width: "100%", height: "200px" }}>
       {(positionDefined || gatewaysLocationsAvailable) && (
-        <Map center={positionDefined? position : mapCenter} zoom={10}>
+        <Map center={positionDefined ? position : mapCenter} zoom={10}>
           <TileLayer
             url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -90,7 +90,7 @@ const Geolocation = (props) => {
             <Marker position={position} opacity={1} icon={icon}></Marker>
           )}
 
-          {gatewaysLocationsAvailable &&
+          {gatewaysLocationsAvailable && !positionDefined &&
             gatewaysLocations.map((gw) => {
               return (
                 <Circle
