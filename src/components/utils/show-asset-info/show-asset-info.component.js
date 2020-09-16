@@ -8,6 +8,7 @@ import ShowInventory from "./inventory-show.component";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import LoaderComponent from "../loader.component";
 import PacketsGraph from "./packets-graph-component";
+import AlertTimeLineGraph from "./alert-timeline-graph.component"
 
 const ShowAssetInfo = (props) => {
   const [inventory, setInventory] = useState({});
@@ -79,6 +80,7 @@ const ShowAssetInfo = (props) => {
         <Grid columns="equal">
           <Grid.Row>
             <Grid.Column flex columns={8}>
+              <AlertTimeLineGraph type={props.type} id={props.id} />
             </Grid.Column>
 
             <Grid.Column flex columns={8}>

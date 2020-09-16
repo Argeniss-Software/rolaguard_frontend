@@ -1,199 +1,275 @@
 import React, {
     useEffect,
     useState,
-    useContext
+    useRef
 } from "react";
-import Chart from "react-apexcharts";
+import {Button, Grid, Segment, Popup} from 'semantic-ui-react'
 import {
     MobXProviderContext
 } from "mobx-react";
+import moment from 'moment'
 import _ from "lodash";
+import * as vis from "vis-timeline/standalone";
+import "./alert-timeline-graph.component.css"
+import ReactDOM from 'react-dom'
 
 const AlertTimeLineGraph = (props) => {
-    /*
-     * This component graph a packet list RSSI and SNR(Y) on the time (X).
-     * You can pass the values to graph as props (data param) or the component
-     * itself can get the data doing an ajax request (when you pass id and type param):
-     * - by props: pass props.data.last_packets_list array (no ajax call)
-     * - by ajax: pass props.id and props.type of an asset. In this case the component encourage the ajax call for get data
-     *
-     * @param data [optional if type and id are not empty]: array of package list with the structure defined on resource usage
-     * @param type [optional if data is not empty]: the string type of asset. Possible options: [gateway, device]
-     * @param id [optional if data is not empty]: the id of the asset
-     *
-     * @return graph
-     */
-
-    const {
-        commonStore
-    } = useContext(MobXProviderContext);
-    const packetList = _.get(props, "data.last_packets_list");
-    const [resourceUsagePacketList, setResourceUsagePacketList] = useState([]);
-
-    const loadDataForGraph = () => {
-        if (props.type && props.id) {
-            let paramsId = {
-                type: props.type,
-                id: props.id,
-            };
-
-            const resourceUsagePromise = commonStore.getData(
-                "resource_usage",
-                paramsId
-            );
-
-            Promise.all([resourceUsagePromise]).then((response) => {
-                setResourceUsagePacketList(
-                    _.get(response, "[0].data.last_packets_list")
-                );
-            });
-        }
+    
+    const items = new vis.DataSet([
+      {
+        id: 1,
+        content: "item 1",
+        start: "2014-04-20",
+        title: "this is the title",
+        className: "red",
+        group: "info",
+        group: 1,
+        title: "this is the title",
+      },
+      {
+        id: 2,
+        content: "item 2",
+        start: "2014-04-14",
+        title: "this is the title",
+        group: 2,
+      },
+      {
+        id: 3,
+        content: "item 3",
+        start: "2014-04-18",
+        title: "this is the title",
+        group: 2
+      },
+      {
+        id: 4,
+        content: "item 4",
+        start: "2014-04-16",
+        title: "this is the title",
+        group_id: 2
+      },
+      {
+        id: 5,
+        content: "item 5",
+        start: "2014-04-25",
+        title: "this is the title",
+        group: 1
+      },
+      {
+        id: 6,
+        content: "item 6",
+        start: "2014-04-27",
+        type: "point",
+        title: "this is the title",
+        group: 3
+      },
+    ]);
+  
+    // Configuration for the Timeline
+    const options = {
+      stack: true,
+      maxHeight: 250,
+      minHeight: 250,
+      editable: false,
+      locale: "en",
+      template: function(item, element, data) {
+        return ReactDOM.render(
+          <Popup basic trigger={
+            <b>{item.content}</b>} content={item.content}/>
+          ,
+          element
+        );
+      },
+      //template: template, => handle bar template
+      //start: "2016-01-01",
+      //end: "2016-01-04",
+      tooltip: {
+        template: function(originalItemData, parsedItemData) {
+          var color = originalItemData.title == "IN_PROGRESS" ? "red" : "green";
+          return `<span style="color:${color}">${originalItemData.title}</span>`;
+        },
+        /*min: new Date(2012, 0, 1), // lower limit of visible range
+      max: new Date(2013, 0, 1), // upper limit of visible range
+      zoomMin: 1000 * 60 * 60 * 24, // one day in milliseconds
+      zoomMax: 1000 * 60 * 60 * 24 * 31 * 3, // about three months in
+      */
+      },
     };
+    var timeline = null
+    
+
+    var groups = [
+      {
+        id: 1,
+        content: "info",
+        // Optional: a field 'className', 'style', 'order', [properties]
+      },
+      {
+        id: 2,
+        content: "low",
+        // Optional: a field 'className', 'style', 'order', [properties]
+      },
+      {
+        id: 3,
+        content: "medium",
+        // Optional: a field 'className', 'style', 'order', [properties]
+      },
+      {
+        id: 4,
+        content: "critic",
+        // Optional: a field 'className', 'style', 'order', [properties]
+      },
+      // more groups...
+    ];
 
     useEffect(() => {
-        if (_.isEmpty(packetList)) {
-            // load by ajax
-            loadDataForGraph();
-        } else {
-            setResourceUsagePacketList(packetList); // set it by props
-        }
-    }, [props.id, props.type]);
+                // create timeline:
+                timeline = new vis.Timeline(refElement.current, items, groups, options);
+               
+/*                items.on("*", function(event, properties) {
+                  logEvent(event, properties);
+                });
+                timeline.on("rangechange", function(properties) {
+                  logEvent("rangechange", properties);
+                });
 
-    const getCategories = () => {
-        if (!_.isEmpty(resourceUsagePacketList)) {
-            return resourceUsagePacketList.map((e) => {
-                return new Date(e.date).getTime();
-            });
-        }
-    };
+                timeline.on("rangechanged", function(properties) {
+                  logEvent("rangechanged", properties);
+                });
 
-    const getSeries = () => {
-        return [{
-                data: [{
-                        x: 'Analysis',
-                        y: [
-                            new Date('2019-02-27').getTime(),
-                            new Date('2019-03-04').getTime()
-                        ],
-                        fillColor: '#008FFB'
-                    },
-                    {
-                        x: 'Design',
-                        y: [
-                            new Date('2019-03-04').getTime(),
-                            new Date('2019-03-08').getTime()
-                        ],
-                        fillColor: '#00E396'
-                    },
-                    {
-                        x: 'Coding',
-                        y: [
-                            new Date('2019-03-07').getTime(),
-                            new Date('2019-03-10').getTime()
-                        ],
-                        fillColor: '#775DD0'
-                    },
-                    {
-                        x: 'Testing',
-                        y: [
-                            new Date('2019-03-08').getTime(),
-                            new Date('2019-03-12').getTime()
-                        ],
-                        fillColor: '#FEB019'
-                    },
-                    {
-                        x: 'Deployment',
-                        y: [
-                            new Date('2019-03-12').getTime(),
-                            new Date('2019-03-17').getTime()
-                        ],
-                        fillColor: '#FF4560'
-                    }
-                ]
-            }],
-            /*if (!_.isEmpty(resourceUsagePacketList)) {
-              let rssi = resourceUsagePacketList.map((e) => {
-                return e.rssi;
-              });
-              let snr = resourceUsagePacketList.map((e) => {
-                return e.lsnr;
-              });
-              return [
-                {
-                  name: "Signal Strength (RSSI)",
-                  type: "line",
-                  data: rssi,
-                  other_data: resourceUsagePacketList,
-                },
-                {
-                  name: "SNR",
-                  type: "line",
-                  data: snr,
-                  other_data: resourceUsagePacketList,
-                },
-              ];
-            }*/
+                timeline.on("select", function(properties) {
+                  logEvent("select", properties);
+                });
+
+                timeline.on("itemover", function(properties) {
+                  logEvent("itemover", properties);
+                  setHoveredItem(properties.item);
+                });
+
+                timeline.on("itemout", function(properties) {
+                  logEvent("itemout", properties);
+                  setHoveredItem("none");
+                });
+
+                timeline.on("click", function(properties) {
+                  logEvent("click", properties);
+                });
+
+                timeline.on("doubleClick", function(properties) {
+                  logEvent("doubleClick", properties);
+                });
+
+                timeline.on("contextmenu", function(properties) {
+                  logEvent("contextmenu", properties);
+                });
+
+                timeline.on("mouseDown", function(properties) {
+                  logEvent("mouseDown", properties);
+                });
+
+                timeline.on("mouseUp", function(properties) {
+                  logEvent("mouseUp", properties);
+                });
+*/
+                // other possible events:
+
+                // timeline.on('mouseOver', function (properties) {
+                //   logEvent('mouseOver', properties);
+                // });
+
+                // timeline.on("mouseMove", function(properties) {
+                //   logEvent('mouseMove', properties);
+                // });
+              }, [])
+
+    const refElement = useRef(null);
+    const fit = () => {
+        timeline.fit()
     }
-
-    const graphData = {
-        series: getSeries(),
-        options: {
-            chart: {
-                height: 350,
-                type: 'rangeBar'
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    distributed: true,
-                    dataLabels: {
-                        hideOverflowingLabels: false
-                    }
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                formatter: function (val, opts) {
-                    var label = opts.w.globals.labels[opts.dataPointIndex]
-                    var a = moment(val[0])
-                    var b = moment(val[1])
-                    var diff = b.diff(a, 'days')
-                    return label + ': ' + diff + (diff > 1 ? ' days' : ' day')
-                },
-                style: {
-                    colors: ['#f3f4f5', '#fff']
-                }
-            },
-            xaxis: {
-                type: 'datetime'
-            },
-            yaxis: {
-                show: false
-            },
-            grid: {
-                row: {
-                    colors: ['#f3f4f5', '#fff'],
-                    opacity: 1
-                }
-            }
-        }
+    const zoomOut = () => {
+        timeline.zoomOut(0.2)
+    }
+    const zoomIn = () => {
+        timeline.zoomIn(0.2);
+    }
+    const moveLeft = () => {
+      timeline.moveTo(-0.2);
+    };
+    const moveRight = () => {
+      timeline.move(0.2);
     };
 
-    return ( <
-        React.Fragment > {
-            !_.isEmpty(resourceUsagePacketList) && ( <
-                Chart options = {
-                    graphData.options
-                }
-                series = {
-                    graphData.series
-                }
-                type = "rangeBar"
-                height = "400" /
-                >
-            )
-        } <
-        /React.Fragment>
+function stringifyObject(object) {
+  if (!object) return;
+  var replacer = function (key, value) {
+    if (value && value.tagName) {
+      return "DOM Element";
+    } else {
+      return value;
+    }
+  };
+  return JSON.stringify(object, replacer);
+}
+
+function logEvent(event, properties) {
+  var log = document.getElementById("log");
+  var msg = document.createElement("div");
+  msg.innerHTML =
+    "event=" +
+    JSON.stringify(event) +
+    ", " +
+    "properties=" +
+    stringifyObject(properties);
+  log.firstChild ? log.insertBefore(msg, log.firstChild) : log.appendChild(msg);
+}
+
+function setHoveredItem(id) {
+  var hoveredItem = document.getElementById("hoveredItem");
+  hoveredItem.innerHTML = "hoveredItem=" + id;
+}
+    return (
+      <React.Fragment>
+        <Segment>
+          <Grid>
+              <Grid.Column width={16}>
+                <Button.Group basic size="tiny" className="aligned pull-right">
+                  <Button
+                    icon="zoom in"
+                    onClick={zoomIn}
+                    style={{padding: "5px"}}
+                    title="zoom in"
+                  ></Button>
+                  <Button
+                    icon="zoom out"
+                    onClick={zoomOut}
+                    style={{padding: "5px"}}
+                    title="zoom out"
+                  ></Button>
+                  <Button
+                    icon="caret left"
+                    onClick={moveLeft}
+                    style={{padding: "5px"}}
+                    title="move left"
+                  ></Button>
+                  <Button
+                    icon="caret right"
+                    onClick={moveRight}
+                    style={{padding: "5px"}}
+                    title="move right"
+                  ></Button>
+                  <Button
+                    icon="expand"
+                    onClick={fit}
+                    style={{padding: "5px"}}
+                    title="fit all items"
+                  ></Button>
+                </Button.Group>
+              </Grid.Column>
+              <Grid.Column width={16}>
+                <div ref={refElement}></div>
+              </Grid.Column>
+          </Grid>
+        </Segment>
+      </React.Fragment>
     );
 };
 

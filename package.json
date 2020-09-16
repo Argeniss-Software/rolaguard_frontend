@@ -35,7 +35,9 @@
     "react-wifi-indicator": "^1.0.1",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "^1.2.0",
-    "socket.io-client": "2.2.0"
+    "socket.io-client": "2.2.0",
+    "vis-react": "^0.5.1",
+    "vis-timeline": "^7.3.9"
   },
   "scripts": {
     "start": "react-app-rewired start --config-overrides ./custom-overides",
