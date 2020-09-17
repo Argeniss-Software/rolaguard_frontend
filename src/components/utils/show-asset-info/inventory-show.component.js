@@ -51,7 +51,7 @@ const ShowInventory = (props) => {
       </h5>
       <Segment attached>
         <Grid>
-          <Grid.Row>
+          <Grid.Row stretched>
             <Grid.Column width={5}>
               <Table basic celled striped compact size="small">
                 <Table.Body>
