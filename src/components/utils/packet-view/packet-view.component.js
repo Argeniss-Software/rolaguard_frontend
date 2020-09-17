@@ -104,7 +104,7 @@ const PacketViewer = (props) => {
       toUpperCase: true,
     },
     gateway: {
-      title: "Gateway ID",
+      title: "Gateway EUI",
       toUpperCase: true,
     },
     f_count: {
