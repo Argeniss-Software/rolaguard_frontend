@@ -71,13 +71,12 @@ const ShowResourceUssage = (props) => {
                         }}
                       />
 
-                      <span> {DBMToSignalStrength(props.asset.max_rssi)}</span>
-
+                      <span> {DBMToSignalStrength(props.asset.max_rssi)} (</span>
+                        
                       {props.asset.max_rssi && (
                         <NumberFormat
                           value={props.asset.max_rssi}
                           displayType={"text"}
-                          prefix={"("}
                           suffix={" dBm)"}
                           decimalScale="1"
                         />
