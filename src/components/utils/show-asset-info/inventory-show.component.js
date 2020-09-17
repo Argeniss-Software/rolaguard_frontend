@@ -156,15 +156,17 @@ const ShowInventory = (props) => {
               </Table>
             </Grid.Column>
             <Grid.Column width={3}>
-              <div className="text-center aligned" style={{height:"100%"}}>
-                <strong>GEOLOCATION</strong>
-                <Geolocation
-                  location={props.inventory.location}
-                  gatewaysLocations={props.inventory.gateway_locations}
-                  radius={2000}
-                  circleColor="blue"
-                />
-              </div>
+              <Segment>
+                <div className="text-center aligned" style={{ height: "95%" }}>
+                  <strong>GEOLOCATION</strong>
+                  <Geolocation
+                    location={props.inventory.location}
+                    gatewaysLocations={props.inventory.gateway_locations}
+                    radius={2000}
+                    circleColor="blue"
+                  />
+                </div>
+              </Segment>
             </Grid.Column>
             <Grid.Column width={8}>
               <ShowCurrentIssues
