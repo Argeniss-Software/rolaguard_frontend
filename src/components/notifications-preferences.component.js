@@ -134,6 +134,8 @@ class NotificationsPreferencesComponent extends React.Component {
             pushItem = destinations.find(item => item.destination === 'push');
         }
 
+        smsItem = {...smsItem, enabled: false};
+
         return (
           <div className="app-body-container-view">
             <div className="animated fadeIn animation-view">
@@ -338,17 +340,6 @@ class NotificationsPreferencesComponent extends React.Component {
                         </Table.Row>}
                       </Table.Body>
                     </Table>
-                  </Accordion.Content>
-                  <Accordion.Title
-                    active={activeIndex === 2}
-                    index={2}
-                    onClick={this.handleAccordionClick}
-                  >
-                    <Icon name='dropdown' />
-                    Tags
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === 2}>
-                 
                   </Accordion.Content>
                 </Accordion>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>

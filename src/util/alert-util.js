@@ -20,7 +20,7 @@ const AlertUtil = {
   },
 
   alertTypes: {
-    notAplicableDescription : ['LAF-402']
+    notAplicableDescription : ['LAF-402', 'LAF-403']
   },
 
   alertParameters: {
