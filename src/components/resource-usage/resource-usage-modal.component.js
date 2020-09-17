@@ -8,13 +8,18 @@ import _ from 'lodash'
 
 const ModalResourceUsage = (props) => {
   const [open, setOpen] = useState(props.openModal || true);
-
+  const closeModal = () => {
+    if (_.isFunction(props.onClose)) {
+      props.onClose()
+    }
+    setOpen(false)
+  }
   return (
     <Modal
       centered={false}
       closeIcon
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={() => closeModal()}
       onOpen={() => {
         setOpen(true);
       }}
@@ -42,7 +47,7 @@ const ModalResourceUsage = (props) => {
       </Modal.Content>
 
       <Modal.Actions>
-        <Button onClick={() => setOpen(false)}>Close</Button>
+        <Button onClick={() => closeModal()}>Close</Button>
       </Modal.Actions>
     </Modal>
   );

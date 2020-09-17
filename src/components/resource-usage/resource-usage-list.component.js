@@ -20,7 +20,7 @@ import _ from 'lodash'
 const ResourceUsageList = (props) => {
   const [indexOpenModal, setIndexOpenModal] = useState(null);
   
-  const closeModal = (index) => {
+  const closeModal = () => {
     setIndexOpenModal(null)
   }
 
@@ -121,7 +121,6 @@ const ResourceUsageList = (props) => {
                       indexOpenModal === index && (
                         <ModalResourceUsage
                           type={item.type}
-                          id={item.id}
                           asset={item}
                           onClose={closeModal}
                         />
