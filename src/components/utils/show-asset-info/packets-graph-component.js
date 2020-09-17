@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext} from "react";
 import Chart from "react-apexcharts"
 import { MobXProviderContext } from "mobx-react";
 import _ from "lodash"
+import "./packets-graph-component.css"
 
 
 const PacketGraph = (props) => {
@@ -144,7 +145,7 @@ const PacketGraph = (props) => {
             },
           },
           tooltip: {
-            enabled: true,
+            enabled: false,
           },
         },
         {
@@ -178,11 +179,8 @@ const PacketGraph = (props) => {
           },
         },
       ],
+      
       tooltip: {
-        fixed: {
-          enabled: true,
-          position: "topRight",
-        },
         x: {
           show: true,
           format: "MM/dd/yyyy hh:mm:ss TT",
