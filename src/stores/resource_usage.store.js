@@ -312,6 +312,7 @@ class ResourceUsageStore {
     switch (keyCriteriaToDelete) {
       case "status":
       case "type":
+        debugger;
         this.criteria = {
           ...this.criteria,
           ...(_.isFunction(data) ? data.call() : data),
@@ -332,10 +333,12 @@ class ResourceUsageStore {
       case "packet_lost_range":
         this.criteria.packet_lost_range.from = data.packet_lost_range.from;
         this.criteria.packet_lost_range.to = data.packet_lost_range.to;
+        this.criteria.type = "device"; // only show packet losts when filter by packet lost
         break;
       case "signal_strength":
         this.criteria.signal_strength.from = data.signal_strength.from;
         this.criteria.signal_strength.to = data.signal_strength.to;
+        this.criteria.type = "device"; // only show devices when filter by signal strength
         break;
       default:
         break;
