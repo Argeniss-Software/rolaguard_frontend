@@ -2,6 +2,40 @@ import React from "react";
 import { Table, Item } from "semantic-ui-react";
 import _ from "lodash";
 
+
+const Prefix = (props) => {
+  return (`${props.prefix ? props.prefix : ""}`);
+};
+
+const Suffix = (props) => {
+  return (`${props.suffix ? props.suffix : ""}`);
+};
+
+const ShowValue = (props) => {
+  /**
+   * @param props
+   *    value: value to show
+   *    details: details on how to show the value
+   */
+  
+   const value = _.get(props, 'value', null);
+   const details = _.get(props, 'details', null);
+
+   if ( !_.isNull(value)){
+     return (
+       <b>
+         <Prefix prefix={details.prefix} />
+         <span className={details.toUpperCase? "upper" : ""} >
+           {value}
+         </span>
+         <Suffix suffix={details.suffix} />
+      </b>
+     );
+   }
+
+   return (<span></span>);
+};
+
 const PacketViewer = (props) => {
   /**
    * @param props:
@@ -31,6 +65,7 @@ const PacketViewer = (props) => {
     "lsnr",
     "date",
     "m_type",
+    "f_count",
     "mic",
   ];
 
@@ -71,6 +106,9 @@ const PacketViewer = (props) => {
     gateway: {
       title: "Gateway ID",
       toUpperCase: true,
+    },
+    f_count: {
+      title: "Counter",
     }
   };
 
@@ -123,22 +161,14 @@ const PacketViewer = (props) => {
                       width="3"
                       className="technical-details-table-row-right"
                     >
-                      <b>{`${itemDetails.prefix ? itemDetails.prefix : ""} ${
-                        itemDetails.toUpperCase && props.packetData[item]
-                          ? props.packetData[item].toUpperCase()
-                          : (props.packetData[item]? props.packetData[item] : "")
-                      }${itemDetails.suffix ? itemDetails.suffix : ""}`}</b>
+                      <ShowValue value={props.packetData[item]} details={itemDetails} />
                     </Table.Cell>
                     {showSecondPacket &&
                       <Table.Cell
                         width="3"
                         className="technical-details-table-row-right"
                       >
-                        <b>{`${itemDetails.prefix ? itemDetails.prefix : ""} ${
-                          itemDetails.toUpperCase && props.packetData[item]
-                            ? props.previousPacketData[item].toUpperCase()
-                            : (props.previousPacketData[item]? props.previousPacketData[item] : "")
-                        }${itemDetails.suffix ? itemDetails.suffix : ""}`}</b>
+                        <ShowValue value={props.previousPacketData[item]} details={itemDetails} />
                       </Table.Cell>
                     }
                   </Table.Row>
