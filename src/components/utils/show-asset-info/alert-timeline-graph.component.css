@@ -13,3 +13,32 @@
 .vis-time-axis .vis-text.vis-sunday {
     color: white;
 }
+
+/* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
+.vis-box {
+    width: 120px;  
+    font-family: sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.vis-item.info {
+    background-color: #5d9bec;
+    border-color: #2f7bde;    
+    color: black;
+}
+.vis-item.low {
+    background-color: #f8d732;
+    border-color: #e0bc09;
+    color: black;
+}
+.vis-item.medium {
+    background-color: #ef8f2a;
+    border-color: #e27d12;
+    color: black;
+}
+.vis-item.high {
+    background-color: #f05050;
+    border-color: #d82727;
+    color: black;
+}
