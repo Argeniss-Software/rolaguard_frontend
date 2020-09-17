@@ -71,15 +71,18 @@ const ShowResourceUssage = (props) => {
                         }}
                       />
 
-                      <span> {DBMToSignalStrength(props.asset.max_rssi)} (</span>
-                        
+                      <span> {DBMToSignalStrength(props.asset.max_rssi)}</span>
+
                       {props.asset.max_rssi && (
-                        <NumberFormat
-                          value={props.asset.max_rssi}
-                          displayType={"text"}
-                          suffix={" dBm)"}
-                          decimalScale="1"
-                        />
+                        <React.Fragment>
+                          <span> (</span>
+                          <NumberFormat
+                            value={props.asset.max_rssi}
+                            displayType={"text"}
+                            suffix={" dBm)"}
+                            decimalScale="1"
+                          />
+                        </React.Fragment>
                       )}
                     </React.Fragment>
                   )}
@@ -129,7 +132,7 @@ const ShowResourceUssage = (props) => {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{wordBreak: "break-all"}}>
+                    <div style={{ wordBreak: "break-all" }}>
                       <AssociatedAsset
                         type={normalizedType}
                         id={props.asset.id}
