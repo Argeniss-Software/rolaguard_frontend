@@ -6,11 +6,14 @@ import LoaderComponent from "../loader.component";
 import _ from "lodash";
 import moment from "moment";
 import DetailsAlertModal from "../../details.alert.modal.component";
+import {Message} from 'semantic-ui-react'
+import * as HttpStatus from "http-status-codes";
 
 const AlertTimeLineGraph = (props) => {
   const { commonStore } = useContext(MobXProviderContext);
   const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
+  const [errorOnRequest, setErrorOnRequest] = useState(false);
   const [perPage, setPerPage] = useState(1000);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
@@ -41,13 +44,26 @@ const AlertTimeLineGraph = (props) => {
         "created_at[lte]": dateFilter.to,
       }
     );
-    Promise.all([alertPromise]).then((response) => {
-      setAlerts(response[0].data.alerts);
-      setItems(getItems(response[0].data.alerts));
-      setTotalItems(response[0].data.total_items);
-      setTotalPages(response[0].data.total_pages);
-      setIsLoading(false);
-    });
+    Promise.all([alertPromise])
+      .then((response) => {
+        if (response[0].status === HttpStatus.OK) {
+          setAlerts(response[0].data.alerts);
+          setItems(getItems(response[0].data.alerts));
+          setTotalItems(response[0].data.total_items);
+          setTotalPages(response[0].data.total_pages);
+          setIsLoading(false);
+          setErrorOnRequest(false);
+        } else {
+          setAlerts([]);
+          setItems([]);
+          setErrorOnRequest(true);
+        }
+      })
+      .catch(() => {
+        setAlerts([]);
+        setItems([]);
+        setErrorOnRequest(true);
+      });
   }, [type, id, perPage, orderBy, dateFilter]);
 
   const getItems = (data) => {
@@ -108,7 +124,7 @@ const AlertTimeLineGraph = (props) => {
             </div>`;
       },
     },
-  }
+  };
 
   var groups = [
     {
@@ -127,17 +143,26 @@ const AlertTimeLineGraph = (props) => {
       id: "high",
       content: "HIGH",
     },
-  ]
+  ];
 
   return (
     <React.Fragment>
-      {_.isEmpty(items) && (
-        <LoaderComponent loadingMessage="Loading Alerts Timeline..." />
+      {errorOnRequest && (
+        <Message
+          error
+          header="Oops!"
+          content={"Something went wrong. Try again later."}
+          style={{ maxWidth: "100%" }}
+          className="animated fadeIn"
+        />
       )}
       {!_.isEmpty(selectedItem) && (
         <DetailsAlertModal alert={selectedItem} onClose={closeAlertDetails} />
       )}
-      {!_.isEmpty(items) && (
+      {_.isEmpty(items) && !errorOnRequest && (
+        <LoaderComponent loadingMessage="Loading Alerts Timeline..." />
+      )}
+      {!_.isEmpty(items) && !errorOnRequest && (
         <TimeLineGraph
           showControlBar={true}
           items={items}
@@ -147,7 +172,7 @@ const AlertTimeLineGraph = (props) => {
         ></TimeLineGraph>
       )}
     </React.Fragment>
-  )
-}
+  );
+};
 
 export default AlertTimeLineGraph;
