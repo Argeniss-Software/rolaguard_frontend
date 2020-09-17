@@ -2,6 +2,40 @@ import React from "react";
 import { Table, Item } from "semantic-ui-react";
 import _ from "lodash";
 
+
+const Prefix = (props) => {
+  return (`${props.prefix ? props.prefix : ""}`);
+};
+
+const Suffix = (props) => {
+  return (`${props.suffix ? props.suffix : ""}`);
+};
+
+const ShowValue = (props) => {
+  /**
+   * @param props
+   *    value: value to show
+   *    details: details on how to show the value
+   */
+  
+   const value = _.get(props, 'value', null);
+   const details = _.get(props, 'details', null);
+
+   if ( !_.isNull(value)){
+     return (
+       <b>
+         <Prefix prefix={details.prefix} />
+         <span className={details.toUpperCase? "upper" : ""} >
+           {value}
+         </span>
+         <Suffix suffix={details.suffix} />
+      </b>
+     );
+   }
+
+   return (<span></span>);
+};
+
 const PacketViewer = (props) => {
   /**
    * @param props:
@@ -23,13 +57,15 @@ const PacketViewer = (props) => {
   const showSecondPacket = _.get(props, "previousPacketData");
 
   const fieldsToShow = [
-    "id",
     "dev_eui",
+    "dev_addr",
+    "gateway",
     "join_eui",
     "rssi",
     "lsnr",
     "date",
     "m_type",
+    "f_count",
     "mic",
   ];
 
@@ -41,16 +77,20 @@ const PacketViewer = (props) => {
       title: "Device EUI",
       toUpperCase: true,
     },
+    dev_addr: {
+      title: "Device address",
+      toUpperCase: true,
+    },
     join_eui: {
       title: "Join EUI",
       toUpperCase: true,
     },
     rssi: {
-      title: "Signal Strenght",
+      title: "RSSI",
       suffix: " dBm",
     },
     lsnr: {
-      title: "Signal to noise ratio",
+      title: "SNR",
       suffix: " dB",
     },
     date: {
@@ -60,9 +100,16 @@ const PacketViewer = (props) => {
       title: "Message type",
     },
     mic: {
-      title: "Message integrity check",
+      title: "Message integity check (mic)",
       toUpperCase: true,
     },
+    gateway: {
+      title: "Gateway EUI",
+      toUpperCase: true,
+    },
+    f_count: {
+      title: "Counter",
+    }
   };
 
   return (
@@ -84,7 +131,7 @@ const PacketViewer = (props) => {
                 className="technical-details-table-row-right"
               >
                 <b>
-                  Involved Packet #1
+                  Message #1
                 </b>
               </Table.Cell>
               {showSecondPacket &&
@@ -93,7 +140,7 @@ const PacketViewer = (props) => {
                   className="technical-details-table-row-right"
                 >
                   <b>
-                    Involved Packet #2
+                    Message #2
                   </b>
                 </Table.Cell>
               }
@@ -114,22 +161,14 @@ const PacketViewer = (props) => {
                       width="3"
                       className="technical-details-table-row-right"
                     >
-                      <b>{`${itemDetails.prefix ? itemDetails.prefix : ""} ${
-                        itemDetails.toUpperCase && props.packetData[item]
-                          ? props.packetData[item].toUpperCase()
-                          : (props.packetData[item]? props.packetData[item] : "")
-                      }${itemDetails.suffix ? itemDetails.suffix : ""}`}</b>
+                      <ShowValue value={props.packetData[item]} details={itemDetails} />
                     </Table.Cell>
                     {showSecondPacket &&
                       <Table.Cell
                         width="3"
                         className="technical-details-table-row-right"
                       >
-                        <b>{`${itemDetails.prefix ? itemDetails.prefix : ""} ${
-                          itemDetails.toUpperCase && props.packetData[item]
-                            ? props.previousPacketData[item].toUpperCase()
-                            : (props.previousPacketData[item]? props.previousPacketData[item] : "")
-                        }${itemDetails.suffix ? itemDetails.suffix : ""}`}</b>
+                        <ShowValue value={props.previousPacketData[item]} details={itemDetails} />
                       </Table.Cell>
                     }
                   </Table.Row>

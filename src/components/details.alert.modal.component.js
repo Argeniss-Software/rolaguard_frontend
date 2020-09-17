@@ -222,7 +222,7 @@ class DetailsAlertModal extends Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name="dropdown" />
-                    <strong>Packets Involved</strong>
+                    <strong>Messages Involved</strong>
                   </Accordion.Title>
                   <Accordion.Content
                     active={activeIndex === packetsIndex}
