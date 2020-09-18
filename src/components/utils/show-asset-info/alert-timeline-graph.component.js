@@ -6,7 +6,7 @@ import LoaderComponent from "../loader.component";
 import _ from "lodash";
 import moment from "moment";
 import DetailsAlertModal from "../../details.alert.modal.component";
-import {Message} from 'semantic-ui-react'
+import { Message } from "semantic-ui-react";
 import * as HttpStatus from "http-status-codes";
 import * as sanitizeHtml from "sanitize-html";
 
@@ -99,7 +99,7 @@ const AlertTimeLineGraph = (props) => {
     locale: "en",
     tooltip: {
       template: function(originalItemData, parsedItemData) {
-        return sanitizeHtml(`
+        return `
             <div style="
             border: "1px solid #d4d4d5;
             line-height: "1.4285em";
@@ -114,15 +114,19 @@ const AlertTimeLineGraph = (props) => {
             ">
             <div>
                 <strong>
-                <small>${moment(_.get(originalItemData, "start")).format(
-                  "MM/DD/YY hh:mm:ss a"
+                <small>${sanitizeHtml(
+                  moment(_.get(originalItemData, "start")).format(
+                    "MM/DD/YY hh:mm:ss a"
+                  ),
+                  { allowedTags: [], disallowedTagsMode: "escape" }
                 )}</small></strong>
             </div>
-                <small>${_.get(
-                  originalItemData,
-                  "allContent.type.name"
-                )}</small>
-            </div>`);
+                <small>${sanitizeHtml(
+                  _.get(originalItemData, "allContent.type.name"),
+                  { allowedTags: [], disallowedTagsMode: "escape" }
+                )}
+                </small>
+            </div>`;
       },
     },
   };
