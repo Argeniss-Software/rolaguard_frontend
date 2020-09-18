@@ -312,7 +312,6 @@ class ResourceUsageStore {
     switch (keyCriteriaToDelete) {
       case "status":
       case "type":
-        debugger;
         this.criteria = {
           ...this.criteria,
           ...(_.isFunction(data) ? data.call() : data),
