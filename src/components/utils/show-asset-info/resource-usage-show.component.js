@@ -130,7 +130,7 @@ const ShowResourceUssage = (props) => {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div>
+                    <div style={{wordBreak: "break-all"}}>
                       <AssociatedAsset
                         type={normalizedType}
                         id={props.asset.id}
