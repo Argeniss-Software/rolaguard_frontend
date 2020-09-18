@@ -20,7 +20,7 @@ const PacketGraph = (props) => {
   * @return graph
   */
  
-  const { commonStore } = useContext(MobXProviderContext);
+  const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
   const packetList = _.get(props, "data.last_packets_list");
   const [resourceUsagePacketList, setResourceUsagePacketList] = useState([])
   
@@ -98,7 +98,7 @@ const PacketGraph = (props) => {
         enabledOnSeries: [0, 1],
       },
       stroke: {
-        width: [4, 4],
+        width: [2, 2],
       },
       title: {
         text: "Signal Strength (RSSI) and SNR for last 10 packets",
@@ -118,8 +118,8 @@ const PacketGraph = (props) => {
       },
       yaxis: [
         {
-          min: -140,
-          max: 0,
+          /*min: -140,
+          max: 0,*/
           axisTicks: {
             show: true,
             offsetX: -20,
@@ -149,8 +149,8 @@ const PacketGraph = (props) => {
           },
         },
         {
-          min: -35,
-          max: 35,
+          /*min: -35,
+          max: 35,*/
           seriesName: "SNR",
           opposite: true,
           axisTicks: {
@@ -183,7 +183,7 @@ const PacketGraph = (props) => {
       tooltip: {
         x: {
           show: true,
-          format: "MM/dd/yyyy hh:mm:ss TT",
+          format: globalConfigStore.dateFormats.apexchart.dateTimeFormat
         },
       }
     },
