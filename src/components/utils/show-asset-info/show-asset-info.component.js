@@ -83,7 +83,7 @@ const ShowAssetInfo = (props) => {
               <AlertTimeLineGraph type={props.type} id={props.id} />
             </Grid.Column>
 
-            <Grid.Column flex columns={8} stretched>
+            <Grid.Column flex columns={8}>
               {props.type && props.id && (
                 <ShowAlerts type={props.type} id={props.id} />
               )}

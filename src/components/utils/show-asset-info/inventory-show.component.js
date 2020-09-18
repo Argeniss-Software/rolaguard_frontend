@@ -51,9 +51,9 @@ const ShowInventory = (props) => {
       </h5>
       <Segment attached>
         <Grid>
-          <Grid.Row stretched>
+          <Grid.Row>
             <Grid.Column width={5}>
-              <Table basic celled striped compact size="small">
+              <Table basic celled striped style={{height:"100%"}}>
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell collapsing>NAME:</Table.Cell>
@@ -155,7 +155,7 @@ const ShowInventory = (props) => {
                 </Table.Body>
               </Table>
             </Grid.Column>
-            <Grid.Column width={3}>
+            <Grid.Column width={3} stretched>
               <Segment>
                 <div className="text-center aligned" style={{ height: "95%" }}>
                   <strong>GEOLOCATION</strong>
