@@ -18,27 +18,35 @@
 .vis-box {
     width: 120px;  
     font-family: sans-serif;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: .85714286rem;
     text-transform: uppercase;
+    vertical-align: baseline;
+    font-weight: 700;    
 }
 .vis-item.info {
     background-color: #5d9bec;
-    border-color: #2f7bde;    
-    color: black;
+    border-color: #5d9bec;
+    color: white;
 }
 .vis-item.low {
     background-color: #f8d732;
-    border-color: #e0bc09;
-    color: black;
+    border-color: #f8d732;
+    color: white;    
 }
 .vis-item.medium {
     background-color: #ef8f2a;
-    border-color: #e27d12;
-    color: black;
+    border-color: #ef8f2a;
+    color: white;
 }
 .vis-item.high {
     background-color: #f05050;
-    border-color: #d82727;
-    color: black;
+    border-color: #f05050;
+    color: white;
+}
+.vis-item.vis-box {
+    border-radius: .28571429rem !important;
+    width: 100px;
+}
+.vis-item .vis-item-content {
+    padding: 0px;
 }

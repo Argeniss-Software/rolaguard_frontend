@@ -71,7 +71,7 @@ const AlertTimeLineGraph = (props) => {
     return data.map((e, index) => {
       return {
         id: _.get(e, "id", index + 1),
-        content: _.truncate(_.get(e, "type.name", "N/A"), { length: 16 }),
+        content: _.truncate(_.get(e, "type.name", "N/A"), { length: 14 }),
         allContent: e,
         start: moment(e.created_at),
         className: _.get(e, "type.risk", "").toLowerCase(),
@@ -104,12 +104,12 @@ const AlertTimeLineGraph = (props) => {
             border: "1px solid #d4d4d5;
             line-height: "1.4285em";
             max-width: "250px";
-            background: "#fff";
+            background: "white";
+            background-color: "white";
             padding: ".833em 1em";
             font-style: "normal";
             color: "rgba(0,0,0,.87)";
             border-radius: ".28571429rem";
-            box-shadow: "0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15)";
             font-size: "8px"
             ">
             <div>
