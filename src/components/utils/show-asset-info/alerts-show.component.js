@@ -6,7 +6,8 @@ import {
   Grid,
   Pagination,
   Segment,
-  Icon
+  Icon,
+  Popup,
 } from "semantic-ui-react";
 import Moment from "react-moment";
 import _ from "lodash";
@@ -14,18 +15,13 @@ import EmptyComponent from "../../utils/empty.component";
 import AlertUtil from "../../../util/alert-util";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import AssetIdComponent from "../asset-id.component";
-import DateFilterBar from "./date-filter-bar.component"
+import DateFilterBar from "./date-filter-bar.component";
 
 const ShowAlerts = (props) => {
   const colorsMap = AlertUtil.getColorsMap();
-  const { commonStore } = useContext(
-    MobXProviderContext
-  );
+  const { commonStore } = useContext(MobXProviderContext);
 
-  const [
-    selectedAlert,
-    setSelectedAlert,
-  ] = useState({
+  const [selectedAlert, setSelectedAlert] = useState({
     alert: {},
     alert_type: {},
   });
@@ -33,15 +29,11 @@ const ShowAlerts = (props) => {
   const [alerts, setAlerts] = useState({});
   const [activePage, setActivePage] = useState(1);
   const [perPage, setPerPage] = useState(5);
-  const [isLoading, setIsLoading] = useState(
-    true
-  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  const [orderBy, setOrderBy] = useState([
-    "created_at",
-    "DESC",
-  ]);
+  const [orderBy, setOrderBy] = useState(["created_at", "DESC"]);
   const [dateFilter, setDateFilter] = useState({
     from: null,
     to: null,
@@ -65,31 +57,15 @@ const ShowAlerts = (props) => {
         "created_at[lte]": dateFilter.to,
       }
     );
-    Promise.all([alertPromise]).then(
-      (response) => {
-        setAlerts(response[0].data.alerts);
-        setTotalItems(
-          response[0].data.total_items
-        );
-        setTotalPages(
-          response[0].data.total_pages
-        );
-        setIsLoading(false);
-      }
-    );
-  }, [
-    type,
-    id,
-    activePage,
-    perPage,
-    orderBy,
-    dateFilter,
-  ]);
+    Promise.all([alertPromise]).then((response) => {
+      setAlerts(response[0].data.alerts);
+      setTotalItems(response[0].data.total_items);
+      setTotalPages(response[0].data.total_pages);
+      setIsLoading(false);
+    });
+  }, [type, id, activePage, perPage, orderBy, dateFilter]);
 
-  const handlePaginationChange = (
-    e,
-    { activePage }
-  ) => {
+  const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
   };
 
@@ -101,10 +77,7 @@ const ShowAlerts = (props) => {
   };
 
   const toggleSort = (field) => {
-    setOrderBy([
-      field,
-      orderBy[1] === "ASC" ? "DESC" : "ASC",
-    ]);
+    setOrderBy([field, orderBy[1] === "ASC" ? "DESC" : "ASC"]);
   };
 
   const closeAlertDetails = () => {
@@ -120,6 +93,11 @@ const ShowAlerts = (props) => {
     });
   };
 
+  const toggleShowFilter = () => {
+    setShowFilters((actualShowFilter) => {
+      return !actualShowFilter;
+    });
+  };
   return (
     <React.Fragment>
       <h5
@@ -127,10 +105,28 @@ const ShowAlerts = (props) => {
         style={{ height: "44px", maxHeight: "44px" }}
       >
         ALERTS {totalItems > 0 && <Label color="red">{totalItems}</Label>}
+        <span className="pull-right aligned" onClick={toggleShowFilter}>
+          <Popup
+            size="tiny"
+            trigger={
+              <Icon
+                name="filter"
+                size="small"
+                bordered
+                link
+                inverted
+                color="white"
+              />
+            }
+            basic
+            content={showFilters ? "Hide Filters" : "ShowFilters"}
+          />
+        </span>
       </h5>
-      <DateFilterBar onDateFilterChange={handleDateFilterChange} />
-
-      <Segment attached>
+      {showFilters && (
+        <DateFilterBar onDateFilterChange={handleDateFilterChange} />
+      )}
+      <Segment attached stretched>
         {totalItems > 0 && (
           <Table
             striped
@@ -253,6 +249,6 @@ const ShowAlerts = (props) => {
       </Segment>
     </React.Fragment>
   );
-}
+};
 
 export default ShowAlerts;

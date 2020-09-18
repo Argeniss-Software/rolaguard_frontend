@@ -53,7 +53,7 @@ const ShowInventory = (props) => {
         <Grid>
           <Grid.Row stretched>
             <Grid.Column width={5}>
-              <Table basic celled striped compact size="small">
+              <Table basic celled striped style={{height:"100%"}}>
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell collapsing>NAME:</Table.Cell>
