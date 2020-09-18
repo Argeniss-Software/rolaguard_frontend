@@ -144,12 +144,6 @@ const ShowInventory = (props) => {
                           }
                         />
                       ))}
-                      <TagSelectorStandalone
-                        type={props.inventory.type}
-                        id={props.inventory.id}
-                        alreadyAssignTags={tags ? tags : []}
-                        callback={(tag) => setTags((tags) => [...tags, tag])}
-                      />
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
@@ -158,7 +152,7 @@ const ShowInventory = (props) => {
             <Grid.Column width={3}>
               <Segment>
                 <div className="text-center aligned" style={{ height: "95%" }}>
-                  <strong>GEOLOCATION</strong>
+                  <strong>LOCATION</strong>
                   <Geolocation
                     location={props.inventory.location}
                     gatewaysLocations={props.inventory.gateway_locations}
