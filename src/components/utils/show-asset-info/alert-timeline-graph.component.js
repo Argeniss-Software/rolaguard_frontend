@@ -8,6 +8,7 @@ import moment from "moment";
 import DetailsAlertModal from "../../details.alert.modal.component";
 import {Message} from 'semantic-ui-react'
 import * as HttpStatus from "http-status-codes";
+import * as sanitizeHtml from "sanitize-html";
 
 const AlertTimeLineGraph = (props) => {
   const { commonStore } = useContext(MobXProviderContext);
@@ -98,7 +99,7 @@ const AlertTimeLineGraph = (props) => {
     locale: "en",
     tooltip: {
       template: function(originalItemData, parsedItemData) {
-        return `
+        return sanitizeHtml(`
             <div style="
             border: "1px solid #d4d4d5;
             line-height: "1.4285em";
@@ -121,7 +122,7 @@ const AlertTimeLineGraph = (props) => {
                   originalItemData,
                   "allContent.type.name"
                 )}</small>
-            </div>`;
+            </div>`);
       },
     },
   };
