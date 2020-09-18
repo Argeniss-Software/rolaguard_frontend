@@ -11,7 +11,7 @@ import * as HttpStatus from "http-status-codes";
 import * as sanitizeHtml from "sanitize-html";
 
 const AlertTimeLineGraph = (props) => {
-  const { commonStore } = useContext(MobXProviderContext);
+  const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
   const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
@@ -116,7 +116,7 @@ const AlertTimeLineGraph = (props) => {
                 <strong>
                 <small>${sanitizeHtml(
                   moment(_.get(originalItemData, "start")).format(
-                    "MM/DD/YY hh:mm:ss a"
+                    globalConfigStore.dateFormats.moment.dateTimeFormat
                   ),
                   { allowedTags: [], disallowedTagsMode: "escape" }
                 )}</small></strong>

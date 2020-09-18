@@ -11,7 +11,7 @@ import AlertDetailTableIcon from "./alert/alert.details.table.icons";
 import AssetLink from "./utils/asset-link.component";
 import PacketViewer from "../components/utils/packet-view/packet-view.component";
 import _ from "lodash";
-@inject("alarmStore", "alertStore", "authStore", "generalDataStore", "usersStore")
+@inject("alarmStore", "alertStore", "authStore", "generalDataStore", "usersStore", "globalConfigStore")
 @observer
 class DetailsAlertModal extends Component {
   constructor(props) {
@@ -75,7 +75,12 @@ class DetailsAlertModal extends Component {
     let alertMessage = alert_type.message.match(/\{.+?\}/g);
     message = `${message}`; 
     message = message.replace(`{packet_id}`, `<b>${alert.packet_id}</b>`);
-    message = message.replace(`{created_at}`, `<b>${moment(alert.created_at).format("YYYY-MM-DD HH:mm:ss")}</b>`);
+    message = message.replace(
+      `{created_at}`,
+      `<b>${moment(alert.created_at).format(
+        this.props.globalConfigStore.dateFormats.moment.dateTimeFormat
+      )}</b>`
+    );
 
     let messageTable = []
     for (let i = 0; i < alertMessage.length - 1; i++) { 

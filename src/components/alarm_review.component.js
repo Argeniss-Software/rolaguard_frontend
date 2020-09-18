@@ -14,7 +14,7 @@ import DetailsAlertModal from "../components/details.alert.modal.component";
 import {subscribeToNewAlertEvents, unsubscribeFromNewAlertEvents} from '../util/web-socket';
 import AlertListComponent from "./alert.list.component";
 
-@inject("generalDataStore", "usersStore", "deviceStore", "alertStore", "alarmStore", "dataCollectorStore")
+@inject("generalDataStore", "usersStore", "deviceStore", "alertStore", "alarmStore", "dataCollectorStore", "globalConfigStore")
 @observer
 class AlarmReviewComponent extends React.Component {
 
@@ -591,17 +591,18 @@ class AlarmReviewComponent extends React.Component {
                     mobile={16}
                     tablet={8}
                     computer={4}
-
-                    style={{display: "flex", verticalAlign: "middle"}}
+                    style={{ display: "flex", verticalAlign: "middle" }}
                   >
-                    <Segment basic textAlign="center" style={{margin: "auto"}}>
+                    <Segment
+                      basic
+                      textAlign="center"
+                      style={{ margin: "auto" }}
+                    >
                       <i className="fas fa-exclamation-circle fa-2x" />
                       <Divider horizontal></Divider>
                       <div>
                         <h3>ALERTS</h3>
-                        <h2>
-                          {this.state.count}
-                        </h2>
+                        <h2>{this.state.count}</h2>
                       </div>
                     </Segment>
                   </Grid.Column>
@@ -625,11 +626,23 @@ class AlarmReviewComponent extends React.Component {
                         }}
                       >
                         FROM{" "}
-                        <Moment format="YYYY-MM-DD HH:mm">
+                        <Moment
+                          format={
+                            this.props.globalConfigStore.dateFormats.moment
+                              .dateTimeFormat
+                          }
+                        >
                           {criteria.from}
                         </Moment>{" "}
                         TO{" "}
-                        <Moment format="YYYY-MM-DD HH:mm">{criteria.to}</Moment>{" "}
+                        <Moment
+                          format={
+                            this.props.globalConfigStore.dateFormats.moment
+                              .dateTimeFormat
+                          }
+                        >
+                          {criteria.to}
+                        </Moment>{" "}
                         <Icon name="delete" />{" "}
                       </Label>
                     )}
@@ -716,9 +729,7 @@ class AlarmReviewComponent extends React.Component {
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                          <Table.HeaderCell>
-                            DESCRIPTION
-                          </Table.HeaderCell>
+                          <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell
                             collapsing
                             sorted={
@@ -735,9 +746,7 @@ class AlarmReviewComponent extends React.Component {
                           <Table.HeaderCell collapsing>
                             DEVICE ID/ADDRESS
                           </Table.HeaderCell>
-                          <Table.HeaderCell>
-                            DEVICE NAME
-                          </Table.HeaderCell>
+                          <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             <Popup
                               trigger={
@@ -751,12 +760,8 @@ class AlarmReviewComponent extends React.Component {
                               be set for each asset in the Inventory section.
                             </Popup>
                           </Table.HeaderCell>
-                          <Table.HeaderCell>
-                            GATEWAY
-                          </Table.HeaderCell>
-                          <Table.HeaderCell>
-                            DATA SOURCE
-                          </Table.HeaderCell>
+                          <Table.HeaderCell>GATEWAY</Table.HeaderCell>
+                          <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
                         </Table.Row>
                       </Table.Header>
                       {!this.state.isLoading && (

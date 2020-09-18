@@ -10,6 +10,7 @@ import statusImages from "../../utils/wifi-signal-indicator/images";
 import PacketsGraph from "./packets-graph-component";
 import _ from "lodash";
 import AssociatedAsset from "../../utils/show-asset-info/associated-asset.component";
+import { MobXProviderContext } from "mobx-react";
 
 const ShowResourceUssage = (props) => {
   const normalizedType =
@@ -19,6 +20,7 @@ const ShowResourceUssage = (props) => {
       : props.asset.type.toLowerCase().trim();
 
   const isDevice = normalizedType === "device";
+  const { globalConfigStore } = React.useContext(MobXProviderContext);
 
   return (
     <Grid divided="vertically">
@@ -32,7 +34,9 @@ const ShowResourceUssage = (props) => {
                   {moment.unix(props.asset.last_activity).fromNow()} (
                   {moment
                     .unix(props.asset.last_activity)
-                    .format("MM/DD/YYYY hh:mm:ss a")}
+                    .format(
+                      globalConfigStore.dateFormats.moment.dateTimeFormat
+                    )}
                   )
                 </Table.Cell>
               </Table.Row>
@@ -132,7 +136,7 @@ const ShowResourceUssage = (props) => {
                     )}
                   </Table.Cell>
                   <Table.Cell>
-                    <div style={{wordBreak: "break-all"}}>
+                    <div style={{ wordBreak: "break-all" }}>
                       <AssociatedAsset
                         type={normalizedType}
                         id={props.asset.id}

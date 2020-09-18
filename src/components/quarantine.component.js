@@ -19,7 +19,7 @@ import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
 import AssetLink from "./utils/asset-link.component"
 
-@inject("deviceStore")
+@inject("deviceStore", "globalConfigStore")
 @observer
 class QuarantineComponent extends React.Component {
   colorsMap
@@ -535,7 +535,12 @@ class QuarantineComponent extends React.Component {
                                   onClick={() => this.showAlertDetails(index)}
                                 >
                                   {
-                                    <Moment format="YYYY-MM-DD HH:mm">
+                                    <Moment
+                                      format={
+                                        this.props.globalConfigStore.dateFormats
+                                          .moment.dateTimeFormat
+                                      }
+                                    >
                                       {item.since}
                                     </Moment>
                                   }
@@ -546,7 +551,12 @@ class QuarantineComponent extends React.Component {
                                   onClick={() => this.showAlertDetails(index)}
                                 >
                                   {
-                                    <Moment format="YYYY-MM-DD HH:mm">
+                                    <Moment
+                                      format={
+                                        this.props.globalConfigStore.dateFormats
+                                          .moment.dateTimeFormat
+                                      }
+                                    >
                                       {item.last_checked}
                                     </Moment>
                                   }
