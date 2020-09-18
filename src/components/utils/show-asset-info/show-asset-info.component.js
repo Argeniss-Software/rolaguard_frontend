@@ -2,12 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import { Icon, Grid, Segment, Popup } from "semantic-ui-react";
 import ShowAlerts from "./alerts-show.component";
-import ShowCurrentIssues from "./current-issues-show.component";
 import ShowResourceUsage from "./resource-usage-show.component";
 import ShowInventory from "./inventory-show.component";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import LoaderComponent from "../loader.component";
-import PacketsGraph from "./packets-graph-component";
 import AlertTimeLineGraph from "./alert-timeline-graph.component"
 
 const ShowAssetInfo = (props) => {
