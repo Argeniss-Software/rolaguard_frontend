@@ -77,11 +77,11 @@ const ShowAssetInfo = (props) => {
 
         <Grid columns="equal">
           <Grid.Row>
-            <Grid.Column flex columns={8}>
+            <Grid.Column columns={8} className="flex">
               <AlertTimeLineGraph type={props.type} id={props.id} />
             </Grid.Column>
 
-            <Grid.Column flex columns={8} stretched>
+            <Grid.Column columns={8} className="stretched flex">
               {props.type && props.id && (
                 <ShowAlerts type={props.type} id={props.id} />
               )}
@@ -91,7 +91,7 @@ const ShowAssetInfo = (props) => {
 
         <Grid columns="equal">
           <Grid.Row>
-            <Grid.Column flex columns={16}>
+            <Grid.Column className="flex" columns={16}>
               <h5
                 className="ui inverted top attached header blue segment"
                 style={{ height: "44px" }}
