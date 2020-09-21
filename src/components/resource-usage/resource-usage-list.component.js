@@ -48,6 +48,7 @@ const ResourceUsageList = (props) => {
             ></ShowDeviceIcon>
           </Table.HeaderCell>
           <Table.HeaderCell collapsing>ID</Table.HeaderCell>
+          <Table.HeaderCell collapsing>DEV ADDR</Table.HeaderCell>
           <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
           <Table.HeaderCell collapsing>LAST MESSAGE</Table.HeaderCell>
           <Table.HeaderCell collapsing>
@@ -133,6 +134,7 @@ const ResourceUsageList = (props) => {
                       id={item.id}
                     />
                   </Table.Cell>
+                  <Table.Cell onClick={() => showModal({ type: item.type, index: index })}>{item.dev_addr}</Table.Cell>
                   <Table.Cell
                     onClick={() => showModal({ type: item.type, index: index })}
                   >
