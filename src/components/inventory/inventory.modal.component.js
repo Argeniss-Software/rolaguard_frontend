@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
 import { Modal, Button, Grid, Table, Divider, Icon } from "semantic-ui-react";
-import Skeleton from 'react-loading-skeleton';
+import Skeleton from "react-loading-skeleton";
+import * as HttpStatus from "http-status-codes";
 
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
 import TagSelector from "../utils/tags/tag.selector.component";
 import LoaderComponent from "../utils/loader.component";
 import ItemDetailsIcon from "./inventory.modal.icon.component";
-import ImportanceLabel from "../utils/importance-label.component"
+import ImportanceLabel from "../utils/importance-label.component";
 import Geolocation from "../utils/geolocation/geolocation.component";
-import AssetLink from "../utils/asset-link.component"
-@inject("tagsStore")
+import AssetLink from "../utils/asset-link.component";
+@inject("tagsStore", "commonStore")
 @observer
 class InventoryDetailsModal extends Component {
   constructor(props) {
@@ -21,123 +22,189 @@ class InventoryDetailsModal extends Component {
       isLoading: true,
       modalOpen: true,
       item: this.props.selectedItem.item,
-      activeIndex: this.props.selectedItem.index 
+      activeIndex: this.props.selectedItem.index,
     };
-    this.hanldleTagSelected = this.hanldleTagSelected.bind(this)
+    this.hanldleTagSelected = this.hanldleTagSelected.bind(this);
   }
 
-  handleClose = e => {
+  UNSAFE_componentWillMount() {
+    this.getGatewaysLocations();
+  };
+
+  UNSAFE_componentWillReceiveProps(newProps){
+    this.setState({
+      item: newProps.selectedItem.item,
+      activeIndex: newProps.selectedItem.index,
+    }, this.getGatewaysLocations);
+  }
+
+  getGatewaysLocations() {
+    const paramsId = {
+      type: this.props.selectedItem.item.type.toLowerCase(),
+      id: this.props.selectedItem.item.id,
+    };
+    this.setState({isLoading: true});
+
+    this.props.commonStore.getData("inventory", paramsId).then((result) => {
+      if (result.status === HttpStatus.OK) {
+        this.setState({
+          gatewaysLocation: result.data.gateway_locations
+        }, () => this.setState({isLoading: false}));
+      }
+    });
+  }
+
+
+
+  handleClose = (e) => {
     this.setState({ modalOpen: false });
     this.props.onClose();
   };
 
-  handleNext = e => {
+  handleNext = (e) => {
     this.props.onNavigate(+1);
   };
 
-  handlePrev = e => {
+  handlePrev = (e) => {
     this.props.onNavigate(-1);
   };
-  
+
   getPArameterValue(parameters, parameterName) {
     return parameters[parameterName];
   }
 
-  showTags(tags){
-      return tags.map((tag)=>{return <Tag key={tag.id} name={tag.name} removable={true} color={tag.color} id={tag.id} onRemoveClick={() => this.handleTagRemoval(tag)}/>})
+  showTags(tags) {
+    return tags.map((tag) => {
+      return (
+        <Tag
+          key={tag.id}
+          name={tag.name}
+          removable={true}
+          color={tag.color}
+          id={tag.id}
+          onRemoveClick={() => this.handleTagRemoval(tag)}
+        />
+      );
+    });
   }
 
-  showTechnicalDetails(item){
-
+  showTechnicalDetails(item) {
     let table = [];
 
-    if(item && item.type && item.type.trim().toLowerCase() === 'device'){
+    if (item && item.type && item.type.trim().toLowerCase() === "device") {
       table = [
         { title: "Item type", value: item.type },
-        { title: "DevEUI", value: item.hex_id? item.hex_id.toUpperCase() : null},
+        {
+          title: "DevEUI",
+          value: item.hex_id ? item.hex_id.toUpperCase() : null,
+        },
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
-        { title: "join_eui/app_eui", value: item.join_eui? item.join_eui.toUpperCase() :null},
-        { title: "Data Source", value: item.data_collector }
-      ]
-    }
-    if(item && item.type && item.type.trim().toLowerCase() === 'gateway'){
-      table = [
-        { title: "Item type",  value: item.type },
-        { title: "Gateway ID",value: item.hex_id? item.hex_id.toUpperCase() : null },
-        { title: "Name", value: item.name },
-        { title: "Vendor", value: item.vendor },
-        { title: "Application", value: item.app_name },
-        { title: "join_eui/app_eui", value: item.join_eui? item.join_eui.toUpperCase() :null},
+        {
+          title: "join_eui/app_eui",
+          value: item.join_eui ? item.join_eui.toUpperCase() : null,
+        },
         { title: "Data Source", value: item.data_collector },
-      ]
+      ];
+    }
+    if (item && item.type && item.type.trim().toLowerCase() === "gateway") {
+      table = [
+        { title: "Item type", value: item.type },
+        {
+          title: "Gateway ID",
+          value: item.hex_id ? item.hex_id.toUpperCase() : null,
+        },
+        { title: "Name", value: item.name },
+        { title: "Vendor", value: item.vendor },
+        { title: "Application", value: item.app_name },
+        {
+          title: "join_eui/app_eui",
+          value: item.join_eui ? item.join_eui.toUpperCase() : null,
+        },
+        { title: "Data Source", value: item.data_collector },
+      ];
     }
 
-    if (table == 0){
+    if (table == 0) {
       return (
         <Table.Row>
           <Table.Cell>
-            Oops, there is no technical details to show. This must be an error, please contact support.
+            Oops, there is no technical details to show. This must be an error,
+            please contact support.
           </Table.Cell>
         </Table.Row>
       );
     }
 
-    return(table.filter((row) => row.value).map((row) => {
-      return (
-        <Table.Row key={row.title}>
-        <Table.Cell width="3" 
-          className="technical-details-table-row-left"
-          style={{"borderTop": "1px solid lightgray !important"}}>
-            <i>{row.title}</i>
-        </Table.Cell>
-        <Table.Cell width="3" className={"technical-details-table-row-right"}><b>{row.value}</b></Table.Cell>
-      </Table.Row>
-      )
-    }));
+    return table
+      .filter((row) => row.value)
+      .map((row) => {
+        return (
+          <Table.Row key={row.title}>
+            <Table.Cell
+              width="3"
+              className="technical-details-table-row-left"
+              style={{ borderTop: "1px solid lightgray !important" }}
+            >
+              <i>{row.title}</i>
+            </Table.Cell>
+            <Table.Cell
+              width="3"
+              className={"technical-details-table-row-right"}
+            >
+              <b>{row.value}</b>
+            </Table.Cell>
+          </Table.Row>
+        );
+      });
   }
 
-  hanldleTagSelected(tag){
+  hanldleTagSelected(tag) {
     let { item } = this.state;
     this.props.tagsStore.assignTag(tag, item).then(() => {
-      item.tags.push(tag)
+      item.tags.push(tag);
       this.setState({
         item,
       });
     });
   }
 
-
   handleTagRemoval = (tag) => {
     const { item } = this.state;
-    this.props.tagsStore.removeTag(tag, item).then(() =>{
+    this.props.tagsStore.removeTag(tag, item).then(() => {
       item.tags = item.tags.filter((t) => t.id !== tag.id);
       this.setState({
-        item
+        item,
       });
     });
-  }
+  };
 
   ModalTitle = (props) => {
     /*
-    * porps:
-    *   type: string, ["gateway", "device"]
-    *   hex_id: string, device id
-    *   name: string, device name (optional)
-    */
+     * porps:
+     *   type: string, ["gateway", "device"]
+     *   hex_id: string, device id
+     *   name: string, device name (optional)
+     */
     const { name, hex_id, type } = props;
     return (
-      <div style={{display: "inline-block", verticalAlign: "middle", marginRight: "20px"}}>
+      <div
+        style={{
+          display: "inline-block",
+          verticalAlign: "middle",
+          marginRight: "20px",
+        }}
+      >
         {(name && name.toUpperCase()) ||
-          ( hex_id && hex_id.toUpperCase() &&
+          (hex_id &&
+            hex_id.toUpperCase() &&
             type &&
             `${type.toUpperCase()}: ${hex_id.toUpperCase()}`) ||
           (type && type.toUpperCase())}
       </div>
     );
-
-  }
+  };
 
   render() {
     const { modalOpen, activeIndex } = this.state;
@@ -154,8 +221,8 @@ class InventoryDetailsModal extends Component {
       >
         <Modal.Header>
           <span style={{ marginLeft: "10px", verticalAling: "middle" }}>
-            {this.props.loading && <Skeleton width="30%" />}
-            {!this.props.loading && (
+            {this.state.isLoading && <Skeleton width="30%" />}
+            {!this.state.isLoading && (
               <React.Fragment>
                 <this.ModalTitle
                   name={item.name}
@@ -186,9 +253,9 @@ class InventoryDetailsModal extends Component {
 
             {this.props.onNavigate && (
               <Button
-                loading={this.props.loading}
+                loading={this.state.isLoading}
                 floated={"left"}
-                disabled={isFirst || this.props.loading}
+                disabled={isFirst || this.state.isLoading}
                 onClick={() => this.handlePrev()}
                 content="Previous"
               />
@@ -196,9 +263,9 @@ class InventoryDetailsModal extends Component {
 
             {this.props.onNavigate && (
               <Button
-                loading={this.props.loading}
+                loading={this.state.isLoading}
                 floated={"left"}
-                disabled={isLast || this.props.loading}
+                disabled={isLast || this.state.isLoading}
                 onClick={() => this.handleNext()}
                 content="Next"
               />
@@ -206,14 +273,18 @@ class InventoryDetailsModal extends Component {
           </div>
         </Modal.Header>
         <Modal.Content id="modal-content">
-          {!this.props.loading && (
+          {!this.state.isLoading && (
             <Grid divided id="modal-content-grid">
               <Grid.Row>
                 <Grid.Column width={5} className="modal-content-grid">
                   <ItemDetailsIcon item={item} />
                   <strong>Location:</strong>
-                  <div style={{height: "200px", width: "100%"}}>
-                    <Geolocation location={item.location} />
+                  <div style={{ height: "200px", width: "100%" }}>
+                    <Geolocation
+                      location={item.location}
+                      gatewaysLocations={this.state.gatewaysLocation}
+                      radius={2000}
+                    />
                   </div>
                 </Grid.Column>
                 <Grid.Column width={10}>
@@ -240,7 +311,7 @@ class InventoryDetailsModal extends Component {
               </Grid.Row>
             </Grid>
           )}
-          {this.props.loading && (
+          {this.state.isLoading && (
             <LoaderComponent
               loadingMessage="Loading details ..."
               style={{ marginBottom: 20 }}
