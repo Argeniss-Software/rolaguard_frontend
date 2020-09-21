@@ -101,7 +101,7 @@ const ShowAlerts = (props) => {
   return (
     <React.Fragment>
       <h5
-        class="ui inverted top attached header"
+        className="ui inverted top attached header"
         style={{ height: "44px", maxHeight: "44px" }}
       >
         ALERTS {totalItems > 0 && <Label color="red">{totalItems}</Label>}
@@ -115,7 +115,6 @@ const ShowAlerts = (props) => {
                 bordered
                 link
                 inverted
-                color="white"
               />
             }
             basic
