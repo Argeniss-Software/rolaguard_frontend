@@ -211,8 +211,10 @@ class InventoryDetailsModal extends Component {
               <Grid.Row>
                 <Grid.Column width={5} className="modal-content-grid">
                   <ItemDetailsIcon item={item} />
-                  <strong>Geolocation:</strong>
-                  <Geolocation location={item.location} />
+                  <strong>Location:</strong>
+                  <div style={{height: "200px", width: "100%"}}>
+                    <Geolocation location={item.location} />
+                  </div>
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Grid.Row className="modal-content-grid">
