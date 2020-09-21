@@ -4,7 +4,7 @@ import { Divider, Header, Grid, Icon, Table, Accordion, Pagination, Message } fr
 import LoaderComponent from "./utils/loader.component";
 import moment from "moment";
 
-@inject("dataCollectorStore")
+@inject("dataCollectorStore", "globalConfigStore")
 @observer
 class DataCollectorLogComponent extends React.Component {
 
@@ -127,7 +127,7 @@ class DataCollectorLogComponent extends React.Component {
                         </Grid.Column>
                         <Grid.Column>
                             <Header as='h2'>Last message</Header>
-                            <span style={{fontSize: 19}}>{dataCollector.lastMessage ? moment(dataCollector.lastMessage).format('MMMM Do YYYY, HH:mm:ss') : 'No messages in last 4 hours'}</span>
+                            <span style={{fontSize: 19}}>{dataCollector.lastMessage ? moment(dataCollector.lastMessage).format(this.props.globalConfigStore.dateFormats .moment.dateTimeFormat) : 'No messages in last 4 hours'}</span>
                         </Grid.Column>
                     </Grid>
 
@@ -153,7 +153,7 @@ class DataCollectorLogComponent extends React.Component {
                             {
                                 log.map((item, index) => 
                                     <Table.Row key={index} error={item.type === 'DISCONNECTED' || item.type === 'FAILED_PARSING' || item.type === 'FAILED_LOGIN'}>
-                                        <Table.Cell>{moment(item.createdAt).format('MMMM Do YYYY, HH:mm:ss')}</Table.Cell>
+                                        <Table.Cell>{moment(item.createdAt).format(this.props.globalConfigStore.dateFormats .moment.dateTimeFormat)}</Table.Cell>
                                         <Table.Cell>
                                         {(item.type === 'DISCONNECTED' || item.type === 'FAILED_PARSING'  || item.type === 'FAILED_LOGIN') && <Icon name='attention' />}
                                         {this.getEvent(item)}</Table.Cell>

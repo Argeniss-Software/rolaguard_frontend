@@ -19,7 +19,7 @@ import DateFilterBar from "./date-filter-bar.component";
 import AssetId from "../asset-id.component";
 
 const ShowCurrentIssues = (props) => {
-  const { commonStore } = useContext(MobXProviderContext);
+  const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
 
   const [selectedAlert, setSelectedAlert] = useState({
     alert: {},
@@ -185,7 +185,11 @@ const ShowCurrentIssues = (props) => {
                       onClick={() => showAlertDetails(current_issue)}
                     >
                       {
-                        <Moment format="MM/DD/YYYY hh:mm:ss a">
+                        <Moment
+                          format={
+                            globalConfigStore.dateFormats.moment.dateTimeFormat
+                          }
+                        >
                           {current_issue.since}
                         </Moment>
                       }
@@ -196,7 +200,11 @@ const ShowCurrentIssues = (props) => {
                       onClick={() => showAlertDetails(current_issue)}
                     >
                       {
-                        <Moment format="MM/DD/YYYY hh:mm:ss a">
+                        <Moment
+                          format={
+                            globalConfigStore.dateFormats.moment.dateTimeFormat
+                          }
+                        >
                           {current_issue.last_checked}
                         </Moment>
                       }

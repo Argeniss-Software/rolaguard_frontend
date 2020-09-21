@@ -14,6 +14,7 @@ import tagsStore from './tag.store'
 import resourceUsageStore from './resource_usage.store'
 import keysStore from './keys.store'
 import commonStore from "./common.store";
+import globalConfigStore from "./global_config.store"
 
 const stores = {
   authStore,
@@ -32,6 +33,7 @@ const stores = {
   resourceUsageStore,
   keysStore,
   commonStore,
+  globalConfigStore
 };
 
 export default stores

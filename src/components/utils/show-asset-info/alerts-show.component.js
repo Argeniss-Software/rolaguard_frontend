@@ -19,7 +19,7 @@ import DateFilterBar from "./date-filter-bar.component";
 
 const ShowAlerts = (props) => {
   const colorsMap = AlertUtil.getColorsMap();
-  const { commonStore } = useContext(MobXProviderContext);
+  const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
 
   const [selectedAlert, setSelectedAlert] = useState({
     alert: {},
@@ -194,7 +194,11 @@ const ShowAlerts = (props) => {
                     onClick={() => showAlertDetails(alert)}
                   >
                     {
-                      <Moment format="MM/DD/YYYY hh:mm:ss a">
+                      <Moment
+                        format={
+                          globalConfigStore.dateFormats.moment.dateTimeFormat
+                        }
+                      >
                         {alert.created_at}
                       </Moment>
                     }

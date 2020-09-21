@@ -1,20 +1,18 @@
 import * as React from "react";
 import _ from "lodash";
-import { Table, Popup, Label, Grid, Segment } from "semantic-ui-react";
-import Tag from "../../utils/tags/tag.component";
+import { Table, Popup, Grid, Segment } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import ShowDeviceState from "../show-device-state.component";
 import ShowDeviceIcon from "../show-device-icon.component";
 import AssetIdComponent from "../asset-id.component";
 import Geolocation from "../geolocation/geolocation.component";
-import TagSelectorStandalone from "../tags/tag.selector.standalone.component";
 import RemovableTagStandalone from "../tags/removable-tag.standalone.component";
 import ShowCurrentIssues from "./current-issues-show.component";
+
 const ShowInventory = (props) => {
   const [tags, setTags] = React.useState(
     props.inventory.tags ? props.inventory.tags : []
   );
-  const isSetLocation = !_.isEmpty(_.get(props, "inventory.location"));
 
   const normalizedType =
     props.inventory.type &&
@@ -94,7 +92,7 @@ const ShowInventory = (props) => {
                     <Table.Cell>
                       <strong>
                         {normalizedType === "device"
-                          ? props.inventory.join_eui
+                          ? _.upperCase(props.inventory.join_eui)
                           : "N/A"}
                       </strong>
                     </Table.Cell>
@@ -144,12 +142,6 @@ const ShowInventory = (props) => {
                           }
                         />
                       ))}
-                      <TagSelectorStandalone
-                        type={props.inventory.type}
-                        id={props.inventory.id}
-                        alreadyAssignTags={tags ? tags : []}
-                        callback={(tag) => setTags((tags) => [...tags, tag])}
-                      />
                     </Table.Cell>
                   </Table.Row>
                 </Table.Body>
@@ -158,7 +150,7 @@ const ShowInventory = (props) => {
             <Grid.Column width={3}>
               <Segment>
                 <div className="text-center aligned" style={{ height: "95%" }}>
-                  <strong>GEOLOCATION</strong>
+                  <strong>LOCATION</strong>
                   <Geolocation
                     location={props.inventory.location}
                     gatewaysLocations={props.inventory.gateway_locations}
