@@ -3,6 +3,7 @@ import { observer, inject } from "mobx-react";
 import { Modal, Button, Grid, Table, Divider, Icon } from "semantic-ui-react";
 import Skeleton from "react-loading-skeleton";
 import * as HttpStatus from "http-status-codes";
+import _ from "lodash";
 
 import "./inventory.modal.component.css";
 import Tag from "../utils/tags/tag.component";
@@ -12,6 +13,7 @@ import ItemDetailsIcon from "./inventory.modal.icon.component";
 import ImportanceLabel from "../utils/importance-label.component";
 import Geolocation from "../utils/geolocation/geolocation.component";
 import AssetLink from "../utils/asset-link.component";
+
 @inject("tagsStore", "commonStore")
 @observer
 class InventoryDetailsModal extends Component {
@@ -29,32 +31,36 @@ class InventoryDetailsModal extends Component {
 
   UNSAFE_componentWillMount() {
     this.getGatewaysLocations();
-  };
+  }
 
-  UNSAFE_componentWillReceiveProps(newProps){
-    this.setState({
-      item: newProps.selectedItem.item,
-      activeIndex: newProps.selectedItem.index,
-    }, this.getGatewaysLocations);
+  UNSAFE_componentWillReceiveProps(newProps) {
+    this.setState(
+      {
+        item: newProps.selectedItem.item,
+        activeIndex: newProps.selectedItem.index,
+      },
+      this.getGatewaysLocations
+    );
   }
 
   getGatewaysLocations() {
     const paramsId = {
-      type: this.props.selectedItem.item.type.toLowerCase(),
+      type: _.lowerCase(this.props.selectedItem.item.type),
       id: this.props.selectedItem.item.id,
     };
-    this.setState({isLoading: true});
+    this.setState({ isLoading: true });
 
     this.props.commonStore.getData("inventory", paramsId).then((result) => {
       if (result.status === HttpStatus.OK) {
-        this.setState({
-          gatewaysLocation: result.data.gateway_locations
-        }, () => this.setState({isLoading: false}));
+        this.setState(
+          {
+            gatewaysLocation: result.data.gateway_locations,
+          },
+          () => this.setState({ isLoading: false })
+        );
       }
     });
   }
-
-
 
   handleClose = (e) => {
     this.setState({ modalOpen: false });
