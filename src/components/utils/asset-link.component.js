@@ -14,7 +14,7 @@ const AssetLinkComponent = (props) => {
     return (
       <React.Fragment>
         <a
-          class="hover-underline"
+          className="hover-underline"
           target="_blank"
           href={`/dashboard/assets/${normalizedType}/${id}/view`}
         >
