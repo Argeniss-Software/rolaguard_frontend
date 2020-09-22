@@ -82,12 +82,12 @@ const AssociatedAssetInventoryShow = (props) => {
     setOrderBy([field, orderBy[1] === "ASC" ? "DESC" : "ASC"]);
   };*/
 
-  const closeAlertDetails = () => {
+  /*const closeAlertDetails = () => {
     setSelectedAsset({
       asset: {},
       asset_type: {},
     });
-  };
+  };*/
 
   /*const handleDateFilterChange = (date) => {
     setDateFilter((prevDate) => {
@@ -114,6 +114,7 @@ const AssociatedAssetInventoryShow = (props) => {
   };
   
   const handleOnChangeSelectedLabels = (items) => {
+    setActivePage(1)
     setSelectedTagsForFilter(items.map((e) => e.code));
     setCriteria((oldCriteria) => {
       return { ...oldCriteria, ...{ tags: items.map((e) => e.code) } };
