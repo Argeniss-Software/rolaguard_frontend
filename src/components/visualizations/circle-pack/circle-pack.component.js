@@ -18,8 +18,8 @@ const CirclePack = (props) => {
     if (props.data && filteredData.length && refElement && refElement.current) {
       const aux = new CirclePackD3(refElement.current, {
         data: props.data,
-        width: refElement.current.parentNode.parentNode.clientWidth * 0.9,
-        height: refElement.current.parentNode.parentNode.clientWidth * 0.6,
+        width: refElement.current.parentNode.clientWidth,
+        height: refElement.current.parentNode.clientHeight,
         handler: props.handler,
         type: props.type
       });
