@@ -211,22 +211,21 @@ const ShowAlerts = (props) => {
                     />
                   )}
                   <Table.Cell
-                    className="upper"
+                    className="upper text-center aligned"
                     style={{ maxWidth: "180px" }}
                     collapsing
                   >
                     <AssetIdComponent
                       id={
-                        type === "gateway" ? alert.device_id : alert.gateway_id
+                        type === "gateway" ? null : alert.gateway_id
                       }
                       type={type === "gateway" ? "device" : "gateway"}
                       hexId={
                         type === "gateway"
-                          ? alert.parameters.dev_eui ||
-                            alert.parameters.dev_addr
+                          ? "N/A"
                           : alert.parameters.gateway
                       }
-                      showAsLink={true}
+                      showAsLink={type === "gateway" ? false : true}
                     />
                   </Table.Cell>
                 </Table.Row>

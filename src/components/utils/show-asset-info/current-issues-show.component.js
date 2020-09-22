@@ -209,26 +209,18 @@ const ShowCurrentIssues = (props) => {
                       }
                     </Table.Cell>
                     <Table.Cell
-                      className="upper"
+                      className="upper text-center aligned"
                       style={{ maxWidth: "180px" }}
                       collapsing
                     >
                       <AssetId
-                        id={
-                          type === "gateway"
-                            ? current_issue.alert.device_id
-                            : current_issue.alert.gateway_id
-                        }
+                        id={type === "gateway" ? null : current_issue.gateway_id}
                         type={type === "gateway" ? "device" : "gateway"}
                         hexId={
-                          type === "gateway"
-                            ? current_issue.alert.parameters.dev_eui ||
-                              current_issue.alert.parameters.dev_addr
-                            : current_issue.alert.parameters.gateway
+                          type === "gateway" ? "N/A" : current_issue.parameters.gateway
                         }
-                        showAsLink={true}
+                        showAsLink={type === "gateway" ? false : true}
                       />
-
                       {!_.isEmpty(selectedAlert.alert) && (
                         <DetailsAlertModal
                           loading={false}
