@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Table,
   Label,
@@ -7,6 +7,7 @@ import {
   Segment,
   // Icon,
   Popup,
+  Message
 } from "semantic-ui-react";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
@@ -15,14 +16,16 @@ import AssetIdComponent from "../asset-id.component";
 // import DateFilterBar from "./date-filter-bar.component";
 import ImportanceLabel from "../importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
-import ShowDeviceState from "../show-device-state.component"
+import ShowDeviceState from "../show-device-state.component";
 import { MobXProviderContext } from "mobx-react";
 import GatewayCirclePackGraph from "./gateway-circle-pack-graph.component";
+import HttpStatus from "http-status-codes"
+import LoaderComponent from "../loader.component"
 
 const AssociatedAssetInventoryShow = (props) => {
   const { inventoryAssetsStore } = useContext(MobXProviderContext);
   const colorsMap = AlertUtil.getColorsMap();
-
+  const [errorOnRequest, setErrorOnRequest] = useState(false)
   const [selectedAsset, setSelectedAsset] = useState({
     asset: {},
     asset_type: {},
@@ -35,7 +38,7 @@ const AssociatedAssetInventoryShow = (props) => {
   const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
-  
+
   const [selectedTagsForFilter, setSelectedTagsForFilter] = useState([]);
   /* 
   const [orderBy, setOrderBy] = useState(["created_at", "DESC"]);
@@ -45,26 +48,39 @@ const AssociatedAssetInventoryShow = (props) => {
   }); 
   */
   const { type, id } = props;
-  
+
   const [criteria, setCriteria] = useState({
     type: "device",
     tags: selectedTagsForFilter,
-    gateways: [id],    
+    gateways: [id],
   });
-  
+
   useEffect(() => {
     setIsLoading(true);
     const assetsPromise = inventoryAssetsStore.getAssets(
       { page: activePage, size: perPage },
       criteria
     );
-    
-    Promise.all([assetsPromise]).then((response) => {
-      setAssets(response[0].data.assets);
-      setTotalItems(response[0].data.total_items);
-      setTotalPages(response[0].data.total_pages);
-      setIsLoading(false);
-    });
+
+    Promise.all([assetsPromise])
+      .then((response) => {
+        if (response[0].status === HttpStatus.OK) {
+          setAssets(response[0].data.assets);
+          setTotalItems(response[0].data.total_items);
+          setTotalPages(response[0].data.total_pages);
+          setErrorOnRequest(false);
+          setIsLoading(false);
+        } else {
+          setAssets([]);
+          setErrorOnRequest(true);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        setAssets([]);
+        setErrorOnRequest(true);
+        setIsLoading(false);
+      });
   }, [activePage, perPage, criteria]);
 
   const handlePaginationChange = (e, { activePage }) => {
@@ -112,14 +128,14 @@ const AssociatedAssetInventoryShow = (props) => {
     };
     setSelectedAsset({ selectedAsset: selectedAsset });
   };
-  
+
   const handleOnChangeSelectedLabels = (items) => {
-    setActivePage(1)
+    setActivePage(1);
     setSelectedTagsForFilter(items.map((e) => e.code));
     setCriteria((oldCriteria) => {
       return { ...oldCriteria, ...{ tags: items.map((e) => e.code) } };
-    })
-  }
+    });
+  };
 
   return (
     <React.Fragment>
@@ -143,7 +159,19 @@ const AssociatedAssetInventoryShow = (props) => {
             </Grid.Column>
             <Grid.Column width={12}>
               <Segment attached style={{ height: "100%" }}>
-                {totalItems > 0 && (
+                {errorOnRequest && (
+                  <Message
+                    error
+                    header="Oops!"
+                    content={"Something went wrong. Try again later."}
+                    style={{ maxWidth: "100%" }}
+                    className="animated fadeIn"
+                  />
+                )}
+                {!errorOnRequest && isLoading && (
+                  <LoaderComponent loadingMessage="Loading list..." />
+                )}
+                {!errorOnRequest && !isLoading && totalItems > 0 && (
                   <Table
                     striped
                     selectable
