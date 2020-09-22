@@ -3,7 +3,7 @@ import Chart from "react-apexcharts"
 import { MobXProviderContext } from "mobx-react";
 import _ from "lodash"
 import "./packets-graph-component.css"
-import LoaderComponent from "../loader.component"
+import LoaderComponent from "../../loader.component"
 
 const PacketGraph = (props) => {
   /* 

@@ -3,7 +3,7 @@ import { Button, Modal, Icon, Grid, Table, Popup, Segment, Divider} from "semant
 import ShowDeviceState from "../utils/show-device-state.component"
 import ShowDeviceIcon  from "../utils/show-device-icon.component";
 import AssetIdComponent from "../utils/asset-id.component";
-import PacketsGraph from "../utils/show-asset-info/packets-graph-component";
+import PacketsGraph from "../utils/show-asset-info/resource-usage/packets-graph-component";
 import _ from 'lodash'
 import AssetLink from "../utils/asset-link.component"
 import NumberFormat from "react-number-format"

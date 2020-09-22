@@ -6,7 +6,7 @@ import { MobXProviderContext } from "mobx-react";
 import * as HttpStatus from "http-status-codes";
 import LoaderComponent from "../loader.component"
 
-const GatewayShowInfo = (props) => {
+const GatewayCirclePackGraph = (props) => {
   const [labels, setLabels] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
@@ -27,8 +27,8 @@ const GatewayShowInfo = (props) => {
   const handleItemSelected = (allItems, selected) => {
     setSelectedLabels((prevSelected) => [...prevSelected, selected]);
   }
-  const deleteItemSelected = (item) => {
-    
+
+  const deleteItemSelected = (item) => {    
     setSelectedLabels((prevSelected) =>
       prevSelected.filter((e) => e.code != item.code)
     );
@@ -38,6 +38,10 @@ const GatewayShowInfo = (props) => {
   useEffect(() => {
     setIsLoading(true);
     setErrorOnRequest(false)
+    
+    if (_.isFunction(props.onChangeSelectedLabels)) {
+      props.onChangeSelectedLabels(selectedLabels)
+    }
 
     const labelsPromise = inventoryAssetsStore.getTagsCount({
       gateways: [props.gatewayId],
@@ -59,7 +63,7 @@ const GatewayShowInfo = (props) => {
         setErrorOnRequest(true);
       });
     setIsLoading(false);
-  }, [props.gatewayId,selectedLabels]);
+  }, [props.gatewayId, selectedLabels]);
 
   return (
     <React.Fragment>
@@ -76,20 +80,27 @@ const GatewayShowInfo = (props) => {
         <LoaderComponent loadingMessage="Loading labels..." />
       )}
       {!errorOnRequest && !isLoading && (
-        <div className="box-data text-center">
-          <h5 className="visualization-title">LABELS OF ASSOCIATED DEVICES</h5>
-          
-          {selectedLabels.length>0 && <label style={{ fontWeight: "bolder" }}>Applied Filters: </label>}
+        <div className="box-data">
+          <h5 className="visualization-title text-center">
+            LABELS OF ASSOCIATED DEVICES
+          </h5>
+
+          {selectedLabels.length > 0 && (
+            <label style={{ fontWeight: "bolder" }}>
+              <i>Applied Filters: </i>
+            </label>
+          )}
           {selectedLabels.map((item, index) => (
             <Label
               as="a"
               key={"tag" + index}
               className="text-uppercase"
+              size="tiny"
               onClick={() => {
                 deleteItemSelected(item);
               }}
             >
-              LABEL: {item.label}
+              {item.label}
               <Icon name="delete" />
             </Label>
           ))}
@@ -111,4 +122,4 @@ const GatewayShowInfo = (props) => {
   );
 };
 
-export default GatewayShowInfo;
+export default GatewayCirclePackGraph;

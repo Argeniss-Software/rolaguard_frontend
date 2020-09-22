@@ -5,19 +5,19 @@ import {
   Grid,
   Pagination,
   Segment,
-  Icon,
+  // Icon,
   Popup,
 } from "semantic-ui-react";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
 import AlertUtil from "../../../util/alert-util";
 import AssetIdComponent from "../asset-id.component";
-import DateFilterBar from "./date-filter-bar.component";
+// import DateFilterBar from "./date-filter-bar.component";
 import ImportanceLabel from "../importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
 import ShowDeviceState from "../show-device-state.component"
 import { MobXProviderContext } from "mobx-react";
-
+import GatewayCirclePackGraph from "./gateway-circle-pack-graph.component";
 
 const AssociatedAssetInventoryShow = (props) => {
   const { inventoryAssetsStore } = useContext(MobXProviderContext);
@@ -35,6 +35,8 @@ const AssociatedAssetInventoryShow = (props) => {
   const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  
+  const [selectedTagsForFilter, setSelectedTagsForFilter] = useState([]);
   /* 
   const [orderBy, setOrderBy] = useState(["created_at", "DESC"]);
   const [dateFilter, setDateFilter] = useState({
@@ -42,12 +44,12 @@ const AssociatedAssetInventoryShow = (props) => {
     to: null,
   }); 
   */
-  const { type, id, tags=[] } = props;
+  const { type, id } = props;
   
   const [criteria, setCriteria] = useState({
     type: "device",
-    tags: tags,
-    gateways: [id],
+    tags: selectedTagsForFilter,
+    gateways: [id],    
   });
   
   useEffect(() => {
@@ -93,11 +95,11 @@ const AssociatedAssetInventoryShow = (props) => {
     });
   };*/
 
-  const toggleShowFilter = () => {
+  /*const toggleShowFilter = () => {
     setShowFilters((actualShowFilter) => {
       return !actualShowFilter;
     });
-  };
+  };*/
 
   const showAssetDetails = (index) => {
     const item = assets[index];
@@ -110,6 +112,13 @@ const AssociatedAssetInventoryShow = (props) => {
     };
     setSelectedAsset({ selectedAsset: selectedAsset });
   };
+  
+  const handleOnChangeSelectedLabels = (items) => {
+    setSelectedTagsForFilter(items.map((e) => e.code));
+    setCriteria((oldCriteria) => {
+      return { ...oldCriteria, ...{ tags: items.map((e) => e.code) } };
+    })
+  }
 
   return (
     <React.Fragment>
@@ -118,99 +127,111 @@ const AssociatedAssetInventoryShow = (props) => {
         style={{ height: "44px", maxHeight: "44px" }}
       >
         INVENTORY {totalItems > 0 && <Label color="red">{totalItems}</Label>}
-        <span className="pull-right aligned" onClick={toggleShowFilter}>
-          <Popup
-            size="tiny"
-            trigger={<Icon name="filter" size="small" bordered link inverted />}
-            basic
-            content={showFilters ? "Hide Filters" : "ShowFilters"}
-          />
-        </span>
       </h5>
 
       <Segment attached stretched>
-        {totalItems > 0 && (
-          <Table
-            striped
-            selectable
-            className="animated fadeIn"
-            basic="very"
-            compact="very"
-          >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-                <Table.HeaderCell>ADDRESS</Table.HeaderCell>
-                <Table.HeaderCell>
-                  APPLICATION
-                </Table.HeaderCell>
-                
-                <Table.HeaderCell>
-                  <Popup
-                    trigger={
-                      <span style={{ cursor: "pointer" }}>IMPORTANCE</span>
-                    }
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={4}>
+              <Segment attached>
+                <GatewayCirclePackGraph
+                  gatewayId={props.id}
+                  onChangeSelectedLabels={handleOnChangeSelectedLabels}
+                />
+              </Segment>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Segment attached style={{ height: "100%" }}>
+                {totalItems > 0 && (
+                  <Table
+                    striped
+                    selectable
+                    className="animated fadeIn"
+                    basic="very"
+                    compact="very"
                   >
-                    The importance value indicates the user-defined relevance of
-                    the device into the organization. Can be set for each asset
-                    in the Inventory section.
-                  </Popup>
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell collapsing>ID</Table.HeaderCell>
+                        <Table.HeaderCell>ADDRESS</Table.HeaderCell>
+                        <Table.HeaderCell>APPLICATION</Table.HeaderCell>
 
-            <Table.Body>
-              {assets &&
-                assets.map((item, index) => {
-                  return (
-                    <Table.Row key={index} style={{ cursor: "pointer" }}>
-                      <Table.Cell className="id-cell upper">
-                        <ShowDeviceState state={item.connected} />
-                        <AssetIdComponent
-                          type={item.type}
-                          id={item.id}
-                          hexId={item.hex_id}
-                        />
-                      </Table.Cell>
-                      <Table.Cell
-                        onClick={() => showAssetDetails(index)}
-                      >
-                        {item.dev_addr}
-                      </Table.Cell>
-                      
-                      <Table.Cell
-                        onClick={() => showAssetDetails(index)}
-                      >
-                        {item.app_name && (
-                          <TruncateMarkup>
-                            <div>{item.app_name}</div>
-                          </TruncateMarkup>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell onClick={() => showAssetDetails(index)}>
-                        <ImportanceLabel importance={item.importance} />
-                      </Table.Cell>
-                    </Table.Row>
-                  );
-                })}
-            </Table.Body>
-          </Table>
-        )}
-        {totalItems <= 0 && (
-          <EmptyComponent emptyMessage="There are no items to show." />
-        )}
+                        <Table.HeaderCell>
+                          <Popup
+                            trigger={
+                              <span style={{ cursor: "pointer" }}>
+                                IMPORTANCE
+                              </span>
+                            }
+                          >
+                            The importance value indicates the user-defined
+                            relevance of the device into the organization. Can
+                            be set for each asset in the Inventory section.
+                          </Popup>
+                        </Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
 
-        {totalPages > 1 && (
-          <Grid className="segment centered">
-            <Pagination
-              size="mini"
-              activePage={activePage}
-              const
-              onPageChange={handlePaginationChange}
-              totalPages={totalPages}
-            />
-          </Grid>
-        )}
+                    <Table.Body>
+                      {assets &&
+                        assets.map((item, index) => {
+                          return (
+                            <Table.Row
+                              key={index}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <Table.Cell className="id-cell upper">
+                                <ShowDeviceState state={item.connected} />
+                                <AssetIdComponent
+                                  type={item.type}
+                                  id={item.id}
+                                  hexId={item.hex_id}
+                                />
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => showAssetDetails(index)}
+                              >
+                                {item.dev_addr}
+                              </Table.Cell>
+
+                              <Table.Cell
+                                onClick={() => showAssetDetails(index)}
+                              >
+                                {item.app_name && (
+                                  <TruncateMarkup>
+                                    <div>{item.app_name}</div>
+                                  </TruncateMarkup>
+                                )}
+                              </Table.Cell>
+                              <Table.Cell
+                                onClick={() => showAssetDetails(index)}
+                              >
+                                <ImportanceLabel importance={item.importance} />
+                              </Table.Cell>
+                            </Table.Row>
+                          );
+                        })}
+                    </Table.Body>
+                  </Table>
+                )}
+                {totalItems <= 0 && (
+                  <EmptyComponent emptyMessage="There are no items to show." />
+                )}
+                {totalPages > 1 && (
+                  <Grid className="segment centered">
+                    <Pagination
+                      size="mini"
+                      activePage={activePage}
+                      const
+                      onPageChange={handlePaginationChange}
+                      totalPages={totalPages}
+                    />
+                  </Grid>
+                )}
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Segment>
     </React.Fragment>
   );
