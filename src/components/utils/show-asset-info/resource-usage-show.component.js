@@ -1,5 +1,6 @@
-import * as React from "react";
-import { Grid, Table, Segment, Header } from "semantic-ui-react";
+import React, {useState} from "react";
+import { Grid, Table, Segment, Header, Divider } from "semantic-ui-react";
+import _ from "lodash";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
@@ -8,9 +9,11 @@ import ShowPacketsStatistics from "../../resource-usage/show-packets-statistics.
 import "./resource-usage-show.component.css";
 import statusImages from "../../utils/wifi-signal-indicator/images";
 import PacketsGraph from "./packets-graph-component";
-import _ from "lodash";
-import AssociatedAsset from "../../utils/show-asset-info/associated-asset.component";
+import AssociatedAssetInventoryShow from "../../utils/show-asset-info/associated-asset-inventory-show.component";
+import AssociatedAsset from "../../utils/show-asset-info/associated-asset.component"
+import GatewayShowInfo from "./gateway-show-info.component"
 import { MobXProviderContext } from "mobx-react";
+
 
 const ShowResourceUssage = (props) => {
   const normalizedType =
@@ -21,10 +24,11 @@ const ShowResourceUssage = (props) => {
 
   const isDevice = normalizedType === "device";
   const { globalConfigStore } = React.useContext(MobXProviderContext);
+  const [filterLabelCodes, setFilterLabelCodes] = useState([])
 
   return (
     <Grid divided="vertically">
-      <Grid.Column width={6}>
+      <Grid.Column width={5}>
         <Grid.Row>
           <Table basic celled striped compact size="small">
             <Table.Body>
@@ -148,31 +152,43 @@ const ShowResourceUssage = (props) => {
             </Table.Body>
           </Table>
         </Grid.Row>
-
+        <Divider />
         <Grid.Row>
-          <Grid.Column style={{ width: "70%" }}>
-            <ShowPacketsStatistics
-              packets_down={props.asset.packets_down}
-              packets_up={props.asset.packets_up}
-              packets_lost={props.asset.packets_lost}
-              headerColorLine="black"
-              type={props.asset.type}
-            >
-              <strong>Messages on the last 24 hours</strong>
-            </ShowPacketsStatistics>
-          </Grid.Column>
+          <ShowPacketsStatistics
+            packets_down={props.asset.packets_down}
+            packets_up={props.asset.packets_up}
+            packets_lost={props.asset.packets_lost}
+            headerColorLine="black"
+            type={props.asset.type}
+          >
+            <strong>Messages on the last 24 hours</strong>
+          </ShowPacketsStatistics>
         </Grid.Row>
       </Grid.Column>
-      <Grid.Column width={10}>
-        {isDevice && <PacketsGraph data={props.asset} />}
+      <Grid.Column width={11}>
+        {isDevice && (
+          <Segment>
+            <PacketsGraph data={props.asset} />
+          </Segment>
+        )}
         {!isDevice && (
-          <Segment placeholder>
-            <Header icon>
-              Devices connected to this gateways (list limited to 100):
-            </Header>
-            <Segment.Inline style={{ wordBreak: "break-all" }}>
-              <AssociatedAsset type={normalizedType} id={props.asset.id} />
-            </Segment.Inline>
+          <Segment stretched placeholder>
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={4}>
+                  <Segment attached>
+                    <GatewayShowInfo gatewayId={props.asset.id} />
+                  </Segment>
+                </Grid.Column>
+                <Grid.Column width={12}>
+                  <AssociatedAssetInventoryShow
+                    type={normalizedType}
+                    id={props.asset.id}
+                    tags={filterLabelCodes}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           </Segment>
         )}
       </Grid.Column>
