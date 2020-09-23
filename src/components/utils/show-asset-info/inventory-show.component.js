@@ -51,7 +51,7 @@ const ShowInventory = (props) => {
         <Grid>
           <Grid.Row stretched>
             <Grid.Column width={5}>
-              <Table basic celled striped style={{height:"100%"}}>
+              <Table basic celled striped style={{ height: "100%" }}>
                 <Table.Body>
                   <Table.Row>
                     <Table.Cell collapsing>NAME:</Table.Cell>
@@ -131,6 +131,7 @@ const ShowInventory = (props) => {
                         <RemovableTagStandalone
                           key={tag.id}
                           id={tag.id}
+                          allowRemove={false}
                           name={tag.name}
                           color={tag.color}
                           assetType={props.inventory.type}
