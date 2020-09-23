@@ -147,7 +147,7 @@ const AssociatedAssetInventoryShow = (props) => {
                   >
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell collapsing>ID</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>DEVICE ID</Table.HeaderCell>
                         <Table.HeaderCell>ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell>APPLICATION</Table.HeaderCell>
 
