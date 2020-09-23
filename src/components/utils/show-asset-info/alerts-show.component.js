@@ -218,7 +218,7 @@ const ShowAlerts = (props) => {
                       hexId={
                         type === "gateway" ? "N/A" : alert.parameters.gateway
                       }
-                      showAsLink={type === "gateway" ? false : true}
+                      showAsLink={!(type === "gateway")}
                     />
                   </Table.Cell>
                 </Table.Row>
