@@ -13,10 +13,10 @@ import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
-import AssetLink from "../../utils/asset-link.component";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import DateFilterBar from "./date-filter-bar.component";
 import AssetId from "../asset-id.component";
+import LoaderComponent from "../loader.component"
 
 const ShowCurrentIssues = (props) => {
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
@@ -102,15 +102,7 @@ const ShowCurrentIssues = (props) => {
         <span className="pull-right aligned" onClick={toggleShowFilter}>
           <Popup
             size="tiny"
-            trigger={
-              <Icon
-                name="filter"
-                size="small"
-                bordered
-                link
-                inverted
-              />
-            }
+            trigger={<Icon name="filter" size="small" bordered link inverted />}
             basic
             content={showFilters ? "Hide Filters" : "ShowFilters"}
           />
@@ -121,10 +113,11 @@ const ShowCurrentIssues = (props) => {
       )}
 
       <Segment attached>
-        {totalItems <= 0 && (
+        {isLoading && <LoaderComponent loadingMessage="Loading current issues..." />}
+        {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no current issues to show" />
         )}
-        {totalItems > 0 && (
+        {totalItems > 0 && !isLoading && (
           <Table
             striped
             selectable
@@ -214,12 +207,16 @@ const ShowCurrentIssues = (props) => {
                       collapsing
                     >
                       <AssetId
-                        id={type === "gateway" ? null : current_issue.gateway_id}
+                        id={
+                          type === "gateway" ? null : current_issue.gateway_id
+                        }
                         type={type === "gateway" ? "device" : "gateway"}
                         hexId={
-                          type === "gateway" ? "N/A" : current_issue.parameters.gateway
+                          type === "gateway"
+                            ? "N/A"
+                            : current_issue.parameters.gateway
                         }
-                        showAsLink={type === "gateway" ? false : true}
+                        showAsLink={!(type === "gateway")}
                       />
                       {!_.isEmpty(selectedAlert.alert) && (
                         <DetailsAlertModal
@@ -236,7 +233,7 @@ const ShowCurrentIssues = (props) => {
           </Table>
         )}
         {totalPages > 1 && (
-          <Grid className="segment centered">
+          <Grid className="centered bottom">
             <Pagination
               size="mini"
               activePage={activePage}
