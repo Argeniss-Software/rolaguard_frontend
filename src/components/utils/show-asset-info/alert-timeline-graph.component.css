@@ -54,3 +54,7 @@
 .vis-item.vis-box {
     border-radius: 31px !important;
 }
+
+.vis-label .vis-inner {
+    height: 75px;
+}
