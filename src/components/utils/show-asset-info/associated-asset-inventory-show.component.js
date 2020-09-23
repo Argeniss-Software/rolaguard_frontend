@@ -5,15 +5,12 @@ import {
   Grid,
   Pagination,
   Segment,
-  // Icon,
   Popup,
   Message
 } from "semantic-ui-react";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
-import AlertUtil from "../../../util/alert-util";
 import AssetIdComponent from "../asset-id.component";
-// import DateFilterBar from "./date-filter-bar.component";
 import ImportanceLabel from "../importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
 import ShowDeviceState from "../show-device-state.component";
@@ -21,16 +18,11 @@ import { MobXProviderContext } from "mobx-react";
 import GatewayCirclePackGraph from "./gateway-circle-pack-graph.component";
 import HttpStatus from "http-status-codes"
 import LoaderComponent from "../loader.component"
+import InventoryDetailsModal from "../../inventory/inventory.modal.component"
 
 const AssociatedAssetInventoryShow = (props) => {
   const { inventoryAssetsStore } = useContext(MobXProviderContext);
-  const colorsMap = AlertUtil.getColorsMap();
   const [errorOnRequest, setErrorOnRequest] = useState(false)
-  const [selectedAsset, setSelectedAsset] = useState({
-    asset: {},
-    asset_type: {},
-  });
-
   const [assets, setAssets] = useState({});
   const [activePage, setActivePage] = useState(1);
   const [perPage, setPerPage] = useState(5);
@@ -40,13 +32,7 @@ const AssociatedAssetInventoryShow = (props) => {
   const [totalPages, setTotalPages] = useState(0);
 
   const [selectedTagsForFilter, setSelectedTagsForFilter] = useState([]);
-  /* 
-  const [orderBy, setOrderBy] = useState(["created_at", "DESC"]);
-  const [dateFilter, setDateFilter] = useState({
-    from: null,
-    to: null,
-  }); 
-  */
+ 
   const { type, id } = props;
 
   const [criteria, setCriteria] = useState({
@@ -87,54 +73,28 @@ const AssociatedAssetInventoryShow = (props) => {
     setActivePage(activePage);
   };
 
-  const showAlertDetails = (data) => {
-    setSelectedAsset({
-      asset: data,
-      asset_type: data.type,
-    });
-  };
-
-  /*const toggleSort = (field) => {
-    setOrderBy([field, orderBy[1] === "ASC" ? "DESC" : "ASC"]);
-  };*/
-
-  /*const closeAlertDetails = () => {
-    setSelectedAsset({
-      asset: {},
-      asset_type: {},
-    });
-  };*/
-
-  /*const handleDateFilterChange = (date) => {
-    setDateFilter((prevDate) => {
-      return { ...prevDate, ...date };
-    });
-  };*/
-
-  /*const toggleShowFilter = () => {
-    setShowFilters((actualShowFilter) => {
-      return !actualShowFilter;
-    });
-  };*/
-
-  const showAssetDetails = (index) => {
-    const item = assets[index];
-    const selectedAsset = {
-      index,
-      item,
-      itemType: item.type,
-      isFirst: activePage === 1 && index === 0,
-      isLast: activePage === totalPages && index === assets.length - 1,
-    };
-    setSelectedAsset({ selectedAsset: selectedAsset });
-  };
-
   const handleOnChangeSelectedLabels = (items) => {
     setActivePage(1);
     setSelectedTagsForFilter(items.map((e) => e.code));
     setCriteria((oldCriteria) => {
       return { ...oldCriteria, ...{ tags: items.map((e) => e.code) } };
     });
+  };
+
+  const [selectedAsset, setSelectedAsset] = useState({})
+  
+  const closeInventoryDetails = () => {
+    setSelectedAsset({});
+  };
+
+  const showAssetDetails = (index) => {
+    const item = assets[index];
+    const selected = {
+      index,
+      item,
+      itemType: item.type
+    };
+    setSelectedAsset(selected);
   };
 
   return (
@@ -145,7 +105,13 @@ const AssociatedAssetInventoryShow = (props) => {
       >
         INVENTORY {totalItems > 0 && <Label color="red">{totalItems}</Label>}
       </h5>
-
+      {!_.isEmpty(selectedAsset) && (
+        <InventoryDetailsModal
+          selectedItem={selectedAsset}
+          assets={assets}
+          onClose={closeInventoryDetails}
+        />
+      )}
       <Segment attached stretched>
         <Grid>
           <Grid.Row>
