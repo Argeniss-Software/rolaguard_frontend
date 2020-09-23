@@ -16,6 +16,7 @@ import AlertUtil from "../../../util/alert-util";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import AssetIdComponent from "../asset-id.component";
 import DateFilterBar from "./date-filter-bar.component";
+import LoaderComponent from "../loader.component"
 
 const ShowAlerts = (props) => {
   const colorsMap = AlertUtil.getColorsMap();
@@ -108,15 +109,7 @@ const ShowAlerts = (props) => {
         <span className="pull-right aligned" onClick={toggleShowFilter}>
           <Popup
             size="tiny"
-            trigger={
-              <Icon
-                name="filter"
-                size="small"
-                bordered
-                link
-                inverted
-              />
-            }
+            trigger={<Icon name="filter" size="small" bordered link inverted />}
             basic
             content={showFilters ? "Hide Filters" : "ShowFilters"}
           />
@@ -126,7 +119,11 @@ const ShowAlerts = (props) => {
         <DateFilterBar onDateFilterChange={handleDateFilterChange} />
       )}
       <Segment attached stretched>
-        {totalItems > 0 && (
+        {isLoading && <LoaderComponent loadingMessage="Loading alerts..." />}
+        {totalItems <= 0 && !isLoading && (
+          <EmptyComponent emptyMessage="There are no alerts to show." />
+        )}
+        {totalItems > 0 && !isLoading && (
           <Table
             striped
             selectable
@@ -216,14 +213,10 @@ const ShowAlerts = (props) => {
                     collapsing
                   >
                     <AssetIdComponent
-                      id={
-                        type === "gateway" ? null : alert.gateway_id
-                      }
+                      id={type === "gateway" ? null : alert.gateway_id}
                       type={type === "gateway" ? "device" : "gateway"}
                       hexId={
-                        type === "gateway"
-                          ? "N/A"
-                          : alert.parameters.gateway
+                        type === "gateway" ? "N/A" : alert.parameters.gateway
                       }
                       showAsLink={type === "gateway" ? false : true}
                     />
@@ -232,9 +225,6 @@ const ShowAlerts = (props) => {
               ))}
             </Table.Body>
           </Table>
-        )}
-        {totalItems <= 0 && (
-          <EmptyComponent emptyMessage="There are no alerts to show." />
         )}
 
         {totalPages > 1 && (
