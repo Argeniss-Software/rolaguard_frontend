@@ -206,7 +206,6 @@ const ShowCurrentIssues = (props) => {
                       style={{ maxWidth: "180px" }}
                       collapsing
                     >
-                      {console.log(current_issue)}
                       <AssetId
                         id={
                           type === "gateway"
