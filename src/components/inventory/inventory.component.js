@@ -793,7 +793,7 @@ class InventoryReviewComponent extends React.Component {
                             active={this.state.isGraphsLoading === true}
                           />
                           {!this.state.isGraphsLoading && (
-                            <div style={{width:'300px', height:'260px'}}>
+                            <div style={{width:'100%', height:'260px'}}>
                               <CirclePack
                                 isLoading={this.state.isGraphsLoading}
                                 data={byTagsViz}

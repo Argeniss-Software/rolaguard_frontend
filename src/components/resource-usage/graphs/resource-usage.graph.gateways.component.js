@@ -19,7 +19,7 @@ const ResourceUsageGraphGatewaysComponent = (props) => {
       <h5 className="visualization-title">BY GATEWAYS</h5>
       <Loader active={resourceUsageStore.getGatewaysLoading()} />
       {
-        <div style={{ width: "300px", height: "300px" }}>
+        <div style={{ width: "100%", height: "300px" }}>
           <CirclePack
             isLoading={resourceUsageStore.getGatewaysLoading()}
             data={resourceUsageStore.gatewaysGraph.series}
