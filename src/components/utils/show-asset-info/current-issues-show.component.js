@@ -13,10 +13,10 @@ import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
 import _ from "lodash";
 import EmptyComponent from "../../utils/empty.component";
-import AssetLink from "../../utils/asset-link.component";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import DateFilterBar from "./date-filter-bar.component";
 import AssetId from "../asset-id.component";
+import LoaderComponent from "../loader.component"
 
 const ShowCurrentIssues = (props) => {
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
@@ -94,7 +94,7 @@ const ShowCurrentIssues = (props) => {
   return (
     <React.Fragment>
       <h5
-        class="ui inverted top attached header"
+        className="ui inverted top attached header"
         style={{ height: "44px", maxHeight: "44px" }}
       >
         CURRENT ISSUES
@@ -102,16 +102,7 @@ const ShowCurrentIssues = (props) => {
         <span className="pull-right aligned" onClick={toggleShowFilter}>
           <Popup
             size="tiny"
-            trigger={
-              <Icon
-                name="filter"
-                size="small"
-                bordered
-                link
-                inverted
-                color="white"
-              />
-            }
+            trigger={<Icon name="filter" size="small" bordered link inverted />}
             basic
             content={showFilters ? "Hide Filters" : "ShowFilters"}
           />
@@ -122,10 +113,11 @@ const ShowCurrentIssues = (props) => {
       )}
 
       <Segment attached>
-        {totalItems <= 0 && (
+        {isLoading && <LoaderComponent loadingMessage="Loading current issues..." />}
+        {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no current issues to show" />
         )}
-        {totalItems > 0 && (
+        {totalItems > 0 && !isLoading && (
           <Table
             striped
             selectable
@@ -210,26 +202,22 @@ const ShowCurrentIssues = (props) => {
                       }
                     </Table.Cell>
                     <Table.Cell
-                      className="upper"
+                      className="upper text-center aligned"
                       style={{ maxWidth: "180px" }}
                       collapsing
                     >
                       <AssetId
                         id={
-                          type === "gateway"
-                            ? current_issue.alert.device_id
-                            : current_issue.alert.gateway_id
+                          type === "gateway" ? null : current_issue.gateway_id
                         }
                         type={type === "gateway" ? "device" : "gateway"}
                         hexId={
                           type === "gateway"
-                            ? current_issue.alert.parameters.dev_eui ||
-                              current_issue.alert.parameters.dev_addr
-                            : current_issue.alert.parameters.gateway
+                            ? "N/A"
+                            : current_issue.parameters.gateway
                         }
-                        showAsLink={true}
+                        showAsLink={!(type === "gateway")}
                       />
-
                       {!_.isEmpty(selectedAlert.alert) && (
                         <DetailsAlertModal
                           loading={false}
@@ -245,7 +233,7 @@ const ShowCurrentIssues = (props) => {
           </Table>
         )}
         {totalPages > 1 && (
-          <Grid className="segment centered">
+          <Grid className="centered bottom">
             <Pagination
               size="mini"
               activePage={activePage}

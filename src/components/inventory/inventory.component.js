@@ -786,19 +786,21 @@ class InventoryReviewComponent extends React.Component {
                         mobile={16}
                         tablet={8}
                         computer={4}
-                      > 
+                      >
                         <div className="box-data">
                           <h5 className="visualization-title">LABELS</h5>
                           <Loader
                             active={this.state.isGraphsLoading === true}
                           />
                           {!this.state.isGraphsLoading && (
-                            <CirclePack
-                              isLoading={this.state.isGraphsLoading}
-                              data={byTagsViz}
-                              type={"byTagsViz"}
-                              handler={this.handleItemSelected}
-                            />
+                            <div style={{width:'100%', height:'260px'}}>
+                              <CirclePack
+                                isLoading={this.state.isGraphsLoading}
+                                data={byTagsViz}
+                                type={"byTagsViz"}
+                                handler={this.handleItemSelected}
+                              />
+                            </div>
                           )}
                         </div>
                       </Grid.Column>

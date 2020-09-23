@@ -8,13 +8,13 @@ const getDataSeries = (data) => {
   return [
     _.get(data, "packets_up.percentage", "-") === "-"
       ? 0
-      : data.packets_up.percentage,
+      : parseFloat(data.packets_up.percentage.toFixed(1)),
     _.get(data, "packets_down.percentage", "-") === "-"
       ? 0
-      : data.packets_down.percentage,
+      : parseFloat(data.packets_down.percentage.toFixed(1)),
     _.get(data, "packets_lost.percentage", "-") === "-"
       ? 0
-      : data.packets_lost.percentage,
+      : parseFloat(data.packets_lost.percentage.toFixed(1)),
   ];
 };
 
@@ -26,28 +26,29 @@ const ShowPacketsStatistics = (props) => {
         animations: {
           enabled: false,
         },
+        dataLabels: {
+          enabled: false,
+          textAnchor: "start",
+          offsetX: 200,
+          offsetY: 200,
+          style: {
+            fontSize: "14px",
+            fontFamily: "Helvetica, Arial, sans-serif",
+            fontWeight: "bold",
+            colors: ["#fff"],
+          },
+          dropShadow: {
+            enabled: true,
+            left: 2,
+            top: 2,
+            opacity: 0.5,
+          },
+          formatter: function(val) {
+            return val.toFixed(1);
+          },
+        },
       },
-      dataLabels: {
-        enabled: false,
-        textAnchor: "start",
-        offsetX: 200,
-        offsetY: 200,
-        style: {
-          fontSize: "14px",
-          fontFamily: "Helvetica, Arial, sans-serif",
-          fontWeight: "bold",
-          colors: ["#fff"],
-        },
-        dropShadow: {
-          enabled: true,
-          left: 2,
-          top: 2,
-          opacity: 0.5,
-        },
-        formatter: function(val) {
-          return val.toFixed(1);
-        },
-      },
+
       plotOptions: {
         pie: {
           donut: {
@@ -61,6 +62,9 @@ const ShowPacketsStatistics = (props) => {
         fontSize: "12px",
         fontFamily: "Helvetica, Arial",
         fontWeight: 400,
+        formatter: function(val) {
+          return val.toFixed(1);
+        },
       },
       labels: ["Uplink", "Downlink", "Lost"],
       colors: ["#f2711c", "#21ba45", "#767676"],
@@ -113,7 +117,7 @@ const ShowPacketsStatistics = (props) => {
               />
             </strong>
           </Table.Cell>
-          <Table.Cell rowSpan="4">
+          <Table.Cell rowSpan="4" className="aligned text-center">
             <Chart
               options={data.options}
               series={data.series}

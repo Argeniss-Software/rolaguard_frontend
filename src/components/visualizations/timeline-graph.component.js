@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Button, Grid, Segment } from "semantic-ui-react";
 import _ from "lodash";
 import * as vis from "vis-timeline/standalone";
+import moment from 'moment'
 
 const TimeLineGraph = (props) => {
   const defaultItems = [
@@ -49,6 +50,8 @@ const TimeLineGraph = (props) => {
       minHeight: 250,
       editable: false,
       locale: "en",
+      start: moment().subtract(1, 'hours'),
+      end: moment().add(5, 'minutes')
       /*template: function(item, element, data) { // there is a bug on template render: https://github.com/almende/vis/issues/3592
         return ReactDOM.render(
           <Popup
@@ -86,7 +89,7 @@ const TimeLineGraph = (props) => {
     setItems(props.items || defaultItems);
     setTimeLine(
       new vis.Timeline(refElement.current, dataSetItems, groups, options)
-    );
+    );    
   }, []);
 
   useEffect(() => {

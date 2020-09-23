@@ -21,7 +21,6 @@ class CirclePackD3 {
       .attr("width", props.width)
       .attr("height", props.height)
       .style("display", "block")
-      .style("margin", "0 -14px")
       .style("background", "white")
       .style("cursor", "default")
 

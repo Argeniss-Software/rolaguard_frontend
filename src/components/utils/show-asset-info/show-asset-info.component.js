@@ -2,18 +2,29 @@ import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import { Icon, Grid, Segment, Popup } from "semantic-ui-react";
 import ShowAlerts from "./alerts-show.component";
-import ShowResourceUsage from "./resource-usage-show.component";
+import ShowResourceUsage from "./resource-usage/resource-usage-show.component";
 import ShowInventory from "./inventory-show.component";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import LoaderComponent from "../loader.component";
 import AlertTimeLineGraph from "./alert-timeline-graph.component"
+import ResourceUsageInfo from "./resource-usage/resource-usage-info.component"
+import AssociatedAssetInventoryShow from "../../utils/show-asset-info/associated-asset-inventory-show.component";
+import _ from 'lodash'
 
 const ShowAssetInfo = (props) => {
   const [inventory, setInventory] = useState({});
   const [resource_usage, setResourceUsage] = useState({});
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { commonStore } = useContext(MobXProviderContext);
+  const { commonStore } = useContext(MobXProviderContext);  
+
+  const normalizedType =
+    _.get(props, "type") &&
+    !["gateway", "device"].includes(props.type.toLowerCase().trim())
+      ? ""
+      : props.type.toLowerCase().trim();
+
+  const isDevice = normalizedType === "device";
 
   useEffect(() => {
     if (props.type && props.id) {
@@ -77,11 +88,11 @@ const ShowAssetInfo = (props) => {
 
         <Grid columns="equal">
           <Grid.Row>
-            <Grid.Column flex columns={8}>
+            <Grid.Column columns={8} className="flex">
               <AlertTimeLineGraph type={props.type} id={props.id} />
             </Grid.Column>
 
-            <Grid.Column flex columns={8} stretched>
+            <Grid.Column columns={8} className="stretched flex">
               {props.type && props.id && (
                 <ShowAlerts type={props.type} id={props.id} />
               )}
@@ -91,17 +102,40 @@ const ShowAssetInfo = (props) => {
 
         <Grid columns="equal">
           <Grid.Row>
-            <Grid.Column flex columns={16}>
-              <h5
-                className="ui inverted top attached header blue segment"
-                style={{ height: "44px" }}
-              >
-                NETWORK OVERVIEW
-              </h5>
-              <Segment attached>
-                <ShowResourceUsage asset={resource_usage} />
-              </Segment>
-            </Grid.Column>
+            {isDevice && (
+              <Grid.Column className="flex" columns={16}>
+                <h5
+                  className="ui inverted top attached header segment"
+                  style={{ height: "44px" }}
+                >
+                  NETWORK OVERVIEW
+                </h5>
+                <Segment attached>
+                  <ShowResourceUsage asset={resource_usage} />
+                </Segment>
+              </Grid.Column>
+            )}
+            {!isDevice && (
+              <React.Fragment>
+                <Grid.Column width={5}>
+                  <h5
+                    className="ui inverted top attached header segment"
+                    style={{ height: "44px" }}
+                  >
+                    NETWORK OVERVIEW
+                  </h5>
+                  <Segment attached>
+                    <ResourceUsageInfo asset={resource_usage} />
+                  </Segment>
+                </Grid.Column>
+                <Grid.Column width={11}>                
+                  <AssociatedAssetInventoryShow
+                    type={normalizedType}
+                    id={props.id}
+                  />
+                </Grid.Column>
+              </React.Fragment>
+            )}
           </Grid.Row>
         </Grid>
       </React.Fragment>

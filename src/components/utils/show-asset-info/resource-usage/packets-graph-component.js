@@ -3,7 +3,7 @@ import Chart from "react-apexcharts"
 import { MobXProviderContext } from "mobx-react";
 import _ from "lodash"
 import "./packets-graph-component.css"
-
+import LoaderComponent from "../../loader.component"
 
 const PacketGraph = (props) => {
   /* 
@@ -23,8 +23,10 @@ const PacketGraph = (props) => {
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
   const packetList = _.get(props, "data.last_packets_list");
   const [resourceUsagePacketList, setResourceUsagePacketList] = useState([])
-  
+  const [isLoading, setIsLoading] = useState(true)
+
   const loadDataForGraph = () => {
+    setIsLoading(true)
     if (props.type && props.id) {
       let paramsId = {
         type: props.type,
@@ -38,6 +40,7 @@ const PacketGraph = (props) => {
 
       Promise.all([resourceUsagePromise]).then((response) => {
         setResourceUsagePacketList(_.get(response, "[0].data.last_packets_list"));
+        setIsLoading(false);
       });
     }
   }
@@ -101,7 +104,7 @@ const PacketGraph = (props) => {
         width: [2, 2],
       },
       title: {
-        text: "Signal Strength (RSSI) and SNR for last 10 packets",
+        text: "Signal Strength (RSSI) and SNR for last 200 packets",
         align: "center",
       },
       xaxis: {
@@ -191,7 +194,10 @@ const PacketGraph = (props) => {
 
   return (
     <React.Fragment>
-      {!_.isEmpty(resourceUsagePacketList) && (
+      {(isLoading && _.isEmpty(resourceUsagePacketList)) && (
+        <LoaderComponent loadingMessage="Loading graph..." />
+      )}
+      {(!isLoading || !_.isEmpty(resourceUsagePacketList)) && (
         <Chart
           options={graphData.options}
           series={graphData.series}

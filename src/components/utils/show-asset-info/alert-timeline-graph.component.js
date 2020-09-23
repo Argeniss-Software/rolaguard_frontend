@@ -15,7 +15,7 @@ const AlertTimeLineGraph = (props) => {
   const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
-  const [perPage, setPerPage] = useState(1000);
+  const [perPage, setPerPage] = useState(500);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -71,9 +71,10 @@ const AlertTimeLineGraph = (props) => {
     return data.map((e, index) => {
       return {
         id: _.get(e, "id", index + 1),
-        content: _.truncate(_.get(e, "type.name", "N/A"), { length: 14 }),
+        content: " ", //_.truncate(_.get(e, "type.name", "N/A"), { length: 14 }),
         allContent: e,
         start: moment(e.created_at),
+        // type: "point",
         className: _.get(e, "type.risk", "").toLowerCase(),
         group: _.get(e, "type.risk", "").toLowerCase(),
       };
@@ -92,11 +93,14 @@ const AlertTimeLineGraph = (props) => {
 
   // Configuration for the Timeline
   const options = {
-    stack: true,
+    stack: false,
     maxHeight: 350,
     minHeight: 350,
     editable: false,
     locale: "en",
+    zoomMin: 1000 * 60 * 60, // every 5 minutes
+    zoomMax: 1000 * 60 * 60 * 24 * 30 * 1, // a month
+    
     tooltip: {
       template: function(originalItemData, parsedItemData) {
         return `
@@ -133,20 +137,20 @@ const AlertTimeLineGraph = (props) => {
 
   var groups = [
     {
-      id: "info",
-      content: "INFO",
-    },
-    {
-      id: "low",
-      content: "LOW",
+      id: "high",
+      content: "HIGH",
     },
     {
       id: "medium",
       content: "MEDIUM",
     },
     {
-      id: "high",
-      content: "HIGH",
+      id: "low",
+      content: "LOW",
+    },
+    {
+      id: "info",
+      content: "INFO",
     },
   ];
 
