@@ -16,6 +16,7 @@ const AssociatedAsset = (props) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [associatedAssets, setAssociatedAssets] = useState([]);
+  const [qtyAssociated, setQtyAssociated] = useState(0);
 
   const { resourceUsageStore } = useContext(MobXProviderContext);
   useEffect(() => {
@@ -29,10 +30,18 @@ const AssociatedAsset = (props) => {
       });
       Promise.all([resourceUsagePromise]).then((response) => {
         setAssociatedAssets(_.get(response, "[0].data.assets"));
+        setQtyAssociated(_.get(response, "[0].data.assets").length);
         setIsLoading(false);
       });
     }
   }, []);
+  
+
+  useEffect(() => {
+    if (_.isFunction(props.onChange)) {
+      props.onChange(qtyAssociated);
+    }
+  }, [qtyAssociated]);
 
   return (
     <React.Fragment>
