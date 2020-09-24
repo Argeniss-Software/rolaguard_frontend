@@ -38,7 +38,7 @@ class MenuComponent extends React.Component {
 
         return (
             <nav className="animated fadeInLeft">
-                {this.props.sidebarCollapsed === false && (<h3>Views</h3>)}
+                <h3></h3>
 
                 <Popup
                   trigger={
@@ -52,9 +52,9 @@ class MenuComponent extends React.Component {
                 />
                 <Popup
                   trigger={
-                    <a onClick={() => { this.selectedItem("quarantine", "/dashboard/quarantine") }} className={this.state.activeItem === "quarantine" ? "active" : ""}>
-                      <i className="fas fa-bug"></i>
-                      {this.props.sidebarCollapsed === false && (<span>Quarantine</span>)}
+                    <a onClick={() => { this.selectedItem("current_issues", "/dashboard/current_issues") }} className={this.state.activeItem === "current_issues" ? "active" : ""}>
+                      <i className="fas fa-exclamation-triangle"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Current Issues</span>)}
                     </a>
                   }
                   style={popupStyle}
@@ -71,24 +71,63 @@ class MenuComponent extends React.Component {
                   content="Alerts"
                 />
 
-                {this.props.sidebarCollapsed === false && <h3>Administration</h3>}
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("inventory", "/dashboard/inventory") }} className={this.state.activeItem === "inventory" ? "active" : ""}>
+                      <i className="fas fa-microchip"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Inventory</span>)}
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Inventory"
+                /> 
 
                 <Popup
                   trigger={
-                    <a onClick={() => { this.selectedItem("notifications", "/dashboard/notifications") || resetUnread() }} className={this.state.activeItem === "notifications" ? "active" : ""}>
-                      <i className="fas fa-bell"></i>
+                    <a onClick={() => { this.selectedItem("resources-usage", "/dashboard/resources_usage") }} className={this.state.activeItem === "resources-usage" ? "active" : ""}>
+                      <i className="fas fa-chart-line"></i>
+                      {this.props.sidebarCollapsed === false && (<span>Network Overview</span>)}
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Resources Usage"
+                />
+
+                <h3></h3>
+
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("events_manager", "/dashboard/events_manager")}} className={this.state.activeItem === "events_manager" ? "active" : ""}>
+                      <i className="fas fa-project-diagram"></i>
                       
                       {this.props.sidebarCollapsed === false && (
                         <span>
-                          Notifications {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                          Events Manager
                         </span>
                       )}
                       
                     </a>
                   }
                   style={popupStyle}
-                  content="Notifications"
+                  content="Events Manager"
                 />
+
+                <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("events_log", "/dashboard/events_log") || resetUnread() }} className={this.state.activeItem === "events_log" ? "active" : ""}>
+                      <i className="fas fa-file-alt"></i>
+                      {this.props.sidebarCollapsed === false && (
+                        <span>
+                          Events Log {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                        </span>
+                      )}
+                      
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Events log"
+                />
+
 
                 <Popup
                   trigger={
@@ -105,11 +144,11 @@ class MenuComponent extends React.Component {
                   trigger={
                     <a onClick={() => { this.selectedItem("data_collector", "/dashboard/data_collectors") }} className={this.state.activeItem === "data_collector" ? "active" : ""}>
                       <i className="fas fa-sitemap"></i>
-                      {this.props.sidebarCollapsed === false && (<span>Message Collectors</span>)}
+                      {this.props.sidebarCollapsed === false && (<span>Data Sources</span>)}
                     </a>
                   }
                   style={popupStyle}
-                  content="Message Collectors"
+                  content="Data Sources"
                 />
 
                 {isAdmin && (

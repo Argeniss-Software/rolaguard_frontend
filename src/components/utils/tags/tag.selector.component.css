@@ -1,0 +1,22 @@
+.tag-selector {
+    display: inline;
+}
+
+.tag-selector-popup {
+}
+
+.tag-list-selector {
+    width: 200px;
+    height: 100px;
+    overflow-y: auto;
+}
+
+.loading-tags{
+    width: 200px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.no-tags {
+    text-align: center;
+}

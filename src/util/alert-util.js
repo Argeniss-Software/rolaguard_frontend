@@ -15,20 +15,21 @@ const AlertUtil = {
   },
 
   parameters : {
-    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui']
+    toUpper: ['app_key', 'dev_eui', 'gateway', 'dev_addr', 'old_dev_eui', 'new_dev_eui', 'join_eui'],
+    shouldNotFix: ['old_latitude', 'new_latitude', 'old_longitude', 'new_longitude']
   },
 
   alertTypes: {
-    notAplicableDescription : ['LAF-402']
+    notAplicableDescription : ['LAF-402', 'LAF-403']
   },
 
   alertParameters: {
     "alert_solved": "Alert solved",
+    "resolution_reason": "Resolution reason",
     "dev_eui": "DevEUI",
     "dev_addr": "DevAddr",
     "dev_name": "Device Name",
     "dev_vendor": "Device Vendor",
-    "join_eui": "Application",
     "counter": "Previous Counter",
     "new_counter": "Counter",
     "prev_packet_id": "Previous Message ID",
@@ -38,7 +39,9 @@ const AlertUtil = {
     "gw_name": "Gateway Name",
     "gw_vendor": "Gateway Vendor",
     "created_at": "Created at",
+    "app_name": "App Name",
     "app_key": "App Key",
+    "join_eui": "AppEUI",
     "packet_type_1": "Message 1 Type",
     "packet_type_2": "Message Type",
     "packet_id_1": "Message 1 ID",
@@ -52,7 +55,8 @@ const AlertUtil = {
     "old_latitude": "Old Latitude",
     "new_latitude": "New Latitude",
     "old_longitude": "Old Longitude",
-    "new_longitude": "New Longitude"
+    "new_longitude": "New Longitude",
+    "rssi": "Signal strenght (dBm)"
   },
 
   getParameterHeader(key){

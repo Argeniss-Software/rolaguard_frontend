@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Button, Dropdown } from "semantic-ui-react";
+import { Table, Loader, Segment, Button, Dropdown, Popup } from "semantic-ui-react";
 import {subscribeToNewAlertEvents, unsubscribeFromNewAlertEvents} from '../util/web-socket';
 
 import moment from "moment";
@@ -307,108 +307,181 @@ class DashboardComponent extends React.Component {
             {!this.state.isLoading && (
               <div>
                 <Segment>
-                <div className="animated fadeIn">
-                    <h3><i className="fas fa-sitemap"/> | MESSAGE COLLECTORS {
-                    dataCollectorsLoading === true ?
-                    <div className="ui active inline loader"/> :
-                    <DataCollectorTooltip dataCollectors={dataCollectors} 
-                      activeCollectors={activeCollectors} 
-                      totalCollectors={totalCollectors}/>
-                    }
-                    </h3> 
-                </div>
-                
+                  <div className="animated fadeIn">
+                    <h3>
+                      <i className="fas fa-sitemap" /> | DATA SOURCES{" "}
+                      {dataCollectorsLoading === true ? (
+                        <div className="ui active inline loader" />
+                      ) : (
+                        <DataCollectorTooltip
+                          dataCollectors={dataCollectors}
+                          activeCollectors={activeCollectors}
+                          totalCollectors={totalCollectors}
+                        />
+                      )}
+                    </h3>
+                  </div>
 
-                <div style={{display: 'flex', marginTop: '0.9rem', marginBottom: '0.9rem'}}>
-                  <Dropdown placeholder='Filter by message collector' 
-                    fluid
-                    clearable 
-                    multiple 
-                    search 
-                    selection 
-                    closeOnChange
-                    options={dataCollectors} 
-                    loading={dataCollectorsLoading} 
-                    onChange={this.handleDataCollectorSelection}
-                    icon={ { 
-                      name: this.state.selectedDataCollectors && this.state.selectedDataCollectors.length > 0 ? 'delete' : 'dropdown',
-                      link: true
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: "0.9rem",
+                      marginBottom: "0.9rem",
                     }}
-                  />
-                </div>
-                <div className='text-right' style={{marginTop: '0.9rem', marginBottom: '0.9rem'}}>
-                  <Button.Group basic size='mini'>
-                    <Button active={this.state.range === 'MONTH'} onClick={() => {this.updateRange('MONTH')}}>Last month</Button>
-                    <Button active={this.state.range === 'WEEK'} onClick={() => {this.updateRange('WEEK')}}>Last week</Button>
-                    <Button active={this.state.range === 'DAY'} onClick={() => {this.updateRange('DAY')}}>Last day</Button>
-                  </Button.Group>
-                </div>
+                  >
+                    <Dropdown
+                      placeholder="Filter by data source"
+                      fluid
+                      clearable
+                      multiple
+                      search
+                      selection
+                      closeOnChange
+                      options={dataCollectors}
+                      loading={dataCollectorsLoading}
+                      onChange={this.handleDataCollectorSelection}
+                      icon={{
+                        name:
+                          this.state.selectedDataCollectors &&
+                          this.state.selectedDataCollectors.length > 0
+                            ? "delete"
+                            : "dropdown",
+                        link: true,
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="text-right"
+                    style={{ marginTop: "0.9rem", marginBottom: "0.9rem" }}
+                  >
+                    <Button.Group basic size="mini">
+                      <Button
+                        active={this.state.range === "MONTH"}
+                        onClick={() => {
+                          this.updateRange("MONTH");
+                        }}
+                      >
+                        Last month
+                      </Button>
+                      <Button
+                        active={this.state.range === "WEEK"}
+                        onClick={() => {
+                          this.updateRange("WEEK");
+                        }}
+                      >
+                        Last week
+                      </Button>
+                      <Button
+                        active={this.state.range === "DAY"}
+                        onClick={() => {
+                          this.updateRange("DAY");
+                        }}
+                      >
+                        Last day
+                      </Button>
+                    </Button.Group>
+                  </div>
                   <div id="visualizations" className="data-container ui grid">
                     <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
                       <div className="box-data">
-                        <BarChart isLoading={this.state.alertsCountLoading} data={this.state.alertsCountArray} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
-                        <Loader active={this.state.alertsCountLoading === true} />
+                        <BarChart
+                          isLoading={this.state.quarantineCountLoading}
+                          data={
+                            this.props.deviceStore.quarantineDeviceCountGrouped
+                          }
+                          domain={this.state.visualizationXDomain}
+                          barsCount={this.state.barsCount}
+                          range={this.state.range}
+                        />
+                        <Loader
+                          active={this.state.quarantineCountLoading === true}
+                        />
+                        <div className="box-data-legend">
+                          <i className="fas fa-exclamation-triangle" />
+                          <div>
+                            <h3>CURRENT ISSUES</h3>
+                            {this.state.quarantineDeviceCountLoading ===
+                            true ? (
+                              <div className="ui active inline loader"></div>
+                            ) : (
+                              <h2>
+                                {this.props.deviceStore.quarantineDeviceCount}
+                              </h2>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
+                      <div className="box-data">
+                        <BarChart
+                          isLoading={this.state.alertsCountLoading}
+                          data={this.state.alertsCountArray}
+                          domain={this.state.visualizationXDomain}
+                          barsCount={this.state.barsCount}
+                          range={this.state.range}
+                        />
+                        <Loader
+                          active={this.state.alertsCountLoading === true}
+                        />
                         <div className="box-data-legend">
                           <i className="fas fa-exclamation-circle" />
                           <div>
                             <h3>ALERTS</h3>
-                            {
-                              this.state.alertsCountLoading === true ? 
-                              <div className="ui active inline loader"></div> :
+                            {this.state.alertsCountLoading === true ? (
+                              <div className="ui active inline loader"></div>
+                            ) : (
                               <h2>{alertsCount}</h2>
-                            }
-                            </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
                       <div className="box-data">
-                        <BarChart isLoading={this.state.quarantineCountLoading} data={this.props.deviceStore.quarantineDeviceCountGrouped} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
-                        <Loader active={this.state.quarantineCountLoading === true} />
-                        <div className="box-data-legend">
-                          <i className="fas fa-bug" />
-                          <div>
-                            <h3>QUARANTINE</h3>
-                            {
-                              this.state.quarantineDeviceCountLoading === true ? 
-                              <div className="ui active inline loader"></div> :
-                              <h2>{this.props.deviceStore.quarantineDeviceCount}</h2>
-                            }
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
-                      <div className="box-data">
-                        <BarChart isLoading={this.state.newDevicesLoading} data={this.props.deviceStore.newDevices} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
-                        <Loader active={this.state.newDevicesLoading === true} />
+                        <BarChart
+                          isLoading={this.state.newDevicesLoading}
+                          data={this.props.deviceStore.newDevices}
+                          domain={this.state.visualizationXDomain}
+                          barsCount={this.state.barsCount}
+                          range={this.state.range}
+                        />
+                        <Loader
+                          active={this.state.newDevicesLoading === true}
+                        />
                         <div className="box-data-legend">
                           <i className="fas fa-microchip" />
                           <div>
                             <h3>DEVICES</h3>
-                            {
-                              this.state.newDevicesLoading === true ? 
-                              <div className="ui active inline loader"></div> :
+                            {this.state.newDevicesLoading === true ? (
+                              <div className="ui active inline loader"></div>
+                            ) : (
                               <h2>{this.props.deviceStore.devicesCount}</h2>
-                            }
-                            </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div className="animated fadeIn data-container-box four wide computer eight wide tablet sixteen wide mobile column">
                       <div className="box-data">
-                        <BarChart isLoading={this.state.packetsLoading} data={this.props.deviceStore.packets} domain={this.state.visualizationXDomain} barsCount={this.state.barsCount} range={this.state.range}/>
+                        <BarChart
+                          isLoading={this.state.packetsLoading}
+                          data={this.props.deviceStore.packets}
+                          domain={this.state.visualizationXDomain}
+                          barsCount={this.state.barsCount}
+                          range={this.state.range}
+                        />
                         <Loader active={this.state.packetsLoading === true} />
                         <div className="box-data-legend">
                           <i className="fas fa-envelope" />
                           <div>
                             <h3>MESSAGES</h3>
-                            {
-                              this.state.packetsLoading === true ? 
-                              <div className="ui active inline loader"></div> :
+                            {this.state.packetsLoading === true ? (
+                              <div className="ui active inline loader"></div>
+                            ) : (
                               <h2>{packetsCount}</h2>
-                            }
-                            </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -417,29 +490,73 @@ class DashboardComponent extends React.Component {
                 <Segment>
                   <div className="table-container">
                     <div className="table-container-box">
-                      <h3>LATEST UNRESOLVED ALERTS</h3 >
+                      <h3>LATEST ALERTS</h3>
                       <Loader active={this.state.topAlertsLoading === true} />
-                      {!this.state.topAlertsLoading && <Table className="animated fadeIn" basic="very" compact="very">
-                        <Table.Header>
-                          <Table.Row>
-                            <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                            <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
-                            <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          <AlertListComponent alerts={this.state.topAlerts} alert_types={ this.state.alarmsTypesMap} handleAlertResolution={this.handleAlertResolution} showAlertDetails={this.showAlertDetails}/>
-                        </Table.Body>
-                      </Table>}
+                      {!this.state.topAlertsLoading && (
+                        <Table
+                          striped
+                          selectable
+                          className="animated fadeIn"
+                          basic="very"
+                          compact="very"
+                        >
+                          <Table.Header>
+                            <Table.Row>
+                              <Table.HeaderCell collapsing>
+                                RISK
+                              </Table.HeaderCell>
+                              <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                              <Table.HeaderCell collapsing>
+                                DATE
+                              </Table.HeaderCell>
+                              <Table.HeaderCell collapsing>
+                                ID/ADDRESS
+                              </Table.HeaderCell>
+                              <Table.HeaderCell>
+                                DEVICE NAME
+                              </Table.HeaderCell>
+                              <Table.HeaderCell collapsing>
+                                <Popup
+                                  trigger={
+                                    <span style={{ cursor: "pointer" }}>
+                                      IMPORTANCE
+                                    </span>
+                                  }
+                                >
+                                  The importance value indicates the
+                                  user-defined relevance of the device into the
+                                  organization. Can be set for each asset in the
+                                  Inventory section.
+                                </Popup>
+                              </Table.HeaderCell>
+                              <Table.HeaderCell style={{maxWidth: "160px"}}>
+                                GATEWAY
+                              </Table.HeaderCell>
+                              <Table.HeaderCell>
+                                DATA SOURCE
+                              </Table.HeaderCell>
+                            </Table.Row>
+                          </Table.Header>
+                          <Table.Body>
+                            <AlertListComponent
+                              alerts={this.state.topAlerts}
+                              alert_types={this.state.alarmsTypesMap}
+                              handleAlertResolution={this.handleAlertResolution}
+                              showAlertDetails={this.showAlertDetails}
+                            />
+                          </Table.Body>
+                        </Table>
+                      )}
                     </div>
                   </div>
                 </Segment>
-                {selectedAlert && <DetailsAlertModal alert={selectedAlert} onClose={this.closeAlertDetails} onNavigate={this.goToAlert}/>}
+                {selectedAlert && (
+                  <DetailsAlertModal
+                    alert={selectedAlert}
+                    onClose={this.closeAlertDetails}
+                    onNavigate={this.goToAlert}
+                  />
+                )}
               </div>
             )}
           </div>

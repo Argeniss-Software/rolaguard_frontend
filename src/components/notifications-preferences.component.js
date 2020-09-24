@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label } from "semantic-ui-react";
+import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid, Divider } from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
 
@@ -8,6 +8,7 @@ import AlertUtil from '../util/alert-util';
 
 import "./notifications-preferences.component.css";
 import Validation from "../util/validation";
+import ImportanceLabel from "./utils/importance-label.component";
 
 @inject("notificationStore")
 class NotificationsPreferencesComponent extends React.Component {
@@ -22,7 +23,8 @@ class NotificationsPreferencesComponent extends React.Component {
         hasError: false,
         preferences: {},
         newEmail: '',
-        newPhone: ''
+        newPhone: '',
+        showMessage: false
       }
 
       this.colors = AlertUtil.getColorsMap();
@@ -101,8 +103,8 @@ class NotificationsPreferencesComponent extends React.Component {
         this.setState({ isSaving: true});
         this.props.notificationStore.savePreferences(this.state.preferences).then(
             () => {
-              this.setState({ isSaving: false});
-              this.props.history.push('/dashboard/notifications')
+              this.setState({ isSaving: false, showMessage: true });
+              //this.props.history.push('/dashboard/events_manager')
             }
           ).catch(err => {
             this.setState({ isSaving: false, hasError: true });
@@ -123,8 +125,8 @@ class NotificationsPreferencesComponent extends React.Component {
     }
 
     render() {
-        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex } = this.state;
-        const { risks, dataCollectors, destinations } = preferences;
+        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage } = this.state;
+        const { risks, dataCollectors, destinations, asset_importance} = preferences;
         let emailItem = null, smsItem = null, pushItem;
         if(destinations) {
             emailItem = destinations.find(item => item.destination === 'email');
@@ -132,14 +134,19 @@ class NotificationsPreferencesComponent extends React.Component {
             pushItem = destinations.find(item => item.destination === 'push');
         }
 
+        smsItem = {...smsItem, enabled: false};
+
         return (
           <div className="app-body-container-view">
             <div className="animated fadeIn animation-view">
               <div className="view-header mb-lg">
-                <h1>NOTIFICATIONS PREFERENCES</h1>
+                <h1>EVENTS MANAGER</h1>
               </div>
               { hasError && (<div id="error-message-wrapper">
                 <Message error header='Oops!' content={'Something went wrong. Try again later.'} className="error-message"/>
+              </div>) }
+              { showMessage && (<div id="success-message-wrapper" onClick= {() => this.setState({showMessage: false})} >
+                <Message success header='Done!' content={'Changes were saved, click to hide.'} className= "success-message"/>
               </div>) }
               {!hasError && isLoading && (
                 <LoaderComponent loadingMessage="Loading preferences..."/>
@@ -154,7 +161,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Message collectors ({dataCollectors.length})
+                    Sources ({dataCollectors.length})
                   </Accordion.Title>
                 <Accordion.Content active={activeIndex === 2}>
                   <Table className="animated fadeIn" unstackable basic="very">
@@ -190,35 +197,69 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Alerts
+                    Triggers
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 1}>
-                    <Table className="animated fadeIn" unstackable basic="very">
-                      <Table.Header>
-                        <Table.Row>
-                          <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
-                          <Table.HeaderCell className="border-bottom-none pb0">RISK</Table.HeaderCell>
-                        </Table.Row>
-                      </Table.Header>
-                      <Table.Body>
-                      {
-                        risks.map( (item, index) => {
-                          return (
-                            <Table.Row key={index}>
-                              <Table.Cell className="status-column">
-                                <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
-                                  <Checkbox toggle onChange={() => this.toggle('risks', index)} checked={item.enabled} />
-                                }/>
-                              </Table.Cell>
-                              <Table.Cell>
-                                <Label horizontal style={{backgroundColor: this.colors[item.name.toUpperCase()], color: 'white', borderWidth: 1, borderColor: this.colors[item.name.toUpperCase()]}}>{item.name.toUpperCase()}</Label>                                  
-                              </Table.Cell>
-                            </Table.Row>
-                          );
-                        })
-                      }
-                      </Table.Body>
-                    </Table>
+                    <Grid  celled='internally'>
+                      <Grid.Row>
+                        <Grid.Column width={4}>
+                          <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
+                            <Table.Header>
+                              <Table.Row>
+                                <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
+                                <Table.HeaderCell className="border-bottom-none pb0">RISK</Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                            {
+                              risks.map( (item, index) => {
+                                return (
+                                  <Table.Row key={index}>
+                                    <Table.Cell className="status-column">
+                                      <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
+                                        <Checkbox toggle onChange={() => this.toggle('risks', index)} checked={item.enabled} />
+                                      }/>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      <Label horizontal style={{backgroundColor: this.colors[item.name.toUpperCase()], color: 'white', width: "100px", borderColor: this.colors[item.name.toUpperCase()]}}>{item.name.toUpperCase()}</Label>                                  
+                                    </Table.Cell>
+                                  </Table.Row>
+                                );
+                              })
+                            }
+                            </Table.Body>
+                          </Table>
+                      </Grid.Column>
+                      <Grid.Column width={4}>
+                          <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
+                            <Table.Header>
+                              <Table.Row>
+                                <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
+                                <Table.HeaderCell className="border-bottom-none pb0">IMPORTANCE</Table.HeaderCell>
+                              </Table.Row>
+                            </Table.Header>
+                            <Table.Body>
+                            {
+                              asset_importance.map( (item, index) => {
+                                return (
+                                  <Table.Row key={index}>
+                                    <Table.Cell className="status-column">
+                                      <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
+                                        <Checkbox toggle onChange={() => this.toggle('asset_importance', index)} checked={item.enabled} />
+                                      }/>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                      <ImportanceLabel importance={item.name.toUpperCase()} />
+                                    </Table.Cell>
+                                  </Table.Row>
+                                );
+                              })
+                            }
+                            </Table.Body>
+                          </Table>
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
                   </Accordion.Content>
                   <Accordion.Title
                     active={activeIndex === 0}
@@ -226,7 +267,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     onClick={this.handleAccordionClick}
                   >
                     <Icon name='dropdown' />
-                    Destination
+                    Action
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 0}>
                     <Table className="animated fadeIn" unstackable basic="very">
@@ -302,7 +343,7 @@ class NotificationsPreferencesComponent extends React.Component {
                   </Accordion.Content>
                 </Accordion>
                 <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/>
+                  {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
                   <Form.Button color="green" disabled={isLoading || isSaving} loading={isSaving} content="Save" style={{marginTop: 25, marginLeft: 10}} onClick={this.save}/>
                 </div>
               </div>

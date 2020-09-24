@@ -1,0 +1,60 @@
+/* alternating column backgrounds */
+.vis-time-axis .vis-grid.vis-odd {
+    background: #f5f5f5;
+}
+
+/* gray background in weekends, white text color */
+.vis-time-axis .vis-grid.vis-saturday,
+.vis-time-axis .vis-grid.vis-sunday {
+    background: lightgray;
+}
+
+.vis-time-axis .vis-text.vis-saturday,
+.vis-time-axis .vis-text.vis-sunday {
+    color: black;
+}
+
+/* custom styles for individual items, load this after vis-timeline-graph2d.min.css/vis-timeline-graph2d.min.css */
+/*.vis-box {
+    width: 120px;  
+    font-family: sans-serif;
+    font-size: .85714286rem;
+    text-transform: uppercase;
+    vertical-align: baseline;
+    font-weight: 700;    
+}*/
+.vis-item.info {
+    background-color: #5d9bec;
+    border-color: #5d9bec;
+    color: black;
+}
+.vis-item.low {
+    background-color: #f8d732;
+    border-color: #f8d732;
+    color: black;    
+}
+.vis-item.medium {
+    background-color: #ef8f2a;
+    border-color: #ef8f2a;
+    color: black;
+}
+.vis-item.high {
+    background-color: #f05050;
+    border-color: #f05050;
+    color: black;
+}
+/*.vis-item.vis-box {
+    border-radius: .28571429rem !important;
+    width: 100px;
+}*/
+/*.vis-item .vis-item-overflow {
+    overflow: visible;
+}*/
+
+.vis-item.vis-box {
+    border-radius: 31px !important;
+}
+
+.vis-label .vis-inner {
+    height: 75px;
+}

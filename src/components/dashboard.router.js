@@ -10,7 +10,9 @@ import DashboardComponent from './dashboard.component';
 import NotFoundPage from '../pages/notFoundPage.page';
 import UserProfileComponent from './user.profile.component';
 import AlarmReviewComponent from './alarm_review.component';
-// Don't delete he next line. It serves the DatePicker in the Alerts Review dashboard
+import InventoryReviewComponent from './inventory/inventory.component';
+import ResourceUsageComponent from './resource-usage/resource-usage.component';
+// Don't delete the next line. It serves the DatePicker in the Alerts Review dashboard
 import ReportComponent from './reports-page';
 import DataCollectorListComponent from './data_collectors.list.component';
 import DataCollectorLogComponent from './data_collector.log.component';
@@ -21,6 +23,7 @@ import ListPoliciesComponent from './policies/list-policies.component';
 import ViewPolicyComponent from './policies/view-policy.component';
 import NotificationsPreferencesComponent from './notifications-preferences.component';
 import ListNotificationsComponent from './notifications/list-notifications.component';
+import ViewAssetComponent from './asset/view-asset.component';
 
 class DashBoardRouter extends React.Component {
     render() {
@@ -30,7 +33,14 @@ class DashBoardRouter extends React.Component {
                     <Route exact path='/dashboard' component={DashboardComponent}/>
 
                     {/* QUARANTINE */}
-                    <Route exact path='/dashboard/quarantine' component={QuarantineComponent}/>
+                    <Route exact path='/dashboard/current_issues' component={QuarantineComponent}/>
+
+                    {/* DEVICES */}
+                    <Route exact path='/dashboard/inventory' component={InventoryReviewComponent}/>
+                    <Route path='/dashboard/assets/:type/:id/view' component={ViewAssetComponent}/>
+
+                    {/* RESOURCES */}
+                    <Route exact path='/dashboard/resources_usage' component={ResourceUsageComponent}/>
 
                     {/* DATA COLLECTORS */}
                     <Route exact path='/dashboard/data_collectors' render={ (props) => <DataCollectorListComponent history={props.history}  /> }/>
@@ -46,8 +56,8 @@ class DashBoardRouter extends React.Component {
                     <Route exact path='/dashboard/policies/:id/edit' component={NewPolicyComponent}/>
 
                     {/* NOTIFICATIONS */}
-                    <Route exact path='/dashboard/notifications/preferences' component={NotificationsPreferencesComponent}/>
-                    <Route exact path='/dashboard/notifications' component={ListNotificationsComponent}/>
+                    <Route exact path='/dashboard/events_log' component={ListNotificationsComponent}/>
+                    <Route exact path='/dashboard/events_manager' component={NotificationsPreferencesComponent}/>
 
                     {/* ALARM EVENTS */}
                     <Route path='/dashboard/alerts_review' component={AlarmReviewComponent} />

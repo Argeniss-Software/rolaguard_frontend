@@ -15,32 +15,41 @@ class AlertDetailTableIcon extends Component {
         }
     }
 
-    getGatewayPopup(icon, value, text, type) {
+    getGatewayPopup(gw_name, gateway, gw_vendor) {
         return (
-            <Popup offset="34, 0" trigger={
+            <Popup trigger={
                 <div>
-                    {/* <i className={"icon-font-size-" + type +" fas " + icon} /> */}
                     <img id="gateway-logo" className="animated" src={this.state.gatewayUrl} alt=""/>
-                </div>
-                } flowing hoverable>
-                <div>
-                    {text + ":"}  {value.toUpperCase()}
+                    </div>
+                }
+                
+                flowing hoverable
+                position='bottom center'
+            >
+                <div className="device-popup">
+                    <span className={gw_name ? "" : "hide"}>{gw_name ? "GW NAME: " + gw_name : ""}</span>
+                    <span className={gateway ? "" : "hide"}>{gateway ? "GW ID: " + gateway.toUpperCase() : ""}</span>
+                    <span className={gw_vendor ? "" : "hide"}>{gw_vendor ? "GW VENDOR: " + gw_vendor : ""}</span>
                 </div>
             </Popup>
         );
     }
 
-    getDevicePopup(dev_eui, dev_addr, device_name, type) {
+    getDevicePopup(dev_eui, dev_addr, device_name, dev_vendor) {
         return (
-            <Popup offset="30, 0" trigger={
+            <Popup trigger={
                 <div>
                     <img id="device-logo" className="animated" src={this.state.microchipUrl} alt=""/>
                 </div>
-                } flowing hoverable>
+                }
+                flowing hoverable
+                position='bottom center'
+            >
                 <div className="device-popup">
-                    <span className={device_name ? "" : "hide"}>{device_name ? "DEVICE NAME: " + device_name.toUpperCase() : ""}</span>
+                    <span className={device_name ? "" : "hide"}>{device_name ? "DEV NAME: " + device_name : ""}</span>
                     <span className={dev_eui ? "" : "hide"}>{dev_eui ? "DEV EUI: " + dev_eui.toUpperCase() : ""}</span>
                     <span className={dev_addr ? "" : "hide"}>{dev_addr ? "DEV ADDR: " + dev_addr.toUpperCase() : ""}</span>
+                    <span className={dev_vendor ? "" : "hide"}>{dev_vendor ? "DEV VENDOR: " + dev_vendor : ""}</span>
                 </div>
             </Popup>
         );
@@ -60,34 +69,35 @@ class AlertDetailTableIcon extends Component {
             <Table compact="very" basic="very">
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell textAlign="center" className={dev_eui ? "" : "hide"}>
-                        {dev_eui && this.getDevicePopup(dev_eui, dev_addr, dev_name, "device")}
+                    <Table.HeaderCell textAlign="center" className={(dev_eui || dev_addr)? "" : "hide"}>
+                        {(dev_eui || dev_addr) && this.getDevicePopup(dev_eui, dev_addr, dev_name, dev_vendor)}
                     </Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center" className={gateway && dev_eui ? "" : "hide"}>
+                    <Table.HeaderCell textAlign="center" className={gateway && (dev_eui || dev_addr) ? "" : "hide"}>
                         <i className="fas fa-ellipsis-h icon-font-arrows-h" ></i>
                         <i className="fas fa-ellipsis-h icon-font-arrows-h" ></i>
                     </Table.HeaderCell>
                     <Table.HeaderCell textAlign="center" className={gateway ? "" : "hide"}>
-                        {gateway && this.getGatewayPopup("fa-wifi", gateway, "GATEWAY ID", "gateway")}
+                        {gateway && this.getGatewayPopup(gw_name, gateway, gw_vendor)}
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
             <Table.Body>
                 <Table.Row>
-                    <Table.Cell className={dev_name || gw_name ? "icon-description" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
-                    <Table.Cell  className={dev_name || gw_name ? "icon-description" : "hide"}></Table.Cell>
-                    <Table.Cell className={dev_name || gw_name ? "icon-description" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
+                    <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
+                    <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"}></Table.Cell>
+                    <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
-                    <Table.Cell className={dev_vendor || gw_vendor ? "icon-description" : "hide"} textAlign= "center">{dev_vendor? dev_vendor : ""}</Table.Cell>
-                    <Table.Cell  className={dev_vendor || gw_vendor ? "icon-description" : "hide"}></Table.Cell>
-                    <Table.Cell className={dev_vendor || gw_vendor ? "icon-description" : "hide"} textAlign= "center">{gw_vendor? gw_vendor : ""}</Table.Cell>
+                    <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"} textAlign= "center">{dev_vendor? dev_vendor : ""}</Table.Cell>
+                    <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"}></Table.Cell>
+                    <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"} textAlign= "center">{gw_vendor? gw_vendor : ""}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
-                    <Table.Cell className={dev_eui ? "" : "hide"} textAlign= "center">
-                        {this.getIconDescription(dev_eui)}
+                    <Table.Cell className={(dev_eui || dev_addr) ? "" : "hide"} textAlign= "center">
+                        {dev_eui && this.getIconDescription(dev_eui)}
+                        {(!dev_eui && dev_addr) && this.getIconDescription(dev_addr)}
                     </Table.Cell>
-                    <Table.Cell  className={gateway && dev_eui ? "" : "hide"}></Table.Cell>
+                    <Table.Cell  className={(gateway && (dev_eui || dev_addr)) ? "" : "hide"}></Table.Cell>
                     <Table.Cell className={gateway ? "" : "hide"} textAlign= "center">
                         {this.getIconDescription(gateway)}
                     </Table.Cell>

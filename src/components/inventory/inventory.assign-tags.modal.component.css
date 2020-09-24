@@ -1,0 +1,11 @@
+.modal-content-container {
+  text-align: left;
+}
+
+.error-message-wrapper {
+  justify-content: center;
+}
+
+.error-message {
+  max-width: none;
+}

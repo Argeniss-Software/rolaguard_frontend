@@ -6,7 +6,7 @@ import Validation from "../util/validation";
 import AlertUtil from "../util/alert-util";
 import DeviceIdComponent from "./utils/device-id.component";
 
-@inject("deviceStore", "usersStore")
+@inject("deviceStore", "usersStore", "globalConfigStore")
 @observer
 export default class QuarantineRemoveModal extends Component {
   constructor(props) {
@@ -64,7 +64,9 @@ export default class QuarantineRemoveModal extends Component {
                 <i className="fas fa-trash" />
               </button>
             }
-            content={isAdmin ? "Remove from quarantine" : "Remove from quarantine (only for admin users)"}
+            content={
+              isAdmin ? "Remove issue" : "Remove issue (only for admin users)"
+            }
           />
         }
         centered={false}
@@ -72,44 +74,80 @@ export default class QuarantineRemoveModal extends Component {
         onClose={this.handleClose}
         size={"mini"}
         closeOnDimmerClick={false}
-        closeOnEscape={false}>
+        closeOnEscape={false}
+      >
         <Modal.Header>
-          <i className="fas fa-trash" /> Remove from quarantine
+          <i className="fas fa-trash" /> Remove issue
         </Modal.Header>
         <Modal.Content>
-            <Table className="animated fadeIn" basic definition compact>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>ID/ADDRESS</Table.Cell>
-                  <Table.Cell className="upper">
-                    <DeviceIdComponent parameters={item.alert.parameters} alertType={alert.type}/>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>RISK</Table.Cell>
-                  <Table.Cell><Label horizontal style={{backgroundColor: AlertUtil.getColorsMap()[item.alert_type.risk], color: 'white', borderWidth: 1}}>{item.alert_type.risk}</Label></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>DESCRIPTION</Table.Cell>
-                  <Table.Cell>{item.alert_type.name}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>DATE</Table.Cell>
-                  <Table.Cell>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>COLLECTOR</Table.Cell>
-                  <Table.Cell>{item.data_collector_name}</Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-            <Form>
-              <TextArea placeholder='Leave a comment (required)' value={comment} onChange={this.handleChange} style={{resize: 'none'}}/>
-              <span>
-                {error && (
-                  <Label basic color='red'>We are sorry. It has been an error while trying to remove this item from quarantine.</Label>
-                )}
-              </span>
+          <Table className="animated fadeIn" basic definition compact>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell>ID/ADDRESS</Table.Cell>
+                <Table.Cell className="upper">
+                  <DeviceIdComponent
+                    parameters={item.alert.parameters}
+                    alertType={item.alert.type}
+                  />
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>RISK</Table.Cell>
+                <Table.Cell>
+                  <Label
+                    horizontal
+                    style={{
+                      backgroundColor: AlertUtil.getColorsMap()[
+                        item.alert_type.risk
+                      ],
+                      color: "white",
+                      borderWidth: 1,
+                    }}
+                  >
+                    {item.alert_type.risk}
+                  </Label>
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>DESCRIPTION</Table.Cell>
+                <Table.Cell>{item.alert_type.name}</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>DATE</Table.Cell>
+                <Table.Cell>
+                  {
+                    <Moment
+                      format={
+                        this.props.globalConfigStore.dateFormats.moment
+                          .dateTimeFormat
+                      }
+                    >
+                      {item.since}
+                    </Moment>
+                  }
+                </Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>DATA SOURCE</Table.Cell>
+                <Table.Cell>{item.data_collector_name}</Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table>
+          <Form>
+            <TextArea
+              placeholder="Leave a comment (required)"
+              value={comment}
+              onChange={this.handleChange}
+              style={{ resize: "none" }}
+            />
+            <span>
+              {error && (
+                <Label basic color="red">
+                  We are sorry. It has been an error while trying to remove this
+                  issue.
+                </Label>
+              )}
+            </span>
           </Form>
         </Modal.Content>
         <Modal.Actions>
@@ -123,7 +161,7 @@ export default class QuarantineRemoveModal extends Component {
             loading={loading}
             positive
             content="Remove"
-            disabled={!comment || comment.trim() === ''}
+            disabled={!comment || comment.trim() === ""}
             onClick={() => this.handleDelete()}
           />
         </Modal.Actions>

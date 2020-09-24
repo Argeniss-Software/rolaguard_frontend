@@ -62,11 +62,11 @@ class DeleteDataCollectorModal extends Component {
         closeOnDimmerClick={false}
         closeOnEscape={false}>
         <Modal.Header>
-          <i className="fas fa-trash" /> Remove message collector
+          <i className="fas fa-trash" /> Remove data source
         </Modal.Header>
         <Modal.Content>
           <p>
-            The message collector <b>{this.props.dataCollector.name}</b> and all its alerts will be removed from the
+            The data source <b>{this.props.dataCollector.name}</b> and all its alerts will be removed from the
             system. Are you sure?
           </p>
           <Checkbox 

@@ -1,0 +1,44 @@
+.div-inventory-container {
+    padding: 20px;
+    margin: 10px;
+}
+
+#gateway-inventory-logo {
+    margin: 0px 0px 0px 0px;
+    width: 4em;
+    padding-bottom: 0 !important;
+}
+
+#device-inventory-logo {
+    margin: 0px 0px 0px 0px;
+    width: 4em;
+    padding-bottom: 0 !important;
+}
+
+.device-inventory-popup{
+    display: grid;
+}
+
+.div-container table thead tr th {
+    border-bottom: none !important;
+}
+
+.hide {
+    display: none;
+}
+
+.icon-font-size-gateway {
+    font-size: 2.3em;
+}
+
+.icon-font-arrows-h {
+    font-size : 1.1em;
+}
+
+.icon-font-size-device {
+    font-size: 1.5em;
+}
+
+.icon-description {
+    font-size: 11px;
+}

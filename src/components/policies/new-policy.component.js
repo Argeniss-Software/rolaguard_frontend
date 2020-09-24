@@ -5,6 +5,7 @@ import LoaderComponent from "../utils/loader.component";
 import "./new-policy.component.css";
 import { Markup } from 'interweave';  
 import AlertUtil from "../../util/alert-util";
+import KeysManager from "../keys-manager/keys-manager.component"
 
 @inject("policyStore", "alarmStore")
 class NewPolicyComponent extends React.Component {
@@ -256,6 +257,37 @@ class NewPolicyComponent extends React.Component {
       )
   }
 
+  getKeysManager = (index, activeIndex) => {
+    return(
+      <Accordion>
+        <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleAccordionClick}>
+          <Icon name='dropdown' />
+          <strong>Advanced settings</strong>
+        </Accordion.Title>
+        <Accordion.Content active={activeIndex === index}>
+          <Message warning style={{display: 'block', maxWidth: '100%'}}>
+            <Message.Header>Security Warning!</Message.Header>
+            <p>Changes on these parameters will affect the security analysis.</p>
+          </Message>
+          You can configure new keys to check whenever the system scans the devices. These keys are global for the organization, that means if you add a new key, it will be use in all the organization's policies (old and new).
+          
+          <Card className="policy-component-card">
+            <Card.Header></Card.Header>
+            <Card.Content>
+              <div>
+                <h3>keys_dictionary</h3>
+                <div style={{marginLeft: 3, marginBottom:3, marginTop: 0}}><p>Organization's keys to check alogside the system keys. These keys are only visible to users in your organization.</p></div>
+                <div style={{marginLeft: 3}}><i>Default value: The system has its own keys that contains the most common used keys.</i></div>
+              </div>
+              <Divider/>
+              <KeysManager />
+            </Card.Content>
+          </Card>
+        </Accordion.Content>
+      </Accordion>
+    );
+  }
+
   getPolicyHeader = (index) => {
     if (index > 0) return;
     return (
@@ -265,7 +297,6 @@ class NewPolicyComponent extends React.Component {
           <Table.HeaderCell className="left aligned">Description</Table.HeaderCell>
           <Table.HeaderCell width="1" className="header-center">Risk</Table.HeaderCell>
         </Table.Row>
-
       </Table.Header>
     );
   }
@@ -338,6 +369,7 @@ class NewPolicyComponent extends React.Component {
                           <Table.Cell colSpan='2'>
                             <Markup content={item.alertType.description}/>
                             { this.getParametersComponent(item, index, activeIndex, errors['items'][index]['parameters']) }
+                            { item.alertTypeCode == "LAF-009" && this.getKeysManager(index, activeIndex) }
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>

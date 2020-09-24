@@ -9,19 +9,31 @@ import alertStore from "./alert.store"
 import dataCollectorStore from './data_collector.store'
 import policyStore from './policy.store'
 import notificationStore from './notification.store'
+import inventoryAssetsStore from './inventory.store'
+import tagsStore from './tag.store'
+import resourceUsageStore from './resource_usage.store'
+import keysStore from './keys.store'
+import commonStore from "./common.store";
+import globalConfigStore from "./global_config.store"
 
 const stores = {
-    authStore,
-    deviceStore,
-    alarmStore,
-    usersStore,
-    messageStore,
-    generalDataStore,
-    rolesStore,
-    alertStore,
-    dataCollectorStore,
-    policyStore,
-    notificationStore
+  authStore,
+  deviceStore,
+  alarmStore,
+  usersStore,
+  messageStore,
+  generalDataStore,
+  rolesStore,
+  alertStore,
+  dataCollectorStore,
+  policyStore,
+  notificationStore,
+  inventoryAssetsStore,
+  tagsStore,
+  resourceUsageStore,
+  keysStore,
+  commonStore,
+  globalConfigStore
 };
 
 export default stores

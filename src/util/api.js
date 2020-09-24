@@ -30,6 +30,10 @@ const API = {
     return axios.delete(API_HOST + endpoint, header);
   },
 
+  deleteWithBody: (endpoint, data, headers) => {
+    return axios.delete(API_HOST + endpoint, {data: data, headers: headers.headers});
+  },
+
   patch: (endpoint, data, header) => {
     return axios.patch(API_HOST + endpoint, data, header);
   },
@@ -50,7 +54,7 @@ const API = {
         throw error;
       }
     );
-  }
+  },
 };
 
 export default API;

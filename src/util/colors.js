@@ -5,7 +5,18 @@ const ColorUtil = {
     const index = i < colors.length ? i : i%colors.length ;
 
     return colors[index];
-  }
+  },
+
+  getByImportance: (i) => {
+    const colorMap = {
+      LOW: "#fad732",
+      MEDIUM: "#ff902b",
+      HIGH: "#f05050",
+    };
+
+    return colorMap[i];
+  },
+
 }
 
 export default ColorUtil;

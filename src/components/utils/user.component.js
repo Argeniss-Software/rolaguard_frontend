@@ -46,7 +46,10 @@ class UserComponent extends React.Component {
     return (
       <div>
         <div className={`sidebar-user ${this.props.sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-          <img className={`animated fadeIn profile-image ${this.props.sidebarCollapsed ? 'sidebar-collapsed' : ''}`} src={urlImage} alt="" />
+          {/* <img className={`animated fadeIn profile-image ${this.props.sidebarCollapsed ? 'sidebar-collapsed' : ''}`} src={urlImage} alt="" /> */}
+          <div style={{height:419, position: "relative", width:"100%"}}>
+            <strong style={{position: "absolute", bottom: 0, left:25}}>Organization:</strong>
+          </div>
 
           {this.state.user &&
             <Dropdown

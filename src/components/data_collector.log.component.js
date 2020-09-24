@@ -4,7 +4,7 @@ import { Divider, Header, Grid, Icon, Table, Accordion, Pagination, Message } fr
 import LoaderComponent from "./utils/loader.component";
 import moment from "moment";
 
-@inject("dataCollectorStore")
+@inject("dataCollectorStore", "globalConfigStore")
 @observer
 class DataCollectorLogComponent extends React.Component {
 
@@ -91,7 +91,7 @@ class DataCollectorLogComponent extends React.Component {
             <div className="animated fadeIn animation-view">
                 <div className="view-header">
                     {/* HEADER TITLE */}
-                    <h1>MESSAGE COLLECTOR LOGS</h1>
+                    <h1>DATA SOURCE LOGS</h1>
 
                     {/* HEADER ACTIONS */}
                     <div className="view-header-actions">
@@ -101,14 +101,14 @@ class DataCollectorLogComponent extends React.Component {
                 <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%', marginTop: 50}}/>
                 }
                 {!hasError && isLoadingDataCollector && (
-                    <LoaderComponent loadingMessage="Loading message collector..."/>
+                    <LoaderComponent loadingMessage="Loading data source..."/>
                 )}
 
                 {/* VIEW BODY */}
                 {!hasError && !isLoadingDataCollector && <div className="view-body">
                     <Grid columns={4} style={{marginBottom: 10}}>
                         <Grid.Column>
-                            <Header as='h2'>Message collector</Header>
+                            <Header as='h2'>Data source</Header>
                             <span style={{fontSize: 19}}>{dataCollector.name}</span>
                         </Grid.Column>                    
                         {dataCollector.type.type !== 'ttn_collector' && <Grid.Column>
@@ -127,7 +127,7 @@ class DataCollectorLogComponent extends React.Component {
                         </Grid.Column>
                         <Grid.Column>
                             <Header as='h2'>Last message</Header>
-                            <span style={{fontSize: 19}}>{dataCollector.lastMessage ? moment(dataCollector.lastMessage).format('MMMM Do YYYY, HH:mm:ss') : 'No messages in last 4 hours'}</span>
+                            <span style={{fontSize: 19}}>{dataCollector.lastMessage ? moment(dataCollector.lastMessage).format(this.props.globalConfigStore.dateFormats .moment.dateTimeFormat) : 'No messages in last 4 hours'}</span>
                         </Grid.Column>
                     </Grid>
 
@@ -153,7 +153,7 @@ class DataCollectorLogComponent extends React.Component {
                             {
                                 log.map((item, index) => 
                                     <Table.Row key={index} error={item.type === 'DISCONNECTED' || item.type === 'FAILED_PARSING' || item.type === 'FAILED_LOGIN'}>
-                                        <Table.Cell>{moment(item.createdAt).format('MMMM Do YYYY, HH:mm:ss')}</Table.Cell>
+                                        <Table.Cell>{moment(item.createdAt).format(this.props.globalConfigStore.dateFormats .moment.dateTimeFormat)}</Table.Cell>
                                         <Table.Cell>
                                         {(item.type === 'DISCONNECTED' || item.type === 'FAILED_PARSING'  || item.type === 'FAILED_LOGIN') && <Icon name='attention' />}
                                         {this.getEvent(item)}</Table.Cell>
@@ -207,7 +207,7 @@ class DataCollectorLogComponent extends React.Component {
             case 'CREATED':
                     return (
                         <div>
-                            The message collector was created by <b>{user}</b>
+                            The data source was created by <b>{user}</b>
                             {event.parameters && <Accordion>
                                 <Accordion.Title active={index===activeIndex} index={index} onClick={this.handleAccordionClick}>
                                     <Icon name='dropdown' />
@@ -222,7 +222,7 @@ class DataCollectorLogComponent extends React.Component {
             case 'UPDATED':
                 return (
                     <div>
-                        The message collector was updated by <b>{user}</b>
+                        The data source was updated by <b>{user}</b>
                         {event.parameters && <Accordion>
                             <Accordion.Title active={index===activeIndex} index={index} onClick={this.handleAccordionClick}>
                                 <Icon name='dropdown' />
@@ -237,7 +237,7 @@ class DataCollectorLogComponent extends React.Component {
             case 'DISCONNECTED':
                 return (
                     <div>
-                        The message collector lost the connection
+                        The data source lost the connection
                         {event.parameters.error && <Accordion>
                             <Accordion.Title active={index===activeIndex} index={index} onClick={this.handleAccordionClick}>
                                 <Icon name='dropdown' />
@@ -251,13 +251,13 @@ class DataCollectorLogComponent extends React.Component {
             case 'CONNECTED':
                 return <span>The connection was established successfully</span>;
             case 'ENABLED':
-                return <span>The message collector was enabled by <b>{user}</b></span>;
+                return <span>The data source was enabled by <b>{user}</b></span>;
             case 'DISABLED':
-                return <span>The message collector was disabled by <b>{user}</b></span>;
+                return <span>The data source was disabled by <b>{user}</b></span>;
             case 'RESTARTED': 
                 return <span>The connection was restarted by system</span>;
             case 'FAILED_LOGIN':
-                return <span>Failed trying to login at TTN Server. Check message collector credentials.</span>;
+                return <span>Failed trying to login at TTN Server. Check data source credentials.</span>;
             case 'FAILED_PARSING':
                     return (
                         <div>

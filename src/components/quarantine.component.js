@@ -1,10 +1,11 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination } from "semantic-ui-react";
+import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup } from "semantic-ui-react";
 import "./quarantine.component.css";
 import AlertUtil from '../util/alert-util';
 import "./quarantine.component.css";
 import Pie from "./visualizations/Pie";
+import ImportanceLabel from "./utils/importance-label.component.js"
 
 import Moment from "react-moment";
 
@@ -13,11 +14,12 @@ import LoaderComponent from "./utils/loader.component";
 import EmptyComponent from "./utils/empty.component";
 import ColorUtil from "../util/colors";
 
-import QuarantineRemoveModal from "./quarantine.remove.modal";
+// import QuarantineRemoveModal from "./quarantine.remove.modal";
 import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
+import AssetLink from "./utils/asset-link.component"
 
-@inject("deviceStore")
+@inject("deviceStore", "globalConfigStore")
 @observer
 class QuarantineComponent extends React.Component {
   colorsMap
@@ -226,11 +228,11 @@ class QuarantineComponent extends React.Component {
     this.loadQuarantineData(1);
   }
 
-  handleQuarantineRemoval = () => {
+  /*handleQuarantineRemoval = () => {
     this.setState({ activePage: 1 } );
     this.loadViz();
     this.loadQuarantineData(1)  
-  }
+  }*/
 
   showAlertDetails = (index) => {
     const quarantine = this.props.deviceStore.quarantine[index];
@@ -283,27 +285,33 @@ class QuarantineComponent extends React.Component {
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>QUARANTINE</h1>
+            <h1>CURRENT ISSUES</h1>
           </div>
 
           {/* VIEW BODY */}
           <div className="view-body">
             {quarantineDeviceCount == null && (
-              <LoaderComponent loadingMessage="Loading Quarantine data..."/>
+              <LoaderComponent loadingMessage="Loading Current Issues..." />
             )}
             {quarantineDeviceCount == 0 && (
-              <EmptyComponent emptyMessage="There are no devices in quarantine" />
+              <EmptyComponent emptyMessage="There are no issues" />
             )}
             {quarantineDeviceCount > 0 && (
               <div>
                 <Segment>
                   <Grid className="animated fadeIn">
                     <Grid.Row columns={16} className="data-container pl pr">
-                      <Grid.Column className="data-container-box pr0" floated="left" mobile={16} tablet={8} computer={4}>
+                      <Grid.Column
+                        className="data-container-box pr0"
+                        floated="left"
+                        mobile={16}
+                        tablet={8}
+                        computer={4}
+                      >
                         <div className="box-data">
                           <h5 className="visualization-title">BY RISK</h5>
                           <Loader active={isLoadingByRiskViz} />
-                          <Pie 
+                          <Pie
                             isLoading={this.state.isLoadingTable}
                             data={this.state.byRiskViz}
                             type={this.ALERT_TYPE_RISK}
@@ -312,11 +320,19 @@ class QuarantineComponent extends React.Component {
                         </div>
                       </Grid.Column>
 
-                      <Grid.Column className="data-container-box pr0" floated="left" mobile={16} tablet={8} computer={4}>
+                      <Grid.Column
+                        className="data-container-box pr0"
+                        floated="left"
+                        mobile={16}
+                        tablet={8}
+                        computer={4}
+                      >
                         <div className="box-data">
-                          <h5 className="visualization-title">BY ALERT DESCRIPTION</h5>
+                          <h5 className="visualization-title">
+                            BY ALERT DESCRIPTION
+                          </h5>
                           <Loader active={isLoadingByReasonViz} />
-                          <Pie 
+                          <Pie
                             isLoading={this.state.isLoadingTable}
                             data={this.state.byReasonsViz}
                             type={this.ALERT_TYPE_NAME}
@@ -325,11 +341,19 @@ class QuarantineComponent extends React.Component {
                         </div>
                       </Grid.Column>
 
-                      <Grid.Column className="data-container-box pr0" floated="left" mobile={16} tablet={8} computer={4}>
+                      <Grid.Column
+                        className="data-container-box pr0"
+                        floated="left"
+                        mobile={16}
+                        tablet={8}
+                        computer={4}
+                      >
                         <div className="box-data">
-                          <h5 className="visualization-title">BY MESSAGE COLLECTOR</h5>
+                          <h5 className="visualization-title">
+                            BY DATA SOURCE
+                          </h5>
                           <Loader active={isLoadingByCollectorViz} />
-                          <Pie 
+                          <Pie
                             isLoading={this.state.isLoadingTable}
                             data={this.state.byCollectorViz}
                             type={this.DATA_COLLECTOR_NAME}
@@ -338,13 +362,21 @@ class QuarantineComponent extends React.Component {
                         </div>
                       </Grid.Column>
 
-                      <Grid.Column className="data-container-box flex-center pr0" floated="left" mobile={16} tablet={8} computer={4}>
-                        <Segment basic textAlign='center'>
+                      <Grid.Column
+                        className="data-container-box flex-center pr0"
+                        floated="left"
+                        mobile={16}
+                        tablet={8}
+                        computer={4}
+                      >
+                        <Segment basic textAlign="center">
                           <i className="fas fa-microchip fa-2x" />
                           <Divider horizontal></Divider>
                           <div className="">
                             <h3>DEVICES</h3>
-                            <h2>{this.props.deviceStore.quarantineDeviceCount}</h2>
+                            <h2>
+                              {this.props.deviceStore.quarantineDeviceCount}
+                            </h2>
                           </div>
                         </Segment>
                       </Grid.Column>
@@ -353,74 +385,267 @@ class QuarantineComponent extends React.Component {
                 </Segment>
                 <Segment>
                   {showFilters && (
-                  <div>
-                    <label style={{fontWeight: 'bolder'}}>Filters: </label>
-                    {this.state.byRiskViz.filter(risk => risk.selected).map( (risk, index) => <Label as='a' key={this.ALERT_TYPE_RISK+index} className="text-uppercase" onClick={() => {this.handleItemSelected(this.state.byRiskViz, risk, this.ALERT_TYPE_RISK)}}>{risk.label}<Icon name='delete'/></Label>)}
-                    {this.state.byReasonsViz.filter(reason => reason.selected).map( (reason, index) => <Label as='a' key={this.ALERT_TYPE_NAME+index} className="text-uppercase" onClick={() => {this.handleItemSelected(this.state.byReasonsViz, reason, this.ALERT_TYPE_NAME)}}>{reason.label}<Icon name='delete'/></Label>)}
-                    {this.state.byCollectorViz.filter(collector => collector.selected).map( (collector, index) => <Label as='a' key={this.DATA_COLLECTOR_NAME+index} className="text-uppercase" onClick={() => {this.handleItemSelected(this.state.byCollectorViz, collector, this.DATA_COLLECTOR_NAME)}}>{collector.label}<Icon name='delete'/></Label>)}
-                    <span className="range-select" onClick={() => this.clearFilters()}>Clear</span>
-                  </div>)}
+                    <div>
+                      <label style={{ fontWeight: "bolder" }}>Filters: </label>
+                      {this.state.byRiskViz
+                        .filter((risk) => risk.selected)
+                        .map((risk, index) => (
+                          <Label
+                            as="a"
+                            key={this.ALERT_TYPE_RISK + index}
+                            className="text-uppercase"
+                            onClick={() => {
+                              this.handleItemSelected(
+                                this.state.byRiskViz,
+                                risk,
+                                this.ALERT_TYPE_RISK
+                              );
+                            }}
+                          >
+                            {risk.label}
+                            <Icon name="delete" />
+                          </Label>
+                        ))}
+                      {this.state.byReasonsViz
+                        .filter((reason) => reason.selected)
+                        .map((reason, index) => (
+                          <Label
+                            as="a"
+                            key={this.ALERT_TYPE_NAME + index}
+                            className="text-uppercase"
+                            onClick={() => {
+                              this.handleItemSelected(
+                                this.state.byReasonsViz,
+                                reason,
+                                this.ALERT_TYPE_NAME
+                              );
+                            }}
+                          >
+                            {reason.label}
+                            <Icon name="delete" />
+                          </Label>
+                        ))}
+                      {this.state.byCollectorViz
+                        .filter((collector) => collector.selected)
+                        .map((collector, index) => (
+                          <Label
+                            as="a"
+                            key={this.DATA_COLLECTOR_NAME + index}
+                            className="text-uppercase"
+                            onClick={() => {
+                              this.handleItemSelected(
+                                this.state.byCollectorViz,
+                                collector,
+                                this.DATA_COLLECTOR_NAME
+                              );
+                            }}
+                          >
+                            {collector.label}
+                            <Icon name="delete" />
+                          </Label>
+                        ))}
+                      <span
+                        className="range-select"
+                        onClick={() => this.clearFilters()}
+                      >
+                        Clear
+                      </span>
+                    </div>
+                  )}
                   {quarantineCount == 0 && (
                     <Grid className="segment centered">
                       <EmptyComponent emptyMessage="No items found" />
                     </Grid>
                   )}
                   {quarantineCount > 0 && (
-                    <Table className="animated fadeIn" basic="very" compact="very">
+                    <Table
+                      striped
+                      selectable
+                      className="animated fadeIn"
+                      basic="very"
+                      compact="very"
+                    >
                       <Table.Header>
                         <Table.Row>
-                          <Table.HeaderCell collapsing>ID/ADDRESS</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>GATEWAY</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>COLLECTOR</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            LAST CHECKED
+                          </Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            DEVICE ID/ADDRESS
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
+                          <Table.HeaderCell collapsing>
+                            <Popup
+                              trigger={
+                                <span style={{ cursor: "pointer" }}>
+                                  IMPORTANCE
+                                </span>
+                              }
+                            >
+                              The importance value indicates the user-defined
+                              relevance of the device into the organization. Can
+                              be set for each asset in the Inventory section.
+                            </Popup>
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>
+                            GATEWAY
+                          </Table.HeaderCell>
+                          <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
+                          {/*<Table.HeaderCell collapsing>
+                            ACTIONS
+                          </Table.HeaderCell>
+                          */}
                         </Table.Row>
                       </Table.Header>
                       <Table.Body>
-                        {!this.state.isLoadingTable && (
+                        {!this.state.isLoadingTable &&
                           quarantine.map((item, index) => {
                             return (
-                              <Table.Row key={index}  style={{cursor: 'pointer'}}>
-                                <Table.Cell className="id-cell upper"  onClick={() => this.showAlertDetails(index)}>
-                                  <DeviceIdComponent parameters={item.alert.parameters} alertType={alert.type}/>
-                                </Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert.parameters.dev_name}</Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)}>
-                                  <Label horizontal style={{backgroundColor: AlertUtil.getColorsMap()[item.alert_type.risk], color: 'white', borderWidth: 1, width: '100px'}}>
+                              <Table.Row
+                                key={index}
+                                style={{ cursor: "pointer" }}
+                              >
+                                <Table.Cell
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  <Label
+                                    horizontal
+                                    style={{
+                                      backgroundColor: AlertUtil.getColorsMap()[
+                                        item.alert_type.risk
+                                      ],
+                                      color: "white",
+                                      borderWidth: 1,
+                                      width: "100px",
+                                    }}
+                                  >
                                     {item.alert_type.risk}
                                   </Label>
                                 </Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.alert_type.name}</Table.Cell>
-                                <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.since}</Moment>}</Table.Cell>
-                                <Table.Cell singleLine onClick={() => this.showAlertDetails(index)}>{<Moment format="YYYY-MM-DD HH:mm">{item.last_checked}</Moment>}</Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)} className="upper">{item.alert.parameters.gateway + (item.alert.parameters.gw_name? `(${item.alert.parameters.gw_name})` : "")}</Table.Cell>
-                                <Table.Cell onClick={() => this.showAlertDetails(index)}>{item.data_collector_name}</Table.Cell>
-                                <Table.Cell>
-                                  <div className="td-actions">
-                                    <QuarantineRemoveModal item={item} handleQuarantineRemoval={this.handleQuarantineRemoval}></QuarantineRemoveModal>
-                                  </div>
+                                <Table.Cell
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {item.alert_type.name}
                                 </Table.Cell>
+                                <Table.Cell
+                                  singleLine
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {
+                                    <Moment
+                                      format={
+                                        this.props.globalConfigStore.dateFormats
+                                          .moment.dateTimeFormat
+                                      }
+                                    >
+                                      {item.since}
+                                    </Moment>
+                                  }
+                                </Table.Cell>
+
+                                <Table.Cell
+                                  singleLine
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {
+                                    <Moment
+                                      format={
+                                        this.props.globalConfigStore.dateFormats
+                                          .moment.dateTimeFormat
+                                      }
+                                    >
+                                      {item.last_checked}
+                                    </Moment>
+                                  }
+                                </Table.Cell>
+                                <Table.Cell
+                                  className="id-cell upper"
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  <DeviceIdComponent
+                                    parameters={item.alert.parameters}
+                                    alertType={item.alert.type}
+                                    deviceId={item.alert.device_id}
+                                  />
+                                </Table.Cell>
+                                <Table.Cell
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {item.alert.parameters.dev_name}
+                                </Table.Cell>
+
+                                <Table.Cell
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {" "}
+                                  <ImportanceLabel
+                                    importance={item.alert.asset_importance}
+                                  />{" "}
+                                </Table.Cell>
+                                <Table.Cell
+                                  className="upper"
+                                  style={{ maxWidth: "180px" }}
+                                >
+                                  <AssetLink
+                                    title={
+                                      item.alert.parameters.gateway +
+                                      (item.alert.parameters.gw_name
+                                        ? `(${item.alert.parameters.gw_name})`
+                                        : "")
+                                    }
+                                    id={item.alert.gateway_id}
+                                    type="gateway"
+                                  />
+                                </Table.Cell>
+                                <Table.Cell
+                                  onClick={() => this.showAlertDetails(index)}
+                                >
+                                  {item.data_collector_name}
+                                </Table.Cell>
+                                {/*<Table.Cell>
+                                  <div className="td-actions">
+                                    <QuarantineRemoveModal
+                                      item={item}
+                                      handleQuarantineRemoval={
+                                        this.handleQuarantineRemoval
+                                      }
+                                    ></QuarantineRemoveModal>
+                                  </div>
+                                </Table.Cell>*/}
                               </Table.Row>
                             );
-                          })
-                        )}
+                          })}
                       </Table.Body>
                     </Table>
                   )}
                   {this.state.isLoadingTable && (
-                    <LoaderComponent loadingMessage="Loading quarantine ..." style={{marginBottom: 20}}/>
+                    <LoaderComponent
+                      loadingMessage="Loading current issues ..."
+                      style={{ marginBottom: 20 }}
+                    />
                   )}
                   {!this.state.isLoadingTable && totalPages > 1 && (
                     <Grid className="segment centered">
-                      <Pagination className="" activePage={activePage} onPageChange={this.handlePaginationChange} totalPages={totalPages} />
+                      <Pagination
+                        className=""
+                        activePage={activePage}
+                        onPageChange={this.handlePaginationChange}
+                        totalPages={totalPages}
+                      />
                     </Grid>
                   )}
                 </Segment>
-                {selectedAlert && <DetailsAlertModal loading={this.state.isLoadingTable} alert={selectedAlert} onClose={this.closeAlertDetails} onNavigate={this.goToQuarantine}/>}
+                {selectedAlert && (
+                  <DetailsAlertModal
+                    loading={this.state.isLoadingTable}
+                    alert={selectedAlert}
+                    onClose={this.closeAlertDetails}
+                    onNavigate={this.goToQuarantine}
+                  />
+                )}
               </div>
             )}
           </div>
