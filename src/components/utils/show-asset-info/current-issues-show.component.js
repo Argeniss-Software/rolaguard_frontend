@@ -208,13 +208,15 @@ const ShowCurrentIssues = (props) => {
                     >
                       <AssetId
                         id={
-                          type === "gateway" ? null : current_issue.gateway_id
+                          type === "gateway"
+                            ? null
+                            : current_issue.alert.gateway_id
                         }
                         type={type === "gateway" ? "device" : "gateway"}
                         hexId={
                           type === "gateway"
                             ? "N/A"
-                            : current_issue.parameters.gateway
+                            : current_issue.alert.parameters.gateway
                         }
                         showAsLink={!(type === "gateway")}
                       />

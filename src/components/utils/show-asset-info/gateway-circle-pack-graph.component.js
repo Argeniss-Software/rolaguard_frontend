@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
-import { Grid, Segment, Loader, Message, Label, Icon } from "semantic-ui-react";
+import { Loader, Message, Label, Icon } from "semantic-ui-react";
 import CirclePack from "../../visualizations/circle-pack/circle-pack.component";
 import { MobXProviderContext } from "mobx-react";
 import * as HttpStatus from "http-status-codes";
@@ -86,14 +86,15 @@ const GatewayCirclePackGraph = (props) => {
           </h5>
 
           {selectedLabels.length > 0 && (
-            <label style={{ fontWeight: "bolder" }}>
-              <i>Applied Filters: </i>
-            </label>
+              <label>
+                <i>Applied Filters: </i>
+              </label>
           )}
           {selectedLabels.map((item, index) => (
             <Label
               as="a"
               key={"tag" + index}
+              style={{ backgroundColor: item.color.trim() }}
               className="text-uppercase"
               size="tiny"
               onClick={() => {
