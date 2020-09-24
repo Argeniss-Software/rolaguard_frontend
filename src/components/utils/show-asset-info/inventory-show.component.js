@@ -6,7 +6,7 @@ import ShowDeviceState from "../show-device-state.component";
 import ShowDeviceIcon from "../show-device-icon.component";
 import AssetIdComponent from "../asset-id.component";
 import Geolocation from "../geolocation/geolocation.component";
-import RemovableTagStandalone from "../tags/removable-tag.standalone.component";
+import Tag from "../tags/tag.component"
 import ShowCurrentIssues from "./current-issues-show.component";
 
 const ShowInventory = (props) => {
@@ -128,19 +128,14 @@ const ShowInventory = (props) => {
                     <Table.Cell collapsing>LABELS:</Table.Cell>
                     <Table.Cell>
                       {tags.map((tag) => (
-                        <RemovableTagStandalone
+                        <Tag
                           key={tag.id}
                           id={tag.id}
-                          allowRemove={false}
                           name={tag.name}
                           color={tag.color}
-                          assetType={props.inventory.type}
-                          assetId={props.inventory.id}
-                          callback={(tag) =>
-                            setTags((tags) =>
-                              tags.filter((t) => t.id !== tag.id)
-                            )
-                          }
+                          textColor="white"
+                          selectable={false}
+                          removable={false}
                         />
                       ))}
                     </Table.Cell>
