@@ -5,7 +5,6 @@ import NumberFormat from "react-number-format";
 import Chart from "react-apexcharts";
 import _ from "lodash";
 const getDataSeries = (data) => {
-  debugger
   let packetsUpPercentage =_.get(data, "packets_up.percentage", null)
   let packetsDownPercentage = _.get(data, "packets_down.percentage", null)
   let packetsLostPercentage = _.get(data, "packets_lost.percentage", null)
