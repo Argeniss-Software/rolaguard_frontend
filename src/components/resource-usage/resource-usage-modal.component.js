@@ -11,16 +11,8 @@ import moment from 'moment'
 import ShowMessagesSummary from "./show-message-summary.component"
 
 const ModalResourceUsage = (props) => {
-  const [open, setOpen] = useState(props.openModal || true);
   
-  useEffect(() => {
-    return () => {
-      setOpen(false)
-    }
-  }, [])
-
   const closeModal = () => {
-    setOpen(false)
     if (_.isFunction(props.onClose)) {
       props.onClose()
     }
@@ -29,12 +21,8 @@ const ModalResourceUsage = (props) => {
   return (
     <Modal
       centered={false}
-      closeIcon
-      open={open}
+      open={props.open}
       onClose={() => closeModal()}
-      onOpen={() => {
-        setOpen(true);
-      }}
       size="large"
     >
       <Modal.Header>
