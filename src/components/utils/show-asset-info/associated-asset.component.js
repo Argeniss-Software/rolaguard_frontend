@@ -35,7 +35,6 @@ const AssociatedAsset = (props) => {
       });
     }
   }, []);
-  
 
   useEffect(() => {
     if (_.isFunction(props.onChange)) {
@@ -61,8 +60,7 @@ const AssociatedAsset = (props) => {
               <span>&nbsp;&nbsp;</span>
             </React.Fragment>
           );
-        })
-      }
+        })}
     </React.Fragment>
   );
 };
