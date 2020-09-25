@@ -41,6 +41,11 @@ const ShowInventory = (props) => {
               hexId={props.inventory.hex_id}
               showAsLink={false}
             />
+            <Popup
+              trigger={(props.inventory.dev_addr && <span style={{marginLeft: "10px"}}>| {_.toUpper(props.inventory.dev_addr)}</span>)}
+              content="Device Address"
+              size="small"
+            />
           </Grid.Column>
           <Grid.Column floated="right" width={3}>
             {props.LayoutHeaderRight}
@@ -92,7 +97,7 @@ const ShowInventory = (props) => {
                     <Table.Cell>
                       <strong>
                         {normalizedType === "device"
-                          ? _.upperCase(props.inventory.join_eui)
+                          ? _.toUpper(props.inventory.join_eui)
                           : "N/A"}
                       </strong>
                     </Table.Cell>

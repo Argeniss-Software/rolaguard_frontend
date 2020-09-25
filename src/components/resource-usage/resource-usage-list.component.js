@@ -128,7 +128,7 @@ const ResourceUsageList = (props) => {
                     <Table.Cell
                       onClick={() => showModal({ item: item, index: index })}
                     >
-                      {item.dev_addr}
+                      {_.toUpper(item.dev_addr)}
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => showModal({ item: item, index: index })}
