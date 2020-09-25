@@ -9,9 +9,9 @@ const getDataSeries = (data) => {
   let packetsDownPercentage = _.get(data, "packets_down.percentage", null)
   let packetsLostPercentage = _.get(data, "packets_lost.percentage", null)
   return [
-    _.isNull(packetsUpPercentage) ? 0 : parseFloat(data.packets_up.percentage.toFixed(1)),
-    _.isNull(packetsDownPercentage) ? 0 : parseFloat(data.packets_down.percentage.toFixed(1)),
-    _.isNull(packetsLostPercentage) ? 0 : parseFloat(data.packets_lost.percentage.toFixed(1)),
+    (_.isNull(packetsUpPercentage) || packetsUpPercentage==='-') ? 0 : parseFloat(data.packets_up.percentage.toFixed(1)),
+    (_.isNull(packetsDownPercentage) || packetsDownPercentage==='-') ? 0 : parseFloat(data.packets_down.percentage.toFixed(1)),
+    (_.isNull(packetsLostPercentage) || packetsLostPercentage==='-') ? 0 : parseFloat(data.packets_lost.percentage.toFixed(1)),
   ];
 };
 
