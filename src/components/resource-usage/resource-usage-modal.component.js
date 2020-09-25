@@ -21,6 +21,8 @@ const ModalResourceUsage = (props) => {
   return (
     <Modal
       centered={false}
+      closeOnDimmerClick
+      closeOnEscape
       open={props.open}
       onClose={() => closeModal()}
       size="large"
