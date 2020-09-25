@@ -46,18 +46,23 @@ class CommonStore {
         uri = uri + "/issues";
         break;
       case "resource_usage":
+        debugger
         uri = `resource_usage/${asset_params.type}/${asset_params.id}`;
         break;
       default:
         break;
     }
-    
-    const params = {
+
+    let params = {
       page: _.get(filter_params, "page", 1),
       size: _.get(filter_params, "size", 5),
       order_by: _.get(filter_params, "order_by", []),
-      'created_at[gte]':  _.get(filter_params, "created_at[gte]",null),
-      'created_at[lte]': _.get(filter_params, "created_at[lte]", null)
+      "created_at[gte]": _.get(filter_params, "created_at[gte]", null),
+      "created_at[lte]": _.get(filter_params, "created_at[lte]", null),
+      min_rssi: _.get(filter_params, "min_rssi", null),
+      max_rssi: _.get(filter_params, "max_rssi", null),
+      min_lsnr: _.get(filter_params, "min_lsrn", null),
+      max_lsnr: _.get(filter_params, "max_lsrn", null),
     };
     return API.get(uri, { headers, params });
   }

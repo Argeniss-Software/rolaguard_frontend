@@ -4,6 +4,10 @@ import { MobXProviderContext } from "mobx-react";
 import _ from "lodash"
 import "./packets-graph-component.css"
 import LoaderComponent from "../../loader.component"
+import Slider from "rc-slider";
+// import "rc-slider/assets/index.css";
+import Tooltip from "rc-tooltip";
+import {Segment, Grid} from "semantic-ui-react";
 
 const PacketGraph = (props) => {
   /* 
@@ -24,22 +28,69 @@ const PacketGraph = (props) => {
   const packetList = _.get(props, "data.last_packets_list");
   const [resourceUsagePacketList, setResourceUsagePacketList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  
+  const { createSliderWithTooltip } = Slider
+  const Range = createSliderWithTooltip(Slider.Range)
+
+  const [lsnrFilter, setLsnrFilter] = useState({from: -32, to: 32})
+  const [lsnrRange, setLsnrRange] = useState({ from: null, to: null });
+  const [lsnrMarks, setLsnrMarks] = useState({});
+
+  const [rssiFilter, setRssiFilter] = useState({from: -150, to: 150})
+  const [rssiRange, setRssiRange] = useState({ from: null, to: null });
+  const [rssiMarks, setRssiMarks] = useState({});
+  const [valueRssi, setValueRssi]   = useState([null,null])
+
+  /*useEffect(() => {
+    // update slide when reset from and to range
+    setValueRssi([rssiFilter.from, rssiFilter.to]);
+  }, [rssiFilter.from, rssiFilter.to]);
+*/
+  const handleAfterChangeRangeRssi = (newRange) => {
+    setRssiFilter({ from: newRange[0], to: newRange[1] });
+  }
 
   const loadDataForGraph = () => {
     setIsLoading(true)
     if (props.type && props.id) {
       let paramsId = {
-        type: props.type,
-        id: props.id,
+        type: props.type.toLowerCase(),
+        id: props.id,        
       }
+
+      let filterParams = {
+        min_rssi: rssiFilter.from,
+        max_rssi: rssiFilter.to,
+        min_lsnr: lsnrFilter.from,
+        max_lsnr: lsnrFilter.to
+      };
 
       const resourceUsagePromise = commonStore.getData(
         "resource_usage",
-        paramsId
+        paramsId,
+        filterParams
       );
 
       Promise.all([resourceUsagePromise]).then((response) => {
-        setResourceUsagePacketList(_.get(response, "[0].data.last_packets_list"));
+        let resp = _.get(response, "[0].data")
+        setResourceUsagePacketList(_.get(resp, 'last_packets_list')); // set data for graph
+
+        if (_.isNull(rssiRange.from) || _.isNull(rssiRange.to)) { // set range for slider and set marks first initialize
+          setRssiRange({from: resp.min_rssi_packets, to: resp.max_rssi_packets})
+          let marksRssi = {}
+          marksRssi[resp.min_rssi_packets] = `${resp.min_rssi_packets} dBm`
+          marksRssi[resp.max_rssi_packets] = `${resp.max_rssi_packets} dBm`;
+          setRssiMarks(marksRssi)
+          setValueRssi([resp.min_rssi_packets, resp.max_rssi_packets]);
+        }
+        if (_.isNull(lsnrRange.from) || _.isNull(lsnrRange.to)) {
+          setLsnrRange({from: resp.min_lsnr_packets, to: resp.max_lsnr_packets})
+          let marksLsnr = {}
+          marksLsnr[resp.min_lsnr_packets] = `${resp.min_lsnr_packets} dB`
+          marksLsnr[resp.max_lsnr_packets] = `${resp.max_lsnr_packets} dB`;
+          setLsnrMarks(marksLsnr)
+        }
+        
         setIsLoading(false);
       });
     }
@@ -51,7 +102,7 @@ const PacketGraph = (props) => {
     } else {
       setResourceUsagePacketList(packetList); // set it by props
     }
-  }, [props.id, props.type])
+  }, [props.id, props.type, lsnrFilter, rssiFilter])
 
   const getCategories = () => {
     if (!_.isEmpty(resourceUsagePacketList)) {
@@ -194,16 +245,40 @@ const PacketGraph = (props) => {
 
   return (
     <React.Fragment>
-      {(isLoading && _.isEmpty(resourceUsagePacketList)) && (
+      value: {JSON.stringify(valueRssi)}-- filter: {JSON.stringify(rssiFilter)}
+      -- rssi range: {JSON.stringify(rssiRange)}
+      {isLoading && _.isEmpty(resourceUsagePacketList) && (
         <LoaderComponent loadingMessage="Loading graph..." />
       )}
       {(!isLoading || !_.isEmpty(resourceUsagePacketList)) && (
-        <Chart
-          options={graphData.options}
-          series={graphData.series}
-          type="line"
-          height="400"
-        />
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={1}>
+              {/* #4190fb*/}
+              <Range
+                vertical
+                defaultValue={[rssiRange.from, rssiRange.to]}
+                allowCross={false}
+                min={rssiRange.from}
+                max={rssiRange.to}
+                //value={[rssiFilter.from,rssiFilter.to]}
+                //onChange={(value) => setValueRssi(value)}
+                onAfterChange={handleAfterChangeRangeRssi}
+                marks={rssiMarks}
+                tipFormatter={(value) => `${value} dBm`}
+              ></Range>
+            </Grid.Column>
+            <Grid.Column width={14}>
+              <Chart
+                options={graphData.options}
+                series={graphData.series}
+                type="line"
+                height="400"
+              />
+            </Grid.Column>
+            <Grid.Column width={1}>#e7852a</Grid.Column>
+          </Grid.Row>
+        </Grid>
       )}
     </React.Fragment>
   );
