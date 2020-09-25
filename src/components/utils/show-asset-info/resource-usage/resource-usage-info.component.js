@@ -25,6 +25,7 @@ const ResourceUsageInfo = (props) => {
 
   const isDevice = normalizedType === "device";
   const { globalConfigStore } = React.useContext(MobXProviderContext);
+  const [NGatewaysConnectedTo, setNGatewaysConnectedTo] = useState(0)
 
   return (
     <React.Fragment>
@@ -131,7 +132,7 @@ const ResourceUsageInfo = (props) => {
                   {isDevice && (
                     <span>
                       CONNECTED TO{" "}
-                      <strong>{props.asset.ngateways_connected_to} </strong>
+                      <strong>{NGatewaysConnectedTo /* props.asset.ngateways_connected_to */} </strong>
                       GATEWAYS:
                     </span>
                   )}
@@ -141,6 +142,7 @@ const ResourceUsageInfo = (props) => {
                     <AssociatedAsset
                       type={normalizedType}
                       id={props.asset.id}
+                      onChange={(qty) => setNGatewaysConnectedTo(qty)}
                     />
                   </div>
                 </Table.Cell>

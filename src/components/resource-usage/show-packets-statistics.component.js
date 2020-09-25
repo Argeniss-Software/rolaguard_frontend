@@ -5,16 +5,13 @@ import NumberFormat from "react-number-format";
 import Chart from "react-apexcharts";
 import _ from "lodash";
 const getDataSeries = (data) => {
+  let packetsUpPercentage =_.get(data, "packets_up.percentage", null)
+  let packetsDownPercentage = _.get(data, "packets_down.percentage", null)
+  let packetsLostPercentage = _.get(data, "packets_lost.percentage", null)
   return [
-    _.get(data, "packets_up.percentage", "-") === "-"
-      ? 0
-      : parseFloat(data.packets_up.percentage.toFixed(1)),
-    _.get(data, "packets_down.percentage", "-") === "-"
-      ? 0
-      : parseFloat(data.packets_down.percentage.toFixed(1)),
-    _.get(data, "packets_lost.percentage", "-") === "-"
-      ? 0
-      : parseFloat(data.packets_lost.percentage.toFixed(1)),
+    _.isNull(packetsUpPercentage) ? 0 : parseFloat(data.packets_up.percentage.toFixed(1)),
+    _.isNull(packetsDownPercentage) ? 0 : parseFloat(data.packets_down.percentage.toFixed(1)),
+    _.isNull(packetsLostPercentage) ? 0 : parseFloat(data.packets_lost.percentage.toFixed(1)),
   ];
 };
 
@@ -44,7 +41,7 @@ const ShowPacketsStatistics = (props) => {
             opacity: 0.5,
           },
           formatter: function(val) {
-            return val.toFixed(1);
+            return _.isNumber(val)? val.toFixed(1) : val;
           },
         },
       },
@@ -63,7 +60,7 @@ const ShowPacketsStatistics = (props) => {
         fontFamily: "Helvetica, Arial",
         fontWeight: 400,
         formatter: function(val) {
-          return val.toFixed(1);
+          return _.isNumber(val)? val.toFixed(1) : val;
         },
       },
       labels: ["Uplink", "Downlink", "Lost"],
