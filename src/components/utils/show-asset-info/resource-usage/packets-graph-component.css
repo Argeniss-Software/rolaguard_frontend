@@ -1,3 +1,11 @@
 div.apexcharts-xaxistooltip, div.apexcharts-xaxistooltip-bottom {
     display: none;
 }
+
+div.multiple.search.selection.dropdown>i.dropdown.icon {
+    margin: -.78571429em !important;
+}
+
+div.menu.transition {
+    z-index: 12 !important;
+}
