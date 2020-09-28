@@ -138,32 +138,7 @@ const TimeLineGraph = (props) => {
         <Grid>
           {showControlBar && (
             <Grid.Column width={16}>
-              {enableFilterQty && (
-                <Button.Group basic size="tiny" className="aligned pull-left">
-                  <Button>
-                    <Dropdown
-                      onChange={handleChangeShowQty}
-                      options={[
-                        { key: 10, text: "Show last 10", value: 10 },
-                        { key: 20, text: "Show last 20", value: 20 },
-                        { key: 30, text: "Show last 30", value: 30 },
-                        { key: 50, text: "Show last 50", value: 50 },
-                        { key: 70, text: "Show last 70", value: 70 },
-                        { key: 100, text: "Show last 100", value: 100 },
-                        { key: 150, text: "Show last 150", value: 150 },
-                        { key: 200, text: "Show last 200", value: 200 },
-                        { key: 500, text: "Show last 500", value: 500 },
-                        { key: "all", text: "Show All", value: "all" },
-                      ]}
-                      compact
-                      item
-                      basic
-                      defaultValue={20}
-                    />
-                  </Button>
-                </Button.Group>
-              )}
-              <Button.Group basic size="medium" className="aligned pull-right">
+              <Button.Group basic size="medium">
                 <Button
                   icon="zoom in"
                   onClick={zoomIn}
@@ -189,6 +164,30 @@ const TimeLineGraph = (props) => {
                   title="fit all items"
                 ></Button>
               </Button.Group>
+              
+              {enableFilterQty && (
+                <Dropdown
+                  onChange={handleChangeShowQty}
+                  options={[
+                    { key: 10, text: "Show last 10", value: 10 },
+                    { key: 20, text: "Show last 20", value: 20 },
+                    { key: 30, text: "Show last 30", value: 30 },
+                    { key: 50, text: "Show last 50", value: 50 },
+                    { key: 70, text: "Show last 70", value: 70 },
+                    { key: 100, text: "Show last 100", value: 100 },
+                    { key: 150, text: "Show last 150", value: 150 },
+                    { key: 200, text: "Show last 200", value: 200 },
+                    { key: 500, text: "Show last 500", value: 500 },
+                    { key: "all", text: "Show All", value: "all" },
+                  ]}
+                  compact
+                  button
+                  item
+                  basic
+                  defaultValue={20}
+                  className="aligned pull-right"
+                />
+              )}
             </Grid.Column>
           )}
           <Grid.Column width={16}>
