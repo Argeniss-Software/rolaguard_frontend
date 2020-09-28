@@ -174,6 +174,7 @@ const AlertTimeLineGraph = (props) => {
       {!_.isEmpty(items) && !errorOnRequest && (
         <TimeLineGraph
           showControlBar={true}
+          enableFilterQty={true}
           items={items}
           options={options}
           groups={groups}
