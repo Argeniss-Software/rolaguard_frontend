@@ -8,6 +8,7 @@ import Slider from "rc-slider";
 // import "rc-slider/assets/index.css";
 import Tooltip from "rc-tooltip";
 import { Segment, Grid, Label, Dropdown, Button } from "semantic-ui-react";
+import moment from "moment";
 
 const PacketGraph = (props) => {
   /*
@@ -45,14 +46,14 @@ const PacketGraph = (props) => {
   const [qtyPackets, setQtyPackets] = useState(10);
   const [gatewayList, setGatewayList] = useState([]);
   const [selectedGatewaysId, setSelectedGatewaysId] = useState(null);
+  const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
   /*useEffect(() => {
     // update slide when reset from and to range
     setValueRssi([rssiFilter.from, rssiFilter.to]);
   }, [rssiFilter.from, rssiFilter.to]);
 */
   const handleAfterChangeRangeRssi = (newRange) => {
-    //debugger
-    //setRssiFilter({ from: newRange[0], to: newRange[1] });
+    setRssiFilter({ from: newRange[0], to: newRange[1] });
   };
 
   const loadDataForGraph = () => {
@@ -83,6 +84,10 @@ const PacketGraph = (props) => {
         if (_.isNull(rssiRange.from) || _.isNull(rssiRange.to)) {
           // set range for slider and set marks first initialize
           setRssiRange({
+            from: resp.min_rssi_packets,
+            to: resp.max_rssi_packets,
+          });
+          setRssiFilter({
             from: resp.min_rssi_packets,
             to: resp.max_rssi_packets,
           });
@@ -124,24 +129,9 @@ const PacketGraph = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(resourceUsagePacketList)) {
-     // let filteredPackets;
-      //if (_.isNull(selectedGatewaysId)) {
-        // first time enter
-        let filteredPackets = _.take(resourceUsagePacketList, qtyPackets);
-      /*} else {
-        filteredPackets = _.take(
-          resourceUsagePacketList.filter((e) =>
-            [selectedGatewaysId].includes(e.gateway_id)
-          ),
-          qtyPackets
-        );
-      }*/
-
-      setFilteredResourceUsagePacketList(filteredPackets);
-
-      //============= build gateway list ==============
+      //============= build gateway list from limited size of the list ==============
       let onlyGateways = _.map(
-        filteredPackets,
+        resourceUsagePacketList,
         _.partialRight(_.pick, ["gateway_id", "gateway"])
       );
       let uniqGateways = _.orderBy(_.uniqBy(onlyGateways, _.isEqual), [
@@ -150,17 +140,47 @@ const PacketGraph = (props) => {
         "asc",
         "asc",
       ]);
-      setGatewayList(
-        Object.keys(uniqGateways).map((key) => {
-          return {
-            key: uniqGateways[key].gateway_id,
-            text: _.toUpper(uniqGateways[key].gateway),
-            value: uniqGateways[key].gateway_id,
-          };
-        })
-      );
+
+      let gatewayListForDropdown = Object.keys(uniqGateways).map((key) => {
+        return {
+          key: uniqGateways[key].gateway_id,
+          text: _.toUpper(uniqGateways[key].gateway),
+          value: uniqGateways[key].gateway_id,
+        };
+      });
+      setGatewayList(gatewayListForDropdown);
+      //==============================================================================
+      // filter by gateway:
+      let filteredPackets = _.takeRight(resourceUsagePacketList, qtyPackets);
+
+      // let filteredPackets;
+      //if (_.isNull(selectedGatewaysId)) {
+      // first time enter
+
+      /*} else {
+        filteredPackets = _.takeRight(
+          resourceUsagePacketList.filter((e) =>
+            [selectedGatewaysId].includes(e.gateway_id)
+          ),
+          qtyPackets
+        );
+      }*/
+      setFilteredResourceUsagePacketList(filteredPackets);
     }
   }, [resourceUsagePacketList, qtyPackets]);
+
+  /*useEffect(() => {
+    if (!_.isEmpty(selectedGatewaysId) && _.isArray(selectedGatewaysId)) {
+      setFilteredResourceUsagePacketList(
+        _.takeRight(
+          resourceUsagePacketList.filter((e) =>
+            [selectedGatewaysId].includes(e.gateway_id)
+          ),
+          qtyPackets
+        )
+      );
+    }
+  }, [selectedGatewaysId]);*/
 
   const getCategories = () => {
     if (!_.isEmpty(filteredResourceUsagePacketList)) {
@@ -183,13 +203,12 @@ const PacketGraph = (props) => {
           name: "Signal Strength (RSSI)",
           type: "line",
           data: rssi,
-          other_data: filteredResourceUsagePacketList,
+          other_data: resourceUsagePacketList,
         },
         {
           name: "SNR",
           type: "line",
-          data: snr,
-          other_data: filteredResourceUsagePacketList,
+          data: snr
         },
       ];
     }
@@ -202,6 +221,8 @@ const PacketGraph = (props) => {
         stacked: false,
         toolbar: {
           show: true,
+          //offsetX: -880,
+          //offsetY: -34,
         },
       },
       colors: ["#008FFB", "#E57812"],
@@ -291,82 +312,32 @@ const PacketGraph = (props) => {
           },
         },
       ],
-
       tooltip: {
+        y: {
+          show: true,
+        },
         x: {
           show: true,
-          format: globalConfigStore.dateFormats.apexchart.dateTimeFormat,
+          formatter: function(
+            value,
+            { series, seriesIndex, dataPointIndex, w }
+          ) {
+            debugger
+            if (!_.isEmpty(w)) {
+              return `${moment(value).format(
+                dateTimeFormat
+              )} - GATEWAY: <strong>${_.toUpper(
+                _.takeRight(w.config.series[0].other_data, qtyPackets)[dataPointIndex].gateway
+              )}</strong>`;
+            } else {
+              return value;
+            }
+          },
         },
       },
     },
   };
-  const marks = {
-    0: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-      },
-      label: <strong>0 dBm</strong>,
-    },
-    50: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-50",
-    },
-    75: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-75",
-    },
-    100: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-100",
-    },
-    110: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-110",
-    },
-    120: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-      },
-      label: "-120",
-    },
-    150: {
-      style: {
-        color: "black",
-        fontSize: "10px",
-        bottom: "-15px",
-        width: "150px",
-      },
-      label: <strong>-Inf</strong>,
-    },
-  };
-
-  const [valueState, setValueState] = useState([0, 150]);
-  const handleAfterChange = (data) => {
-    debugger;
-    if (!_.isEmpty(data)) {
-      setLsnrFilter([data[0], data[1]]);
-    }
-  };
-
+ 
   const handleChangeQtyPackets = (event, object) => {
     if (object.value) {
       setQtyPackets(object.value);
@@ -376,6 +347,7 @@ const PacketGraph = (props) => {
   const handleGatewaysOnChange = (event, data) => {
     setSelectedGatewaysId(data.value);
   };
+
   return (
     <React.Fragment>
       {isLoading && _.isEmpty(resourceUsagePacketList) && (
@@ -385,7 +357,7 @@ const PacketGraph = (props) => {
         <Grid>
           <Grid.Row style={{ padding: "0px" }}>
             <Grid.Column width={12}>
-              {!_.isEmpty(gatewayList) && (
+              {/*!_.isEmpty(gatewayList) && (
                 <React.Fragment>
                   Gateways:
                   <Dropdown
@@ -396,11 +368,10 @@ const PacketGraph = (props) => {
                     selection
                     defaultValue={_.map(gatewayList, "key")}
                     options={gatewayList}
-                    selectedLabel
                     onChange={handleGatewaysOnChange}
                   />
                 </React.Fragment>
-              )}
+              )*/}
             </Grid.Column>
             <Grid.Column width={4}>
               <Dropdown
@@ -427,20 +398,23 @@ const PacketGraph = (props) => {
           <Grid.Row style={{ padding: "0px" }}>
             <Grid.Column width={1}>
               {/* #4190fb*/}
-              {/*<Range
+              <Range
                 vertical
                 defaultValue={[rssiRange.from, rssiRange.to]}
                 allowCross={false}
                 min={rssiRange.from}
                 max={rssiRange.to}
-                //value={[valueRssi[0],valueRssi[1]]}
+                //value={[rssiFilter.from,rssiFilter.to]}
                 //onChange={(value) => setValueRssi(value)}
-                //onAfterChange={handleAfterChangeRangeRssi}
+                onAfterChange={handleAfterChangeRangeRssi}
+                marks={rssiMarks}
                 pushable={true}
+                dots
                 tipFormatter={(value) => `${value} dBm`}
-              ></Range>*/}
+              ></Range>
             </Grid.Column>
             <Grid.Column width={14}>
+              {JSON.stringify(rssiFilter)}
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
                 <Chart
                   options={graphData.options}
@@ -451,20 +425,7 @@ const PacketGraph = (props) => {
               )}
             </Grid.Column>
             <Grid.Column width={1}>
-              {/*<Range
-                defaultValue={[0, 150]}
-                allowCross={false}
-                step={null}
-                min={0}
-                width="450px"
-                max={50}
-                value={valueState}
-                onChange={(value) => setValueState(value)}
-                onAfterChange={handleAfterChange}
-                pushable={true}
-                marks={marks}
-                reverse={true}
-              ></Range>*/}
+            snr db filter
             </Grid.Column>
           </Grid.Row>
         </Grid>
