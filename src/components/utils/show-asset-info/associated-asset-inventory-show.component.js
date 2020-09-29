@@ -19,6 +19,7 @@ import GatewayCirclePackGraph from "./gateway-circle-pack-graph.component";
 import HttpStatus from "http-status-codes"
 import LoaderComponent from "../loader.component"
 import InventoryDetailsModal from "../../inventory/inventory.modal.component"
+import moment from 'moment'
 
 const AssociatedAssetInventoryShow = (props) => {
   const { inventoryAssetsStore } = useContext(MobXProviderContext);
@@ -147,10 +148,23 @@ const AssociatedAssetInventoryShow = (props) => {
                   >
                     <Table.Header>
                       <Table.Row>
-                        <Table.HeaderCell collapsing>DEVICE ID</Table.HeaderCell>
+                        <Table.HeaderCell collapsing>
+                          DEVICE ID
+                        </Table.HeaderCell>
                         <Table.HeaderCell>ADDRESS</Table.HeaderCell>
                         <Table.HeaderCell>APPLICATION</Table.HeaderCell>
-
+                        <Table.HeaderCell>
+                          <Popup
+                            trigger={
+                              <span style={{ cursor: "pointer" }}>
+                                FIRST ACTIVITY
+                              </span>
+                            }
+                          >
+                            This was the first time when the device was
+                            detected in the network.
+                          </Popup>
+                        </Table.HeaderCell>
                         <Table.HeaderCell>
                           <Popup
                             trigger={
@@ -188,7 +202,6 @@ const AssociatedAssetInventoryShow = (props) => {
                               >
                                 {item.dev_addr}
                               </Table.Cell>
-
                               <Table.Cell
                                 onClick={() => showAssetDetails(index)}
                               >
@@ -196,6 +209,29 @@ const AssociatedAssetInventoryShow = (props) => {
                                   <TruncateMarkup>
                                     <div>{item.app_name}</div>
                                   </TruncateMarkup>
+                                )}
+                              </Table.Cell>
+                              <Table.Cell collapsing>
+                                {!_.isNull(item.first_activity) && (
+                                  <Popup
+                                    trigger={
+                                      <span>
+                                        {moment
+                                          .unix(item.first_activity)
+                                          .fromNow()}
+                                      </span>
+                                    }
+                                    position="bottom left"
+                                  >
+                                    <Popup.Header>First seen</Popup.Header>
+                                    <Popup.Content>
+                                      {moment
+                                        .unix(item.first_activity)
+                                        .format(
+                                          "dddd, MMMM Do, YYYY h:mm:ss A"
+                                        )}
+                                    </Popup.Content>
+                                  </Popup>
                                 )}
                               </Table.Cell>
                               <Table.Cell
