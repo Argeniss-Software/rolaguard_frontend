@@ -176,6 +176,7 @@ const AlertTimeLineGraph = (props) => {
           showControlBar={true}
           enableFilterQty={true}
           items={items}
+          titleGraph="Alerts Timeline"
           options={options}
           groups={groups}
           onClickItemEvent={clickItemEvent}

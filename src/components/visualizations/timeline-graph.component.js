@@ -131,7 +131,8 @@ const TimeLineGraph = (props) => {
       setQtyShow(items.length);
     }
   };
-
+  const titleGraph = props.titleGraph || "Timeline Title"
+  
   return (
     <React.Fragment>
       <Segment>
@@ -164,7 +165,7 @@ const TimeLineGraph = (props) => {
                   title="fit all items"
                 ></Button>
               </Button.Group>
-              
+
               {enableFilterQty && (
                 <Dropdown
                   onChange={handleChangeShowQty}
@@ -191,6 +192,10 @@ const TimeLineGraph = (props) => {
             </Grid.Column>
           )}
           <Grid.Column width={16}>
+            {titleGraph &&
+            <div className="text-center aligned">
+              <strong>{titleGraph}</strong>
+            </div>}
             <div ref={refElement}> </div>
           </Grid.Column>
         </Grid>
