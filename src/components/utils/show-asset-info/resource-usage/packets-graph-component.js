@@ -4,8 +4,10 @@ import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
 import "./packets-graph-component.css";
 import LoaderComponent from "../../loader.component";
-import { Segment, Grid, Label, Dropdown, Button } from "semantic-ui-react";
+import { Icon, Grid, Label, Dropdown, Button } from "semantic-ui-react";
 import moment from "moment";
+import { Range } from "rc-slider";
+import "rc-slider/assets/index.css";
 
 const PacketGraph = (props) => {
   /*
@@ -35,10 +37,11 @@ const PacketGraph = (props) => {
   const [qtyPackets, setQtyPackets] = useState(20);
   const [gatewayList, setGatewayList] = useState([]);
   const [selectedGatewaysId, setSelectedGatewaysId] = useState([]);
+  
   const [rssiFilter, setRssiFilter] = useState({ from: null, to: null });
+  const [rssiRange, setRssiRange] = useState({ min: null, max: null });
+
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
-  const [rssiRange, setRssiRange] = useState({ from: null, to: null });
-  const [lsnrRange, setLsnrRange] = useState({ from: null, to: null });
 
   const loadDataForGraph = () => {
     setIsLoading(true);
@@ -65,18 +68,19 @@ const PacketGraph = (props) => {
         let resp = _.get(response, "[0].data");
         setResourceUsagePacketList(_.get(resp, "last_packets_list")); // set data for graph
 
-        if (_.isNull(rssiRange.from) || _.isNull(rssiRange.to)) {
+        if (_.isNull(rssiRange.min) || _.isNull(rssiRange.max)) {
           // set range for slider and set marks first initialize
           setRssiRange({
-            from: resp.min_rssi_packets,
-            to: resp.max_rssi_packets,
+            min: resp.min_rssi_packets,
+            max: resp.max_rssi_packets,
           });
           setRssiFilter({
             from: resp.min_rssi_packets,
             to: resp.max_rssi_packets,
           });
+          setRssiValue([resp.min_rssi_packets, resp.max_rssi_packets]);
         }
-        if (_.isNull(lsnrRange.from) || _.isNull(lsnrRange.to)) {
+        /*if (_.isNull(lsnrRange.from) || _.isNull(lsnrRange.to)) {
           setLsnrRange({
             from: resp.min_lsnr_packets,
             to: resp.max_lsnr_packets,
@@ -85,12 +89,13 @@ const PacketGraph = (props) => {
             from: resp.min_lsnr_packets,
             to: resp.max_lsnr_packets,
           });
-        }
+        }*/
 
         setIsLoading(false);
       });
     }
-  };
+  }
+  
   const handleChangeQtyPackets = (event, object) => {
     if (object.value) {
       setQtyPackets(object.value);
@@ -104,12 +109,6 @@ const PacketGraph = (props) => {
       setSelectedGatewaysId(selectedGatewaysId);
     }
   };
-
-  /*const handleAfterChange = (data) => {
-    if (!_.isEmpty(data)) {
-      setLsnrFilter({ from: data[0], to: data[1] });
-    }
-  };*/
 
   useEffect(() => {
     // load data fro graph
@@ -315,6 +314,38 @@ const PacketGraph = (props) => {
     },
   };
 
+  
+  let marksRssi ={}
+  marksRssi[rssiRange.min] = {
+    style: {
+      color: "black",
+      fontSize: "9px",
+    },
+    label: <strong>{rssiRange.min} dBm</strong>,
+  };
+  marksRssi[rssiRange.max] = {
+    style: {
+      color: "black",
+      fontSize: "9px",
+    },
+    label: <strong>{rssiRange.max} dBm</strong>,
+  };
+
+  const handleAfterChangeRssiRange = (data) => {
+    if (!_.isEmpty(data)) {
+      setRssiFilter({ from: data[0], to: data[1] });
+    }
+  };
+  const [rssiValue, setRssiValue] = useState([
+    rssiFilter.from,
+    rssiFilter.to,
+  ]);
+    
+  const resetRssiRange = () => {
+    setRssiFilter({from: rssiRange.min, to: rssiRange.max})
+    setRssiValue([rssiRange.min, rssiRange.max]);
+  }
+
   return (
     <React.Fragment>
       {isLoading && _.isEmpty(resourceUsagePacketList) && (
@@ -367,16 +398,44 @@ const PacketGraph = (props) => {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ padding: "0px" }}>
-            <Grid.Column width={16}>
+            <Grid.Column width={1} style={{ height: "94%" }}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <Chart
-                  options={graphData.options}
-                  series={graphData.series}
-                  type="line"
-                  height="400"
-                />
+                <Range
+                  width={90}
+                  defaultValue={[rssiRange.min, rssiRange.max]}
+                  allowCross={false}
+                  min={rssiRange.min}
+                  max={rssiRange.max}
+                  vertical
+                  value={rssiValue}
+                  onChange={(value) => setRssiValue(value)}
+                  onAfterChange={handleAfterChangeRssiRange}
+                  pushable={true}
+                  marks={marksRssi}
+                ></Range>
               )}
             </Grid.Column>
+            <Grid.Column width={14}>
+              {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
+                <React.Fragment>
+                  <Label
+                    as="a"
+                    onClick={resetRssiRange}
+                    title="Click to reset filter"
+                  >
+                    {rssiFilter.from} dBm TO {rssiFilter.to} dBm
+                  </Label>
+
+                  <Chart
+                    options={graphData.options}
+                    series={graphData.series}
+                    type="line"
+                    height="400"
+                  />
+                </React.Fragment>
+              )}
+            </Grid.Column>
+            <Grid.Column width={1}>filter</Grid.Column>
           </Grid.Row>
         </Grid>
       }
