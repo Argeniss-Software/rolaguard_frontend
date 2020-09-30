@@ -9,3 +9,6 @@ div.multiple.search.selection.dropdown>i.dropdown.icon {
 div.menu.transition {
     z-index: 12 !important;
 }
+span.rc-slider-mark-text {
+    width: 100%;
+}

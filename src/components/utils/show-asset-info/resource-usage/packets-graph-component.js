@@ -42,6 +42,7 @@ const PacketGraph = (props) => {
   const [rssiRange, setRssiRange] = useState({ min: null, max: null });
 
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
+  const [lsnrRange, setLsnrRange] = useState({ min: null, max: null });
 
   const loadDataForGraph = () => {
     setIsLoading(true);
@@ -67,7 +68,8 @@ const PacketGraph = (props) => {
       Promise.all([resourceUsagePromise]).then((response) => {
         let resp = _.get(response, "[0].data");
         setResourceUsagePacketList(_.get(resp, "last_packets_list")); // set data for graph
-
+        
+        // =================== set data related to rssi ===================
         if (_.isNull(rssiRange.min) || _.isNull(rssiRange.max)) {
           // set range for slider and set marks first initialize
           setRssiRange({
@@ -80,16 +82,19 @@ const PacketGraph = (props) => {
           });
           setRssiValue([resp.min_rssi_packets, resp.max_rssi_packets]);
         }
-        /*if (_.isNull(lsnrRange.from) || _.isNull(lsnrRange.to)) {
+
+        // =================== set data related to lsnr ===================
+        if (_.isNull(lsnrRange.min) || _.isNull(lsnrRange.max)) {
           setLsnrRange({
+            min: resp.min_lsnr_packets,
+            max: resp.max_lsnr_packets,
+          });
+          setLsnrFilter({
             from: resp.min_lsnr_packets,
             to: resp.max_lsnr_packets,
           });
-          setLsnrRange({
-            from: resp.min_lsnr_packets,
-            to: resp.max_lsnr_packets,
-          });
-        }*/
+          setLsnrValue([resp.min_lsnr_packets, resp.max_lsnr_packets]);
+        }
 
         setIsLoading(false);
       });
@@ -329,6 +334,22 @@ const PacketGraph = (props) => {
       fontSize: "9px",
     },
     label: <strong>{rssiRange.max} dBm</strong>,
+  }
+
+  let marksLsnr = {};
+  marksLsnr[lsnrRange.min] = {
+    style: {
+      color: "black",
+      fontSize: "9px",
+    },
+    label: <strong>{lsnrRange.min} dBm</strong>,
+  };
+  marksLsnr[lsnrRange.max] = {
+    style: {
+      color: "black",
+      fontSize: "9px",
+    },
+    label: <strong>{lsnrRange.max} dBm</strong>,
   };
 
   const handleAfterChangeRssiRange = (data) => {
@@ -336,15 +357,28 @@ const PacketGraph = (props) => {
       setRssiFilter({ from: data[0], to: data[1] });
     }
   };
+
   const [rssiValue, setRssiValue] = useState([
     rssiFilter.from,
     rssiFilter.to,
   ]);
+  
+  const [lsnrValue, setLsnrValue] = useState([lsnrFilter.from, lsnrFilter.to]);
     
+  const handleAfterChangeLsnrRange = (data) => {
+    if (!_.isEmpty(data)) {
+      setLsnrFilter({ from: data[0], to: data[1] });
+    }
+  };
   const resetRssiRange = () => {
     setRssiFilter({from: rssiRange.min, to: rssiRange.max})
     setRssiValue([rssiRange.min, rssiRange.max]);
   }
+
+  const resetLsnrRange = () => {
+    setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
+    setLsnrValue([lsnrRange.min, lsnrRange.max]);
+  };
 
   return (
     <React.Fragment>
@@ -398,44 +432,115 @@ const PacketGraph = (props) => {
             </Grid.Column>
           </Grid.Row>
           <Grid.Row style={{ padding: "0px" }}>
-            <Grid.Column width={1} style={{ height: "94%" }}>
+            <Grid.Column width={8}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <Range
-                  width={90}
-                  defaultValue={[rssiRange.min, rssiRange.max]}
-                  allowCross={false}
-                  min={rssiRange.min}
-                  max={rssiRange.max}
-                  vertical
-                  value={rssiValue}
-                  onChange={(value) => setRssiValue(value)}
-                  onAfterChange={handleAfterChangeRssiRange}
-                  pushable={true}
-                  marks={marksRssi}
-                ></Range>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={10}>
+                      <Range
+                        defaultValue={[rssiRange.min, rssiRange.max]}
+                        allowCross={false}
+                        min={rssiRange.min}
+                        max={rssiRange.max}
+                        value={rssiValue}
+                        onChange={(value) => setRssiValue(value)}
+                        onAfterChange={handleAfterChangeRssiRange}
+                        pushable={true}
+                        className="pull-right"
+                        style={{ marginRight: "15px" }}
+                        marks={marksRssi}
+                        trackStyle={[
+                          {
+                            backgroundColor: "#008efb",
+                            borderColor: "#008efb",
+                          },
+                        ]}
+                        handleStyle={[
+                          {
+                            borderColor: "#008efb",
+                          },
+                          { borderColor: "#008efb" },
+                        ]}
+                      ></Range>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                      <Label
+                        as="a"
+                        onClick={resetRssiRange}
+                        title="Click to reset filter"
+                        color="blue"
+                      >
+                        RSSI:{" "}
+                        <strong>
+                          {rssiFilter.from} dBm TO {rssiFilter.to} dBm
+                        </strong>
+                      </Label>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
               )}
             </Grid.Column>
-            <Grid.Column width={14}>
-              {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <React.Fragment>
-                  <Label
-                    as="a"
-                    onClick={resetRssiRange}
-                    title="Click to reset filter"
-                  >
-                    {rssiFilter.from} dBm TO {rssiFilter.to} dBm
-                  </Label>
 
-                  <Chart
-                    options={graphData.options}
-                    series={graphData.series}
-                    type="line"
-                    height="400"
-                  />
-                </React.Fragment>
+            <Grid.Column width={8}>
+              {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={10}>
+                      <Range
+                        defaultValue={[lsnrRange.min, lsnrRange.max]}
+                        allowCross={false}
+                        min={lsnrRange.min}
+                        max={lsnrRange.max}
+                        value={lsnrValue}
+                        onChange={(value) => setLsnrValue(value)}
+                        onAfterChange={handleAfterChangeLsnrRange}
+                        pushable={true}
+                        className="pull-right"
+                        style={{ marginRight: "15px" }}
+                        marks={marksLsnr}
+                        trackStyle={[
+                          {
+                            backgroundColor: "#e57812",
+                            borderColor: "#e57812",
+                          },
+                        ]}
+                        handleStyle={[
+                          {
+                            borderColor: "#e57812",
+                          },
+                          { borderColor: "#e57812" },
+                        ]}
+                      ></Range>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                      <Label
+                        as="a"
+                        onClick={resetLsnrRange}
+                        title="Click to reset filter"
+                        color="orange"
+                      >
+                        LSNR:{" "}
+                        <strong>
+                          {lsnrFilter.from} dB TO {lsnrFilter.to} dB
+                        </strong>
+                      </Label>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
               )}
             </Grid.Column>
-            <Grid.Column width={1}>filter</Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={16}>
+              {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
+                <Chart
+                  options={graphData.options}
+                  series={graphData.series}
+                  type="line"
+                  height="400"
+                />
+              )}
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       }
