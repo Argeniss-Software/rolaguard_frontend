@@ -4,10 +4,8 @@ import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
 import "./packets-graph-component.css";
 import LoaderComponent from "../../loader.component";
-import { Grid, Label, Dropdown, Segment } from "semantic-ui-react";
+import { Grid, Dropdown } from "semantic-ui-react";
 import moment from "moment";
-import { Range } from "rc-slider";
-import "rc-slider/assets/index.css";
 import RangeFilter from "./range-filter-component";
 
 const PacketGraph = (props) => {
@@ -44,6 +42,96 @@ const PacketGraph = (props) => {
 
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
   const [lsnrRange, setLsnrRange] = useState({ min: null, max: null });
+
+  
+  // ======================== HANDLER EVENTS ================================
+  const handleAfterChangeRssiRange = (data) => {
+    if (!_.isEmpty(data)) {
+      setRssiFilter({ from: data[0], to: data[1] });
+    }
+  };
+
+  const handleAfterChangeLsnrRange = (data) => {
+    if (!_.isEmpty(data)) {
+      setLsnrFilter({ from: data[0], to: data[1] });
+    }
+  };
+
+  const handleChangeQtyPackets = (event, object) => {
+    if (object.value) {
+      setQtyPackets(object.value);
+    }
+  };
+
+  const handleGatewaysOnChange = (event, data) => {
+    if (data.value.length >= 1) {
+      setSelectedGatewaysId(data.value);
+    } else {
+      setSelectedGatewaysId(selectedGatewaysId);
+    }
+  };
+  // =======================================================================
+  // =========================== UseEffects Hooks ==========================
+  useEffect(() => {
+    // load data from graph
+    if (_.isEmpty(packetList)) {
+      // load by ajax
+      loadDataForGraph();
+    } else {
+      setResourceUsagePacketList(packetList); // set it by props
+    }
+  }, [props.id, props.type, lsnrFilter, rssiFilter]);
+
+  useEffect(() => {
+    // build a unique gateway list from api results
+    if (!_.isEmpty(resourceUsagePacketList) && _.isEmpty(gatewayList)) {
+      let onlyGateways = _.map(
+        resourceUsagePacketList,
+        _.partialRight(_.pick, ["gateway_id", "gateway"])
+      );
+      let uniqGateways = _.orderBy(_.uniqBy(onlyGateways, "gateway_id"), [
+        "gateway",
+        "gateway_id",
+        "asc",
+        "asc",
+      ]);
+
+      let gatewayListForDropdown = Object.keys(uniqGateways).map((key) => {
+        return {
+          key: uniqGateways[key].gateway_id,
+          text: _.toUpper(uniqGateways[key].gateway),
+          value: uniqGateways[key].gateway_id,
+        };
+      });
+      setGatewayList(gatewayListForDropdown);
+    }
+  }, [resourceUsagePacketList]);
+
+  useEffect(() => {
+    let filteredResults = resourceUsagePacketList;
+
+    if (!_.isEmpty(selectedGatewaysId)) {
+      // if it is not empty filter by gateways. If it empty the filter gateway list: show all
+      filteredResults = filteredResults.filter((e) =>
+        selectedGatewaysId.includes(e.gateway_id)
+      );
+    }
+
+    setFilteredResourceUsagePacketList(
+      _.takeRight(filteredResults, qtyPackets)
+    );
+  }, [selectedGatewaysId, resourceUsagePacketList, qtyPackets]);
+
+
+  // =======================================================================
+  // ============================ METHODS ==================================
+  const resetRssiRange = () => {
+    setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
+  };
+
+  const resetLsnrRange = () => {
+    setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
+  };
 
   const loadDataForGraph = () => {
     setIsLoading(true);
@@ -98,71 +186,6 @@ const PacketGraph = (props) => {
       });
     }
   };
-
-  const handleChangeQtyPackets = (event, object) => {
-    if (object.value) {
-      setQtyPackets(object.value);
-    }
-  };
-
-  const handleGatewaysOnChange = (event, data) => {
-    if (data.value.length >= 1) {
-      setSelectedGatewaysId(data.value);
-    } else {
-      setSelectedGatewaysId(selectedGatewaysId);
-    }
-  };
-
-  useEffect(() => {
-    // load data fro graph
-    if (_.isEmpty(packetList)) {
-      // load by ajax
-      loadDataForGraph();
-    } else {
-      setResourceUsagePacketList(packetList); // set it by props
-    }
-  }, [props.id, props.type, lsnrFilter, rssiFilter]);
-
-  useEffect(() => {
-    // build a unique gateway list from api results
-    if (!_.isEmpty(resourceUsagePacketList) && _.isEmpty(gatewayList)) {
-      let onlyGateways = _.map(
-        resourceUsagePacketList,
-        _.partialRight(_.pick, ["gateway_id", "gateway"])
-      );
-      let uniqGateways = _.orderBy(_.uniqBy(onlyGateways, "gateway_id"), [
-        "gateway",
-        "gateway_id",
-        "asc",
-        "asc",
-      ]);
-
-      let gatewayListForDropdown = Object.keys(uniqGateways).map((key) => {
-        return {
-          key: uniqGateways[key].gateway_id,
-          text: _.toUpper(uniqGateways[key].gateway),
-          value: uniqGateways[key].gateway_id,
-        };
-      });
-      setGatewayList(gatewayListForDropdown);
-    }
-  }, [resourceUsagePacketList]);
-
-  useEffect(() => {
-    // filter list with
-    let filteredResults = resourceUsagePacketList;
-
-    if (!_.isEmpty(selectedGatewaysId)) {
-      // if it is not empty filter by gateways. If it empty the filter gateway list: show all
-      filteredResults = filteredResults.filter((e) =>
-        selectedGatewaysId.includes(e.gateway_id)
-      );
-    }
-
-    setFilteredResourceUsagePacketList(
-      _.takeRight(filteredResults, qtyPackets)
-    );
-  }, [selectedGatewaysId, resourceUsagePacketList, qtyPackets]);
 
   const getCategories = () => {
     if (!_.isEmpty(filteredResourceUsagePacketList)) {
@@ -316,27 +339,8 @@ const PacketGraph = (props) => {
       },
     },
   };
-
-  const handleAfterChangeRssiRange = (data) => {
-    if (!_.isEmpty(data)) {
-      setRssiFilter({ from: data[0], to: data[1] });
-    }
-  };
-
-  const handleAfterChangeLsnrRange = (data) => {
-    if (!_.isEmpty(data)) {
-      setLsnrFilter({ from: data[0], to: data[1] });
-    }
-  };
-  
-  const resetRssiRange = () => {
-    setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
-  };
-
-  const resetLsnrRange = () => {
-    setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
-  };
-
+  // =======================================================================
+  // ============================ RENDER  ==================================
   return (
     <React.Fragment>
       {isLoading && _.isEmpty(resourceUsagePacketList) && (
