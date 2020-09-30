@@ -8,7 +8,7 @@ import { Grid, Label, Dropdown, Segment } from "semantic-ui-react";
 import moment from "moment";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
-import RssiRangeFilter from "./rssi-range-filter-component"
+import RangeFilter from "./range-filter-component";
 
 const PacketGraph = (props) => {
   /*
@@ -80,7 +80,6 @@ const PacketGraph = (props) => {
             from: resp.min_rssi_packets,
             to: resp.max_rssi_packets,
           });
-          setRssiValue([resp.min_rssi_packets, resp.max_rssi_packets]);
         }
 
         // =================== set data related to lsnr ===================
@@ -93,7 +92,6 @@ const PacketGraph = (props) => {
             from: resp.min_lsnr_packets,
             to: resp.max_lsnr_packets,
           });
-          setLsnrValue([resp.min_lsnr_packets, resp.max_lsnr_packets]);
         }
 
         setIsLoading(false);
@@ -319,59 +317,24 @@ const PacketGraph = (props) => {
     },
   };
 
-  let marksRssi = {};
-  marksRssi[rssiRange.min] = {
-    style: {
-      color: "black",
-      fontSize: "9px",
-    },
-    label: <strong>{rssiRange.min} dBm</strong>,
-  };
-  marksRssi[rssiRange.max] = {
-    style: {
-      color: "black",
-      fontSize: "9px",
-    },
-    label: <strong>{rssiRange.max} dBm</strong>,
-  };
-
-  let marksLsnr = {};
-  marksLsnr[lsnrRange.min] = {
-    style: {
-      color: "black",
-      fontSize: "9px",
-    },
-    label: <strong>{lsnrRange.min} dBm</strong>,
-  };
-  marksLsnr[lsnrRange.max] = {
-    style: {
-      color: "black",
-      fontSize: "9px",
-    },
-    label: <strong>{lsnrRange.max} dBm</strong>,
-  };
-
   const handleAfterChangeRssiRange = (data) => {
     if (!_.isEmpty(data)) {
       setRssiFilter({ from: data[0], to: data[1] });
     }
   };
 
-  const [rssiValue, setRssiValue] = useState([rssiFilter.from, rssiFilter.to]);
-  const [lsnrValue, setLsnrValue] = useState([lsnrFilter.from, lsnrFilter.to]);
-
   const handleAfterChangeLsnrRange = (data) => {
     if (!_.isEmpty(data)) {
       setLsnrFilter({ from: data[0], to: data[1] });
     }
   };
+  
   const resetRssiRange = () => {
     setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
   };
 
   const resetLsnrRange = () => {
     setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
-    setLsnrValue([lsnrRange.min, lsnrRange.max]);
   };
 
   return (
@@ -428,56 +391,29 @@ const PacketGraph = (props) => {
           <Grid.Row style={{ padding: "0px" }}>
             <Grid.Column width={8}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-              <RssiRangeFilter onAfterChange={handleAfterChangeRssiRange} rssiRange={rssiRange} rssiFilter={rssiFilter} onReset={resetRssiRange}></RssiRangeFilter>
+                <RangeFilter
+                  onAfterChange={handleAfterChangeRssiRange}
+                  range={rssiRange}
+                  filter={rssiFilter}
+                  onReset={resetRssiRange}
+                  label="RSSI"
+                  color="#008efb"
+                  unit="dBm"
+                />
               )}
             </Grid.Column>
 
             <Grid.Column width={8}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={10}>
-                      <Range
-                        defaultValue={[lsnrRange.min, lsnrRange.max]}
-                        allowCross={false}
-                        min={lsnrRange.min}
-                        max={lsnrRange.max}
-                        value={lsnrValue}
-                        onChange={(value) => setLsnrValue(value)}
-                        onAfterChange={handleAfterChangeLsnrRange}
-                        pushable={true}
-                        className="pull-right"
-                        style={{ marginRight: "15px" }}
-                        marks={marksLsnr}
-                        trackStyle={[
-                          {
-                            backgroundColor: "#e57812",
-                            borderColor: "#e57812",
-                          },
-                        ]}
-                        handleStyle={[
-                          {
-                            borderColor: "#e57812",
-                          },
-                          { borderColor: "#e57812" },
-                        ]}
-                      ></Range>
-                    </Grid.Column>
-                    <Grid.Column width={6}>
-                      <Label
-                        as="a"
-                        onClick={resetLsnrRange}
-                        title="Click to reset filter"
-                        color="orange"
-                      >
-                        LSNR:{" "}
-                        <strong>
-                          {lsnrFilter.from} dB TO {lsnrFilter.to} dB
-                        </strong>
-                      </Label>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+                <RangeFilter
+                  onAfterChange={handleAfterChangeLsnrRange}
+                  range={lsnrRange}
+                  filter={lsnrFilter}
+                  onReset={resetLsnrRange}
+                  label="LSNR"
+                  color="#e57812"
+                  unit="dB"
+                />
               )}
             </Grid.Column>
           </Grid.Row>
