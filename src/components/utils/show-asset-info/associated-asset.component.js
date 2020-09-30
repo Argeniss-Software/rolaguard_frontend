@@ -50,7 +50,7 @@ const AssociatedAsset = (props) => {
       {!isLoading &&
         associatedAssets.map((e) => {
           return (
-            <React.Fragment>
+            <React.Fragment key={e.id}>
               <AssetId
                 type={e.type}
                 hexId={e.hex_id}

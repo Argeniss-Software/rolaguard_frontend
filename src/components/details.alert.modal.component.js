@@ -203,7 +203,7 @@ class DetailsAlertModal extends Component {
                 ref="technical-detail"
               >
                 <Icon name="dropdown" />
-                <strong>Technical details</strong>
+                <strong>Details</strong>
               </Accordion.Title>
               <Accordion.Content
                 active={activeIndex === technicalDescriptionIndex}
