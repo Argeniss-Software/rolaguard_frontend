@@ -4,7 +4,7 @@ import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
 import "./packets-graph-component.css";
 import LoaderComponent from "../../loader.component";
-import { Icon, Grid, Label, Dropdown, Button } from "semantic-ui-react";
+import { Grid, Label, Dropdown, Segment } from "semantic-ui-react";
 import moment from "moment";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -37,7 +37,7 @@ const PacketGraph = (props) => {
   const [qtyPackets, setQtyPackets] = useState(20);
   const [gatewayList, setGatewayList] = useState([]);
   const [selectedGatewaysId, setSelectedGatewaysId] = useState([]);
-  
+
   const [rssiFilter, setRssiFilter] = useState({ from: null, to: null });
   const [rssiRange, setRssiRange] = useState({ min: null, max: null });
 
@@ -68,7 +68,6 @@ const PacketGraph = (props) => {
       Promise.all([resourceUsagePromise]).then((response) => {
         let resp = _.get(response, "[0].data");
         setResourceUsagePacketList(_.get(resp, "last_packets_list")); // set data for graph
-        
         // =================== set data related to rssi ===================
         if (_.isNull(rssiRange.min) || _.isNull(rssiRange.max)) {
           // set range for slider and set marks first initialize
@@ -99,8 +98,8 @@ const PacketGraph = (props) => {
         setIsLoading(false);
       });
     }
-  }
-  
+  };
+
   const handleChangeQtyPackets = (event, object) => {
     if (object.value) {
       setQtyPackets(object.value);
@@ -319,8 +318,7 @@ const PacketGraph = (props) => {
     },
   };
 
-  
-  let marksRssi ={}
+  let marksRssi = {};
   marksRssi[rssiRange.min] = {
     style: {
       color: "black",
@@ -334,7 +332,7 @@ const PacketGraph = (props) => {
       fontSize: "9px",
     },
     label: <strong>{rssiRange.max} dBm</strong>,
-  }
+  };
 
   let marksLsnr = {};
   marksLsnr[lsnrRange.min] = {
@@ -358,22 +356,18 @@ const PacketGraph = (props) => {
     }
   };
 
-  const [rssiValue, setRssiValue] = useState([
-    rssiFilter.from,
-    rssiFilter.to,
-  ]);
-  
+  const [rssiValue, setRssiValue] = useState([rssiFilter.from, rssiFilter.to]);
   const [lsnrValue, setLsnrValue] = useState([lsnrFilter.from, lsnrFilter.to]);
-    
+
   const handleAfterChangeLsnrRange = (data) => {
     if (!_.isEmpty(data)) {
       setLsnrFilter({ from: data[0], to: data[1] });
     }
   };
   const resetRssiRange = () => {
-    setRssiFilter({from: rssiRange.min, to: rssiRange.max})
+    setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
     setRssiValue([rssiRange.min, rssiRange.max]);
-  }
+  };
 
   const resetLsnrRange = () => {
     setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
