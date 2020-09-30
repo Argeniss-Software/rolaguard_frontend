@@ -118,7 +118,7 @@ const ShowAlerts = (props) => {
       {showFilters && (
         <DateFilterBar onDateFilterChange={handleDateFilterChange} />
       )}
-      <Segment attached stretched>
+      <Segment attached stretched="true">
         {isLoading && <LoaderComponent loadingMessage="Loading alerts..." />}
         {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no alerts to show." />
@@ -232,7 +232,6 @@ const ShowAlerts = (props) => {
             <Pagination
               size="mini"
               activePage={activePage}
-              const
               onPageChange={handlePaginationChange}
               totalPages={totalPages}
             />
