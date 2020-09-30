@@ -8,6 +8,7 @@ import { Grid, Label, Dropdown, Segment } from "semantic-ui-react";
 import moment from "moment";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
+import RssiRangeFilter from "./rssi-range-filter-component"
 
 const PacketGraph = (props) => {
   /*
@@ -366,7 +367,6 @@ const PacketGraph = (props) => {
   };
   const resetRssiRange = () => {
     setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
-    setRssiValue([rssiRange.min, rssiRange.max]);
   };
 
   const resetLsnrRange = () => {
@@ -428,50 +428,7 @@ const PacketGraph = (props) => {
           <Grid.Row style={{ padding: "0px" }}>
             <Grid.Column width={8}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={10}>
-                      <Range
-                        defaultValue={[rssiRange.min, rssiRange.max]}
-                        allowCross={false}
-                        min={rssiRange.min}
-                        max={rssiRange.max}
-                        value={rssiValue}
-                        onChange={(value) => setRssiValue(value)}
-                        onAfterChange={handleAfterChangeRssiRange}
-                        pushable={true}
-                        className="pull-right"
-                        style={{ marginRight: "15px" }}
-                        marks={marksRssi}
-                        trackStyle={[
-                          {
-                            backgroundColor: "#008efb",
-                            borderColor: "#008efb",
-                          },
-                        ]}
-                        handleStyle={[
-                          {
-                            borderColor: "#008efb",
-                          },
-                          { borderColor: "#008efb" },
-                        ]}
-                      ></Range>
-                    </Grid.Column>
-                    <Grid.Column width={6}>
-                      <Label
-                        as="a"
-                        onClick={resetRssiRange}
-                        title="Click to reset filter"
-                        color="blue"
-                      >
-                        RSSI:{" "}
-                        <strong>
-                          {rssiFilter.from} dBm TO {rssiFilter.to} dBm
-                        </strong>
-                      </Label>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+              <RssiRangeFilter onAfterChange={handleAfterChangeRssiRange} rssiRange={rssiRange} rssiFilter={rssiFilter} onReset={resetRssiRange}></RssiRangeFilter>
               )}
             </Grid.Column>
 
