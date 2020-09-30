@@ -4,7 +4,7 @@ import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
 import "./packets-graph-component.css";
 import LoaderComponent from "../../loader.component";
-import { Grid, Dropdown } from "semantic-ui-react";
+import { Grid, Dropdown, Dimmer, Loader, Message } from "semantic-ui-react";
 import moment from "moment";
 import RangeFilter from "./range-filter-component";
 
@@ -43,7 +43,6 @@ const PacketGraph = (props) => {
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
   const [lsnrRange, setLsnrRange] = useState({ min: null, max: null });
 
-  
   // ======================== HANDLER EVENTS ================================
   const handleAfterChangeRssiRange = (data) => {
     if (!_.isEmpty(data)) {
@@ -121,7 +120,6 @@ const PacketGraph = (props) => {
       _.takeRight(filteredResults, qtyPackets)
     );
   }, [selectedGatewaysId, resourceUsagePacketList, qtyPackets]);
-
 
   // =======================================================================
   // ============================ METHODS ==================================
@@ -424,12 +422,29 @@ const PacketGraph = (props) => {
           <Grid.Row>
             <Grid.Column width={16}>
               {(!isLoading || !_.isEmpty(filteredResourceUsagePacketList)) && (
-                <Chart
-                  options={graphData.options}
-                  series={graphData.series}
-                  type="line"
-                  height="400"
-                />
+                <React.Fragment>
+                  <Dimmer active={isLoading} inverted>
+                    <Loader>Loading...</Loader>
+                  </Dimmer>
+                  {_.isEmpty(graphData.series) && (
+                    <Message warning>
+                      <Message.Header>
+                        There is no results for selected filters
+                      </Message.Header>
+                      <p>
+                        Try to change the filtering criteria to get results...
+                      </p>
+                    </Message>
+                  )}
+                  {!_.isEmpty(graphData.series) && (
+                    <Chart
+                      options={graphData.options}
+                      series={graphData.series}
+                      type="line"
+                      height="400"
+                    />
+                  )}
+                </React.Fragment>
               )}
             </Grid.Column>
           </Grid.Row>
