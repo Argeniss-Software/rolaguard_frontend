@@ -76,6 +76,7 @@ const RangeFilter = (props) => {
             onAfterChange={handleAfterChange}
             pushable={true}
             className="pull-right"
+            step={1}
             style={{ marginRight: "15px" }}
             marks={marks}
             trackStyle={[
