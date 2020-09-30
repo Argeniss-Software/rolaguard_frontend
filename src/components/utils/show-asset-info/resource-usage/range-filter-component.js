@@ -49,7 +49,7 @@ const RangeFilter = (props) => {
     }
   };
 
-  const [Value, setValue] = useState([props.filter.from, props.filter.to]);
+  const [value, setValue] = useState([props.filter.from, props.filter.to]);
 
   useEffect(() => {
     setValue([props.filter.from, props.filter.to]);
@@ -71,7 +71,7 @@ const RangeFilter = (props) => {
             allowCross={false}
             min={props.range.min}
             max={props.range.max}
-            value={Value}
+            value={value}
             onChange={(value) => setValue(value)}
             onAfterChange={handleAfterChange}
             pushable={true}
@@ -97,11 +97,11 @@ const RangeFilter = (props) => {
             as="a"
             onClick={resetRange}
             title="Click to reset filter"
-            style={{backgroundColor: props.color, color: 'white'}}
+            style={{ backgroundColor: props.color, color: "white" }}
           >
             {props.label}:{" "}
             <strong>
-              {props.filter.from} {props.unit} TO {props.filter.to} {props.unit}
+              {value[0]} {props.unit} TO {value[1]} {props.unit}
             </strong>
           </Label>
         </Grid.Column>
