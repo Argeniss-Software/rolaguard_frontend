@@ -52,7 +52,7 @@ class CommonStore {
         break;
     }
 
-    let params = {
+    const params = {
       page: _.get(filter_params, "page", 1),
       size: _.get(filter_params, "size", 5),
       order_by: _.get(filter_params, "order_by", []),

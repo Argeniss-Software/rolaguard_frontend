@@ -28,8 +28,8 @@ import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ImportanceLabel from "../utils/importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
-import moment from "moment"
-import _ from 'lodash'
+import moment from "moment";
+import _ from "lodash";
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
 class InventoryReviewComponent extends React.Component {
@@ -230,7 +230,7 @@ class InventoryReviewComponent extends React.Component {
     ) {
       // When page changes, index must be set to 0
       newIndex = 0;
-      newPage = this.state.activePage +1
+      newPage = this.state.activePage + 1;
     }
 
     if (newPage) {
@@ -244,7 +244,7 @@ class InventoryReviewComponent extends React.Component {
       );
     } else {
       this.showAssetDetails(newIndex);
-    }  
+    }
   };
 
   handleItemSelected = (array, selectedItem, type) => {
@@ -439,7 +439,8 @@ class InventoryReviewComponent extends React.Component {
                   <span style={{ cursor: "pointer" }}>FIRST ACTIVITY</span>
                 }
               >
-                This was the first time when the device was detected in the network.
+                This was the first time when the device was detected in the
+                network.
               </Popup>
             </Table.HeaderCell>
             <Table.HeaderCell>
@@ -616,7 +617,12 @@ class InventoryReviewComponent extends React.Component {
   }
 
   showFilters() {
-    const { byVendorsViz, byDataCollectorsViz, byTagsViz, byImportancesViz} = this.state;
+    const {
+      byVendorsViz,
+      byDataCollectorsViz,
+      byTagsViz,
+      byImportancesViz,
+    } = this.state;
     const filter = (item) => item.selected;
     const filteredVendors = byVendorsViz.filter(filter);
     const filteredDataCollectors = byDataCollectorsViz.filter(filter);
@@ -675,7 +681,11 @@ class InventoryReviewComponent extends React.Component {
             key={"importance" + index}
             className="text-uppercase"
             onClick={() => {
-              this.handleItemSelected(byImportancesViz, item, "byImportancesViz");
+              this.handleItemSelected(
+                byImportancesViz,
+                item,
+                "byImportancesViz"
+              );
             }}
           >
             IMPORTANCE: {item.label}
@@ -826,7 +836,7 @@ class InventoryReviewComponent extends React.Component {
                             active={this.state.isGraphsLoading === true}
                           />
                           {!this.state.isGraphsLoading && (
-                            <div style={{width:'100%', height:'260px'}}>
+                            <div style={{ width: "100%", height: "260px" }}>
                               <CirclePack
                                 isLoading={this.state.isGraphsLoading}
                                 data={byTagsViz}
