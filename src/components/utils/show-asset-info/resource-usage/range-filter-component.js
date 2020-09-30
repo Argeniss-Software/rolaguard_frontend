@@ -19,26 +19,26 @@ const RangeFilter = (props) => {
    */
 
   let marks = {};
-  marks[props.range.min] = {
+  marks[_.floor(props.range.min)] = {
     style: {
       color: "black",
       fontSize: "9px",
     },
     label: (
       <strong>
-        {props.range.min} {props.unit}
+        {_.floor(props.range.min)} {props.unit}
       </strong>
     ),
   };
 
-  marks[props.range.max] = {
+  marks[_.ceil(props.range.max)] = {
     style: {
       color: "black",
       fontSize: "9px",
     },
     label: (
       <strong>
-        {props.range.max} {props.unit}
+        {_.ceil(props.range.max)} {props.unit}
       </strong>
     ),
   };
@@ -57,7 +57,7 @@ const RangeFilter = (props) => {
 
   const resetRange = () => {
     if (_.isFunction(props.onReset)) {
-      setValue([props.range.min, props.range.max]);
+      setValue([_.floor(props.range.min), _.ceil(props.range.max)]);
       props.onReset();
     }
   };
@@ -67,10 +67,10 @@ const RangeFilter = (props) => {
       <Grid.Row>
         <Grid.Column width={10}>
           <Range
-            defaultValue={[props.range.min, props.range.max]}
+            defaultValue={[_.floor(props.range.min), _.ceil(props.range.max)]}
             allowCross={false}
-            min={props.range.min}
-            max={props.range.max}
+            min={_.floor(props.range.min)}
+            max={_.ceil(props.range.max)}
             value={value}
             onChange={(value) => setValue(value)}
             onAfterChange={handleAfterChange}
