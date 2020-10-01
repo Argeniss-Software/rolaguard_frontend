@@ -109,8 +109,8 @@ class ResourceUsageStore {
       self.setTotalList(response[0].data.total_items);
       self.setTotalPages(response[0].data.total_pages);
       self.setList(this.formatApiData(response[0].data.assets));
+      this.setModelLoading(false);
     });
-    this.setModelLoading(false);
   };
 
   @action getDataStatusFromApi = () => {

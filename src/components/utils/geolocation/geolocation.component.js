@@ -5,6 +5,8 @@ import "./geolocation.component.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
 import mark from "../../../img/map-marker.png";
+import {Segment, Dimmer, Loader} from "semantic-ui-react"
+import { withRouter } from "react-router-dom";
 
 const { Map, TileLayer, Marker, Circle } = ReactLeaflet;
 
@@ -32,6 +34,7 @@ const Geolocation = (props) => {
         props.location.latitude !== null &&
         props.location.longitude !== null
     );
+
     setPosition([
       _.get(props, "location.latitude"),
       _.get(props, "location.longitude"),
@@ -90,7 +93,8 @@ const Geolocation = (props) => {
             <Marker position={position} opacity={1} icon={icon}></Marker>
           )}
 
-          {gatewaysLocationsAvailable && !positionDefined &&
+          {gatewaysLocationsAvailable &&
+            !positionDefined &&
             gatewaysLocations.map((gw) => {
               return (
                 <Circle
@@ -103,28 +107,18 @@ const Geolocation = (props) => {
         </Map>
       )}
       {!positionDefined && !gatewaysLocationsAvailable && (
-        <div
-          style={{
-            backgroundColor: "#e0e1e2",
-            textAlign: "center",
-            width: "100%",
-            height: "100%",
-          }}
+        <Map
+          viewport={{ center: [31.505, -0.05], zoom: 0.5 }}
+          zoomControl={false}
         >
-          <h5
-            style={{ color: "gray", alignSelf: "center", paddingTop: "10px" }}
-          >
-            No location set
-          </h5>
-          <i
-            className="fas fa-exclamation fa-4x"
-            style={{
-              color: "gray",
-              alignContent: "center",
-              paddingBottom: "10px",
-            }}
-          ></i>
-        </div>
+          <TileLayer
+            url="https://{s}.tile.osm.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <Dimmer active style={{opacity: 0.8}}>
+            <span style={{color: 'white', fontSize: "1.3em", fontStyle: 'bold', fontWeight:900}}>Not available</span>
+          </Dimmer>
+        </Map>
       )}
     </div>
   );

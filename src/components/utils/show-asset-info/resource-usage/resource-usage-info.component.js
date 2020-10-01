@@ -132,7 +132,11 @@ const ResourceUsageInfo = (props) => {
                   {isDevice && (
                     <span>
                       CONNECTED TO{" "}
-                      <strong>{NGatewaysConnectedTo /* props.asset.ngateways_connected_to */} </strong>
+                      <strong>
+                        {
+                          NGatewaysConnectedTo /* props.asset.ngateways_connected_to */
+                        }{" "}
+                      </strong>
                       GATEWAYS:
                     </span>
                   )}
@@ -152,16 +156,15 @@ const ResourceUsageInfo = (props) => {
         </Table>
       </Grid.Row>
       <Divider />
-      <Grid.Row>
+      <Grid.Row className="text-center aligned">
+        <strong>Messages on the last 24 hours</strong>
         <ShowPacketsStatistics
           packets_down={props.asset.packets_down}
           packets_up={props.asset.packets_up}
           packets_lost={props.asset.packets_lost}
           headerColorLine="black"
           type={props.asset.type}
-        >
-          <strong>Messages on the last 24 hours</strong>
-        </ShowPacketsStatistics>
+        ></ShowPacketsStatistics>
       </Grid.Row>
     </React.Fragment>
   );

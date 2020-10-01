@@ -100,6 +100,7 @@ const AlertTimeLineGraph = (props) => {
     locale: "en",
     zoomMin: 1000 * 60 * 60, // every 5 minutes
     zoomMax: 1000 * 60 * 60 * 24 * 30 * 1, // a month
+    clickToUse: true,
     
     tooltip: {
       template: function(originalItemData, parsedItemData) {
