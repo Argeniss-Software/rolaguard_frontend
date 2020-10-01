@@ -69,7 +69,7 @@ const AssignTagsModal = (props) => {
 
 
   return (
-    <Modal open={open}>
+    <Modal open={open} closeIcon>
       <Modal.Header>ASSIGN LABELS</Modal.Header>
       <Modal.Content className="modal-content-container">
         {/* Error message in case the assignation fails */}

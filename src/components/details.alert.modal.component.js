@@ -116,8 +116,8 @@ class DetailsAlertModal extends Component {
 
     return (
       <Modal
-        closeOnEscape={true}
-        closeOnDimmerClick={false}
+        closeOnEscape
+        closeIcon
         open={modalOpen}
         onClose={this.handleClose}
       >

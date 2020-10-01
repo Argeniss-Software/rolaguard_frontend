@@ -20,12 +20,10 @@ const ModalResourceUsage = (props) => {
 
   return (
     <Modal
-      centered={false}
-      closeOnDimmerClick
       closeOnEscape
+      closeIcon
       open={props.open}
       onClose={() => closeModal()}
-      size="large"
     >
       <Modal.Header>
         <ShowDeviceState state={props.asset.connected} />
@@ -64,7 +62,12 @@ const ModalResourceUsage = (props) => {
           <Grid>
             <Grid.Row>
               <Grid.Column width={16}>
-                <Table className="animated fadeIn" celled compact="very" color="black">
+                <Table
+                  className="animated fadeIn"
+                  celled
+                  compact="very"
+                  color="black"
+                >
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>DEV ADDR</Table.HeaderCell>
