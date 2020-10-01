@@ -82,7 +82,7 @@ const PacketViewer = (props) => {
       toUpperCase: true,
     },
     join_eui: {
-      title: "Join EUI",
+      title: "JOIN EUI/APP EUI",
       toUpperCase: true,
     },
     rssi: {
@@ -100,7 +100,7 @@ const PacketViewer = (props) => {
       title: "Message type",
     },
     mic: {
-      title: "Message integity check (mic)",
+      title: "Message integity check (MIC)",
       toUpperCase: true,
     },
     gateway: {
@@ -109,7 +109,7 @@ const PacketViewer = (props) => {
     },
     f_count: {
       title: "Counter",
-    }
+    },
   };
 
   return (
