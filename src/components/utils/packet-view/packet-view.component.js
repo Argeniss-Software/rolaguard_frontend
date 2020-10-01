@@ -119,7 +119,7 @@ const PacketViewer = (props) => {
           <Table.Body>
             <Table.Row>
               <Table.Cell
-                width="3"
+                width="4"
                 className="technical-details-table-row-right"
               >
                 <b>
@@ -127,7 +127,7 @@ const PacketViewer = (props) => {
                 </b>
               </Table.Cell>
               <Table.Cell
-                width="3"
+                width="4"
                 className="technical-details-table-row-right"
               >
                 <b>
@@ -136,7 +136,7 @@ const PacketViewer = (props) => {
               </Table.Cell>
               {showSecondPacket &&
                 <Table.Cell
-                  width="3"
+                  width="4"
                   className="technical-details-table-row-right"
                 >
                   <b>
@@ -151,21 +151,21 @@ const PacketViewer = (props) => {
                 return (
                   <Table.Row key={index}>
                     <Table.Cell
-                      width="3"
+                      width="4"
                       className="technical-details-table-row-left"
                       style={{ borderTop: "1px solid lightgray !important" }}
                     >
                       <i>{itemDetails.title}</i>
                     </Table.Cell>
                     <Table.Cell
-                      width="3"
+                      width="4"
                       className="technical-details-table-row-right"
                     >
                       <ShowValue value={props.packetData[item]} details={itemDetails} />
                     </Table.Cell>
                     {showSecondPacket &&
                       <Table.Cell
-                        width="3"
+                        width="4"
                         className="technical-details-table-row-right"
                       >
                         <ShowValue value={props.previousPacketData[item]} details={itemDetails} />
@@ -176,13 +176,13 @@ const PacketViewer = (props) => {
               })}
             <Table.Row>
               <Table.Cell
-                width="3"
+                width="4"
                 className="technical-details-table-row-left"
                 style={{ borderTop: "1px solid lightgray !important" }}
               >
               </Table.Cell>
               <Table.Cell
-                width="3"
+                width="4"
                 className="technical-details-table-row-right"
               >
                 <a href="#" onClick={() => downloadTxtFile(props.packetData)}>
@@ -191,7 +191,7 @@ const PacketViewer = (props) => {
               </Table.Cell>
               {showSecondPacket &&
                 <Table.Cell
-                  width="3"
+                  width="4"
                   className="technical-details-table-row-right"
                 >
                     <a href="#" onClick={() => downloadTxtFile(props.previousPacketData)}>
