@@ -109,12 +109,14 @@ class InventoryDetailsModal extends Component {
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
-          title: "join_eui/app_eui",
+          title: "JOIN EUI/APP EUI",
           value: item.join_eui ? item.join_eui.toUpperCase() : null,
         },
         {
           title: "First Activity",
-          value: _.isNull(item.first_activity)? 'N/A' : moment.unix(item.first_activity).format(dateFormat),
+          value: _.isNull(item.first_activity)
+            ? "N/A"
+            : moment.unix(item.first_activity).format(dateFormat),
         },
         { title: "Data Source", value: item.data_collector },
       ];
@@ -130,7 +132,7 @@ class InventoryDetailsModal extends Component {
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
-          title: "join_eui/app_eui",
+          title: "JOIN EUI/APP EUI",
           value: item.join_eui ? item.join_eui.toUpperCase() : null,
         },
         {
