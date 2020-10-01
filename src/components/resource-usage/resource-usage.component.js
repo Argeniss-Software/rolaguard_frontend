@@ -163,7 +163,7 @@ const ResourceUsageComponent = (props) => {
           <div className="table-container">
             <div className="table-container-box">
               <Segment>
-                {showFilters && (
+                {showFilters && !resourceUsageStore.model.isLoading && (
                   <React.Fragment>
                     <Grid>
                       <Grid.Row>
@@ -200,7 +200,6 @@ const ResourceUsageComponent = (props) => {
                     </Grid>
                   </React.Fragment>
                 )}
-
                 {!resourceUsageStore.model.isLoading && (
                   <ResourceUsageList
                     list={resourceUsageStore.model.list}
@@ -209,7 +208,6 @@ const ResourceUsageComponent = (props) => {
                     deviceTypeClick={toggleDeviceTypeFilter}
                   ></ResourceUsageList>
                 )}
-
                 {resourceUsageStore.model.isLoading && (
                   <LoaderComponent
                     loadingMessage="Loading network overview..."
