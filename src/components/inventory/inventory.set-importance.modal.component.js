@@ -76,7 +76,7 @@ const SetImportanceModal = (props) => {
           IMPORTANCE: <ImportanceSelector />
         </strong>
         <Divider />
-        <strong>DEVICES AFFECTED:</strong>
+        <strong>GATEWAYS/DEVICES SELECTED:</strong>
         <div className="table-wrapper">
           <DevicesTable assets={props.assets} />
         </div>
