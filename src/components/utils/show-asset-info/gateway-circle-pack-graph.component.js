@@ -108,7 +108,7 @@ const GatewayCirclePackGraph = (props) => {
 
           <Loader active={isLoading === true} />
           {!isLoading && (
-            <div style={{ width: "240px", height: "260px" }}>
+            <div style={{ width: "100%", height: "260px" }}>
               <CirclePack
                 isLoading={isLoading}
                 data={labels}
