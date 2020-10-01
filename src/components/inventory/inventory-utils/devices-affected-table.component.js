@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Table} from "semantic-ui-react"
-
+import _ from 'lodash'
 import "./devices-affected-table.component.css"
 
 
@@ -24,7 +24,7 @@ const DevicesTable = (props) => {
           <Table.Body className="affected-devices-body-container">
             {props.assets.filter((i) => i.selected).map((item, index) => 
               <Table.Row key={index}>
-                <Table.Cell>{item.hex_id}</Table.Cell>
+                <Table.Cell>{_.toUpper(item.hex_id)}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>
                 <Table.Cell>{item.vendor}</Table.Cell>
               </Table.Row>
