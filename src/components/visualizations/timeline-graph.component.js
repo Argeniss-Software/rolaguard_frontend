@@ -179,6 +179,7 @@ const TimeLineGraph = (props) => {
                     { key: 150, text: "Show last 150", value: 150 },
                     { key: 200, text: "Show last 200", value: 200 },
                     { key: 500, text: "Show last 500", value: 500 },
+                    { key: 1000, text: "Show last 1000", value: 1000 },
                     { key: "all", text: "Show All", value: "all" },
                   ]}
                   compact
@@ -192,10 +193,11 @@ const TimeLineGraph = (props) => {
             </Grid.Column>
           )}
           <Grid.Column width={16}>
-            {titleGraph &&
-            <div className="text-center aligned">
-              <strong>{titleGraph}</strong>
-            </div>}
+            {titleGraph && (
+              <div className="text-center aligned">
+                <strong>{titleGraph}</strong>
+              </div>
+            )}
             <div ref={refElement}> </div>
           </Grid.Column>
         </Grid>
