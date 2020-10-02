@@ -7,7 +7,7 @@ import LoaderComponent from "../../loader.component";
 import { Grid, Dropdown, Dimmer, Loader, Message } from "semantic-ui-react";
 import moment from "moment";
 import RangeFilter from "./range-filter-component";
-
+import * as sanitizeHtml from "sanitize-html";
 const PacketGraph = (props) => {
   /*
    * This component graph a packet list RSSI and SNR(Y) on the time (X).
@@ -25,7 +25,6 @@ const PacketGraph = (props) => {
 
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
   const packetList = _.get(props, "data.last_packets_list");
-  const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
 
   const [resourceUsagePacketList, setResourceUsagePacketList] = useState([]);
   const [
@@ -140,7 +139,10 @@ const PacketGraph = (props) => {
     setSerieRssiShow((showed) => {
       return !showed;
     });
-    if (_.get(refChart, 'current.chart') && !_.isEmpty(refChart.current.chart)) {
+    if (
+      _.get(refChart, "current.chart") &&
+      !_.isEmpty(refChart.current.chart)
+    ) {
       refChart.current.chart.toggleSeries("RSSI"); // show/hide serie
     }
   };
@@ -241,6 +243,45 @@ const PacketGraph = (props) => {
         },
       ];
     }
+  };
+
+  const getTooltipForMaker = (data) => {
+    const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
+    const sanitizeOptions = { allowedTags: [], disallowedTagsMode: "escape" };
+
+    return `<div><strong>${sanitizeHtml(
+      moment(data.value).format(dateTimeFormat),
+      sanitizeOptions
+    )}</strong></div>
+              <hr />
+              <div>GATEWAY: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].gateway`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+              <div>MIC: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].mic`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+              <div>COUNTER: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].f_count`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+              `;
   };
 
   const graphData = {
@@ -354,14 +395,10 @@ const PacketGraph = (props) => {
             { series, seriesIndex, dataPointIndex, w }
           ) {
             if (!_.isEmpty(filteredResourceUsagePacketList)) {
-              return `${moment(value).format(
-                dateTimeFormat
-              )} - GATEWAY: <strong>${_.toUpper(
-                _.get(
-                  filteredResourceUsagePacketList,
-                  `[${dataPointIndex}].gateway`
-                )
-              )}</strong>`;
+              return getTooltipForMaker({
+                value: value,
+                dataPointIndex: dataPointIndex,
+              });
             } else {
               return value;
             }
