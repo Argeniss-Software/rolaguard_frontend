@@ -92,7 +92,7 @@ class AlertListComponent extends React.Component {
                 title={
                   alert.parameters.gateway +
                   (alert.parameters.gw_name
-                    ? `(${alert.parameters.gw_name})`
+                    ? ` (${alert.parameters.gw_name})`
                     : "")
                 }
                 id={alert.gateway_id}
