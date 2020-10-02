@@ -51,13 +51,17 @@ class CommonStore {
       default:
         break;
     }
-    
+
     const params = {
       page: _.get(filter_params, "page", 1),
       size: _.get(filter_params, "size", 5),
       order_by: _.get(filter_params, "order_by", []),
-      'created_at[gte]':  _.get(filter_params, "created_at[gte]",null),
-      'created_at[lte]': _.get(filter_params, "created_at[lte]", null)
+      "created_at[gte]": _.get(filter_params, "created_at[gte]", null),
+      "created_at[lte]": _.get(filter_params, "created_at[lte]", null),
+      min_rssi: _.get(filter_params, "min_rssi", null),
+      max_rssi: _.get(filter_params, "max_rssi", null),
+      min_lsnr: _.get(filter_params, "min_lsnr", null),
+      max_lsnr: _.get(filter_params, "max_lsnr", null),
     };
     return API.get(uri, { headers, params });
   }

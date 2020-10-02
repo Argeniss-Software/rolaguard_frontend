@@ -13,8 +13,9 @@ import ItemDetailsIcon from "./inventory.modal.icon.component";
 import ImportanceLabel from "../utils/importance-label.component";
 import Geolocation from "../utils/geolocation/geolocation.component";
 import AssetLink from "../utils/asset-link.component";
+import moment from "moment"
 
-@inject("tagsStore", "commonStore")
+@inject("tagsStore", "commonStore", "globalConfigStore")
 @observer
 class InventoryDetailsModal extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class InventoryDetailsModal extends Component {
       item: this.props.selectedItem.item,
       activeIndex: this.props.selectedItem.index,
     };
-    this.hanldleTagSelected = this.hanldleTagSelected.bind(this);
+    this.hanldleTagSelected = this.hanldleTagSelected.bind(this);              
   }
 
   UNSAFE_componentWillMount() {
@@ -94,7 +95,7 @@ class InventoryDetailsModal extends Component {
     });
   }
 
-  showTechnicalDetails(item) {
+  showTechnicalDetails(item, dateFormat) {
     let table = [];
 
     if (item && item.type && item.type.trim().toLowerCase() === "device") {
@@ -108,8 +109,14 @@ class InventoryDetailsModal extends Component {
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
-          title: "join_eui/app_eui",
+          title: "JOIN EUI/APP EUI",
           value: item.join_eui ? item.join_eui.toUpperCase() : null,
+        },
+        {
+          title: "First Activity",
+          value: _.isNull(item.first_activity)
+            ? "N/A"
+            : moment.unix(item.first_activity).format(dateFormat),
         },
         { title: "Data Source", value: item.data_collector },
       ];
@@ -125,8 +132,12 @@ class InventoryDetailsModal extends Component {
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
-          title: "join_eui/app_eui",
+          title: "JOIN EUI/APP EUI",
           value: item.join_eui ? item.join_eui.toUpperCase() : null,
+        },
+        {
+          title: "First Activity",
+          value: _.isNull(item.first_activity)? 'N/A' : moment.unix(item.first_activity).format(dateFormat),
         },
         { title: "Data Source", value: item.data_collector },
       ];
@@ -217,11 +228,12 @@ class InventoryDetailsModal extends Component {
     const { index, itemType, isFirst, isLast } = this.props.selectedItem;
     const { assets } = this.props;
     const item = assets[index];
+    const dateFormat = this.props.globalConfigStore.dateFormats.moment.dateTimeFormat;
 
     return (
       <Modal
-        closeOnEscape={true}
-        closeOnDimmerClick={false}
+        closeOnEscape
+        closeIcon
         open={modalOpen}
         onClose={this.handleClose}
       >
@@ -304,11 +316,11 @@ class InventoryDetailsModal extends Component {
                   </Grid.Row>
                   <Divider />
                   <Grid.Row className="modal-content-grid">
-                    <strong>Technical details</strong>
+                    <strong>Details</strong>
                     <div className="asset-details-technical-table">
                       <Table compact="very" celled padded>
                         <Table.Body>
-                          {this.showTechnicalDetails(item)}
+                          {this.showTechnicalDetails(item, dateFormat)}
                         </Table.Body>
                       </Table>
                     </div>

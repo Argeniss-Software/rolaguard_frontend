@@ -28,7 +28,7 @@ const ShowResourceUsage = (props) => {
       <Grid.Column width={11}>
         {isDevice && (
           <Segment>
-            <PacketsGraph data={props.asset} />
+            <PacketsGraph type={props.asset.type} id={props.asset.id} />
           </Segment>
         )}
       </Grid.Column>

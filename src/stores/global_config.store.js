@@ -9,7 +9,7 @@ class GlobalConfigStore {
 
   @observable dateFormats = {
     moment: {
-      dateTimeFormat: "MM/DD/YY hh:mm:SS A",
+      dateTimeFormat: "MM/DD/YY hh:mm:ss A",
     },
     apexchart: {
       dateTimeFormat: "MM/dd/yy hh:mm:ss TT",

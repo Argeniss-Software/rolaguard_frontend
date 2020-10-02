@@ -11,16 +11,8 @@ import moment from 'moment'
 import ShowMessagesSummary from "./show-message-summary.component"
 
 const ModalResourceUsage = (props) => {
-  const [open, setOpen] = useState(props.openModal || true);
   
-  useEffect(() => {
-    return () => {
-      setOpen(false)
-    }
-  }, [])
-
   const closeModal = () => {
-    setOpen(false)
     if (_.isFunction(props.onClose)) {
       props.onClose()
     }
@@ -28,14 +20,10 @@ const ModalResourceUsage = (props) => {
 
   return (
     <Modal
-      centered={false}
+      closeOnEscape
       closeIcon
-      open={open}
+      open={props.open}
       onClose={() => closeModal()}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      size="large"
     >
       <Modal.Header>
         <ShowDeviceState state={props.asset.connected} />
@@ -74,7 +62,12 @@ const ModalResourceUsage = (props) => {
           <Grid>
             <Grid.Row>
               <Grid.Column width={16}>
-                <Table className="animated fadeIn" celled compact="very" color="black">
+                <Table
+                  className="animated fadeIn"
+                  celled
+                  compact="very"
+                  color="black"
+                >
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>DEV ADDR</Table.HeaderCell>
