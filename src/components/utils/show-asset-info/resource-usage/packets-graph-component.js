@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import Chart from "react-apexcharts";
 import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
@@ -42,6 +42,7 @@ const PacketGraph = (props) => {
 
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
   const [lsnrRange, setLsnrRange] = useState({ min: null, max: null });
+  const refChart = useRef(null);
 
   // ======================== HANDLER EVENTS ================================
   const handleAfterChangeRssiRange = (data) => {
@@ -79,6 +80,8 @@ const PacketGraph = (props) => {
     } else {
       setResourceUsagePacketList(packetList); // set it by props
     }
+    window.chart = refChart.current;
+    
   }, [props.id, props.type, lsnrFilter, rssiFilter]);
 
   useEffect(() => {
@@ -119,16 +122,58 @@ const PacketGraph = (props) => {
     setFilteredResourceUsagePacketList(
       _.takeRight(filteredResults, qtyPackets)
     );
+    fixShowHideMarkersOnChart()
   }, [selectedGatewaysId, resourceUsagePacketList, qtyPackets]);
 
   // =======================================================================
   // ============================ METHODS ==================================
-  const resetRssiRange = () => {
+  /*const resetRssiRange = () => {
     setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
   };
 
   const resetLsnrRange = () => {
     setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
+  };*/
+  const [serieRssiShow, setSerieRssiShow] = useState(true)
+  const [serieSnrShow, setSerieSnrShow] = useState(true);
+  
+  const fixShowHideMarkersOnChart = () => {
+    let newEnabledOnSeries = []
+    if (serieRssiShow) {
+      newEnabledOnSeries.push(0)
+    }
+    if (serieSnrShow) {
+      newEnabledOnSeries.push(1);
+    }
+    debugger
+    if (_.get(refChart,'current.chart') && !_.isEmpty(refChart.current.chart)) {
+        refChart.current.chart.updateOptions({
+          dataLabels: {
+            enabled: true,
+            enabledOnSeries: newEnabledOnSeries,
+          },
+        });
+    }
+  };
+
+  const clickLabelRssi = () => {
+    //show or hide serie rssi
+    setSerieRssiShow((showed) => {
+      return !showed
+    })
+    if (!_.isEmpty(refChart.current.chart)) {
+      refChart.current.chart.toggleSeries("RSSI"); // show/hide serie
+    }
+  };
+
+  const clickLabelSnr = () => {
+    // show or hide serie snr
+    setSerieSnrShow((showed) => {
+      return !showed;
+    });
+    if (!_.isEmpty(refChart.current.chart)) {
+      refChart.current.chart.toggleSeries("SNR");
+    }
   };
 
   const loadDataForGraph = () => {
@@ -201,20 +246,24 @@ const PacketGraph = (props) => {
       let snr = filteredResourceUsagePacketList.map((e) => {
         return e.lsnr;
       });
-      return [
-        {
-          name: "Signal Strength (RSSI)",
+      let series = []
+      if (serieRssiShow) {
+        series.push({
+          name: "RSSI",
           type: "line",
           data: rssi,
           other_data: filteredResourceUsagePacketList,
-        },
-        {
+        })
+      }
+      if (serieSnrShow) {
+        series.push({
           name: "SNR",
           type: "line",
           data: snr,
           other_data: filteredResourceUsagePacketList,
-        },
-      ];
+        })
+      }
+      return series
     }
   };
 
@@ -226,6 +275,9 @@ const PacketGraph = (props) => {
         toolbar: {
           show: true,
         },
+      },
+      legend: {
+        show: false,
       },
       colors: ["#008FFB", "#E57812"],
       dataLabels: {
@@ -399,7 +451,8 @@ const PacketGraph = (props) => {
                   onAfterChange={handleAfterChangeRssiRange}
                   range={rssiRange}
                   filter={rssiFilter}
-                  onReset={resetRssiRange}
+                  //onReset={resetRssiRange}
+                  onClickLabel={clickLabelRssi}
                   label="RSSI"
                   color="#008efb"
                   unit="dBm"
@@ -413,8 +466,9 @@ const PacketGraph = (props) => {
                   onAfterChange={handleAfterChangeLsnrRange}
                   range={lsnrRange}
                   filter={lsnrFilter}
-                  onReset={resetLsnrRange}
-                  label="LSNR"
+                  //onReset={resetLsnrRange}
+                  onClickLabel={clickLabelSnr}
+                  label="SNR"
                   color="#e57812"
                   unit="dB"
                 />
@@ -444,6 +498,7 @@ const PacketGraph = (props) => {
                       series={graphData.series}
                       type="line"
                       height="400"
+                      ref={refChart}
                     />
                   )}
                 </React.Fragment>
