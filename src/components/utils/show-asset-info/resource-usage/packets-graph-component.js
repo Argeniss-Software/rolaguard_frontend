@@ -188,7 +188,7 @@ const PacketGraph = (props) => {
   const getCategories = () => {
     if (!_.isEmpty(filteredResourceUsagePacketList)) {
       return filteredResourceUsagePacketList.map((e) => {
-        return new Date(e.date).getTime();
+        return moment(e.date).format();
       });
     }
   };
@@ -243,11 +243,13 @@ const PacketGraph = (props) => {
         categories: getCategories(),
         type: "datetime",
         labels: {
+          datetimeUTC: false,
           datetimeFormatter: {
             year: "yyyy",
             month: "MMM 'yy",
-            day: "dd MMM",
-            hour: "HH:mm TT",
+            day: "MMM/dd",
+            hour: "MMM/dd hh:mm TT",
+            minute: "MM/dd hh:mm TT",
           },
         },
       },

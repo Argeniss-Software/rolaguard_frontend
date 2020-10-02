@@ -66,12 +66,18 @@ const SetImportanceModal = (props) => {
   };
 
   return (
-    <Modal open={open}>
+    <Modal open={open} closeIcon>
       <Modal.Header>SET DEVICES IMPORTANCE</Modal.Header>
       <Modal.Content className="modal-content-container">
-        {hasError &&
-          <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%'}} className="animated fadeIn"/>
-        }
+        {hasError && (
+          <Message
+            error
+            header="Oops!"
+            content={"Something went wrong. Try again later."}
+            style={{ maxWidth: "100%" }}
+            className="animated fadeIn"
+          />
+        )}
         <strong>
           IMPORTANCE: <ImportanceSelector />
         </strong>

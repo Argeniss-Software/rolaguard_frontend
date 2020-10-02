@@ -23,27 +23,6 @@ const ShowPacketsStatistics = (props) => {
         animations: {
           enabled: false,
         },
-        dataLabels: {
-          enabled: false,
-          textAnchor: "start",
-          offsetX: 200,
-          offsetY: 200,
-          style: {
-            fontSize: "14px",
-            fontFamily: "Helvetica, Arial, sans-serif",
-            fontWeight: "bold",
-            colors: ["#fff"],
-          },
-          dropShadow: {
-            enabled: true,
-            left: 2,
-            top: 2,
-            opacity: 0.5,
-          },
-          formatter: function(val) {
-            return _.isNumber(val)? val.toFixed(1) : val;
-          },
-        },
       },
 
       plotOptions: {
@@ -53,6 +32,27 @@ const ShowPacketsStatistics = (props) => {
           },
         },
       },
+      dataLabels: {
+        enabled: false,
+        textAnchor: "start",
+        offsetX: 200,
+        offsetY: 200,
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: "bold",
+          colors: ["#fff"],
+        },
+        dropShadow: {
+          enabled: true,
+          left: 2,
+          top: 2,
+          opacity: 0.5,
+        },
+        formatter: function(val) {
+          return _.isNumber(val) ? val.toFixed(1) : val;
+        },
+      },
       legend: {
         show: false,
         position: "bottom",
@@ -60,7 +60,7 @@ const ShowPacketsStatistics = (props) => {
         fontFamily: "Helvetica, Arial",
         fontWeight: 400,
         formatter: function(val) {
-          return _.isNumber(val)? val.toFixed(1) : val;
+          return _.isNumber(val) ? val.toFixed(1) : val;
         },
       },
       labels: ["Uplink", "Downlink", "Lost"],

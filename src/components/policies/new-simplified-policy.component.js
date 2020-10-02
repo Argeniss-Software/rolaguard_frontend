@@ -85,20 +85,49 @@ class NewSimplifiedPolicyModal extends Component {
         onClose={this.handleClose}
         size={"tiny"}
         closeOnDimmerClick={false}
-        closeOnEscape={false}>
-        <Modal.Header>
-          Clone a policy
-        </Modal.Header>
+        closeOnEscape={false}
+      >
+        <Modal.Header>Clone a policy</Modal.Header>
         <Modal.Content>
           <Form>
-            <Form.Input label="Name" fluid placeholder='Name' error={!!error && touched} value={name} onChange={this.handleChangeOnName}/>
-            { error && touched && <Label basic color="red" pointing style={{marginTop: -5}}> {error} </Label> }
+            <Form.Input
+              label="Name"
+              fluid
+              placeholder="Name"
+              error={!!error && touched}
+              value={name}
+              onChange={this.handleChangeOnName}
+            />
+            {error && touched && (
+              <Label basic color="red" pointing style={{ marginTop: -5 }}>
+                {" "}
+                {error}{" "}
+              </Label>
+            )}
           </Form>
-          { fatalError && <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%'}}/> }
+          {fatalError && (
+            <Message
+              error
+              header="Oops!"
+              content={"Something went wrong. Try again later."}
+              style={{ maxWidth: "100%" }}
+            />
+          )}
         </Modal.Content>
         <Modal.Actions>
-          <Button negative onClick={this.handleClose} content="Cancel" disabled={isSaving}/>
-          <Button positive content="Clone" onClick={this.save} disabled={!!error || fatalError || isSaving} loading={isSaving}/>
+          <Button
+            negative
+            onClick={this.handleClose}
+            content="Cancel"
+            disabled={isSaving}
+          />
+          <Button
+            positive
+            content="Clone"
+            onClick={this.save}
+            disabled={!!error || fatalError || isSaving}
+            loading={isSaving}
+          />
         </Modal.Actions>
       </Modal>
     );
