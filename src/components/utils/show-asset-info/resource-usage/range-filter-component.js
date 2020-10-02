@@ -10,7 +10,7 @@ const RangeFilter = (props) => {
    * This component show a range rc slider for filtering
    *
    * @param onAfterChange [Function]: to execute after the range change
-   * @param onReset       [Function]: to execute when press the clear filter button
+   * @param onClickLabel  [Function]: to execute when press the filter text button
    * @param range     [Object]:   object with min and max values for range
    * @param filter    [Object]:   object with from and to values that indicate the filtered range
    * @param label    [String]:   label for applied filter values
@@ -50,15 +50,25 @@ const RangeFilter = (props) => {
   };
 
   const [value, setValue] = useState([props.filter.from, props.filter.to]);
+  const [activeLabelStatus, setActiveLabelStatus] = useState(true)
 
   useEffect(() => {
     setValue([props.filter.from, props.filter.to]);
   }, [props.filter]);
 
-  const resetRange = () => {
+  /*const resetRange = () => {
     if (_.isFunction(props.onReset)) {
       setValue([_.floor(props.range.min), _.ceil(props.range.max)]);
       props.onReset();
+    }
+  };*/
+
+  const clickLabel = () => {
+    if (_.isFunction(props.onClickLabel)) {
+      setActiveLabelStatus((actualStatus) => {
+        return !actualStatus
+      })
+      props.onClickLabel();
     }
   };
 
@@ -83,22 +93,28 @@ const RangeFilter = (props) => {
               {
                 backgroundColor: props.color,
                 borderColor: props.color,
+                opacity: activeLabelStatus ? 1 : 0.2,
               },
             ]}
             handleStyle={[
               {
                 borderColor: props.color,
+                opacity: activeLabelStatus ? 1 : 0.2,
               },
-              { borderColor: props.color },
+              { borderColor: props.color,
+                opacity: activeLabelStatus ? 1 : 0.2 },
             ]}
           ></Range>
         </Grid.Column>
         <Grid.Column width={6}>
           <Label
             as="a"
-            onClick={resetRange}
-            title="Click to reset filter"
-            style={{ backgroundColor: props.color, color: "white" }}
+            onClick={clickLabel}
+            style={{
+              backgroundColor: props.color,
+              color: "white",
+              opacity: activeLabelStatus ? 1 : 0.2,
+            }}
           >
             {props.label}:{" "}
             <strong>
