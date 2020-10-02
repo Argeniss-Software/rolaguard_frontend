@@ -15,7 +15,7 @@ const AlertTimeLineGraph = (props) => {
   const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
-  const [perPage, setPerPage] = useState(500);
+  const [perPage, setPerPage] = useState(20);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
