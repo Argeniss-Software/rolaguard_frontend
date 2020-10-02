@@ -61,28 +61,42 @@ class ChangeStatusDataCollectorModal extends Component {
             content={buttonContent}
           />
         }
-        centered={false}
+        closeOnEscape
+        closeOnDimmerClick
+        closeIcon
         open={modalOpen}
         onClose={this.handleClose}
         size={"mini"}
         closeOnDimmerClick={false}
-        closeOnEscape={false}>
+        closeOnEscape={false}
+      >
         <Modal.Header>
           <i className={buttonIcon} /> {buttonContent}
         </Modal.Header>
         <Modal.Content>
-        { hasError && 
-          <Message error header='Forbidden' content="Something went wrong. Try again later."/>
-        }
-        { !hasError &&
-          <p>
-            {body}
-          </p>
-        }
+          {hasError && (
+            <Message
+              error
+              header="Forbidden"
+              content="Something went wrong. Try again later."
+            />
+          )}
+          {!hasError && <p>{body}</p>}
         </Modal.Content>
         <Modal.Actions>
-          <Button negative onClick={() => this.handleClose()} content="Cancel" disabled={isUpdating}/>
-          <Button positive content={status === 'DISABLED' ? 'Enable': 'Disable'} onClick={this.handleChangeStatus} loading={isUpdating} disabled={isUpdating || hasError}/>
+          <Button
+            negative
+            onClick={() => this.handleClose()}
+            content="Cancel"
+            disabled={isUpdating}
+          />
+          <Button
+            positive
+            content={status === "DISABLED" ? "Enable" : "Disable"}
+            onClick={this.handleChangeStatus}
+            loading={isUpdating}
+            disabled={isUpdating || hasError}
+          />
         </Modal.Actions>
       </Modal>
     );

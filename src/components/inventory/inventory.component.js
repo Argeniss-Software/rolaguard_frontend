@@ -28,7 +28,8 @@ import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ImportanceLabel from "../utils/importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
-
+import moment from "moment";
+import _ from "lodash";
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
 class InventoryReviewComponent extends React.Component {
@@ -229,7 +230,7 @@ class InventoryReviewComponent extends React.Component {
     ) {
       // When page changes, index must be set to 0
       newIndex = 0;
-      newPage = this.state.activePage +1
+      newPage = this.state.activePage + 1;
     }
 
     if (newPage) {
@@ -243,7 +244,7 @@ class InventoryReviewComponent extends React.Component {
       );
     } else {
       this.showAssetDetails(newIndex);
-    }  
+    }
   };
 
   handleItemSelected = (array, selectedItem, type) => {
@@ -424,9 +425,24 @@ class InventoryReviewComponent extends React.Component {
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
             <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
-            <Table.HeaderCell style={{maxWidth: "100px"}}>VENDOR</Table.HeaderCell>
-            <Table.HeaderCell style={{maxWidth: "100px"}}>APPLICATION</Table.HeaderCell>
+
+            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+              VENDOR
+            </Table.HeaderCell>
+            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+              APPLICATION
+            </Table.HeaderCell>
             <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
+            <Table.HeaderCell collapsing>
+              <Popup
+                trigger={
+                  <span style={{ cursor: "pointer" }}>FIRST ACTIVITY</span>
+                }
+              >
+                This was the first time when the device was detected in the
+                network.
+              </Popup>
+            </Table.HeaderCell>
             <Table.HeaderCell>
               <Popup
                 trigger={<span style={{ cursor: "pointer" }}>IMPORTANCE</span>}
@@ -480,10 +496,12 @@ class InventoryReviewComponent extends React.Component {
                         }
                       ></ShowDeviceIcon>
                     </Table.Cell>
-                    <Table.Cell
-                      className="id-cell upper"
-                    >
-                      <AssetIdComponent type={item.type} id={item.id} hexId={item.hex_id} />
+                    <Table.Cell className="id-cell upper">
+                      <AssetIdComponent
+                        type={item.type}
+                        id={item.id}
+                        hexId={item.hex_id}
+                      />
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
@@ -491,29 +509,45 @@ class InventoryReviewComponent extends React.Component {
                     >
                       {item.name}
                     </Table.Cell>
+
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
-                      {item.vendor && 
+                      {item.vendor && (
                         <TruncateMarkup>
-                          <div>
-                            {item.vendor}
-                          </div>
+                          <div>{item.vendor}</div>
                         </TruncateMarkup>
-                      }
+                      )}
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
                       collapsing
                     >
-                      {item.app_name && 
+                      {item.app_name && (
                         <TruncateMarkup>
-                          <div>
-                            {item.app_name}
-                          </div>
+                          <div>{item.app_name}</div>
                         </TruncateMarkup>
-                      }
+                      )}
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.join_eui && item.join_eui.toUpperCase()}
+                    </Table.Cell>
+                    <Table.Cell collapsing>
+                      {!_.isNull(item.first_activity) && (
+                        <Popup
+                          trigger={
+                            <span>
+                              {moment.unix(item.first_activity).fromNow()}
+                            </span>
+                          }
+                          position="bottom left"
+                        >
+                          <Popup.Header>First seen</Popup.Header>
+                          <Popup.Content>
+                            {moment
+                              .unix(item.first_activity)
+                              .format("dddd, MMMM Do, YYYY h:mm:ss A")}
+                          </Popup.Content>
+                        </Popup>
+                      )}
                     </Table.Cell>
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       <ImportanceLabel importance={item.importance} />
@@ -583,7 +617,12 @@ class InventoryReviewComponent extends React.Component {
   }
 
   showFilters() {
-    const { byVendorsViz, byDataCollectorsViz, byTagsViz, byImportancesViz} = this.state;
+    const {
+      byVendorsViz,
+      byDataCollectorsViz,
+      byTagsViz,
+      byImportancesViz,
+    } = this.state;
     const filter = (item) => item.selected;
     const filteredVendors = byVendorsViz.filter(filter);
     const filteredDataCollectors = byDataCollectorsViz.filter(filter);
@@ -642,7 +681,11 @@ class InventoryReviewComponent extends React.Component {
             key={"importance" + index}
             className="text-uppercase"
             onClick={() => {
-              this.handleItemSelected(byImportancesViz, item, "byImportancesViz");
+              this.handleItemSelected(
+                byImportancesViz,
+                item,
+                "byImportancesViz"
+              );
             }}
           >
             IMPORTANCE: {item.label}
@@ -793,7 +836,7 @@ class InventoryReviewComponent extends React.Component {
                             active={this.state.isGraphsLoading === true}
                           />
                           {!this.state.isGraphsLoading && (
-                            <div style={{width:'100%', height:'260px'}}>
+                            <div style={{ width: "100%", height: "260px" }}>
                               <CirclePack
                                 isLoading={this.state.isGraphsLoading}
                                 data={byTagsViz}

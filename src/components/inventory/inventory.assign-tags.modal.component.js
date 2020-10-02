@@ -68,40 +68,47 @@ const AssignTagsModal = (props) => {
   }
 
 
-  return(
-    <Modal
-    open={open} 
-    >
+  return (
+    <Modal open={open} closeIcon>
       <Modal.Header>ASSIGN LABELS</Modal.Header>
       <Modal.Content className="modal-content-container">
         {/* Error message in case the assignation fails */}
-        {showError &&
+        {showError && (
           <div className="error-message-wrapper">
-            <Message error header='Error' content="Something went wrong. Try again later." className="error-message" onClick={() => setShowError(false)}/>
+            <Message
+              error
+              header="Error"
+              content="Something went wrong. Try again later."
+              className="error-message"
+              onClick={() => setShowError(false)}
+            />
           </div>
-        }
-
-        <strong>Labels to assign: </strong><ShowTags tags={tagsToAssign}/> <TagSelector alreadyAssignTags={tagsToAssign} onSelection={handleTagSelected} />
-        <Divider/>
-        <p><strong>Devices affected:</strong></p>
+        )}
+        <strong>Labels to assign: </strong>
+        <ShowTags tags={tagsToAssign} />{" "}
+        <TagSelector
+          alreadyAssignTags={tagsToAssign}
+          onSelection={handleTagSelected}
+        />
+        <Divider />
+        <p>
+          <strong>GATEWAYS/DEVICES SELECTED:</strong>
+        </p>
         <div className="table-wrapper">
           <DevicesTable assets={props.assets} />
         </div>
       </Modal.Content>
       <Modal.Actions>
-          <Button
-            onClick={() => props.onClose()}
-            content="Close"
-          />
-          <Button
-              type="submit"
-              disabled={sendDisabled}
-              loading={assigning}
-              color="green"
-              content="Assign"
-              onClick={handleAssign}
-          />
-        </Modal.Actions>
+        <Button onClick={() => props.onClose()} content="Close" />
+        <Button
+          type="submit"
+          disabled={sendDisabled}
+          loading={assigning}
+          color="green"
+          content="Assign"
+          onClick={handleAssign}
+        />
+      </Modal.Actions>
     </Modal>
   ); 
 }
