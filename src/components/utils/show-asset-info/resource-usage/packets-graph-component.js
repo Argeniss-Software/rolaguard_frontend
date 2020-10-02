@@ -80,8 +80,6 @@ const PacketGraph = (props) => {
     } else {
       setResourceUsagePacketList(packetList); // set it by props
     }
-    window.chart = refChart.current;
-    
   }, [props.id, props.type, lsnrFilter, rssiFilter]);
 
   useEffect(() => {
@@ -122,7 +120,6 @@ const PacketGraph = (props) => {
     setFilteredResourceUsagePacketList(
       _.takeRight(filteredResults, qtyPackets)
     );
-    fixShowHideMarkersOnChart()
   }, [selectedGatewaysId, resourceUsagePacketList, qtyPackets]);
 
   // =======================================================================
@@ -134,33 +131,15 @@ const PacketGraph = (props) => {
   const resetLsnrRange = () => {
     setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
   };*/
-  const [serieRssiShow, setSerieRssiShow] = useState(true)
+
+  const [serieRssiShow, setSerieRssiShow] = useState(true);
   const [serieSnrShow, setSerieSnrShow] = useState(true);
-  
-  const fixShowHideMarkersOnChart = () => {
-    let newEnabledOnSeries = []
-    if (serieRssiShow) {
-      newEnabledOnSeries.push(0)
-    }
-    if (serieSnrShow) {
-      newEnabledOnSeries.push(1);
-    }
-    debugger
-    if (_.get(refChart,'current.chart') && !_.isEmpty(refChart.current.chart)) {
-        refChart.current.chart.updateOptions({
-          dataLabels: {
-            enabled: true,
-            enabledOnSeries: newEnabledOnSeries,
-          },
-        });
-    }
-  };
 
   const clickLabelRssi = () => {
     //show or hide serie rssi
     setSerieRssiShow((showed) => {
-      return !showed
-    })
+      return !showed;
+    });
     if (!_.isEmpty(refChart.current.chart)) {
       refChart.current.chart.toggleSeries("RSSI"); // show/hide serie
     }
@@ -246,24 +225,21 @@ const PacketGraph = (props) => {
       let snr = filteredResourceUsagePacketList.map((e) => {
         return e.lsnr;
       });
-      let series = []
-      if (serieRssiShow) {
-        series.push({
+
+      return [
+        {
           name: "RSSI",
           type: "line",
           data: rssi,
           other_data: filteredResourceUsagePacketList,
-        })
-      }
-      if (serieSnrShow) {
-        series.push({
+        },
+        {
           name: "SNR",
           type: "line",
           data: snr,
           other_data: filteredResourceUsagePacketList,
-        })
-      }
-      return series
+        },
+      ];
     }
   };
 
@@ -275,6 +251,9 @@ const PacketGraph = (props) => {
         toolbar: {
           show: true,
         },
+        events: {
+          updated: function(chartContext, config) {},
+        },
       },
       legend: {
         show: false,
@@ -282,7 +261,7 @@ const PacketGraph = (props) => {
       colors: ["#008FFB", "#E57812"],
       dataLabels: {
         enabled: true,
-        enabledOnSeries: [0, 1],
+        enabledOnSeries: [serieRssiShow ? 0 : "", serieSnrShow ? 1 : ""],
       },
       stroke: {
         width: [2, 2],
