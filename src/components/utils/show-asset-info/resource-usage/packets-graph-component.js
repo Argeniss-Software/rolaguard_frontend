@@ -140,7 +140,7 @@ const PacketGraph = (props) => {
     setSerieRssiShow((showed) => {
       return !showed;
     });
-    if (!_.isEmpty(refChart.current.chart)) {
+    if (_.get(refChart, 'current.chart') && !_.isEmpty(refChart.current.chart)) {
       refChart.current.chart.toggleSeries("RSSI"); // show/hide serie
     }
   };
