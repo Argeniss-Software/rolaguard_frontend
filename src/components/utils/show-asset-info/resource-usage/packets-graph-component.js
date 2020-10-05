@@ -281,6 +281,13 @@ const PacketGraph = (props) => {
                 ),
                 sanitizeOptions
               )}</strong></div>
+                <div>MESSAGE TYPE: <strong>${sanitizeHtml(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].m_type`
+                  ),
+                  sanitizeOptions
+                )}</strong></div>
               `;
   };
 
