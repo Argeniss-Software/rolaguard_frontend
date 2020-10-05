@@ -26,9 +26,7 @@ const ResourceUsageList = (props) => {
 
   const showModal = (data) => {
     const { item } = data;
-    if (item.type === "device") {
-      setItemSelected(item);
-    }
+    setItemSelected(item);
   };
 
   return (
