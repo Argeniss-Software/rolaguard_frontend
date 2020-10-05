@@ -36,13 +36,12 @@ const AlertTimeLineGraph = (props) => {
         type: type,
         id: id,
       },
-
       {
+        "created_at[gte]": dateFilter.from,
+        "created_at[lte]": dateFilter.to,
         page: 1,
         size: perPage,
         order_by: orderBy,
-        "created_at[gte]": dateFilter.from,
-        "created_at[lte]": dateFilter.to,
       }
     );
     Promise.all([alertPromise])
@@ -101,7 +100,7 @@ const AlertTimeLineGraph = (props) => {
     zoomMin: 1000 * 60 * 60, // every 5 minutes
     zoomMax: 1000 * 60 * 60 * 24 * 30 * 1, // a month
     clickToUse: true,
-    
+
     tooltip: {
       template: function(originalItemData, parsedItemData) {
         return `
@@ -155,6 +154,19 @@ const AlertTimeLineGraph = (props) => {
     },
   ];
 
+  const handleRangeChanged = (data) => {
+    const { start, end } = data;
+    setDateFilter({ from: start, to: end });
+  };
+
+  const handleChangeQty = (qty) => {
+    if (qty === "all") {
+      setPerPage(totalItems);
+    } else {
+      setPerPage(qty);
+    }
+  };
+
   return (
     <React.Fragment>
       {errorOnRequest && (
@@ -176,11 +188,15 @@ const AlertTimeLineGraph = (props) => {
         <TimeLineGraph
           showControlBar={true}
           enableFilterQty={true}
+          dateTimeRange={dateFilter}
           items={items}
+          isLoading={isLoading}
           titleGraph="Alerts Timeline"
           options={options}
           groups={groups}
           onClickItemEvent={clickItemEvent}
+          onChangeQty={handleChangeQty}
+          onRangeChanged={handleRangeChanged}
         ></TimeLineGraph>
       )}
     </React.Fragment>
