@@ -6,17 +6,21 @@ import ShowResourceUsage from "./resource-usage/resource-usage-show.component";
 import ShowInventory from "./inventory-show.component";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import LoaderComponent from "../loader.component";
-import AlertTimeLineGraph from "./alert-timeline-graph.component"
-import ResourceUsageInfo from "./resource-usage/resource-usage-info.component"
+import AlertTimeLineGraph from "./alert-timeline-graph.component";
+import ResourceUsageInfo from "./resource-usage/resource-usage-info.component";
 import AssociatedAssetInventoryShow from "../../utils/show-asset-info/associated-asset-inventory-show.component";
-import _ from 'lodash'
+import NotFoundPage from "../../../pages/notFoundPage.page"
+import _ from "lodash";
+import * as HttpStatus from "http-status-codes";
 
 const ShowAssetInfo = (props) => {
   const [inventory, setInventory] = useState({});
   const [resource_usage, setResourceUsage] = useState({});
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { commonStore } = useContext(MobXProviderContext);  
+  const [errorOnRequest, setErrorOnRequest] = useState(true);
+  const [statusResponse, setStatusResponse] = useState({isError: false, status: null, message: null});
+  const { commonStore } = useContext(MobXProviderContext);
 
   const normalizedType =
     _.get(props, "type") &&
@@ -37,17 +41,40 @@ const ShowAssetInfo = (props) => {
         "resource_usage",
         paramsId
       );
-      const inventoryPromise = commonStore.getData("inventory", paramsId);
+      const inventoryPromise = commonStore.getData("inventory", paramsId)
 
-      Promise.all([inventoryPromise, resourceUsagePromise]).then((response) => {
-        setInventory(response[0].data);
-        setResourceUsage(response[1].data);
-        setIsLoading(false);
-      });
+      Promise.all([inventoryPromise, resourceUsagePromise])
+        .then((response) => {          
+          if (response[0].status === HttpStatus.OK) {
+            setInventory(response[0].data);
+            setResourceUsage(response[1].data);
+            setIsLoading(false);
+            setErrorOnRequest(false);
+          } else {
+            setInventory([]);
+            setResourceUsage([]);
+            setIsLoading(false);
+            setErrorOnRequest(true);
+          }
+        })
+        .catch((resp) => {
+          setStatusResponse({isError: resp.isAxiosError, status: _.get(resp, 'response.status'), message: _.get(resp ,'response.data.message')});
+          setInventory([]);          
+          setResourceUsage([]);
+          setIsLoading(false);
+          setErrorOnRequest(true);
+        });
     }
   }, [props.id, props.type]);
   if (isLoading) {
     return <LoaderComponent loadingMessage="Loading asset info..." />;
+  } else if (errorOnRequest && _.get(statusResponse, 'isError')) {
+    return (
+      <NotFoundPage
+        status={statusResponse.status}
+        statusText={statusResponse.message}
+      />
+    );
   } else {
     return (
       <React.Fragment>
@@ -125,10 +152,10 @@ const ShowAssetInfo = (props) => {
                     NETWORK OVERVIEW
                   </h5>
                   <Segment attached>
-                    <ResourceUsageInfo asset={resource_usage} />
+                      <ResourceUsageInfo asset={resource_usage} />                    
                   </Segment>
                 </Grid.Column>
-                <Grid.Column width={11}>                
+                <Grid.Column width={11}>
                   <AssociatedAssetInventoryShow
                     type={normalizedType}
                     id={props.id}
@@ -143,4 +170,4 @@ const ShowAssetInfo = (props) => {
   }
 };
 
-export default ShowAssetInfo;
+export default ShowAssetInfo
