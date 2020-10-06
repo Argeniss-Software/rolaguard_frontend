@@ -181,10 +181,7 @@ const AlertTimeLineGraph = (props) => {
       {!_.isEmpty(selectedItem) && (
         <DetailsAlertModal alert={selectedItem} onClose={closeAlertDetails} />
       )}
-      {_.isEmpty(items) && !errorOnRequest && (
-        <LoaderComponent loadingMessage="Loading Alerts Timeline..." />
-      )}
-      {!_.isEmpty(items) && !errorOnRequest && (
+      {!errorOnRequest && (
         <TimeLineGraph
           showControlBar={true}
           enableFilterQty={true}
