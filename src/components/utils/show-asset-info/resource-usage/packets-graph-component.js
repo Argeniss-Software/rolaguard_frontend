@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import Chart from "react-apexcharts";
 import { MobXProviderContext } from "mobx-react";
 import _ from "lodash";
@@ -7,7 +7,7 @@ import LoaderComponent from "../../loader.component";
 import { Grid, Dropdown, Dimmer, Loader, Message } from "semantic-ui-react";
 import moment from "moment";
 import RangeFilter from "./range-filter-component";
-
+import * as sanitizeHtml from "sanitize-html";
 const PacketGraph = (props) => {
   /*
    * This component graph a packet list RSSI and SNR(Y) on the time (X).
@@ -25,7 +25,6 @@ const PacketGraph = (props) => {
 
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
   const packetList = _.get(props, "data.last_packets_list");
-  const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
 
   const [resourceUsagePacketList, setResourceUsagePacketList] = useState([]);
   const [
@@ -42,6 +41,7 @@ const PacketGraph = (props) => {
 
   const [lsnrFilter, setLsnrFilter] = useState({ from: null, to: null });
   const [lsnrRange, setLsnrRange] = useState({ min: null, max: null });
+  const refChart = useRef(null);
 
   // ======================== HANDLER EVENTS ================================
   const handleAfterChangeRssiRange = (data) => {
@@ -123,12 +123,38 @@ const PacketGraph = (props) => {
 
   // =======================================================================
   // ============================ METHODS ==================================
-  const resetRssiRange = () => {
+  /*const resetRssiRange = () => {
     setRssiFilter({ from: rssiRange.min, to: rssiRange.max });
   };
 
   const resetLsnrRange = () => {
     setLsnrFilter({ from: lsnrRange.min, to: lsnrRange.max });
+  };*/
+
+  const [serieRssiShow, setSerieRssiShow] = useState(true);
+  const [serieSnrShow, setSerieSnrShow] = useState(true);
+
+  const clickLabelRssi = () => {
+    //show or hide serie rssi
+    setSerieRssiShow((showed) => {
+      return !showed;
+    });
+    if (
+      _.get(refChart, "current.chart") &&
+      !_.isEmpty(refChart.current.chart)
+    ) {
+      refChart.current.chart.toggleSeries("RSSI"); // show/hide serie
+    }
+  };
+
+  const clickLabelSnr = () => {
+    // show or hide serie snr
+    setSerieSnrShow((showed) => {
+      return !showed;
+    });
+    if (!_.isEmpty(refChart.current.chart)) {
+      refChart.current.chart.toggleSeries("SNR");
+    }
   };
 
   const loadDataForGraph = () => {
@@ -201,9 +227,10 @@ const PacketGraph = (props) => {
       let snr = filteredResourceUsagePacketList.map((e) => {
         return e.lsnr;
       });
+
       return [
         {
-          name: "Signal Strength (RSSI)",
+          name: "RSSI",
           type: "line",
           data: rssi,
           other_data: filteredResourceUsagePacketList,
@@ -218,6 +245,52 @@ const PacketGraph = (props) => {
     }
   };
 
+  const getTooltipForMaker = (data) => {
+    const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
+    const sanitizeOptions = { allowedTags: [], disallowedTagsMode: "escape" };
+
+    return `<div><strong>${sanitizeHtml(
+      moment(data.value).format(dateTimeFormat),
+      sanitizeOptions
+    )}</strong></div>
+              <hr />
+              <div>GATEWAY: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].gateway`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+              <div>MIC: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].mic`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+              <div>COUNTER: <strong>${sanitizeHtml(
+                _.toUpper(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].f_count`
+                  )
+                ),
+                sanitizeOptions
+              )}</strong></div>
+                <div>MESSAGE TYPE: <strong>${sanitizeHtml(
+                  _.get(
+                    filteredResourceUsagePacketList,
+                    `[${data.dataPointIndex}].m_type`
+                  ),
+                  sanitizeOptions
+                )}</strong></div>
+              `;
+  };
+
   const graphData = {
     series: getSeries(),
     options: {
@@ -226,11 +299,17 @@ const PacketGraph = (props) => {
         toolbar: {
           show: true,
         },
+        events: {
+          updated: function(chartContext, config) {},
+        },
+      },
+      legend: {
+        show: false,
       },
       colors: ["#008FFB", "#E57812"],
       dataLabels: {
         enabled: true,
-        enabledOnSeries: [0, 1],
+        enabledOnSeries: [serieRssiShow ? 0 : "", serieSnrShow ? 1 : ""],
       },
       stroke: {
         width: [2, 2],
@@ -323,14 +402,10 @@ const PacketGraph = (props) => {
             { series, seriesIndex, dataPointIndex, w }
           ) {
             if (!_.isEmpty(filteredResourceUsagePacketList)) {
-              return `${moment(value).format(
-                dateTimeFormat
-              )} - GATEWAY: <strong>${_.toUpper(
-                _.get(
-                  filteredResourceUsagePacketList,
-                  `[${dataPointIndex}].gateway`
-                )
-              )}</strong>`;
+              return getTooltipForMaker({
+                value: value,
+                dataPointIndex: dataPointIndex,
+              });
             } else {
               return value;
             }
@@ -399,7 +474,8 @@ const PacketGraph = (props) => {
                   onAfterChange={handleAfterChangeRssiRange}
                   range={rssiRange}
                   filter={rssiFilter}
-                  onReset={resetRssiRange}
+                  //onReset={resetRssiRange}
+                  onClickLabel={clickLabelRssi}
                   label="RSSI"
                   color="#008efb"
                   unit="dBm"
@@ -413,8 +489,9 @@ const PacketGraph = (props) => {
                   onAfterChange={handleAfterChangeLsnrRange}
                   range={lsnrRange}
                   filter={lsnrFilter}
-                  onReset={resetLsnrRange}
-                  label="LSNR"
+                  //onReset={resetLsnrRange}
+                  onClickLabel={clickLabelSnr}
+                  label="SNR"
                   color="#e57812"
                   unit="dB"
                 />
@@ -444,6 +521,7 @@ const PacketGraph = (props) => {
                       series={graphData.series}
                       type="line"
                       height="400"
+                      ref={refChart}
                     />
                   )}
                 </React.Fragment>

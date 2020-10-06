@@ -46,6 +46,7 @@ const GatewayCirclePackGraph = (props) => {
     const labelsPromise = inventoryAssetsStore.getTagsCount({
       gateways: [props.gatewayId],
       tags: selectedLabels.map((e) => e.code),
+      type: 'device'
     });
 
     Promise.all([labelsPromise])

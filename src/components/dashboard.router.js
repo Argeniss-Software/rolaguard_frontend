@@ -69,7 +69,7 @@ class DashBoardRouter extends React.Component {
 
                      {/* PROFILE */}
                     <Route path='/dashboard/profile/:username' render={ (props) => <UserProfileComponent history={props.history} match={props.match}/> } />
-                    <Route component={NotFoundPage} />
+                    <Route render={() => <NotFoundPage status="404" statusText="Not found"/> }/>
 
                 </Switch>
         )

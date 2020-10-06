@@ -147,13 +147,15 @@ const ModalResourceUsage = (props) => {
                 </Table>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={16}>
-                <Segment>
-                  <PacketsGraph type={props.asset.type} id={props.asset.id} />
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
+            {props.asset.type != "gateway" && (
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <Segment>
+                    <PacketsGraph type={props.asset.type} id={props.asset.id} />
+                  </Segment>
+                </Grid.Column>
+              </Grid.Row>
+            )}
           </Grid>
         </Modal.Description>
       </Modal.Content>
