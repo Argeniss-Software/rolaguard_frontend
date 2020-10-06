@@ -196,6 +196,7 @@ const TimeLineGraph = (props) => {
             <Grid.Column width={4} className="pull-right aligned">
               {enableFilterQty && (
                 <Dropdown
+                  style={{ zIndex: 1001 }}
                   onChange={handleChangeShowQty}
                   options={[
                     { key: 10, text: "Show 10", value: 10 },
