@@ -50,24 +50,17 @@ const RangeFilter = (props) => {
   };
 
   const [value, setValue] = useState([props.filter.from, props.filter.to]);
-  const [activeLabelStatus, setActiveLabelStatus] = useState(true)
+  const [activeLabelStatus, setActiveLabelStatus] = useState(true);
 
   useEffect(() => {
     setValue([props.filter.from, props.filter.to]);
   }, [props.filter]);
 
-  /*const resetRange = () => {
-    if (_.isFunction(props.onReset)) {
-      setValue([_.floor(props.range.min), _.ceil(props.range.max)]);
-      props.onReset();
-    }
-  };*/
-
   const clickLabel = () => {
     if (_.isFunction(props.onClickLabel)) {
       setActiveLabelStatus((actualStatus) => {
-        return !actualStatus
-      })
+        return !actualStatus;
+      });
       props.onClickLabel();
     }
   };
@@ -101,8 +94,10 @@ const RangeFilter = (props) => {
                 borderColor: props.color,
                 opacity: activeLabelStatus ? 1 : 0.2,
               },
-              { borderColor: props.color,
-                opacity: activeLabelStatus ? 1 : 0.2 },
+              {
+                borderColor: props.color,
+                opacity: activeLabelStatus ? 1 : 0.2,
+              },
             ]}
           ></Range>
         </Grid.Column>
