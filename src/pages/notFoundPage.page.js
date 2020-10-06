@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./notFoundPage.page.css";
-import { Icon } from "semantic-ui-react";
+import { Icon, Button } from "semantic-ui-react";
 import { withRouter } from "react-router-dom";
 
 const NotFoundPage = (props) => {
@@ -15,9 +15,9 @@ const NotFoundPage = (props) => {
       </div>
       <h5 className="animated fadeIn">{statusText}</h5>
 
-      <button className="animated fadeIn" style={{cursor: "pointer"}} onClick={() => {history.push('/dashboard')}}>
+      <Button positive onClick={() => {history.push('/dashboard')}}>
         GO BACK
-      </button>
+      </Button>
     </div>
   );
 };
