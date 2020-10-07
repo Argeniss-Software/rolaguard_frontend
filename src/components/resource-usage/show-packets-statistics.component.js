@@ -5,13 +5,19 @@ import NumberFormat from "react-number-format";
 import Chart from "react-apexcharts";
 import _ from "lodash";
 const getDataSeries = (data) => {
-  let packetsUpPercentage =_.get(data, "packets_up.percentage", null)
-  let packetsDownPercentage = _.get(data, "packets_down.percentage", null)
-  let packetsLostPercentage = _.get(data, "packets_lost.percentage", null)
+  let packetsUpPercentage = _.get(data, "packets_up.percentage", null);
+  let packetsDownPercentage = _.get(data, "packets_down.percentage", null);
+  let packetsLostPercentage = _.get(data, "packets_lost.percentage", null);
   return [
-    (_.isNull(packetsUpPercentage) || packetsUpPercentage==='-') ? 0 : parseFloat(data.packets_up.percentage.toFixed(1)),
-    (_.isNull(packetsDownPercentage) || packetsDownPercentage==='-') ? 0 : parseFloat(data.packets_down.percentage.toFixed(1)),
-    (_.isNull(packetsLostPercentage) || packetsLostPercentage==='-') ? 0 : parseFloat(data.packets_lost.percentage.toFixed(1)),
+    _.isNull(packetsUpPercentage) || packetsUpPercentage === "-"
+      ? 0
+      : parseFloat(data.packets_up.percentage.toFixed(1)),
+    _.isNull(packetsDownPercentage) || packetsDownPercentage === "-"
+      ? 0
+      : parseFloat(data.packets_down.percentage.toFixed(1)),
+    _.isNull(packetsLostPercentage) || packetsLostPercentage === "-"
+      ? 0
+      : parseFloat(data.packets_lost.percentage.toFixed(1)),
   ];
 };
 
@@ -24,7 +30,16 @@ const ShowPacketsStatistics = (props) => {
           enabled: false,
         },
       },
-
+      yaxis: {
+        labels: {
+          formatter: function(val, index) {
+            return `${val.toFixed(1)} %`;
+          },
+        },
+      },
+      tooltip: {
+        enabled: true,
+      },
       plotOptions: {
         pie: {
           donut: {
@@ -50,7 +65,7 @@ const ShowPacketsStatistics = (props) => {
           opacity: 0.5,
         },
         formatter: function(val) {
-          return _.isNumber(val) ? val.toFixed(1) : val;
+          return _.isNumber(val) ? `${val.toFixed(1)} %` : `${val} %`;
         },
       },
       legend: {
@@ -77,7 +92,7 @@ const ShowPacketsStatistics = (props) => {
       : props.headerColorLine;
 
   const normalizedType = props.type && props.type.toLowerCase().trim();
-  const isDevice = normalizedType === 'device'
+  const isDevice = normalizedType === "device";
 
   return (
     <Table compact="very" celled color={colorHeaderTable}>
@@ -107,10 +122,10 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={_.get(props, "packets_up.percentage")}
+                value={_.round(_.get(props, "packets_up.percentage", 0),1)}
                 displayType={"text"}
                 suffix={"%"}
-                decimalScale="2"
+                decimalScale="1"
               />
             </strong>
           </Table.Cell>
@@ -143,14 +158,15 @@ const ShowPacketsStatistics = (props) => {
           <Table.Cell textAlign="right">
             <strong>
               <NumberFormat
-                value={_.get(props, "packets_down.percentage")}
+                value={_.round(_.get(props, "packets_down.percentage",0),1)}
                 displayType={"text"}
                 suffix={"%"}
-                decimalScale="2"
+                decimalScale="1"
               />
             </strong>
           </Table.Cell>
         </Table.Row>
+        
         {isDevice && (
           <Table.Row>
             <Table.Cell>
@@ -168,10 +184,10 @@ const ShowPacketsStatistics = (props) => {
             <Table.Cell textAlign="right">
               <strong>
                 <NumberFormat
-                  value={props.packets_lost.percentage}
+                  value={_.round(_.get(props, 'packets_lost.percentage', 0),1)}
                   displayType={"text"}
                   suffix={"%"}
-                  decimalScale="2"
+                  decimalScale="1"
                 />
               </strong>
             </Table.Cell>
@@ -181,5 +197,4 @@ const ShowPacketsStatistics = (props) => {
     </Table>
   );
 };
-
 export default ShowPacketsStatistics;
