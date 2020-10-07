@@ -112,7 +112,7 @@ class MenuComponent extends React.Component {
                   content="Events Manager"
                 />
 
-                <Popup
+                {/* <Popup
                   trigger={
                     <a onClick={() => { this.selectedItem("events_log", "/dashboard/events_log") || resetUnread() }} className={this.state.activeItem === "events_log" ? "active" : ""}>
                       <i className="fas fa-file-alt"></i>
@@ -126,7 +126,7 @@ class MenuComponent extends React.Component {
                   }
                   style={popupStyle}
                   content="Events log"
-                />
+                /> */}
 
 
                 <Popup
