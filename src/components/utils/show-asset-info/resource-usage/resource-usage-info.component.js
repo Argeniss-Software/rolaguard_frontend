@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Table, Divider } from "semantic-ui-react";
+import { Grid, Table, Divider, Popup } from "semantic-ui-react";
 import _ from "lodash";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";
@@ -70,16 +70,23 @@ const ResourceUsageInfo = (props) => {
                   <Table.Cell>SIGNAL STRENGTH (RSSI):</Table.Cell>
                   <Table.Cell className="bold">
                     <React.Fragment>
-                      <WifiIndicator
-                        strength={DBMToSignalStrength(props.asset.max_rssi)}
-                        statusImages={statusImages}
-                        style={{
-                          height: 20,
-                          verticalAlign: "bottom",
-                        }}
+                      <Popup
+                        basic
+                        trigger={
+                          <WifiIndicator
+                            strength={DBMToSignalStrength(props.asset.max_rssi)}
+                            statusImages={statusImages}
+                            style={{
+                              height: 20,
+                              verticalAlign: "bottom",
+                            }}
+                          />
+                        }
+                        content={
+                          DBMToSignalStrength(props.asset.max_rssi, true)
+                        }
                       />
-
-                      <span> {DBMToSignalStrength(props.asset.max_rssi)}</span>
+                      <span> {DBMToSignalStrength(props.asset.max_rssi, true)}</span>
 
                       {props.asset.max_rssi && (
                         <React.Fragment>

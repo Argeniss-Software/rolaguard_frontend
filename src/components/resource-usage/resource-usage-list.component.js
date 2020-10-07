@@ -219,13 +219,7 @@ const ResourceUsageList = (props) => {
                                   />
                                 }
                                 content={
-                                  DBMToSignalStrength(item.max_rssi) ===
-                                  "DISCONNECTED"
-                                    ? "UNUSABLE"
-                                    : DBMToSignalStrength(item.max_rssi) ===
-                                      "UNUSABLE"
-                                    ? "VERY WEAK"
-                                    : DBMToSignalStrength(item.max_rssi)
+                                  DBMToSignalStrength(item.max_rssi, true)
                                 }
                               ></Popup>
                             )}
