@@ -5,8 +5,7 @@ import {
   Segment,
   Dropdown,
   Dimmer,
-  Loader,
-  Checkbox,
+  Loader
 } from "semantic-ui-react";
 import _ from "lodash";
 import { MobXProviderContext } from "mobx-react";
