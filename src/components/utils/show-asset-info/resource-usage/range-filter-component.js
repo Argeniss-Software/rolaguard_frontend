@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import "./packets-graph-component.css";
-import { Grid, Label } from "semantic-ui-react";
+import { Grid, Label, Popup } from "semantic-ui-react";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 
@@ -102,20 +102,26 @@ const RangeFilter = (props) => {
           ></Range>
         </Grid.Column>
         <Grid.Column width={6}>
-          <Label
-            as="a"
-            onClick={clickLabel}
-            style={{
-              backgroundColor: props.color,
-              color: "white",
-              opacity: activeLabelStatus ? 1 : 0.2,
-            }}
-          >
-            {props.label}:{" "}
-            <strong>
-              {value[0]} {props.unit} TO {value[1]} {props.unit}
-            </strong>
-          </Label>
+          <Popup
+            trigger={
+              <Label
+                as="a"
+                onClick={clickLabel}
+                style={{
+                  backgroundColor: props.color,
+                  color: "white",
+                  opacity: activeLabelStatus ? 1 : 0.2,
+                }}
+              >
+                {props.label}:{" "}
+                <strong>
+                  {value[0]} {props.unit} TO {value[1]} {props.unit}
+                </strong>
+              </Label>
+            }
+            size="small"
+            content={`Click to ${activeLabelStatus ? "hide" : "show"}`}
+          />
         </Grid.Column>
       </Grid.Row>
     </Grid>
