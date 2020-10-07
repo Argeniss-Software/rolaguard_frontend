@@ -7,7 +7,7 @@ import {
   Segment,
   Grid,
   Pagination,
-  Popup
+  Popup,
 } from "semantic-ui-react";
 import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
@@ -16,7 +16,7 @@ import EmptyComponent from "../../utils/empty.component";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import DateFilterBar from "./date-filter-bar.component";
 import AssetId from "../asset-id.component";
-import LoaderComponent from "../loader.component"
+import LoaderComponent from "../loader.component";
 
 const ShowCurrentIssues = (props) => {
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
@@ -108,12 +108,15 @@ const ShowCurrentIssues = (props) => {
           />
         </span>
       </h5>
-      {showFilters && (
-        <DateFilterBar onDateFilterChange={handleDateFilterChange} />
-      )}
+      <DateFilterBar
+        showFilters={showFilters}
+        onDateFilterChange={handleDateFilterChange}
+      />
 
-      <Segment attached>
-        {isLoading && <LoaderComponent loadingMessage="Loading current issues..." />}
+      <Segment attached style={{ height: "100%" }}>
+        {isLoading && (
+          <LoaderComponent loadingMessage="Loading current issues..." />
+        )}
         {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no current issues to show" />
         )}

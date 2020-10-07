@@ -82,12 +82,26 @@ const AlertTimeLineGraph = (props) => {
 
   const closeAlertDetails = () => {
     setSelectedItem({});
+    setSelectedItemId(null);
   };
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  useEffect(() => {
+    // when click on item, set the item selected for the popup
+    if (_.isNumber(selectedItemId)) {
+      const selected = items.find((e) => e.id === selectedItemId);
+      if (!_.isEmpty(selected)) {
+        setSelectedItem({
+          alert: _.get(selected, "allContent", {}),
+          alert_type: _.get(selected, "allContent.type", {}),
+        });
+      }
+    }
+  }, [selectedItemId]);
+
   const clickItemEvent = (data) => {
-    setSelectedItem({
-      alert: _.get(data, "item.allContent", {}),
-      alert_type: _.get(data, "item.allContent.type", {}),
-    });
+    // just set selected item id
+    setSelectedItemId(data.id);
   };
 
   // Configuration for the Timeline

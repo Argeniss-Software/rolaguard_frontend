@@ -6,6 +6,7 @@ import {
   Dropdown,
   Dimmer,
   Loader,
+  Checkbox,
 } from "semantic-ui-react";
 import _ from "lodash";
 import { MobXProviderContext } from "mobx-react";
@@ -14,6 +15,10 @@ import moment from "moment";
 
 const TimeLineGraph = (props) => {
   const { globalConfigStore } = useContext(MobXProviderContext);
+  const [rangeDates, setRangeDates] = useState({});
+  const [firstTime, setFirstTime] = useState(true);
+  const fromDate = props.dateTimeRange.from || rangeDates.start;
+  const toDate = props.dateTimeRange.to || rangeDates.end;
   const defaultItems = [
     {
       id: 1,
@@ -105,8 +110,13 @@ const TimeLineGraph = (props) => {
 
   useEffect(() => {
     if (!_.isEmpty(props.items) && !_.isEmpty(timeline)) {
-      timeline.setItems(props.items);
       setItems(props.items);
+      timeline.setItems(props.items);
+      if (firstTime) {
+        // first time fit automatically
+        fit();
+        setFirstTime(false);
+      }
     }
   }, [props.items]);
 
@@ -120,6 +130,7 @@ const TimeLineGraph = (props) => {
           props.onRangeChanged(data);
         }
       });
+      setRangeDates(timeline.getWindow());
     }
   }, [timeline]);
 
@@ -185,11 +196,11 @@ const TimeLineGraph = (props) => {
             </Grid.Column>
             <Grid.Column width={8} className="text-center aligned">
               FROM:{" "}
-              {moment(props.dateTimeRange.from).format(
+              {moment(fromDate).format(
                 globalConfigStore.dateFormats.moment.dateTimeFormat
               )}{" "}
               - TO:{" "}
-              {moment(props.dateTimeRange.to).format(
+              {moment(toDate).format(
                 globalConfigStore.dateFormats.moment.dateTimeFormat
               )}
             </Grid.Column>

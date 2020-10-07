@@ -37,19 +37,17 @@ const SignalStrengthHelp = (props) => {
                       />
                     }
                     content={
-                      r.text === "DISCONNECTED"
-                        ? "UNUSABLE"
-                        : r.text === "UNUSABLE"
-                        ? "VERY WEAK"
-                        : r.text
-                    }
-                  ></Popup>{" "}
+                      DBMToSignalStrength(
+                    index === 5 ? r.value - 1 : r.value,
+                    true
+                  )}
+                    
+                  />
                   <small>
-                    {r.text === "DISCONNECTED"
-                      ? "UNUSABLE"
-                      : r.text === "UNUSABLE"
-                      ? "VERY WEAK"
-                      : r.text}
+                    {DBMToSignalStrength(
+                      index === 5 ? r.value - 1 : r.value,
+                      true
+                    )}
                   </small>
                 </Table.Cell>
                 <Table.Cell textAlign="left">

@@ -88,9 +88,9 @@ const ShowAlerts = (props) => {
   };
 
   const handleDateFilterChange = (date) => {
-    setDateFilter((prevDate) => {
-      return { ...prevDate, ...date };
-    });
+      setDateFilter((prevDate) => {
+        return { ...prevDate, ...date };
+      });
   };
 
   const toggleShowFilter = () => {
@@ -114,10 +114,8 @@ const ShowAlerts = (props) => {
           />
         </span>
       </h5>
-      {showFilters && (
-        <DateFilterBar onDateFilterChange={handleDateFilterChange} />
-      )}
-      <Segment attached stretched="true">
+      <DateFilterBar showFilters={showFilters} onDateFilterChange={handleDateFilterChange} />
+      <Segment attached stretched="true" style={{height: "100%"}}>
         {isLoading && <LoaderComponent loadingMessage="Loading alerts..." />}
         {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no alerts to show." />

@@ -5,16 +5,16 @@ import moment from "moment";
 import _ from "lodash";
 
 /**
-  * This component render a date time picker bar with FROM and DATE fields.
-  * also add D,M,W (last day, las month and las week) options filters as buttons 
-  * for preset automatically the from and date filters.
-  * 
-  * When de user press the filter button, clear button or D,M,W, the component
-  * trigger a callback function in order to notify the date change
-  * 
-  * @param props:
-  *    onDateFilterChange: function to notify date change. It send and object like: {from: date, to: dates}
-**/
+ * This component render a date time picker bar with FROM and DATE fields.
+ * also add D,M,W (last day, las month and las week) options filters as buttons
+ * for preset automatically the from and date filters.
+ *
+ * When de user press the filter button, clear button or D,M,W, the component
+ * trigger a callback function in order to notify the date change
+ *
+ * @param props:
+ *    onDateFilterChange: function to notify date change. It send and object like: {from: date, to: dates}
+ **/
 
 const DateFilterBar = (props) => {
   const dateTimePickerFormat = "MMMM D YYYY hh:mm a";
@@ -103,7 +103,10 @@ const DateFilterBar = (props) => {
 
   return (
     <React.Fragment>
-      <Segment attached>
+      <Segment
+        attached
+        style={{ display: props.showFilters ? "block" : "none" }}
+      >
         <Grid flex>
           <Grid.Column width={6}>
             <div
