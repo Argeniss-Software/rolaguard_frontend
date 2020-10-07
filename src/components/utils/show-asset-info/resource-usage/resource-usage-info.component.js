@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Table, Divider, Popup } from "semantic-ui-react";
+import { Grid, Table, Divider, Popup, Statistic, Segment, Card } from "semantic-ui-react";
 import _ from "lodash";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";
@@ -82,11 +82,15 @@ const ResourceUsageInfo = (props) => {
                             }}
                           />
                         }
-                        content={
-                          DBMToSignalStrength(props.asset.max_rssi, true)
-                        }
+                        content={DBMToSignalStrength(
+                          props.asset.max_rssi,
+                          true
+                        )}
                       />
-                      <span> {DBMToSignalStrength(props.asset.max_rssi, true)}</span>
+                      <span>
+                        {" "}
+                        {DBMToSignalStrength(props.asset.max_rssi, true)}
+                      </span>
 
                       {props.asset.max_rssi && (
                         <React.Fragment>
@@ -166,6 +170,30 @@ const ResourceUsageInfo = (props) => {
           type={props.asset.type}
         ></ShowPacketsStatistics>
       </Grid.Row>
+      {isDevice && (
+        <Segment>
+          <Statistic.Group widths="3" size="tiny">
+            <Statistic color="yellow">
+              <Statistic.Value>
+                {props.asset.retransmissions}
+              </Statistic.Value>
+              <Statistic.Label>Retransmissions</Statistic.Label>
+            </Statistic>
+            <Statistic color="grey">
+              <Statistic.Value>
+                {props.asset.join_requests}
+              </Statistic.Value>
+              <Statistic.Label>Join requests (JR)</Statistic.Label>
+            </Statistic>
+            <Statistic color="red">
+              <Statistic.Value>
+                {props.asset.failed_join_requests}
+              </Statistic.Value>
+              <Statistic.Label>Failed Join Req.</Statistic.Label>
+            </Statistic>
+          </Statistic.Group>
+        </Segment>
+      )}
     </React.Fragment>
   );
 };
