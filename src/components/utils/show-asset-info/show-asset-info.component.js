@@ -115,11 +115,15 @@ const ShowAssetInfo = (props) => {
 
         <Grid columns="equal">
           <Grid.Row>
-            <Grid.Column columns={8} className="flex">
+            
+            <Grid.Column mobile={16}
+            tablet={16}
+            computer={8} className="flex">
               <AlertTimeLineGraph type={props.type} id={props.id} />
             </Grid.Column>
-
-            <Grid.Column columns={8} className="stretched flex">
+            <Grid.Column mobile={16}
+            tablet={16}
+            computer={8} className="stretched flex">
               {props.type && props.id && (
                 <ShowAlerts type={props.type} id={props.id} />
               )}
@@ -152,7 +156,7 @@ const ShowAssetInfo = (props) => {
                     NETWORK OVERVIEW
                   </h5>
                   <Segment attached>
-                      <ResourceUsageInfo asset={resource_usage} />                    
+                    <ResourceUsageInfo asset={resource_usage} />
                   </Segment>
                 </Grid.Column>
                 <Grid.Column width={11}>

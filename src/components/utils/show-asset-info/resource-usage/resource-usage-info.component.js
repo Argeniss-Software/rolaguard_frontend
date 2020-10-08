@@ -6,6 +6,7 @@ import {
   Popup,
   Statistic,
   Segment,
+  Container,
 } from "semantic-ui-react";
 import _ from "lodash";
 import NumberFormat from "react-number-format";
@@ -62,100 +63,102 @@ const ResourceUsageInfo = (props) => {
               </Table.Cell>
             </Table.Row>
 
-            {isDevice && (
-              <React.Fragment>
-                <Table.Row>
-                  <Table.Cell>SIGNAL STRENGTH (RSSI):</Table.Cell>
-                  <Table.Cell className="bold">
-                    <React.Fragment>
-                      <Popup
-                        basic
-                        trigger={
-                          <WifiIndicator
-                            strength={DBMToSignalStrength(props.asset.max_rssi)}
-                            statusImages={statusImages}
-                            style={{
-                              height: 20,
-                              verticalAlign: "bottom",
-                            }}
-                          />
-                        }
-                        content={DBMToSignalStrength(
-                          props.asset.max_rssi,
-                          true
-                        )}
-                      />
-                      <span>
-                        {" "}
-                        {DBMToSignalStrength(props.asset.max_rssi, true)}
-                      </span>
+              {isDevice && (
+                <React.Fragment>
+                  <Table.Row>
+                    <Table.Cell>SIGNAL STRENGTH (RSSI):</Table.Cell>
+                    <Table.Cell className="bold">
+                      <React.Fragment>
+                        <Popup
+                          basic
+                          trigger={
+                            <WifiIndicator
+                              strength={DBMToSignalStrength(
+                                props.asset.max_rssi
+                              )}
+                              statusImages={statusImages}
+                              style={{
+                                height: 20,
+                                verticalAlign: "bottom",
+                              }}
+                            />
+                          }
+                          content={DBMToSignalStrength(
+                            props.asset.max_rssi,
+                            true
+                          )}
+                        />
+                        <span>
+                          {" "}
+                          {DBMToSignalStrength(props.asset.max_rssi, true)}
+                        </span>
 
-                      {props.asset.max_rssi && (
-                        <React.Fragment>
-                          <span> (</span>
-                          <NumberFormat
-                            value={props.asset.max_rssi}
-                            displayType={"text"}
-                            suffix={" dBm)"}
-                            decimalScale="1"
-                          />
-                        </React.Fragment>
-                      )}
-                    </React.Fragment>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>SNR:</Table.Cell>
-                  <Table.Cell>
-                    <strong>
-                      <NumberFormat
-                        value={props.asset.max_lsnr}
-                        suffix=" dB"
-                        displayType={"text"}
-                        decimalScale="1"
-                      />
-                    </strong>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>PAYLOAD SIZE:</Table.Cell>
-                  <Table.Cell>
-                    <strong>
-                      <NumberFormat
-                        value={props.asset.payload_size}
-                        suffix=" bytes"
-                        displayType={"text"}
-                        decimalScale="1"
-                      />
-                    </strong>
-                  </Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>
-                    <span>
-                      CONNECTED TO{" "}
+                        {props.asset.max_rssi && (
+                          <React.Fragment>
+                            <span> (</span>
+                            <NumberFormat
+                              value={props.asset.max_rssi}
+                              displayType={"text"}
+                              suffix={" dBm)"}
+                              decimalScale="1"
+                            />
+                          </React.Fragment>
+                        )}
+                      </React.Fragment>
+                    </Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>SNR:</Table.Cell>
+                    <Table.Cell>
                       <strong>
-                        {
-                          NGatewaysConnectedTo /* props.asset.ngateways_connected_to */
-                        }{" "}
+                        <NumberFormat
+                          value={props.asset.max_lsnr}
+                          suffix=" dB"
+                          displayType={"text"}
+                          decimalScale="1"
+                        />
                       </strong>
-                      GATEWAYS:
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div style={{ wordBreak: "break-all" }}>
-                      <AssociatedAsset
-                        type={normalizedType}
-                        id={props.asset.id}
-                        onChange={(qty) => setNGatewaysConnectedTo(qty)}
-                      />
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              </React.Fragment>
-            )}
-          </Table.Body>
-        </Table>
+                    </Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>PAYLOAD SIZE:</Table.Cell>
+                    <Table.Cell>
+                      <strong>
+                        <NumberFormat
+                          value={props.asset.payload_size}
+                          suffix=" bytes"
+                          displayType={"text"}
+                          decimalScale="1"
+                        />
+                      </strong>
+                    </Table.Cell>
+                  </Table.Row>
+                  <Table.Row>
+                    <Table.Cell>
+                      <span>
+                        CONNECTED TO{" "}
+                        <strong>
+                          {
+                            NGatewaysConnectedTo /* props.asset.ngateways_connected_to */
+                          }{" "}
+                        </strong>
+                        GATEWAYS:
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div style={{ wordBreak: "break-all" }}>
+                        <AssociatedAsset
+                          type={normalizedType}
+                          id={props.asset.id}
+                          onChange={(qty) => setNGatewaysConnectedTo(qty)}
+                        />
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                </React.Fragment>
+              )}
+            </Table.Body>
+          </Table>
       </Grid.Row>
       <Divider />
       <Grid.Row className="text-center aligned">
