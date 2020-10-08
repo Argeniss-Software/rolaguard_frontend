@@ -101,7 +101,7 @@ class DetailsAlertModal extends Component {
         <Table.Row key={messageParameter}>
           <Table.Cell width="3"
             className="technical-details-table-row-left"
-            style={{ "borderTop": "1px solid lightgray !important" }}><i>{header}</i></Table.Cell>
+            style={{borderTop: "1px solid lightgray !important" }}><i>{header}</i></Table.Cell>
           <Table.Cell width={3} className={`technical-details-table-row-right ${(parameterToUpper && value) ? "upper" : ""}`}>{value ? <b>{value}</b> : <i style={{ color: "gray", opacity:"0.8"}}>not available</i>}</Table.Cell>
         </Table.Row>
       );
