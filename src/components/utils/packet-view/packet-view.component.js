@@ -33,7 +33,7 @@ const ShowValue = (props) => {
      );
    }
 
-   return (<span></span>);
+   return (<i style={{ color: "gray", opacity:"0.8"}}>not available</i>);
 };
 
 const PacketViewer = (props) => {
