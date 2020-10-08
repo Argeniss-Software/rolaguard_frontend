@@ -6,7 +6,7 @@ const ViewAsset = (props) => {
   const [id, setId] = useState(null)
   const [type, setType] = useState(null)
   useEffect(() => {
-    setId(parseInt(props.match.params.id))
+    setId(parseInt(props.match.params.id,10))
     setType(props.match.params.type)
   }, [])
 
