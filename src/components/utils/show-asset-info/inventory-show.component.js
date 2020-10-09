@@ -8,6 +8,7 @@ import AssetIdComponent from "../asset-id.component";
 import Geolocation from "../geolocation/geolocation.component";
 import Tag from "../tags/tag.component";
 import ShowCurrentIssues from "./current-issues-show.component";
+import NotAvailableComponent from "../not-available-value/not-available-value.component";
 
 const ShowInventory = (props) => {
   const [tags, setTags] = React.useState(
@@ -70,9 +71,7 @@ const ShowInventory = (props) => {
                       {props.inventory.name ? (
                         <strong>{props.inventory.name}</strong>
                       ) : (
-                        <i style={{ color: "gray", opacity: "0.8" }}>
-                          not available
-                        </i>
+                        <NotAvailableComponent />
                       )}
                     </Table.Cell>
                   </Table.Row>
@@ -92,9 +91,7 @@ const ShowInventory = (props) => {
                       {props.inventory.vendor ? (
                         <strong>{props.inventory.vendor}</strong>
                       ) : (
-                        <i style={{ color: "gray", opacity: "0.8" }}>
-                          not available
-                        </i>
+                        <NotAvailableComponent />
                       )}
                     </Table.Cell>
                   </Table.Row>
@@ -105,18 +102,14 @@ const ShowInventory = (props) => {
                       {props.inventory.name ? (
                         <strong>{props.inventory.name}</strong>
                       ) : (
-                        <i style={{ color: "gray", opacity: "0.8" }}>
-                          not available
-                        </i>
+                        <NotAvailableComponent />
                       )}
 
                       {normalizedType === "device" ? (
                         props.inventory.app_name ? (
                           <strong>{props.inventory.app_name}</strong>
                         ) : (
-                          <i style={{ color: "gray", opacity: "0.8" }}>
-                            not available
-                          </i>
+                          <NotAvailableComponent />
                         )
                       ) : (
                         "N/A"
@@ -131,9 +124,7 @@ const ShowInventory = (props) => {
                         props.inventory.join_eui ? (
                           <strong>{_.toUpper(props.inventory.join_eui)}</strong>
                         ) : (
-                          <i style={{ color: "gray", opacity: "0.8" }}>
-                            not available
-                          </i>
+                          <NotAvailableComponent />
                         )
                       ) : (
                         "N/A"
@@ -147,9 +138,7 @@ const ShowInventory = (props) => {
                       {props.inventory.data_collector ? (
                         <strong>{props.inventory.data_collector}</strong>
                       ) : (
-                        <i style={{ color: "gray", opacity: "0.8" }}>
-                          not available
-                        </i>
+                        <NotAvailableComponent />
                       )}
                     </Table.Cell>
                   </Table.Row>

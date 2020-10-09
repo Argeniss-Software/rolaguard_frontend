@@ -11,6 +11,7 @@ import AlertDetailTableIcon from "./alert/alert.details.table.icons";
 import AssetLink from "./utils/asset-link.component";
 import PacketViewer from "../components/utils/packet-view/packet-view.component";
 import _ from "lodash";
+import NotAvailableCoponent from "./utils/not-available-value/not-available-value.component"
 @inject("alarmStore", "alertStore", "authStore", "generalDataStore", "usersStore", "globalConfigStore")
 @observer
 class DetailsAlertModal extends Component {
@@ -102,7 +103,7 @@ class DetailsAlertModal extends Component {
           <Table.Cell width={3}
             className="technical-details-table-row-left"
             style={{borderTop: "1px solid lightgray !important" }}><i>{header}</i></Table.Cell>
-          <Table.Cell width={3} className={`technical-details-table-row-right ${(parameterToUpper && value) ? "upper" : ""}`}>{value ? <b>{value}</b> : <i style={{ color: "gray", opacity:"0.8"}}>not available</i>}</Table.Cell>
+          <Table.Cell width={3} className={`technical-details-table-row-right ${(parameterToUpper && value) ? "upper" : ""}`}>{value ? <b>{value}</b> : <NotAvailableCoponent/>}</Table.Cell>
         </Table.Row>
       );
     }
