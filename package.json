@@ -28,7 +28,6 @@
     "react-number-format": "^4.4.1",
     "react-recaptcha-google": "^1.1.1",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.5",
     "react-semantic-toasts": "^0.6.5",
     "react-semantic-ui": "^0.2.0",
     "react-truncate-markup": "^5.0.0",
@@ -41,8 +40,8 @@
     "vis-timeline": "^7.3.9"
   },
   "scripts": {
-    "start": "react-app-rewired start --config-overrides ./custom-overides",
-    "build": "react-app-rewired build --config-overrides ./custom-overides",
+    "start": "rescripts start",
+    "build": "rescripts build",
     "test": "jest --config=./jest.config.json"
   },
   "devDependencies": {
@@ -51,16 +50,23 @@
     "@babel/plugin-proposal-decorators": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-react": "^7.0.0",
+    "@rescripts/cli": "0.0.14",
+    "@rescripts/rescript-env": "0.0.12",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
+    "eslint-plugin-react": "^7.21.3",
     "eslint-plugin-react-hooks": "^4.1.0",
     "react-addons-test-utils": "^15.6.2",
+    "react-scripts": "^3.4.3",
     "react-test-renderer": "^16.9.0"
   },
   "browserslist": [
     ">0.2%",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "rescripts": [
+    "env"
   ]
 }
