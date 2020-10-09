@@ -28,7 +28,7 @@
     "react-number-format": "^4.4.1",
     "react-recaptcha-google": "^1.1.1",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.0",
+    "react-scripts": "1.1.5",
     "react-semantic-toasts": "^0.6.5",
     "react-semantic-ui": "^0.2.0",
     "react-truncate-markup": "^5.0.0",
