@@ -15,7 +15,7 @@ const AlertTimeLineGraph = (props) => {
   const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
-  const [perPage, setPerPage] = useState(500);
+  const [perPage, setPerPage] = useState(20);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -36,13 +36,12 @@ const AlertTimeLineGraph = (props) => {
         type: type,
         id: id,
       },
-
       {
+        "created_at[gte]": dateFilter.from,
+        "created_at[lte]": dateFilter.to,
         page: 1,
         size: perPage,
         order_by: orderBy,
-        "created_at[gte]": dateFilter.from,
-        "created_at[lte]": dateFilter.to,
       }
     );
     Promise.all([alertPromise])
@@ -83,12 +82,26 @@ const AlertTimeLineGraph = (props) => {
 
   const closeAlertDetails = () => {
     setSelectedItem({});
+    setSelectedItemId(null);
   };
+  const [selectedItemId, setSelectedItemId] = useState(null);
+
+  useEffect(() => {
+    // when click on item, set the item selected for the popup
+    if (_.isNumber(selectedItemId)) {
+      const selected = items.find((e) => e.id === selectedItemId);
+      if (!_.isEmpty(selected)) {
+        setSelectedItem({
+          alert: _.get(selected, "allContent", {}),
+          alert_type: _.get(selected, "allContent.type", {}),
+        });
+      }
+    }
+  }, [selectedItemId]);
+
   const clickItemEvent = (data) => {
-    setSelectedItem({
-      alert: _.get(data, "item.allContent", {}),
-      alert_type: _.get(data, "item.allContent.type", {}),
-    });
+    // just set selected item id
+    setSelectedItemId(data.id);
   };
 
   // Configuration for the Timeline
@@ -101,7 +114,7 @@ const AlertTimeLineGraph = (props) => {
     zoomMin: 1000 * 60 * 60, // every 5 minutes
     zoomMax: 1000 * 60 * 60 * 24 * 30 * 1, // a month
     clickToUse: true,
-    
+
     tooltip: {
       template: function(originalItemData, parsedItemData) {
         return `
@@ -155,6 +168,19 @@ const AlertTimeLineGraph = (props) => {
     },
   ];
 
+  const handleRangeChanged = (data) => {
+    const { start, end } = data;
+    setDateFilter({ from: start, to: end });
+  };
+
+  const handleChangeQty = (qty) => {
+    if (qty === "all") {
+      setPerPage(totalItems);
+    } else {
+      setPerPage(qty);
+    }
+  };
+
   return (
     <React.Fragment>
       {errorOnRequest && (
@@ -169,18 +195,19 @@ const AlertTimeLineGraph = (props) => {
       {!_.isEmpty(selectedItem) && (
         <DetailsAlertModal alert={selectedItem} onClose={closeAlertDetails} />
       )}
-      {_.isEmpty(items) && !errorOnRequest && (
-        <LoaderComponent loadingMessage="Loading Alerts Timeline..." />
-      )}
-      {!_.isEmpty(items) && !errorOnRequest && (
+      {!errorOnRequest && (
         <TimeLineGraph
           showControlBar={true}
           enableFilterQty={true}
+          dateTimeRange={dateFilter}
           items={items}
+          isLoading={isLoading}
           titleGraph="Alerts Timeline"
           options={options}
           groups={groups}
           onClickItemEvent={clickItemEvent}
+          onChangeQty={handleChangeQty}
+          onRangeChanged={handleRangeChanged}
         ></TimeLineGraph>
       )}
     </React.Fragment>

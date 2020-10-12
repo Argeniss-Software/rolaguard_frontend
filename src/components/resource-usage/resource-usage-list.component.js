@@ -26,9 +26,7 @@ const ResourceUsageList = (props) => {
 
   const showModal = (data) => {
     const { item } = data;
-    if (item.type === "device") {
-      setItemSelected(item);
-    }
+    setItemSelected(item);
   };
 
   return (
@@ -221,13 +219,7 @@ const ResourceUsageList = (props) => {
                                   />
                                 }
                                 content={
-                                  DBMToSignalStrength(item.max_rssi) ===
-                                  "DISCONNECTED"
-                                    ? "UNUSABLE"
-                                    : DBMToSignalStrength(item.max_rssi) ===
-                                      "UNUSABLE"
-                                    ? "VERY WEAK"
-                                    : DBMToSignalStrength(item.max_rssi)
+                                  DBMToSignalStrength(item.max_rssi, true)
                                 }
                               ></Popup>
                             )}
