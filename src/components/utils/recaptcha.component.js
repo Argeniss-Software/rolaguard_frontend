@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ReCaptcha } from "react-recaptcha-google";
+import ReCAPTCHA from "react-google-recaptcha";
 import { observer, inject } from "mobx-react";
 
 @inject("authStore")
@@ -39,16 +39,16 @@ class RecaptchaComponent extends Component {
     return (
       <div>
         {/* You can replace captchaDemo with any ref word */}
-        <ReCaptcha
-          ref={el => {
+        <ReCAPTCHA
+          ref={(el) => {
             this.captchaDemo = el;
           }}
           size="normal"
-          data-theme="dark"
+          theme="light"
           render="explicit"
           sitekey={window.RECAPTCHA_SITEKEY}
-          onloadCallback={this.onLoadRecaptcha}
-          verifyCallback={this.verifyCallback}
+          // onloadCallback={this.onLoadRecaptcha}
+          onChange={this.verifyCallback}
         />
       </div>
     );
