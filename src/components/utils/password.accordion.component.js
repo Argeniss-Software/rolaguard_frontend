@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Accordion, Icon } from "semantic-ui-react";
-import { Button, Form, Label, Divider } from "semantic-ui-react";
+import { Button, Form, Label } from "semantic-ui-react";
 import Validation from "../../util/validation";
 import { observer, inject } from "mobx-react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Item } from "semantic-ui-react";
+import { Table } from "semantic-ui-react";
 import _ from "lodash";
 
 

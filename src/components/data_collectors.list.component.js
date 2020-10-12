@@ -155,6 +155,8 @@ class DataCollectorListComponent extends React.Component {
             {header.name}
           </Table.HeaderCell>
         );
+      } else {
+        return ""
       }
     });
     

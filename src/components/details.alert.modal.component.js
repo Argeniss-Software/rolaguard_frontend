@@ -71,19 +71,19 @@ class DetailsAlertModal extends Component {
       : this.props.alert.alert.gateway_id;
     
 
-    let message = alert_type.message;
+    /*let message = alert_type.message;*/
     let alertMessage = alert_type.message.match(/\{.+?\}/g);
-    message = `${message}`; 
+    /*message = `${message}`; 
     message = message.replace(`{packet_id}`, `<b>${alert.packet_id}</b>`);
     message = message.replace(
       `{created_at}`,
       `<b>${moment(alert.created_at).format(
         this.props.globalConfigStore.dateFormats.moment.dateTimeFormat
       )}</b>`
-    );
+    );*/
 
     let messageTable = []
-    for (let i = 0; i < alertMessage.length - 1; i++) { 
+    for (let i = 0; i < alertMessage.length - 1; i++) {
       let messageParameter = alertMessage[i].replace(/[{()}]/g, '');
       let value = this.getPArameterValue(alert.parameters, messageParameter);
       const parameterToUpper = AlertUtil.parameters.toUpper.includes(messageParameter);

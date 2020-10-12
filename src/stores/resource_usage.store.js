@@ -353,7 +353,7 @@ class ResourceUsageStore {
   /* used it on list device and gateway on resrouce ussages */
   @action getAssets(pagination) {
     const { page, size } = pagination || {};
-    const { status, type, gateways, packet_lost_range, signal_strength, devices } =
+    const { status, type, gateways, packet_lost_range, signal_strength } =
       this.criteria || {};
 
     const headers = this.getHeaders();

@@ -29,7 +29,7 @@ const ShowAlerts = (props) => {
 
   const [alerts, setAlerts] = useState({});
   const [activePage, setActivePage] = useState(1);
-  const [perPage, setPerPage] = useState(7);
+  const [perPage] = useState(7);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);

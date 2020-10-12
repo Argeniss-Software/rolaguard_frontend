@@ -13,7 +13,6 @@ import AlarmReviewComponent from './alarm_review.component';
 import InventoryReviewComponent from './inventory/inventory.component';
 import ResourceUsageComponent from './resource-usage/resource-usage.component';
 // Don't delete the next line. It serves the DatePicker in the Alerts Review dashboard
-import ReportComponent from './reports-page';
 import DataCollectorListComponent from './data_collectors.list.component';
 import DataCollectorLogComponent from './data_collector.log.component';
 import DataCollectorViewComponent from './data_collector.view.component';

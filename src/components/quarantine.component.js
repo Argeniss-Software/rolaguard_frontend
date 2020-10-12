@@ -221,6 +221,9 @@ class QuarantineComponent extends React.Component {
       
       case this.DATA_COLLECTOR_NAME:
         criteria.dataCollector = array.filter(dc => dc.selected).map(dc => dc.id);
+        break;
+      default: 
+        break;
     }
 
     this.setState({[type]: array, activePage: 1, isLoadingTable: true, criteria, showFilters: this.showFilters()});
@@ -290,10 +293,10 @@ class QuarantineComponent extends React.Component {
 
           {/* VIEW BODY */}
           <div className="view-body">
-            {quarantineDeviceCount == null && (
+            {quarantineDeviceCount === null && (
               <LoaderComponent loadingMessage="Loading Current Issues..." />
             )}
-            {quarantineDeviceCount == 0 && (
+            {quarantineDeviceCount === 0 && (
               <EmptyComponent emptyMessage="There are no issues" />
             )}
             {quarantineDeviceCount > 0 && (
@@ -452,7 +455,7 @@ class QuarantineComponent extends React.Component {
                       </span>
                     </div>
                   )}
-                  {quarantineCount == 0 && (
+                  {quarantineCount === 0 && (
                     <Grid className="segment centered">
                       <EmptyComponent emptyMessage="No items found" />
                     </Grid>

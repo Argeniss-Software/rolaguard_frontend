@@ -78,7 +78,7 @@ const ResourceUsageComponent = (props) => {
                     deleteFilter(key, value);
                   }}
                 >
-                  {key.replace(/\_+/gm, ` `)}:{" "}
+                  {key.replace(/_+/gm, ` `)}:{" "}
                   <strong>
                     {value.from}-{value.to}%
                   </strong>
@@ -98,7 +98,7 @@ const ResourceUsageComponent = (props) => {
                     deleteFilter(key, value);
                   }}
                 >
-                  {key.replace(/\_+/gm, ` `)}:{" "}
+                  {key.replace(/_+/gm, ` `)}:{" "}
                   <strong>
                     {value.from <-120 ? '-Inf' : value.from} to {value.to > -50 ? '0' : value.to} dBm 
                   </strong>

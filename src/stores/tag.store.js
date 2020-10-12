@@ -1,7 +1,6 @@
-import { observable, action, computed } from "mobx";
+import { action } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
-import axios from "axios";
 
 class TagsStore {
 
@@ -18,10 +17,6 @@ class TagsStore {
   @action
   createTag(name, color) {
     const headers = this.getHeaders();
-    const params = {
-        ...color && { 'color': color },
-        ...name && { 'name': name },
-    }
     return API.post(`tags?color=${encodeURIComponent(color)}&name=${encodeURIComponent(name)}`, {}, {headers})
   }
 

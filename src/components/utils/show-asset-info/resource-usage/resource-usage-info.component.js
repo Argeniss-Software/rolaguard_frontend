@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, Table, Divider, Popup, Statistic, Segment, Card } from "semantic-ui-react";
+import { Grid, Table, Divider, Popup, Statistic, Segment } from "semantic-ui-react";
 import _ from "lodash";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";

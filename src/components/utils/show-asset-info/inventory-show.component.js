@@ -10,7 +10,7 @@ import Tag from "../tags/tag.component"
 import ShowCurrentIssues from "./current-issues-show.component";
 
 const ShowInventory = (props) => {
-  const [tags, setTags] = React.useState(
+  const [tags] = React.useState(
     props.inventory.tags ? props.inventory.tags : []
   );
 

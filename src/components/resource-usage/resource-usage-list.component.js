@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useState } from "react";
 import { Icon, Table, Popup, Grid } from "semantic-ui-react";
 
 import AssetIdComponent from "../utils/asset-id.component";

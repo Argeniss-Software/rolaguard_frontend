@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { Button, Modal, Icon, Grid, Table, Popup, Segment, Divider} from "semantic-ui-react";
+import React from "react";
+import { Button, Modal, Icon, Grid, Table, Popup, Segment } from "semantic-ui-react";
 import ShowDeviceState from "../utils/show-device-state.component"
 import ShowDeviceIcon  from "../utils/show-device-icon.component";
 import AssetIdComponent from "../utils/asset-id.component";
@@ -147,7 +147,7 @@ const ModalResourceUsage = (props) => {
                 </Table>
               </Grid.Column>
             </Grid.Row>
-            {props.asset.type != "gateway" && (
+            {props.asset.type !== "gateway" && (
               <Grid.Row>
                 <Grid.Column width={16}>
                   <Segment>

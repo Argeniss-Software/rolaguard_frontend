@@ -67,7 +67,7 @@ class NewPolicyComponent extends React.Component {
           }
 
           const {errors, hasError} = this.checkValidations(policy);
-          this.setState({ policies, isLoading: false, errors, hasError, policy, selectedTemplate: cloneId ? parseInt(cloneId) : template.value });
+          this.setState({ policies, isLoading: false, errors, hasError, policy, selectedTemplate: cloneId ? parseInt(cloneId,10) : template.value });
         }
         ).catch(
           err => {
@@ -187,10 +187,12 @@ class NewPolicyComponent extends React.Component {
               }
               break;
             case 'Integer':
-              validType = !isNaN(field) && parseInt(field) === parseFloat(field);
+              validType = !isNaN(field) && parseInt(field,10) === parseFloat(field);
               if(validType) {
-                params[key] = parseInt(field);
+                params[key] = parseInt(field,10);
               }
+              break;
+            default: 
               break;
           }
           if(validType && maximum !== undefined) {
@@ -369,7 +371,7 @@ class NewPolicyComponent extends React.Component {
                           <Table.Cell colSpan='2'>
                             <Markup content={item.alertType.description}/>
                             { this.getParametersComponent(item, index, activeIndex, errors['items'][index]['parameters']) }
-                            { item.alertTypeCode == "LAF-009" && this.getKeysManager(index, activeIndex) }
+                            { item.alertTypeCode === "LAF-009" && this.getKeysManager(index, activeIndex) }
                           </Table.Cell>
                         </Table.Row>
                       </Table.Body>

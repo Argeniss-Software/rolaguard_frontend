@@ -61,8 +61,6 @@ class ChangeStatusDataCollectorModal extends Component {
             content={buttonContent}
           />
         }
-        closeOnEscape
-        closeOnDimmerClick
         closeIcon
         open={modalOpen}
         onClose={this.handleClose}
