@@ -45,6 +45,7 @@ const AlertUtil = {
     "packet_type_1": "Message 1 Type",
     "packet_type_2": "Message Type",
     "packet_id_1": "Message 1 ID",
+    "packets_lost": "Packets lost",
     "number_of_devices": "Device Count",
     "old_dev_eui": "Old DevEUI",
     "new_dev_eui": "New DevEUI",
