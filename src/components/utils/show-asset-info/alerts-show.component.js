@@ -16,7 +16,7 @@ import AlertUtil from "../../../util/alert-util";
 import DetailsAlertModal from "../../../components/details.alert.modal.component";
 import AssetIdComponent from "../asset-id.component";
 import DateFilterBar from "./date-filter-bar.component";
-import LoaderComponent from "../loader.component"
+import LoaderComponent from "../loader.component";
 
 const ShowAlerts = (props) => {
   const colorsMap = AlertUtil.getColorsMap();
@@ -29,7 +29,7 @@ const ShowAlerts = (props) => {
 
   const [alerts, setAlerts] = useState({});
   const [activePage, setActivePage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(7);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
@@ -49,7 +49,6 @@ const ShowAlerts = (props) => {
         type: type,
         id: id,
       },
-
       {
         page: activePage,
         size: perPage,
@@ -89,9 +88,9 @@ const ShowAlerts = (props) => {
   };
 
   const handleDateFilterChange = (date) => {
-    setDateFilter((prevDate) => {
-      return { ...prevDate, ...date };
-    });
+      setDateFilter((prevDate) => {
+        return { ...prevDate, ...date };
+      });
   };
 
   const toggleShowFilter = () => {
@@ -115,10 +114,8 @@ const ShowAlerts = (props) => {
           />
         </span>
       </h5>
-      {showFilters && (
-        <DateFilterBar onDateFilterChange={handleDateFilterChange} />
-      )}
-      <Segment attached stretched="true">
+      <DateFilterBar showFilters={showFilters} onDateFilterChange={handleDateFilterChange} />
+      <Segment attached stretched="true" style={{height: "100%"}}>
         {isLoading && <LoaderComponent loadingMessage="Loading alerts..." />}
         {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no alerts to show." />

@@ -7,7 +7,7 @@ import SignalStrengthReferences from "./SignalStrengthReferences";
  * @param {*} dBm
  * @return {SignalStrength}
  */
-const DBMToSignalStrength = (dBm) => {
+const DBMToSignalStrength = (dBm, showText=false) => {
   const references = SignalStrengthReferences();
   const defaultValueToReturn = references.find((e) => {
     return e.default === true;
@@ -21,7 +21,17 @@ const DBMToSignalStrength = (dBm) => {
         return r.text;
       }
     });
-    return (foundCriteria === undefined) ? defaultValueToReturn : foundCriteria.text
+    let returnValue =
+      foundCriteria === undefined ? defaultValueToReturn : foundCriteria.text;
+    if (showText) {
+      return returnValue === "DISCONNECTED"
+        ? "UNUSABLE"
+        : returnValue === "UNUSABLE"
+        ? "VERY WEAK"
+        : returnValue;
+    } else {
+      return returnValue
+    }
 };
 
 export default DBMToSignalStrength;

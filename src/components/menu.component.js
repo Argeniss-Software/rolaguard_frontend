@@ -112,6 +112,23 @@ class MenuComponent extends React.Component {
                   content="Events Manager"
                 />
 
+                {/* <Popup
+                  trigger={
+                    <a onClick={() => { this.selectedItem("events_log", "/dashboard/events_log") || resetUnread() }} className={this.state.activeItem === "events_log" ? "active" : ""}>
+                      <i className="fas fa-file-alt"></i>
+                      {this.props.sidebarCollapsed === false && (
+                        <span>
+                          Events Log {countUnread && <Label color='red' circular>{countUnread}</Label> }
+                        </span>
+                      )}
+                      
+                    </a>
+                  }
+                  style={popupStyle}
+                  content="Events log"
+                /> */}
+
+
                 <Popup
                   trigger={
                     <a onClick={() => { this.selectedItem("events_log", "/dashboard/events_log") || resetUnread() }} className={this.state.activeItem === "events_log" ? "active" : ""}>
