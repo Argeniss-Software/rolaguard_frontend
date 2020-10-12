@@ -1,6 +1,5 @@
 import * as React from "react";
-import { observer, inject } from "mobx-react";
-import { Popup, Icon } from "semantic-ui-react";
+import { observer } from "mobx-react";
 
 import MenuComponent from './menu.component';
 import UserComponent from "./utils/user.component";

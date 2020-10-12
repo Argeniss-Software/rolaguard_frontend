@@ -28,7 +28,7 @@ const ShowCurrentIssues = (props) => {
 
   const [currentIssues, setCurrentIssues] = useState({});
   const [activePage, setActivePage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);

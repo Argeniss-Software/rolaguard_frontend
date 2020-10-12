@@ -96,7 +96,7 @@ class DeleteNotificationModal extends Component {
                 <Table.Cell>DATE</Table.Cell>                
                 <Table.Cell>
                   {
-                    <Moment format={this.props.globalConfigStore.dateFormats .moment.dateTimeFormat}>
+                    <Moment format={this.props.globalConfigStore.dateFormats.moment.dateTimeFormat}>
                       {notification.createdAt}
                     </Moment>
                   }

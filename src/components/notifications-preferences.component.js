@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid, Divider } from "semantic-ui-react";
+import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid } from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
 

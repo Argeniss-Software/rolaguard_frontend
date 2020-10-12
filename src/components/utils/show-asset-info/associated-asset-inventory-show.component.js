@@ -26,15 +26,14 @@ const AssociatedAssetInventoryShow = (props) => {
   const [errorOnRequest, setErrorOnRequest] = useState(false)
   const [assets, setAssets] = useState({});
   const [activePage, setActivePage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
   const [selectedTagsForFilter, setSelectedTagsForFilter] = useState([]);
  
-  const { type, id } = props;
+  const { id } = props;
 
   const [criteria, setCriteria] = useState({
     type: "device",

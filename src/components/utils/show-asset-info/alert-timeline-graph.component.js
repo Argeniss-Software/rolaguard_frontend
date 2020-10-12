@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { MobXProviderContext } from "mobx-react";
 import "./alert-timeline-graph.component.css";
 import TimeLineGraph from "../../visualizations/timeline-graph.component";
-import LoaderComponent from "../loader.component";
 import _ from "lodash";
 import moment from "moment";
 import DetailsAlertModal from "../../details.alert.modal.component";
@@ -12,15 +11,14 @@ import * as sanitizeHtml from "sanitize-html";
 
 const AlertTimeLineGraph = (props) => {
   const { commonStore, globalConfigStore } = useContext(MobXProviderContext);
-  const [alerts, setAlerts] = useState({});
   const [items, setItems] = useState([]);
   const [errorOnRequest, setErrorOnRequest] = useState(false);
   const [perPage, setPerPage] = useState(20);
   const [isLoading, setIsLoading] = useState(true);
   const [totalItems, setTotalItems] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  // const [totalPages, setTotalPages] = useState(0);
   const [selectedItem, setSelectedItem] = useState({});
-  const [orderBy, setOrderBy] = useState(["created_at", "DESC"]);
+  const [orderBy] = useState(["created_at", "DESC"]);
   const [dateFilter, setDateFilter] = useState({
     from: null,
     to: null,
@@ -47,20 +45,17 @@ const AlertTimeLineGraph = (props) => {
     Promise.all([alertPromise])
       .then((response) => {
         if (response[0].status === HttpStatus.OK) {
-          setAlerts(response[0].data.alerts);
           setItems(getItems(response[0].data.alerts));
           setTotalItems(response[0].data.total_items);
-          setTotalPages(response[0].data.total_pages);
+          // setTotalPages(response[0].data.total_pages);
           setIsLoading(false);
           setErrorOnRequest(false);
         } else {
-          setAlerts([]);
           setItems([]);
           setErrorOnRequest(true);
         }
       })
       .catch(() => {
-        setAlerts([]);
         setItems([]);
         setErrorOnRequest(true);
       });

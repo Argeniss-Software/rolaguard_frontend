@@ -1,12 +1,10 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Popup, Input, Divider, Button, Modal, Form} from "semantic-ui-react";
+import { Input, Button, Modal} from "semantic-ui-react";
 
 import "./tag.creator.component.css";
 import Tag from "./tag.component";
 import Validation from "../../../util/validation";
-import LoaderComponent from "../../utils/loader.component";
-import { rgb } from "d3";
 
 const ColorPicker = (props) => {
     const [selected, setSelected] = React.useState(false);

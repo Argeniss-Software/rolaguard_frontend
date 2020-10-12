@@ -96,7 +96,7 @@ class UsersComponent extends React.Component {
             {header.name}
           </Table.HeaderCell>
         );
-      }
+      } else return("")
     });
 
     let usersList = users.map((user, index) => {
