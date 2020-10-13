@@ -10,7 +10,7 @@ import "./resource-usage-show.component.css";
 import statusImages from "../../../utils/wifi-signal-indicator/images";
 import AssociatedAsset from "../../../utils/show-asset-info/associated-asset.component";
 import { MobXProviderContext } from "mobx-react";
-
+import ShowMessageFrequency from "./show-message-frequency.component"
 /*
  * This component show the resource usage (network overview) info of a gateway or device
  *
@@ -50,17 +50,7 @@ const ResourceUsageInfo = (props) => {
                   props.asset.connected ? "" : "lightgray"
                 }`}
               >
-                {moment
-                  .duration(props.asset.activity_freq || 0, "seconds")
-                  .humanize()}{" "}
-                (
-                <NumberFormat
-                  value={(props.asset.activity_freq || 0).toFixed(1)}
-                  displayType={"text"}
-                  suffix={" s"}
-                  decimalScale="1"
-                />
-                )
+                <ShowMessageFrequency asset={props.asset} />
               </Table.Cell>
             </Table.Row>
 
@@ -174,15 +164,11 @@ const ResourceUsageInfo = (props) => {
         <Segment>
           <Statistic.Group widths="3" size="tiny">
             <Statistic color="yellow">
-              <Statistic.Value>
-                {props.asset.retransmissions}
-              </Statistic.Value>
+              <Statistic.Value>{props.asset.retransmissions}</Statistic.Value>
               <Statistic.Label>Retransmissions</Statistic.Label>
             </Statistic>
             <Statistic color="grey">
-              <Statistic.Value>
-                {props.asset.join_requests}
-              </Statistic.Value>
+              <Statistic.Value>{props.asset.join_requests}</Statistic.Value>
               <Statistic.Label>Join requests (JR)</Statistic.Label>
             </Statistic>
             <Statistic color="red">

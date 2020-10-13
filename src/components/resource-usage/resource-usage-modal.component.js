@@ -6,9 +6,9 @@ import AssetIdComponent from "../utils/asset-id.component";
 import PacketsGraph from "../utils/show-asset-info/resource-usage/packets-graph-component";
 import _ from 'lodash'
 import AssetLink from "../utils/asset-link.component"
-import NumberFormat from "react-number-format"
 import moment from 'moment'
 import ShowMessagesSummary from "./show-message-summary.component"
+import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component"
 
 const ModalResourceUsage = (props) => {
   
@@ -115,33 +115,7 @@ const ModalResourceUsage = (props) => {
                         props.asset.connected ? "" : "lightgray"
                       }`}
                     >
-                      {props.asset.activity_freq !== null && (
-                        <Popup
-                          trigger={
-                            <span>
-                              {moment
-                                .duration(
-                                  props.asset.activity_freq || 0,
-                                  "seconds"
-                                )
-                                .humanize()}
-                            </span>
-                          }
-                          position="bottom left"
-                        >
-                          <Popup.Header>Frequency of messages</Popup.Header>
-                          <Popup.Content>
-                            <NumberFormat
-                              value={(props.asset.activity_freq || 0).toFixed(
-                                1
-                              )}
-                              displayType={"text"}
-                              suffix={" s."}
-                              decimalScale="1"
-                            />
-                          </Popup.Content>
-                        </Popup>
-                      )}
+                      <ShowMessageFrequency asset={props.asset} />
                     </Table.Cell>
                   </Table.Body>
                 </Table>
