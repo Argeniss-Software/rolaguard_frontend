@@ -5,6 +5,7 @@ import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ShowMessagesSummary from "./show-message-summary.component";
+import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component"
 import EmptyComponent from "../utils/empty.component";
 import WifiIndicator from "react-wifi-indicator";
 import NumberFormat from "react-number-format";
@@ -65,7 +66,7 @@ const ResourceUsageList = (props) => {
                   </span>
                 }
                 basic
-              >
+              >                
                 <Popup.Header>Signal strength references</Popup.Header>
                 <Popup.Content>
                   <SignalStrengthHelp></SignalStrengthHelp>
@@ -169,28 +170,7 @@ const ResourceUsageList = (props) => {
                         item.connected ? "" : "lightgray"
                       }`}
                     >
-                      {item.activity_freq !== null && (
-                        <Popup
-                          trigger={
-                            <span>
-                              {moment
-                                .duration(item.activity_freq || 0, "seconds")
-                                .humanize()}
-                            </span>
-                          }
-                          position="bottom left"
-                        >
-                          <Popup.Header>Frequency of messages</Popup.Header>
-                          <Popup.Content>
-                            <NumberFormat
-                              value={(item.activity_freq || 0).toFixed(1)}
-                              displayType={"text"}
-                              suffix={" s."}
-                              decimalScale="1"
-                            />
-                          </Popup.Content>
-                        </Popup>
-                      )}
+                      <ShowMessageFrequency asset={item}/>
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => showModal({ item: item, index: index })}
@@ -218,9 +198,10 @@ const ResourceUsageList = (props) => {
                                     }}
                                   />
                                 }
-                                content={
-                                  DBMToSignalStrength(item.max_rssi, true)
-                                }
+                                content={DBMToSignalStrength(
+                                  item.max_rssi,
+                                  true
+                                )}
                               ></Popup>
                             )}
                           </Grid.Column>
