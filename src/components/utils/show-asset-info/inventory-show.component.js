@@ -6,8 +6,9 @@ import ShowDeviceState from "../show-device-state.component";
 import ShowDeviceIcon from "../show-device-icon.component";
 import AssetIdComponent from "../asset-id.component";
 import Geolocation from "../geolocation/geolocation.component";
-import Tag from "../tags/tag.component"
+import Tag from "../tags/tag.component";
 import ShowCurrentIssues from "./current-issues-show.component";
+import NotAvailableComponent from "../not-available-value/not-available-value.component";
 
 const ShowInventory = (props) => {
   const [tags] = React.useState(
@@ -42,7 +43,13 @@ const ShowInventory = (props) => {
               showAsLink={false}
             />
             <Popup
-              trigger={(props.inventory.dev_addr && <span style={{marginLeft: "10px"}}>| {_.toUpper(props.inventory.dev_addr)}</span>)}
+              trigger={
+                props.inventory.dev_addr && (
+                  <span style={{ marginLeft: "10px" }}>
+                    | {_.toUpper(props.inventory.dev_addr)}
+                  </span>
+                )
+              }
               content="Device Address"
               size="small"
             />
@@ -61,7 +68,11 @@ const ShowInventory = (props) => {
                   <Table.Row>
                     <Table.Cell collapsing>NAME:</Table.Cell>
                     <Table.Cell>
-                      <strong>{props.inventory.name}</strong>
+                      {props.inventory.name ? (
+                        <strong>{props.inventory.name}</strong>
+                      ) : (
+                        <NotAvailableComponent />
+                      )}
                     </Table.Cell>
                   </Table.Row>
                   <Table.Row>
@@ -77,36 +88,58 @@ const ShowInventory = (props) => {
                   <Table.Row>
                     <Table.Cell collapsing>VENDOR:</Table.Cell>
                     <Table.Cell>
-                      <strong>{props.inventory.vendor}</strong>
+                      {props.inventory.vendor ? (
+                        <strong>{props.inventory.vendor}</strong>
+                      ) : (
+                        <NotAvailableComponent />
+                      )}
                     </Table.Cell>
                   </Table.Row>
 
                   <Table.Row>
                     <Table.Cell collapsing>APPLICATION:</Table.Cell>
                     <Table.Cell>
-                      <strong>
-                        {normalizedType === "device"
-                          ? props.inventory.app_name
-                          : "N/A"}
-                      </strong>
+                      {props.inventory.name ? (
+                        <strong>{props.inventory.name}</strong>
+                      ) : (
+                        <NotAvailableComponent />
+                      )}
+
+                      {normalizedType === "device" ? (
+                        props.inventory.app_name ? (
+                          <strong>{props.inventory.app_name}</strong>
+                        ) : (
+                          <NotAvailableComponent />
+                        )
+                      ) : (
+                        "N/A"
+                      )}
                     </Table.Cell>
                   </Table.Row>
 
                   <Table.Row>
                     <Table.Cell collapsing>JOIN EUI/APP EUI:</Table.Cell>
                     <Table.Cell>
-                      <strong>
-                        {normalizedType === "device"
-                          ? _.toUpper(props.inventory.join_eui)
-                          : "N/A"}
-                      </strong>
+                      {normalizedType === "device" ? (
+                        props.inventory.join_eui ? (
+                          <strong>{_.toUpper(props.inventory.join_eui)}</strong>
+                        ) : (
+                          <NotAvailableComponent />
+                        )
+                      ) : (
+                        "N/A"
+                      )}
                     </Table.Cell>
                   </Table.Row>
 
                   <Table.Row>
                     <Table.Cell collapsing>DATA SOURCE:</Table.Cell>
                     <Table.Cell>
-                      <strong>{props.inventory.data_collector}</strong>
+                      {props.inventory.data_collector ? (
+                        <strong>{props.inventory.data_collector}</strong>
+                      ) : (
+                        <NotAvailableComponent />
+                      )}
                     </Table.Cell>
                   </Table.Row>
 

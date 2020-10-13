@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "semantic-ui-react";
 import _ from "lodash";
-
+import NotAvailableCoponent from "../not-available-value/not-available-value.component"
 
 const Prefix = (props) => {
   return (`${props.prefix ? props.prefix : ""}`);
@@ -33,7 +33,7 @@ const ShowValue = (props) => {
      );
    }
 
-   return (<span></span>);
+   return (<NotAvailableCoponent/>);
 };
 
 const PacketViewer = (props) => {
