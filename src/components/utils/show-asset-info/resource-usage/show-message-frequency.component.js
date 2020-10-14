@@ -33,9 +33,8 @@ const ShowMessageFrequency = (props) => {
               <Message icon size="tiny" wide>
                 <Icon color="yellow" name="warning circle" type="icon" />
                 <Message.Content>
-                  <Message.Header>Irregular asset</Message.Header>
-                  Take note that this asset does not communicate on regular
-                  intervals
+                  <Message.Header>Irregular transmission device</Message.Header>
+                  Take note that this device has irregular transmission frequency
                 </Message.Content>
               </Message>
             )}
