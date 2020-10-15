@@ -9,6 +9,7 @@ import AssetLink from "../utils/asset-link.component"
 import moment from 'moment'
 import ShowMessagesSummary from "./show-message-summary.component"
 import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component"
+import ShowRequestsStatistics from "./show-requests-statistics.component"
 
 const ModalResourceUsage = (props) => {
   
@@ -17,12 +18,16 @@ const ModalResourceUsage = (props) => {
       props.onClose()
     }
   }
+  
+  const normalizedType = props.type && props.type.toLowerCase().trim();
+  const isDevice = normalizedType === "device";
 
   return (
     <Modal
       closeOnEscape
       closeIcon
       open={props.open}
+      size="large"
       onClose={() => closeModal()}
     >
       <Modal.Header>
@@ -61,13 +66,8 @@ const ModalResourceUsage = (props) => {
         <Modal.Description>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={16}>
-                <Table
-                  className="animated fadeIn"
-                  celled
-                  compact="very"
-                  color="black"
-                >
+              <Grid.Column width={isDevice ? 12 : 16}>
+                <Table celled compact color="black" style={{ height: "100%" }}>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>DEV ADDR</Table.HeaderCell>
@@ -119,6 +119,18 @@ const ModalResourceUsage = (props) => {
                     </Table.Cell>
                   </Table.Body>
                 </Table>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                {isDevice && (
+                  <Popup
+                    trigger={
+                      <div>
+                        <ShowRequestsStatistics asset={props.asset} />
+                      </div>
+                    }
+                    content="Statistics of last 24 hours"
+                  />
+                )}
               </Grid.Column>
             </Grid.Row>
             {props.asset.type !== "gateway" && (
