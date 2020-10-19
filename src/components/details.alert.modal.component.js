@@ -167,17 +167,6 @@ class DetailsAlertModal extends Component {
               <AssetLink id={idAsset} type={typeAsset} title="VIEW ASSET 360" />
               <Icon name="linkify" />
             </Button>
-
-            {this.props.onNavigate && (
-              <Button
-                loading={this.props.loading}
-                floated={"left"}
-                disabled={isLast || this.props.loading}
-                onClick={() => this.handleNext()}
-                content="Previous"
-              />
-            )}
-
             {this.props.onNavigate && (
               <Button
                 loading={this.props.loading}
@@ -185,6 +174,15 @@ class DetailsAlertModal extends Component {
                 disabled={isFirst || this.props.loading}
                 onClick={() => this.handlePrev()}
                 content="Next"
+              />
+            )}
+            {this.props.onNavigate && (
+              <Button
+                loading={this.props.loading}
+                floated={"left"}
+                disabled={isLast || this.props.loading}
+                onClick={() => this.handleNext()}
+                content="Previous"
               />
             )}
           </div>
