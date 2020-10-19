@@ -272,18 +272,18 @@ class InventoryDetailsModal extends Component {
               <Button
                 loading={this.state.isLoading}
                 floated={"left"}
-                disabled={isLast || this.state.isLoading}
-                onClick={() => this.handleNext()}
-                content="Next"
+                disabled={isFirst || this.state.isLoading}
+                onClick={() => this.handlePrev()}
+                content="Previous"
               />
             )}
             {this.props.onNavigate && (
               <Button
                 loading={this.state.isLoading}
                 floated={"left"}
-                disabled={isFirst || this.state.isLoading}
-                onClick={() => this.handlePrev()}
-                content="Previous"
+                disabled={isLast || this.state.isLoading}
+                onClick={() => this.handleNext()}
+                content="Next"
               />
             )}
           </div>
