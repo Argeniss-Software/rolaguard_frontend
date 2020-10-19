@@ -22,13 +22,37 @@ const Tag = (props) => {
 
     const { name, color, textColor, onClick, removable, selectable} = props;
     return (
-        <div
-            className={selectable? "container selectable" : "container"}
-            style={{backgroundColor: color, fontSize:props.fontSize, opacity:props.opacity}}
-            onClick={onClick}
+      <div
+        className={selectable ? "container selectable" : "container"}
+        style={{
+          backgroundColor: color,
+          fontSize: props.fontSize,
+          opacity: props.opacity,
+        }}
+        onClick={onClick}
+      >
+        <span
+          className="tag-text"
+          style={{
+            color: textColor,
+            paddingLeft: "0.3em",
+            paddingRight: "0.3em",
+            paddingTop: "0.15em",
+            paddingBottom: "0.2em",
+          }}
         >
-            <span className="tag-text" style={{color: textColor}}>{name} {removable?<i style={{cursor: "pointer"}} onClick={props.onRemoveClick} className="fas fa-times-circle fa-sm"></i>:""}</span>
-        </div>
+          {name}{" "}
+          {removable ? (
+            <i
+              style={{ cursor: "pointer" }}
+              onClick={props.onRemoveClick}
+              className="fas fa-times-circle fa-sm"
+            ></i>
+          ) : (
+            ""
+          )}
+        </span>
+      </div>
     );
 }
 
