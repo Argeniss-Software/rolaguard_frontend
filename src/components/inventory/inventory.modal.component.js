@@ -268,17 +268,6 @@ class InventoryDetailsModal extends Component {
               />
               <Icon name="linkify" />
             </Button>
-
-            {this.props.onNavigate && (
-              <Button
-                loading={this.state.isLoading}
-                floated={"left"}
-                disabled={isFirst || this.state.isLoading}
-                onClick={() => this.handlePrev()}
-                content="Previous"
-              />
-            )}
-
             {this.props.onNavigate && (
               <Button
                 loading={this.state.isLoading}
@@ -286,6 +275,15 @@ class InventoryDetailsModal extends Component {
                 disabled={isLast || this.state.isLoading}
                 onClick={() => this.handleNext()}
                 content="Next"
+              />
+            )}
+            {this.props.onNavigate && (
+              <Button
+                loading={this.state.isLoading}
+                floated={"left"}
+                disabled={isFirst || this.state.isLoading}
+                onClick={() => this.handlePrev()}
+                content="Previous"
               />
             )}
           </div>

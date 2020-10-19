@@ -886,7 +886,7 @@ class AlarmReviewComponent extends React.Component {
                             DATE
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            DEVICE ID/ADDRESS
+                            DevEUI/ADDRESS
                           </Table.HeaderCell>
                           <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>

@@ -50,11 +50,6 @@ class DetailsAlertModal extends Component {
     this.setState({ activeIndex: newIndex })
   }
 
-  
-  getPArameterValue(parameters, parameterName) {
-    return parameters[parameterName];
-  }
-
   render() {
     const { modalOpen, activeIndex } = this.state;
     const { alert, alert_type, isFirst, isLast } = this.props.alert
@@ -71,7 +66,6 @@ class DetailsAlertModal extends Component {
       ? this.props.alert.alert.device_id
       : this.props.alert.alert.gateway_id;
     
-
     /*let message = alert_type.message;*/
     let alertMessage = alert_type.message.match(/\{.+?\}/g);
     /*message = `${message}`; 
@@ -84,10 +78,13 @@ class DetailsAlertModal extends Component {
     );*/
 
     let messageTable = []
-    for (let i = 0; i < alertMessage.length - 1; i++) {
+    for (let i = 0; i < alertMessage.length; i++) {
       let messageParameter = alertMessage[i].replace(/[{()}]/g, '');
-      let value = this.getPArameterValue(alert.parameters, messageParameter);
+      let value = alert.parameters[messageParameter];
       const parameterToUpper = AlertUtil.parameters.toUpper.includes(messageParameter);
+      const parameterToToBrowserTime = AlertUtil.parameters.convertToBrowserTime.includes(
+        messageParameter
+      );
       const header = AlertUtil.getParameterHeader(messageParameter);
 
       const numberShouldFix = !AlertUtil.parameters.shouldNotFix.includes(messageParameter);
@@ -99,11 +96,33 @@ class DetailsAlertModal extends Component {
       }
 
       messageTable.push(
-        <Table.Row key={messageParameter}>
-          <Table.Cell width={3}
+        <Table.Row key={messageParameter} className={messageParameter}>
+          <Table.Cell
+            width={3}
             className="technical-details-table-row-left"
-            style={{borderTop: "1px solid lightgray !important" }}><i>{header}</i></Table.Cell>
-          <Table.Cell width={3} className={`technical-details-table-row-right ${(parameterToUpper && value) ? "upper" : ""}`}>{value ? <b>{value}</b> : <NotAvailableCoponent/>}</Table.Cell>
+            style={{ borderTop: "1px solid lightgray !important" }}
+          >
+            <i>{header}</i>
+          </Table.Cell>
+          <Table.Cell
+            width={3}
+            className={`technical-details-table-row-right ${
+              parameterToUpper && value ? "upper" : ""
+            }`}
+          >
+            {value ? (
+              <b>
+                {parameterToToBrowserTime
+                  ? moment(value).format(
+                      this.props.globalConfigStore.dateFormats.moment
+                        .dateTimeFormat
+                    )
+                  : value}
+              </b>
+            ) : (
+              <NotAvailableCoponent />
+            )}
+          </Table.Cell>
         </Table.Row>
       );
     }
@@ -180,8 +199,9 @@ class DetailsAlertModal extends Component {
             </div>
 
             <Accordion>
+              {/* =========================== RECOMMENDED ACTIONS =========================== */}
               {alert_type.recommendedAction && (
-                <div>
+                <React.Fragment>
                   <Accordion.Title
                     active={activeIndex === recommendedActionIndex}
                     index={recommendedActionIndex}
@@ -195,8 +215,9 @@ class DetailsAlertModal extends Component {
                   >
                     <Markup content={alert_type.recommendedAction} />
                   </Accordion.Content>
-                </div>
+                </React.Fragment>
               )}
+              {/* =========================== DETAILS =========================== */}
               <Accordion.Title
                 active={activeIndex === technicalDescriptionIndex}
                 index={technicalDescriptionIndex}
@@ -219,8 +240,8 @@ class DetailsAlertModal extends Component {
                 </div>
               </Accordion.Content>
 
-              { _.hasIn(alert, "parameters.packet_data") && 
-
+              {/* =========================== MESSAGES INVOLVED =========================== */}
+              {_.hasIn(alert, "parameters.packet_data") && (
                 <React.Fragment>
                   <Accordion.Title
                     active={activeIndex === packetsIndex}
@@ -230,13 +251,14 @@ class DetailsAlertModal extends Component {
                     <Icon name="dropdown" />
                     <strong>Messages Involved</strong>
                   </Accordion.Title>
-                  <Accordion.Content
-                    active={activeIndex === packetsIndex}
-                  >
-                    <PacketViewer packetData={alert.parameters.packet_data} previousPacketData={alert.parameters.prev_packet_data}></PacketViewer>
+                  <Accordion.Content active={activeIndex === packetsIndex}>
+                    <PacketViewer
+                      packetData={alert.parameters.packet_data}
+                      previousPacketData={alert.parameters.prev_packet_data}
+                    ></PacketViewer>
                   </Accordion.Content>
                 </React.Fragment>
-              }
+              )}
 
               {resolution && (
                 <div>

@@ -477,7 +477,7 @@ class QuarantineComponent extends React.Component {
                             LAST CHECKED
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            DEVICE ID/ADDRESS
+                            DevEUI/ADDRESS
                           </Table.HeaderCell>
                           <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
@@ -493,9 +493,7 @@ class QuarantineComponent extends React.Component {
                               be set for each asset in the Inventory section.
                             </Popup>
                           </Table.HeaderCell>
-                          <Table.HeaderCell>
-                            GATEWAY
-                          </Table.HeaderCell>
+                          <Table.HeaderCell>GATEWAY</Table.HeaderCell>
                           <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
                           {/*<Table.HeaderCell collapsing>
                             ACTIONS

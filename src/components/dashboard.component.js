@@ -654,7 +654,7 @@ class DashboardComponent extends React.Component {
                                 DATE
                               </Table.HeaderCell>
                               <Table.HeaderCell collapsing>
-                                ID/ADDRESS
+                                DevEUI/ADDRESS
                               </Table.HeaderCell>
                               <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                               <Table.HeaderCell collapsing>
