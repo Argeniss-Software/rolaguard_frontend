@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid, Divider } from "semantic-ui-react";
+import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid } from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
 
@@ -200,9 +200,9 @@ class NotificationsPreferencesComponent extends React.Component {
                     Triggers
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 1}>
-                    <Grid  celled='internally'>
+                    <Grid  celled='internally' stackable columns={2}>
                       <Grid.Row>
-                        <Grid.Column width={4}>
+                        <Grid.Column>
                           <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
                             <Table.Header>
                               <Table.Row>
@@ -230,7 +230,7 @@ class NotificationsPreferencesComponent extends React.Component {
                             </Table.Body>
                           </Table>
                       </Grid.Column>
-                      <Grid.Column width={4}>
+                      <Grid.Column>
                           <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
                             <Table.Header>
                               <Table.Row>

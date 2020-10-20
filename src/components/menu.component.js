@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer, inject } from "mobx-react"
 import Validation from "../util/validation";
-import { Popup, Label } from "semantic-ui-react";
+import { Popup } from "semantic-ui-react";
 
 @inject("usersStore")
 @observer
@@ -28,8 +28,6 @@ class MenuComponent extends React.Component {
     }
 
     render() {
-        const { countUnread, resetUnread } = this.props;
-
         const isAdmin = Validation.isUserAdmin(this.props.usersStore.currentUser);
 
         const popupStyle = {

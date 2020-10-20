@@ -5,8 +5,7 @@ import "./geolocation.component.css";
 import "leaflet/dist/leaflet.css";
 import _ from "lodash";
 import mark from "../../../img/map-marker.png";
-import {Segment, Dimmer, Loader} from "semantic-ui-react"
-import { withRouter } from "react-router-dom";
+import { Dimmer } from "semantic-ui-react"
 
 const { Map, TileLayer, Marker, Circle } = ReactLeaflet;
 

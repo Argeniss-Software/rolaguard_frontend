@@ -4,7 +4,6 @@ import { Popup, Input, Divider, Button} from "semantic-ui-react";
 
 import "./tag.selector.component.css";
 import Tag from "./tag.component";
-import LoaderComponent from "../../utils/loader.component";
 import TagsCreatorModal from "./tag.creator.component";
 
 
@@ -15,8 +14,6 @@ const TagSelector = (props) => {
     const [open, setOpen] = React.useState(false);
     const [tags, setTags] = React.useState([]);
     const [tagsFiltered, setTagsFiltered] = React.useState([])
-    const [tagsAssigned, setTagsAssigned] = React.useState();
-    const [searchCriteria, setSearchCriteria] = React.useState("");
     const [loading, setLoading] = React.useState(true);
     const [showTagCreatorModal, setShowTagCreatorModal] = React.useState(false);
 

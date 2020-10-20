@@ -14,15 +14,11 @@ import AssetLink from "./utils/asset-link.component"
 class AlertListComponent extends React.Component {
   colorsMap = AlertUtil.getColorsMap();
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const {
       alerts,
       alert_types,
-      handleAlertResolution,
+      // handleAlertResolution,
       showAlertDetails,
     } = this.props;
 

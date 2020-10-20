@@ -18,7 +18,7 @@ const SetImportanceModal = (props) => {
   */
 
   const { inventoryAssetsStore } = React.useContext(MobXProviderContext);
-  const [open, setOpen] = React.useState(!!props.open);
+  const [open] = React.useState(!!props.open);
   const [importanceSelected, setImportance] = React.useState(false);
   const [assigning, setAssigning] = React.useState(false);
   const [sendDisabled, setSendDisabled] = React.useState(true);

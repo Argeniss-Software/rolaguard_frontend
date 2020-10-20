@@ -9,13 +9,7 @@
 }
 
 @media only screen and (max-width: 1338px) {
-    #datepicker-container {
-        width: 100% !important;
-    }
-    #range-container {
-        margin-left: auto;
-        margin-right: auto;
-    }
+ 
 }
 
 .graphs-container {
@@ -150,23 +144,7 @@ div.tooltip {
     min-height: 100px;
 }
 
-.react-datepicker-wrapper {
-    margin-left: 8px !important;
-    width: 100%;
-}
 
-.react-datepicker__input-container {
-    min-width: unset;
-    width: 100%;
-}
-
-.react-datepicker__input-container input {
-    min-width: unset !important;
-    background-color: transparent;
-    font-size: 1em !important;
-    width: 100%;
-    padding-left: 3px !important;
-}
 
 th {
     background: transparent !important;

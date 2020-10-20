@@ -100,9 +100,7 @@ class InventoryReviewComponent extends React.Component {
       tagsPromise,
       importancesPromise,
     ]).then((responses) => {
-      {
-        /* Filted data by count (delete entries with count=0, if any) */
-      }
+      /* Filted data by count (delete entries with count=0, if any) */
       const filterByCount = (data) => data.count !== 0;
 
       const assetsList = responses[0].data.assets;
@@ -113,9 +111,7 @@ class InventoryReviewComponent extends React.Component {
       const tags = responses[3].data.filter(filterByCount);
       const importances = responses[4].data.filter(filterByCount);
 
-      {
-        /* Map API data into Piechart-ready data */
-      }
+      /* Map API data into Piechart-ready data */
       const mapper = (item, index) => {
         return {
           code: item.id,
@@ -148,9 +144,7 @@ class InventoryReviewComponent extends React.Component {
       };
       const importancesPieData = importances.map(mapperImportances);
 
-      {
-        /* Apply colormaps */
-      }
+      /* Apply colormaps */
       const applyColormap = (item, index) =>
         (item.color = ColorUtil.getByIndex(index));
       const applyColorMapImportances = (item, index) =>
@@ -160,9 +154,7 @@ class InventoryReviewComponent extends React.Component {
       vendorsPieData.forEach(applyColormap);
       importancesPieData.forEach(applyColorMapImportances);
 
-      {
-        /* set selected field from criteria */
-      }
+      /* set selected field from criteria */
 
       dataCollectorsPieData.forEach(
         (item) => (item.selected = criteria.dataCollectors.includes(item.code))
@@ -251,7 +243,7 @@ class InventoryReviewComponent extends React.Component {
     const foundItem = array.find((item) => item.code === selectedItem.code);
     foundItem.selected = !foundItem.selected;
 
-    const { criteria, pageSize } = this.state;
+    const { criteria } = this.state;
 
     switch (type) {
       case "byVendorsViz":
@@ -282,6 +274,8 @@ class InventoryReviewComponent extends React.Component {
         criteria.importances = array
           .filter((i) => i.selected)
           .map((i) => i.code);
+        break;
+      default:
         break;
     }
 
@@ -338,7 +332,7 @@ class InventoryReviewComponent extends React.Component {
   };
 
   toggleDeviceType(type) {
-    const { criteria, pageSize } = this.state;
+    const { criteria } = this.state;
 
     /* null stands for both types */
     const order = [null, "gateway", "device"];
@@ -372,7 +366,7 @@ class InventoryReviewComponent extends React.Component {
   }
 
   toggleSingleSelect(item, index, event) {
-    const { selectAll, assets } = this.state;
+    const { assets } = this.state;
     assets[index].selected = !assets[index].selected;
 
     this.setState({
@@ -704,20 +698,15 @@ class InventoryReviewComponent extends React.Component {
       isLoading,
       showFilters,
       assets,
-      assetsCount,
       byVendorsViz,
-      byGatewaysViz,
       activePage,
       byDataCollectorsViz,
       byTagsViz,
       byImportancesViz,
       pagesCount,
-      criteria,
       selectedAsset,
-      selectAll,
       assignTags,
       setImportance,
-      firstLoad,
     } = this.state;
 
     return (

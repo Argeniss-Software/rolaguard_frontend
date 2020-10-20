@@ -1,7 +1,7 @@
-import { observable, action, computed } from "mobx";
+import { observable, action } from "mobx";
 import AuthStore from "./auth.store";
 import API from "../util/api";
-
+import moment from "moment"
 // TODO This file should be named alerts.store.js instead
 class AlarmStore {
   @observable alarms = [];
@@ -24,7 +24,6 @@ class AlarmStore {
   @action
   getAlertsCount( criteria ) {
     const { groupBy, from, to, dataCollectors } = criteria
-
     return API.get(`alerts/count`, {
       headers: { Authorization: "Bearer " + AuthStore.access_token },
       params: {
@@ -51,7 +50,6 @@ class AlarmStore {
   @action
   getAlertsTypeCount(from, to) {
     let query = 'alert_types/count';
-
     return API.get(query, { 
       headers: { Authorization: "Bearer " + AuthStore.access_token }, 
       params: {

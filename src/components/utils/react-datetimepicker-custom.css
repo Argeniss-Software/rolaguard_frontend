@@ -1,0 +1,39 @@
+.react-datepicker__input-container>input {
+    border: 0;
+    border-bottom: 1px solid rgba(55, 185, 220, .8);
+    height: 30px;
+    padding: 0 10px;
+    color: rgba(0, 0, 0, .6);
+    font-size: 1.2em;
+    min-width: 225px;
+}
+
+.react-datepicker__close-icon {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    outline: 0;
+    padding: 0;
+    vertical-align: middle;
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    top: 25%;
+    right: 7px;
+}
+
+.react-datepicker__input-container {
+    position: relative;
+    display: inline-block;
+}
+
+.react-datepicker__input-container {
+    min-width: unset;
+    width: 100%;
+}
+.wrapper-datetimpicker{
+    display: flex;
+}
+i.fas-datetimepicker {
+    margin-top: 0.5em;
+}

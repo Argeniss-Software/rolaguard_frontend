@@ -1,12 +1,10 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Popup, Input, Divider, Button, Modal, Form} from "semantic-ui-react";
+import { Input, Button, Modal} from "semantic-ui-react";
 
 import "./tag.creator.component.css";
 import Tag from "./tag.component";
 import Validation from "../../../util/validation";
-import LoaderComponent from "../../utils/loader.component";
-import { rgb } from "d3";
 
 const ColorPicker = (props) => {
     const [selected, setSelected] = React.useState(false);
@@ -64,7 +62,18 @@ const TagsCreatorModal = (props) => {
         "#5d9cec",
         "#fad732",
         "#ff902b",
-        "#f05050"
+        "#f05050",
+        "#B03060",
+        "#FE9A76",
+        "#FFD700",
+        "#32CD32",
+        "#016936",
+        "#008080",
+        "#0E6EB8",
+        "#EE82EE",
+        "#B413EC",
+        "#FF1493",
+        "#A52A2A",
     ];
     return(
         <Modal

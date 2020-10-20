@@ -1,14 +1,15 @@
-import React, {useState, useEffect} from "react";
-import { Button, Modal, Icon, Grid, Table, Popup, Segment, Divider} from "semantic-ui-react";
+import React from "react";
+import { Button, Modal, Icon, Grid, Table, Popup, Segment } from "semantic-ui-react";
 import ShowDeviceState from "../utils/show-device-state.component"
 import ShowDeviceIcon  from "../utils/show-device-icon.component";
 import AssetIdComponent from "../utils/asset-id.component";
 import PacketsGraph from "../utils/show-asset-info/resource-usage/packets-graph-component";
 import _ from 'lodash'
 import AssetLink from "../utils/asset-link.component"
-import NumberFormat from "react-number-format"
 import moment from 'moment'
 import ShowMessagesSummary from "./show-message-summary.component"
+import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component"
+import ShowRequestsStatistics from "./show-requests-statistics.component"
 
 const ModalResourceUsage = (props) => {
   
@@ -17,12 +18,16 @@ const ModalResourceUsage = (props) => {
       props.onClose()
     }
   }
+  
+  const normalizedType = props.type && props.type.toLowerCase().trim();
+  const isDevice = normalizedType === "device";
 
   return (
     <Modal
       closeOnEscape
       closeIcon
       open={props.open}
+      size="large"
       onClose={() => closeModal()}
     >
       <Modal.Header>
@@ -61,13 +66,8 @@ const ModalResourceUsage = (props) => {
         <Modal.Description>
           <Grid>
             <Grid.Row>
-              <Grid.Column width={16}>
-                <Table
-                  className="animated fadeIn"
-                  celled
-                  compact="very"
-                  color="black"
-                >
+              <Grid.Column width={isDevice ? 12 : 16}>
+                <Table celled compact color="black" style={{ height: "100%" }}>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>DEV ADDR</Table.HeaderCell>
@@ -115,39 +115,25 @@ const ModalResourceUsage = (props) => {
                         props.asset.connected ? "" : "lightgray"
                       }`}
                     >
-                      {props.asset.activity_freq !== null && (
-                        <Popup
-                          trigger={
-                            <span>
-                              {moment
-                                .duration(
-                                  props.asset.activity_freq || 0,
-                                  "seconds"
-                                )
-                                .humanize()}
-                            </span>
-                          }
-                          position="bottom left"
-                        >
-                          <Popup.Header>Frequency of messages</Popup.Header>
-                          <Popup.Content>
-                            <NumberFormat
-                              value={(props.asset.activity_freq || 0).toFixed(
-                                1
-                              )}
-                              displayType={"text"}
-                              suffix={" s."}
-                              decimalScale="1"
-                            />
-                          </Popup.Content>
-                        </Popup>
-                      )}
+                      <ShowMessageFrequency asset={props.asset} />
                     </Table.Cell>
                   </Table.Body>
                 </Table>
               </Grid.Column>
+              <Grid.Column width={4}>
+                {isDevice && (
+                  <Popup
+                    trigger={
+                      <div>
+                        <ShowRequestsStatistics asset={props.asset} />
+                      </div>
+                    }
+                    content="Statistics of last 24 hours"
+                  />
+                )}
+              </Grid.Column>
             </Grid.Row>
-            {props.asset.type != "gateway" && (
+            {props.asset.type !== "gateway" && (
               <Grid.Row>
                 <Grid.Column width={16}>
                   <Segment>

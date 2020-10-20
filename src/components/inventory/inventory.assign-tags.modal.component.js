@@ -21,7 +21,7 @@ const AssignTagsModal = (props) => {
   */
 
  const { tagsStore } = React.useContext(MobXProviderContext);
- const [open, setOpen] = React.useState(!!props.open);
+ const [open] = React.useState(!!props.open);
  const [tagsToAssign, setTagsToAssign] = React.useState([]);
  const [assigning, setAssigning] = React.useState(false);
  const [sendDisabled, setSendDisabled] = React.useState(true);

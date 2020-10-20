@@ -30,7 +30,7 @@ const GatewayCirclePackGraph = (props) => {
 
   const deleteItemSelected = (item) => {    
     setSelectedLabels((prevSelected) =>
-      prevSelected.filter((e) => e.code != item.code)
+      prevSelected.filter((e) => e.code !== item.code)
     );
   };
   

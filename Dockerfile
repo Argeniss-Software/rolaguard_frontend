@@ -6,8 +6,8 @@ WORKDIR /frontend_app
 # Copy the current directory contents into the container at /frontend_app
 COPY . /frontend_app
 
-RUN npm install -dd
-RUN npm run build
+RUN yarn
+RUN yarn build
 
 FROM nginx:1.16-alpine
 

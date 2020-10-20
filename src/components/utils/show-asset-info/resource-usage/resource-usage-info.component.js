@@ -1,16 +1,24 @@
 import React, { useState } from "react";
-import { Grid, Table, Divider, Popup, Statistic, Segment, Card } from "semantic-ui-react";
+import {
+  Grid,
+  Table,
+  Divider,
+  Popup,
+  Statistic,
+  Segment,
+} from "semantic-ui-react";
 import _ from "lodash";
 import NumberFormat from "react-number-format";
 import WifiIndicator from "react-wifi-indicator";
 import moment from "moment";
 import DBMToSignalStrength from "../../wifi-signal-indicator/DBMToSignalStrength";
+import ShowRequestsStatistics from "../../../resource-usage/show-requests-statistics.component";
 import ShowPacketsStatistics from "../../../resource-usage/show-packets-statistics.component";
 import "./resource-usage-show.component.css";
 import statusImages from "../../../utils/wifi-signal-indicator/images";
 import AssociatedAsset from "../../../utils/show-asset-info/associated-asset.component";
 import { MobXProviderContext } from "mobx-react";
-
+import ShowMessageFrequency from "./show-message-frequency.component";
 /*
  * This component show the resource usage (network overview) info of a gateway or device
  *
@@ -50,17 +58,7 @@ const ResourceUsageInfo = (props) => {
                   props.asset.connected ? "" : "lightgray"
                 }`}
               >
-                {moment
-                  .duration(props.asset.activity_freq || 0, "seconds")
-                  .humanize()}{" "}
-                (
-                <NumberFormat
-                  value={(props.asset.activity_freq || 0).toFixed(1)}
-                  displayType={"text"}
-                  suffix={" s"}
-                  decimalScale="1"
-                />
-                )
+                <ShowMessageFrequency asset={props.asset} />
               </Table.Cell>
             </Table.Row>
 
@@ -170,30 +168,7 @@ const ResourceUsageInfo = (props) => {
           type={props.asset.type}
         ></ShowPacketsStatistics>
       </Grid.Row>
-      {isDevice && (
-        <Segment>
-          <Statistic.Group widths="3" size="tiny">
-            <Statistic color="yellow">
-              <Statistic.Value>
-                {props.asset.retransmissions}
-              </Statistic.Value>
-              <Statistic.Label>Retransmissions</Statistic.Label>
-            </Statistic>
-            <Statistic color="grey">
-              <Statistic.Value>
-                {props.asset.join_requests}
-              </Statistic.Value>
-              <Statistic.Label>Join requests (JR)</Statistic.Label>
-            </Statistic>
-            <Statistic color="red">
-              <Statistic.Value>
-                {props.asset.failed_join_requests}
-              </Statistic.Value>
-              <Statistic.Label>Failed Join Req.</Statistic.Label>
-            </Statistic>
-          </Statistic.Group>
-        </Segment>
-      )}
+      {isDevice && <ShowRequestsStatistics asset={props.asset} />}
     </React.Fragment>
   );
 };

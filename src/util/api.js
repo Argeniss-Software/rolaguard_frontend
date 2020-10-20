@@ -1,5 +1,5 @@
 import axios from "axios";
-import { createBrowserHistory } from "history"
+// import { createBrowserHistory } from "history"
 
 import AuthStore from "../stores/auth.store";
 
@@ -7,6 +7,7 @@ const API_HOST = window.RUNTIME_API_HOST ? window.RUNTIME_API_HOST : 'http://loc
 
 const API = {
   get: (endpoint, data) => {
+    /*
     let query = "?";
 
     for (let key in data) {
@@ -14,6 +15,7 @@ const API = {
     }
 
     query = query.replace("?&", "?");
+    */
 
     return axios.get(API_HOST + endpoint, data);
   },
