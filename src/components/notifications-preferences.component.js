@@ -200,9 +200,9 @@ class NotificationsPreferencesComponent extends React.Component {
                     Triggers
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 1}>
-                    <Grid  celled='internally'>
+                    <Grid  celled='internally' stackable columns={2}>
                       <Grid.Row>
-                        <Grid.Column width={4}>
+                        <Grid.Column>
                           <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
                             <Table.Header>
                               <Table.Row>
@@ -230,7 +230,7 @@ class NotificationsPreferencesComponent extends React.Component {
                             </Table.Body>
                           </Table>
                       </Grid.Column>
-                      <Grid.Column width={4}>
+                      <Grid.Column>
                           <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
                             <Table.Header>
                               <Table.Row>
