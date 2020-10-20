@@ -41,8 +41,6 @@ class UserComponent extends React.Component {
   };
 
   render() {
-    const { urlImage } = this.state;
-
     return (
       <div>
         <div className={`sidebar-user ${this.props.sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>

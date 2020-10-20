@@ -1,27 +1,48 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Button, Dropdown, Popup } from "semantic-ui-react";
-import {subscribeToNewAlertEvents, unsubscribeFromNewAlertEvents} from '../util/web-socket';
-
+import {
+  Table,
+  Loader,
+  Segment,
+  Button,
+  Dropdown,
+  Popup,
+  Grid,
+  Header,
+} from "semantic-ui-react";
+import {
+  subscribeToNewAlertEvents,
+  unsubscribeFromNewAlertEvents,
+} from "../util/web-socket";
+import { Link } from "react-router-dom";
 import moment from "moment";
 
 import BarChart from "./visualizations/Bar";
 
 import "./dashboard.component.css";
-import microchipSvg from '../img/microchip.svg'
+import microchipSvg from "../img/microchip.svg";
 import LoaderComponent from "./utils/loader.component";
 import DetailsAlertModal from "../components/details.alert.modal.component";
 import DataCollectorTooltip from "./dashboard/data.collector.tooltip";
-import AlertUtil from '../util/alert-util';
+import AlertUtil from "../util/alert-util";
 import AlertListComponent from "./alert.list.component";
+import BounceLoader from "react-spinners/BounceLoader";
+import { css } from "@emotion/core";
+import _ from "lodash";
 
-@inject("generalDataStore", "usersStore", "deviceStore", "alarmStore", "alertStore", "dataCollectorStore")
+@inject(
+  "generalDataStore",
+  "usersStore",
+  "deviceStore",
+  "alarmStore",
+  "alertStore",
+  "dataCollectorStore"
+)
 @observer
 class DashboardComponent extends React.Component {
   subscriber = null;
-  
-  constructor(props) {
 
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -38,73 +59,106 @@ class DashboardComponent extends React.Component {
       organization_name: "",
       isRefreshing: false,
       devices_count: 0,
-      range: 'DAY',
+      range: "DAY",
       barsCount: 0,
       alertsCountArray: null,
       selectedAlert: null,
       visualizationXDomain: {
         from: null,
-        to: null
+        to: null,
       },
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
+      override: null,
     };
   }
 
   updateRange(range, silent) {
     let barsCount = 0;
-    let groupBy = 'DAY';
+    let groupBy = "DAY";
     let from, to, visualizationDomainFrom, visualizationDomainTo;
 
-    this.setState({ lastUpdated: Date.now() })
+    this.setState({ lastUpdated: Date.now() });
 
-    if(range === 'DAY') {
-      groupBy = 'HOUR';
+    if (range === "DAY") {
+      groupBy = "HOUR";
       barsCount = 26;
-      from = moment().subtract(1, 'days').utc().format();
+      from = moment().subtract(1, "days").utc().format();
       to = moment().utc().format();
 
-      visualizationDomainFrom = moment().subtract(1, 'days').subtract(1, 'hour').format("YYYY-MM-DD HH:mm:ss");
-      visualizationDomainTo = moment().add(1, 'hour').format("YYYY-MM-DD HH:mm:ss");
-    } else if(range === 'WEEK') {
+      visualizationDomainFrom = moment()
+        .subtract(1, "days")
+        .subtract(1, "hour")
+        .format("YYYY-MM-DD HH:mm:ss");
+      visualizationDomainTo = moment()
+        .add(1, "hour")
+        .format("YYYY-MM-DD HH:mm:ss");
+    } else if (range === "WEEK") {
       barsCount = 9;
-      from = moment().subtract(7, 'days').utc().format("YYYY-MM-DD");
-      to = moment().add(1, 'day').utc().format("YYYY-MM-DD");
+      from = moment().subtract(7, "days").utc().format("YYYY-MM-DD");
+      to = moment().add(1, "day").utc().format("YYYY-MM-DD");
 
-      visualizationDomainFrom = moment().subtract(8, 'days').format("YYYY-MM-DD");
-      visualizationDomainTo = moment().add(1, 'days').utc().format("YYYY-MM-DD");
-    } else if(range === 'MONTH') {
+      visualizationDomainFrom = moment()
+        .subtract(8, "days")
+        .format("YYYY-MM-DD");
+      visualizationDomainTo = moment()
+        .add(1, "days")
+        .utc()
+        .format("YYYY-MM-DD");
+    } else if (range === "MONTH") {
       barsCount = 33;
-      from = moment().subtract(1, 'month').utc().format("YYYY-MM-DD");
-      to = moment().add(1, 'day').utc().format("YYYY-MM-DD");
+      from = moment().subtract(1, "month").utc().format("YYYY-MM-DD");
+      to = moment().add(1, "day").utc().format("YYYY-MM-DD");
 
-      visualizationDomainFrom = moment().subtract(1, 'month').subtract(1, 'days').format("YYYY-MM-DD");
-      visualizationDomainTo = moment().add(1, 'days').utc().format("YYYY-MM-DD");
+      visualizationDomainFrom = moment()
+        .subtract(1, "month")
+        .subtract(1, "days")
+        .format("YYYY-MM-DD");
+      visualizationDomainTo = moment()
+        .add(1, "days")
+        .utc()
+        .format("YYYY-MM-DD");
     }
 
     const dataCollectors = this.state.selectedDataCollectors;
 
-    this.setState({ newDevicesLoading: true && !silent })
-    this.props.deviceStore.getNewDevicesCount({ groupBy, from, to, dataCollectors }).then(response => this.setState({
-      newDevicesLoading: false
-    }));
+    this.setState({ newDevicesLoading: true && !silent });
+    this.props.deviceStore
+      .getNewDevicesCount({ groupBy, from, to, dataCollectors })
+      .then((response) =>
+        this.setState({
+          newDevicesLoading: false,
+        })
+      );
 
-    this.setState({ packetsLoading: true && !silent})
-    this.props.deviceStore.getPacketsCount({ groupBy, from, to, dataCollectors } ).then(response => this.setState({
-      packetsLoading: false
-    }));
+    this.setState({ packetsLoading: true && !silent });
+    this.props.deviceStore
+      .getPacketsCount({ groupBy, from, to, dataCollectors })
+      .then((response) =>
+        this.setState({
+          packetsLoading: false,
+        })
+      );
 
-    this.setState({ quarantineCountLoading: true && !silent})
-    this.props.deviceStore.getQuarantineDeviceCount({groupBy, from, to, dataCollectors}).then(response => this.setState({
-      quarantineCountLoading: false
-    }));
+    this.setState({ quarantineCountLoading: true && !silent });
+    this.props.deviceStore
+      .getQuarantineDeviceCount({ groupBy, from, to, dataCollectors })
+      .then((response) =>
+        this.setState({
+          quarantineCountLoading: false,
+        })
+      );
 
-    this.setState({ quarantineDeviceCountLoading: true && !silent })
-    this.props.deviceStore.getQuarantineDeviceCount({from, to, dataCollectors}).then(response => this.setState({
-      quarantineDeviceCountLoading: false
-    }));
+    this.setState({ quarantineDeviceCountLoading: true && !silent });
+    this.props.deviceStore
+      .getQuarantineDeviceCount({ from, to, dataCollectors })
+      .then((response) =>
+        this.setState({
+          quarantineDeviceCountLoading: false,
+        })
+      );
 
     this.getAlerts(groupBy, from, to, dataCollectors, silent);
-    
+
     this.setState({
       range: range,
       barsCount: barsCount,
@@ -112,20 +166,25 @@ class DashboardComponent extends React.Component {
       alertsCountArray: [],
       visualizationXDomain: {
         from: new Date(visualizationDomainFrom),
-        to: new Date(visualizationDomainTo)
-      }
+        to: new Date(visualizationDomainTo),
+      },
     });
   }
 
   componentDidMount() {
     this.getDataCollectors();
-    this.updateRange('DAY');
+    this.updateRange("DAY");
     this.getTopAlerts();
+
+    this.override = css`
+      display: inline-block;
+      margin-right: 5px;
+    `;
 
     this.subscriber = subscribeToNewAlertEvents(() => {
       const { lastUpdated, range } = this.state;
 
-      if (Date.now() - lastUpdated > (60 * 1000)) {
+      if (Date.now() - lastUpdated > 60 * 1000) {
         this.getTopAlerts(true);
         this.updateRange(range, true);
       }
@@ -138,20 +197,20 @@ class DashboardComponent extends React.Component {
 
   handleAlertResolution = () => {
     this.getTopAlerts();
-  }
+  };
 
-  handleDataCollectorSelection = (e, { value } ) => {
+  handleDataCollectorSelection = (e, { value }) => {
     const { range } = this.state;
 
     this.setState({ selectedDataCollectors: value }, () => {
       this.updateRange(range, true);
       this.getTopAlerts();
-    })
-  }
+    });
+  };
 
   getDataCollectors() {
     this.setState({
-      dataCollectorsLoading: true
+      dataCollectorsLoading: true,
     });
 
     const dataCollectorsPromise = this.props.dataCollectorStore.getDataCollectorApi();
@@ -160,24 +219,38 @@ class DashboardComponent extends React.Component {
     Promise.all([dataCollectorsPromise, dataCollectorsCountPromise]).then(
       (response) => {
         const totalCollectors = this.props.generalDataStore.dataCollectorsCount;
-        let activeCollectors = this.props.dataCollectorStore.dataCollectorList.filter(collector => collector.status === 'CONNECTED').length || 0; 
+        let activeCollectors =
+          this.props.dataCollectorStore.dataCollectorList.filter(
+            (collector) => collector.status === "CONNECTED"
+          ).length || 0;
 
         const dataCollectors = this.props.dataCollectorStore.dataCollectorList
-          .filter(collector => collector.status === 'CONNECTED' || collector.status === 'DISCONNECTED')
-          .sort((collector1, collector2) => collector1.name.localeCompare(collector2.name))
+          .filter(
+            (collector) =>
+              collector.status === "CONNECTED" ||
+              collector.status === "DISCONNECTED"
+          )
+          .sort((collector1, collector2) =>
+            collector1.name.localeCompare(collector2.name)
+          )
           .map((collector, index) => ({
-              key: collector.id,
-              text: collector.name,
-              value: collector.id,
-              label: { color: collector.status === 'CONNECTED' ? 'green' : 'red', empty: true, circular: true, size: 'mini' }
-            }))
+            key: collector.id,
+            text: collector.name,
+            value: collector.id,
+            label: {
+              color: collector.status === "CONNECTED" ? "green" : "red",
+              empty: true,
+              circular: true,
+              size: "mini",
+            },
+          }));
 
         this.setState({
           totalCollectors,
           activeCollectors,
           dataCollectorsLoading: false,
           isLoading: false,
-          dataCollectors
+          dataCollectors,
         });
       }
     );
@@ -185,58 +258,70 @@ class DashboardComponent extends React.Component {
 
   getTopAlerts(silent) {
     this.setState({
-      topAlertsLoading: true && !silent
+      topAlertsLoading: true && !silent,
     });
 
-    const from = moment().subtract(7, 'days').utc().format("YYYY-MM-DD");
-    const topalertsPromise = this.props.alertStore.query({page: 0, size: this.state.numberOfPreviewAlerts}, {resolved: false, from, dataCollector: this.state.selectedDataCollectors});
-    const alertsTypesPromise = this.props.alarmStore.getAlertsType();
-
-    Promise.all([topalertsPromise, alertsTypesPromise]).then(
-      (response) => {
-        
-        const alarmsTypesMap = {};
-        response[1].forEach((alarmType) => {
-          alarmsTypesMap[alarmType.code] = alarmType;
-        });
-
-        this.setState({
-          topAlertsLoading: false,
-          topAlerts: response[0].data,
-          alarmsTypesMap
-        });
+    const from = moment().subtract(7, "days").utc().format("YYYY-MM-DD");
+    const topalertsPromise = this.props.alertStore.query(
+      { page: 0, size: this.state.numberOfPreviewAlerts },
+      {
+        resolved: false,
+        from,
+        dataCollector: this.state.selectedDataCollectors,
       }
     );
+    const alertsTypesPromise = this.props.alarmStore.getAlertsType();
+
+    Promise.all([topalertsPromise, alertsTypesPromise]).then((response) => {
+      const alarmsTypesMap = {};
+      response[1].forEach((alarmType) => {
+        alarmsTypesMap[alarmType.code] = alarmType;
+      });
+
+      this.setState({
+        topAlertsLoading: false,
+        topAlerts: response[0].data,
+        alarmsTypesMap,
+      });
+    });
   }
 
   getAlerts(groupBy, from, to, dataCollectors, silent) {
     this.setState({
-      alertsCountLoading: true && !silent
+      alertsCountLoading: true && !silent,
     });
 
-    this.props.alarmStore.getAlertsCount( { groupBy, from, to, dataCollectors }).then(
-      (response) => {
+    this.props.alarmStore
+      .getAlertsCount({ groupBy, from, to, dataCollectors })
+      .then((response) => {
         const alertsCountArray = [];
 
-        const dateAttributeName = (groupBy === 'HOUR') ? 'hour' : 'date';
+        const dateAttributeName = groupBy === "HOUR" ? "hour" : "date";
         const colorsMap = AlertUtil.colorsMap;
 
-        const filteredResponse = response.filter(alertCount => alertCount.risk != null)
+        const filteredResponse = response.filter(
+          (alertCount) => alertCount.risk != null
+        );
 
         filteredResponse.forEach((alarmCount, i) => {
-          alertsCountArray.push({xValue: new Date(alarmCount[dateAttributeName]), yValue: alarmCount.count,color: colorsMap[alarmCount.risk]});
+          alertsCountArray.push({
+            xValue: new Date(alarmCount[dateAttributeName]),
+            yValue: alarmCount.count,
+            color: colorsMap[alarmCount.risk],
+          });
         });
 
-        const alertsCount = filteredResponse.map(item => item.count).reduce((value, partialTotal) => value + partialTotal, 0);
+        const alertsCount = filteredResponse
+          .map((item) => item.count)
+          .reduce((value, partialTotal) => value + partialTotal, 0);
 
         this.setState({
           alertsCountLoading: false,
           alertsCountArray: alertsCountArray,
           isLoading: false,
-          alertsCount: alertsCount
+          alertsCount: alertsCount,
         });
-      }
-    );
+      });
   }
 
   goToAlert = (direction) => {
@@ -244,13 +329,16 @@ class DashboardComponent extends React.Component {
       return;
     }
 
-    if (this.state.selectedAlert.index === this.state.topAlerts.length-1 && direction > 0) {
+    if (
+      this.state.selectedAlert.index === this.state.topAlerts.length - 1 &&
+      direction > 0
+    ) {
       return;
     }
 
     const newIndex = this.state.selectedAlert.index + direction;
     this.showAlertDetails(newIndex);
-  }
+  };
 
   showAlertDetails = (index) => {
     const alert = this.state.topAlerts[index];
@@ -260,35 +348,42 @@ class DashboardComponent extends React.Component {
       alert,
       alert_type: this.state.alarmsTypesMap[alert.type],
       isFirst: index === 0,
-      isLast: index === this.state.topAlerts.length-1
-    }
+      isLast: index === this.state.topAlerts.length - 1,
+    };
 
     this.setState({ selectedAlert });
-  }
+  };
 
   closeAlertDetails = () => {
     this.setState({ selectedAlert: null });
-  }
+  };
 
   render() {
     let organization_name = this.props.usersStore.currentUser.organization_name;
 
-    let { activeCollectors, totalCollectors, alertsCount, selectedAlert, dataCollectors, dataCollectorsLoading } = this.state;
+    let {
+      activeCollectors,
+      totalCollectors,
+      alertsCount,
+      selectedAlert,
+      dataCollectors,
+      dataCollectorsLoading,
+    } = this.state;
     if (organization_name) {
       organization_name = organization_name.toUpperCase();
     }
 
     if (alertsCount && alertsCount >= 1000 && alertsCount < 1000000) {
       alertsCount = (alertsCount / 1000).toFixed(1) + "K";
-    } else if(alertsCount && alertsCount >= 1000000) {
+    } else if (alertsCount && alertsCount >= 1000000) {
       alertsCount = (alertsCount / 1000000).toFixed(1) + "M";
     }
 
     let packetsCount = this.props.deviceStore.packetsCount;
-    if(packetsCount && packetsCount >= 1000 && packetsCount < 1000000) {
-      packetsCount = (packetsCount/1000).toFixed(1) + 'K';
-    } else if(packetsCount && packetsCount >= 1000000) {
-      packetsCount = (packetsCount/1000000).toFixed(1) + 'M';
+    if (packetsCount && packetsCount >= 1000 && packetsCount < 1000000) {
+      packetsCount = (packetsCount / 1000).toFixed(1) + "K";
+    } else if (packetsCount && packetsCount >= 1000000) {
+      packetsCount = (packetsCount / 1000000).toFixed(1) + "M";
     }
 
     return (
@@ -307,21 +402,70 @@ class DashboardComponent extends React.Component {
             {!this.state.isLoading && (
               <div>
                 <Segment>
-                  <div className="animated fadeIn">
-                    <h3>
-                      <i className="fas fa-sitemap" /> | DATA SOURCES{" "}
-                      {dataCollectorsLoading === true ? (
-                        <div className="ui active inline loader" />
-                      ) : (
-                        <DataCollectorTooltip
-                          dataCollectors={dataCollectors}
-                          activeCollectors={activeCollectors}
-                          totalCollectors={totalCollectors}
-                        />
-                      )}
-                    </h3>
-                  </div>
+                  <Grid
+                    className="animated fadeIn"
+                    stretched
+                    verticalAlign="middle"
+                    centered
+                  >
+                    <Grid.Row>
+                      <Grid.Column floated="left" width={11}>
+                        <h3>
+                          <i className="fas fa-sitemap" /> | DATA SOURCES{" "}
+                          {dataCollectorsLoading === true ? (
+                            <span className="ui active inline loader" />
+                          ) : (
+                            <DataCollectorTooltip
+                              dataCollectors={dataCollectors}
+                              activeCollectors={activeCollectors}
+                              totalCollectors={totalCollectors}
+                            />
+                          )}
+                        </h3>
+                      </Grid.Column>
 
+                      <Grid.Column
+                        width={5}
+                        floated="right"
+                        className="pull-right aligned"
+                        stretched
+                        verticalAlign="middle"
+                        centered
+                      >
+                        {activeCollectors > 0 && (
+                          <React.Fragment>
+                            <div>
+                              <BounceLoader
+                                css={this.override}
+                                size={16}
+                                color="#01dd01"
+                                loading={true}
+                              />
+                              <span>
+                                <Header
+                                  as="h6"
+                                  color={"green"}
+                                  size="small"
+                                  style={{ display: "inline" }}
+                                >
+                                  ANALYZING DATA...
+                                </Header>
+                              </span>
+                            </div>
+                          </React.Fragment>
+                        )}
+                        {activeCollectors <= 0 && (
+                          <span>
+                            There isn't any data source configured yet.
+                            <Link to="/dashboard/data_collectors">
+                              Try to add one
+                            </Link>{" "}
+                            for getting data
+                          </span>
+                        )}
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
                   <div
                     style={{
                       display: "flex",
@@ -510,11 +654,9 @@ class DashboardComponent extends React.Component {
                                 DATE
                               </Table.HeaderCell>
                               <Table.HeaderCell collapsing>
-                                ID/ADDRESS
+                                DevEUI/ADDRESS
                               </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                DEVICE NAME
-                              </Table.HeaderCell>
+                              <Table.HeaderCell>DEVICE NAME</Table.HeaderCell>
                               <Table.HeaderCell collapsing>
                                 <Popup
                                   trigger={
@@ -529,12 +671,10 @@ class DashboardComponent extends React.Component {
                                   Inventory section.
                                 </Popup>
                               </Table.HeaderCell>
-                              <Table.HeaderCell style={{maxWidth: "160px"}}>
+                              <Table.HeaderCell style={{ maxWidth: "160px" }}>
                                 GATEWAY
                               </Table.HeaderCell>
-                              <Table.HeaderCell>
-                                DATA SOURCE
-                              </Table.HeaderCell>
+                              <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
                             </Table.Row>
                           </Table.Header>
                           <Table.Body>

@@ -192,7 +192,7 @@ class ViewPolicyComponent extends React.Component {
                             <Table.Cell colSpan='2' >
                               <Markup content={item.alertType.description}/>
                               { this.getParametersComponent(item, index, activeIndex) }
-                              { item.alertTypeCode == "LAF-009" && this.getKeysManager(index, activeIndex) }
+                              { item.alertTypeCode === "LAF-009" && this.getKeysManager(index, activeIndex) }
                             </Table.Cell>
                           </Table.Row>
                         </Table.Body>

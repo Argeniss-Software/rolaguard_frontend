@@ -198,8 +198,6 @@ class ListNotificationsComponent extends React.Component {
     } = this.state;
     const { page } = pagination;
 
-    const { history } = this.props;
-
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view">

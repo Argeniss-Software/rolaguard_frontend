@@ -19,6 +19,8 @@ const DBMToSignalStrength = (dBm, showText=false) => {
     const foundCriteria = references.find((r) => {
       if (num >= r.value) {
         return r.text;
+      } else {
+        return undefined
       }
     });
     let returnValue =

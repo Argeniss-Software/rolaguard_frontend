@@ -65,13 +65,13 @@ const Validation = {
     const blocks = ip.split('.');
     if(blocks.length !== 4) return false;
     for(let i = 0; i < 4; i++) {
-      const value = parseInt(blocks[i]);
+      const value = parseInt(blocks[i],10);
       if(isNaN(value) || value < 0 || value > 255) return false;
     }
     return true;
   },
   isValidPort: port => {
-    const value = parseInt(port);
+    const value = parseInt(port,10);
     return !(isNaN(value) || value <= 0 || value >= 65536);
   },
 

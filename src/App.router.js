@@ -11,7 +11,6 @@ import EmailChange from './pages/email-change.page';
 import EmailActivation from './pages/email-activation.page';
 import PhoneActivation from './pages/phone-activation.page';
 
-const reload = () => window.location.reload();
 const Router = () => (
   <Switch>
     <Route exact path="/login" component={Login} />

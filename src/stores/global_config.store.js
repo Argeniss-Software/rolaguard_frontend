@@ -1,5 +1,4 @@
-import { action, observable } from "mobx";
-import _ from "lodash";
+import { observable } from "mobx";
 
 /*
  The idea of this store is to save the global config of the app

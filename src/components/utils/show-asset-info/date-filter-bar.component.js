@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Grid, Segment, Icon, Button, Popup } from "semantic-ui-react";
 import DatePicker from "react-datepicker";
 import moment from "moment";
-import _ from "lodash";
 
 /**
  * This component render a date time picker bar with FROM and DATE fields.
@@ -17,7 +16,7 @@ import _ from "lodash";
  **/
 
 const DateFilterBar = (props) => {
-  const dateTimePickerFormat = "MMMM D YYYY hh:mm a";
+  const dateTimePickerFormat = "MMMM d yyyy hh:mm a";
   const dateTimeApiFormat = "YYYY-MM-DDTHH:mm:ss.SSS";
   const timeFormat = "HH:mm";
 
@@ -36,14 +35,14 @@ const DateFilterBar = (props) => {
   const handleDateFilterFromTmp = (date) => {
     // set from date but not filter yet
     setDateFilterTmp((dateRange) => {
-      return { ...dateRange, ...{ from: date ? date.toDate() : null } };
+      return { ...dateRange, ...{ from: date ? date : null } };
     });
   };
 
   const handleDateFilterToTmp = (date) => {
     // set to date but not filter yet
     setDateFilterTmp((dateRange) => {
-      return { ...dateRange, ...{ to: date ? date.toDate() : null } };
+      return { ...dateRange, ...{ to: date ? date : null } };
     });
   };
 
@@ -121,13 +120,21 @@ const DateFilterBar = (props) => {
                 selectsStart
                 todayButton="Today"
                 startDate={
-                  dateFilterTmp.from ? moment(dateFilterTmp.from) : null
+                  dateFilterTmp.from
+                    ? moment(dateFilterTmp.from).toDate()
+                    : null
                 }
-                endDate={dateFilterTmp.to ? moment(dateFilterTmp.to) : null}
-                maxDate={dateFilterTmp.to ? moment(dateFilterTmp.to) : null}
+                endDate={
+                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
+                }
+                maxDate={
+                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
+                }
                 placeholderText="Select a start date"
                 selected={
-                  dateFilterTmp.from ? moment(dateFilterTmp.from) : null
+                  dateFilterTmp.from
+                    ? moment(dateFilterTmp.from).toDate()
+                    : null
                 }
                 onChange={handleDateFilterFromTmp}
                 showTimeSelect
@@ -146,12 +153,20 @@ const DateFilterBar = (props) => {
                 selectsEnd
                 todayButton="Today"
                 startDate={
-                  dateFilterTmp.from ? moment(dateFilterTmp.from) : null
+                  dateFilterTmp.from
+                    ? moment(dateFilterTmp.from).toDate()
+                    : null
                 }
-                endDate={dateFilterTmp.to ? moment(dateFilterTmp.to) : null}
-                minDate={dateFilterTmp.from ? moment(dateFilterTmp.from) : null}
+                endDate={
+                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
+                }
+                minDate={
+                  dateFilterTmp.from
+                    ? moment(dateFilterTmp.from).toDate()
+                    : null
+                }
                 placeholderText="Select a finish date"
-                selected={dateFilterTmp.to ? moment(dateFilterTmp.to) : null}
+                selected={dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null}
                 onChange={handleDateFilterToTmp}
                 showTimeSelect
                 timeFormat={timeFormat}

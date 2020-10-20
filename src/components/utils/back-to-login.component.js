@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Grid } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { withRouter } from 'react-router-dom';
 
 class BackToLoginComponent extends React.Component {

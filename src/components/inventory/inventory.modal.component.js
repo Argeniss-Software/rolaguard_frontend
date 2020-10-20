@@ -143,7 +143,7 @@ class InventoryDetailsModal extends Component {
       ];
     }
 
-    if (table == 0) {
+    if (table === 0) {
       return (
         <Table.Row>
           <Table.Cell>
@@ -224,8 +224,8 @@ class InventoryDetailsModal extends Component {
   };
 
   render() {
-    const { modalOpen, activeIndex } = this.state;
-    const { index, itemType, isFirst, isLast } = this.props.selectedItem;
+    const { modalOpen } = this.state;
+    const { index, isFirst, isLast } = this.props.selectedItem;
     const { assets } = this.props;
     const item = assets[index];
     const dateFormat = this.props.globalConfigStore.dateFormats.moment.dateTimeFormat;
@@ -268,7 +268,6 @@ class InventoryDetailsModal extends Component {
               />
               <Icon name="linkify" />
             </Button>
-
             {this.props.onNavigate && (
               <Button
                 loading={this.state.isLoading}
@@ -278,7 +277,6 @@ class InventoryDetailsModal extends Component {
                 content="Previous"
               />
             )}
-
             {this.props.onNavigate && (
               <Button
                 loading={this.state.isLoading}

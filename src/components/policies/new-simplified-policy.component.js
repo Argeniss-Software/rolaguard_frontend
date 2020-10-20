@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { inject } from "mobx-react";
-import { Button, Modal, Popup, Message, Form, Label, Input } from "semantic-ui-react";
+import { Button, Modal, Popup, Message, Form, Label } from "semantic-ui-react";
 
 @inject("policyStore")
 class NewSimplifiedPolicyModal extends Component {
@@ -12,10 +12,6 @@ class NewSimplifiedPolicyModal extends Component {
     fatalError: false,
     name: '',
     touched: false
-  }
-
-  componentWillMount() {
-    const { policy } = this.props;
   }
 
   handleOpen = e => {

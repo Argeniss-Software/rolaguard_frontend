@@ -1,7 +1,9 @@
-import React from "react";
-import { Table, Item } from "semantic-ui-react";
+import React, { useContext } from "react";
+import { Table } from "semantic-ui-react";
 import _ from "lodash";
-
+import NotAvailableComponent from "../not-available-value/not-available-value.component"
+import { MobXProviderContext } from "mobx-react";
+import moment from 'moment'
 
 const Prefix = (props) => {
   return (`${props.prefix ? props.prefix : ""}`);
@@ -20,20 +22,22 @@ const ShowValue = (props) => {
   
    const value = _.get(props, 'value', null);
    const details = _.get(props, 'details', null);
+   const { globalConfigStore } = useContext(MobXProviderContext);
+   const dateTimeFormat = globalConfigStore.dateFormats.moment.dateTimeFormat;
 
    if ( !_.isNull(value)){
      return (
        <b>
          <Prefix prefix={details.prefix} />
-         <span className={details.toUpperCase? "upper" : ""} >
-           {value}
+         <span className={details.toUpperCase ? "upper" : ""}>
+           {details.convertToBrowserTime ? moment(value).format(dateTimeFormat) : value}
          </span>
          <Suffix suffix={details.suffix} />
-      </b>
+       </b>
      );
    }
 
-   return (<span></span>);
+   return (<NotAvailableComponent/>);
 };
 
 const PacketViewer = (props) => {
@@ -66,7 +70,7 @@ const PacketViewer = (props) => {
     "date",
     "m_type",
     "f_count",
-    "mic",
+    "mic"
   ];
 
   const details = {
@@ -94,7 +98,8 @@ const PacketViewer = (props) => {
       suffix: " dB",
     },
     date: {
-      title: "Timestamp",
+      title: "Date",
+      convertToBrowserTime: true
     },
     m_type: {
       title: "Message type",
@@ -109,7 +114,7 @@ const PacketViewer = (props) => {
     },
     f_count: {
       title: "Counter",
-    },
+    }
   };
 
   return (

@@ -7,10 +7,6 @@ import {Icon} from "semantic-ui-react";
 @observer
 class ForbiddenPage extends React.Component {
 
-    constructor(props){
-        super(props)
-    }
-
     render() {
         return (
             <div className="not-found-page">
