@@ -99,12 +99,6 @@ const ShowInventory = (props) => {
                   <Table.Row>
                     <Table.Cell collapsing>APPLICATION:</Table.Cell>
                     <Table.Cell>
-                      {props.inventory.name ? (
-                        <strong>{props.inventory.name}</strong>
-                      ) : (
-                        <NotAvailableComponent />
-                      )}
-
                       {normalizedType === "device" ? (
                         props.inventory.app_name ? (
                           <strong>{props.inventory.app_name}</strong>
