@@ -152,9 +152,6 @@ const ShowCurrentIssues = (props) => {
                   <Table.HeaderCell collapsing>
                     LAST CHECKED
                   </Table.HeaderCell>
-                  <Table.HeaderCell collapsing>
-                    {type === "gateway" ? "DEVICE" : "GATEWAY"}
-                  </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -215,33 +212,13 @@ const ShowCurrentIssues = (props) => {
                           </Moment>
                         }
                       </Table.Cell>
-                      <Table.Cell
-                        className="upper text-center aligned"
-                        style={{ maxWidth: "180px" }}
-                        collapsing
-                      >
-                        <AssetId
-                          id={
-                            type === "gateway"
-                              ? null
-                              : current_issue.alert.gateway_id
-                          }
-                          type={type === "gateway" ? "device" : "gateway"}
-                          hexId={
-                            type === "gateway"
-                              ? "N/A"
-                              : current_issue.alert.parameters.gateway
-                          }
-                          showAsLink={!(type === "gateway")}
+                      {!_.isEmpty(selectedAlert.alert) && (
+                        <DetailsAlertModal
+                          loading={false}
+                          alert={selectedAlert}
+                          onClose={closeAlertDetails}
                         />
-                        {!_.isEmpty(selectedAlert.alert) && (
-                          <DetailsAlertModal
-                            loading={false}
-                            alert={selectedAlert}
-                            onClose={closeAlertDetails}
-                          />
-                        )}
-                      </Table.Cell>
+                      )}
                     </Table.Row>
                   );
                 })}
