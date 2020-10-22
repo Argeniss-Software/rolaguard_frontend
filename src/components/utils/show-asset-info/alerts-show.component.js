@@ -8,6 +8,7 @@ import {
   Segment,
   Icon,
   Popup,
+  Container
 } from "semantic-ui-react";
 import Moment from "react-moment";
 import _ from "lodash";
@@ -114,114 +115,119 @@ const ShowAlerts = (props) => {
           />
         </span>
       </h5>
-      <DateFilterBar showFilters={showFilters} onDateFilterChange={handleDateFilterChange} />
-      <Segment attached stretched="true" style={{height: "100%"}}>
+      <DateFilterBar
+        showFilters={showFilters}
+        onDateFilterChange={handleDateFilterChange}
+      />
+      <Segment attached stretched="true" style={{ height: "100%" }}>
         {isLoading && <LoaderComponent loadingMessage="Loading alerts..." />}
         {totalItems <= 0 && !isLoading && (
           <EmptyComponent emptyMessage="There are no alerts to show." />
         )}
         {totalItems > 0 && !isLoading && (
-          <Table
-            striped
-            selectable
-            className="animated fadeIn"
-            basic="very"
-            compact="very"
-          >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                <Table.HeaderCell
-                  collapsing
-                  onClick={() => toggleSort("created_at")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Icon
-                    name={`sort content ${
-                      orderBy[1] === "ASC" ? "ascending" : "descending"
-                    }`}
-                    title={`toggle sort order content ${
-                      orderBy[1] === "ASC" ? "descending" : "ascending"
-                    }`}
-                  />
-                  DATE
-                </Table.HeaderCell>
-                <Table.HeaderCell collapsing>
-                  {type === "gateway" ? "DEVICE" : "GATEWAY"}
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body>
-              {alerts.map((alert, index) => (
-                <Table.Row
-                  key={index}
-                  style={{ cursor: "pointer" }}
-                  positive={alert.resolved_at}
-                >
-                  <Table.Cell
-                    onClick={() => showAlertDetails(alert)}
+          <Container>
+            <Table
+              striped
+              selectable
+              className="animated fadeIn"
+              basic="very"
+              compact="very"
+            >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                  <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                  <Table.HeaderCell
                     collapsing
+                    onClick={() => toggleSort("created_at")}
+                    style={{ cursor: "pointer" }}
                   >
-                    {_.get(alert, "type.risk") && (
-                      <Label
-                        horizontal
-                        style={{
-                          backgroundColor: colorsMap[alert.type.risk],
-                          color: "white",
-                          borderWidth: 1,
-                          borderColor: colorsMap[alert.type.risk],
-                          width: "100px",
-                        }}
-                      >
-                        {alert.type.risk}
-                      </Label>
-                    )}
-                  </Table.Cell>
-                  <Table.Cell onClick={() => showAlertDetails(alert)}>
-                    {alert.type.name}
-                  </Table.Cell>
-                  <Table.Cell
-                    singleLine
-                    onClick={() => showAlertDetails(alert)}
-                  >
-                    {
-                      <Moment
-                        format={
-                          globalConfigStore.dateFormats.moment.dateTimeFormat
-                        }
-                      >
-                        {alert.created_at}
-                      </Moment>
-                    }
-                  </Table.Cell>
-
-                  {!_.isEmpty(selectedAlert.alert) && (
-                    <DetailsAlertModal
-                      loading={false}
-                      alert={selectedAlert}
-                      onClose={closeAlertDetails}
+                    <Icon
+                      name={`sort content ${
+                        orderBy[1] === "ASC" ? "ascending" : "descending"
+                      }`}
+                      title={`toggle sort order content ${
+                        orderBy[1] === "ASC" ? "descending" : "ascending"
+                      }`}
                     />
-                  )}
-                  <Table.Cell
-                    className="upper text-center aligned"
-                    style={{ maxWidth: "180px" }}
-                    collapsing
-                  >
-                    <AssetIdComponent
-                      id={type === "gateway" ? null : alert.gateway_id}
-                      type={type === "gateway" ? "device" : "gateway"}
-                      hexId={
-                        type === "gateway" ? "N/A" : alert.parameters.gateway
-                      }
-                      showAsLink={!(type === "gateway")}
-                    />
-                  </Table.Cell>
+                    DATE
+                  </Table.HeaderCell>
+                  <Table.HeaderCell collapsing>
+                    {type === "gateway" ? "DEVICE" : "GATEWAY"}
+                  </Table.HeaderCell>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+              </Table.Header>
+
+              <Table.Body>
+                {alerts.map((alert, index) => (
+                  <Table.Row
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                    positive={alert.resolved_at}
+                  >
+                    <Table.Cell
+                      onClick={() => showAlertDetails(alert)}
+                      collapsing
+                    >
+                      {_.get(alert, "type.risk") && (
+                        <Label
+                          horizontal
+                          style={{
+                            backgroundColor: colorsMap[alert.type.risk],
+                            color: "white",
+                            borderWidth: 1,
+                            borderColor: colorsMap[alert.type.risk],
+                            width: "100px",
+                          }}
+                        >
+                          {alert.type.risk}
+                        </Label>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => showAlertDetails(alert)}>
+                      {alert.type.name}
+                    </Table.Cell>
+                    <Table.Cell
+                      singleLine
+                      onClick={() => showAlertDetails(alert)}
+                    >
+                      {
+                        <Moment
+                          format={
+                            globalConfigStore.dateFormats.moment.dateTimeFormat
+                          }
+                        >
+                          {alert.created_at}
+                        </Moment>
+                      }
+                    </Table.Cell>
+
+                    {!_.isEmpty(selectedAlert.alert) && (
+                      <DetailsAlertModal
+                        loading={false}
+                        alert={selectedAlert}
+                        onClose={closeAlertDetails}
+                      />
+                    )}
+                    <Table.Cell
+                      className="upper text-center aligned"
+                      style={{ maxWidth: "180px" }}
+                      collapsing
+                    >
+                      <AssetIdComponent
+                        id={type === "gateway" ? null : alert.gateway_id}
+                        type={type === "gateway" ? "device" : "gateway"}
+                        hexId={
+                          type === "gateway" ? "N/A" : alert.parameters.gateway
+                        }
+                        showAsLink={!(type === "gateway")}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </Container>
         )}
 
         {totalPages > 1 && (

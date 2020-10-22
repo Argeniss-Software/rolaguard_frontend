@@ -1,6 +1,6 @@
 import * as React from "react";
 import _ from "lodash";
-import { Table, Popup, Grid, Segment } from "semantic-ui-react";
+import { Table, Popup, Grid, Segment, Container } from "semantic-ui-react";
 import ImportanceLabel from "../../utils/importance-label.component";
 import ShowDeviceState from "../show-device-state.component";
 import ShowDeviceIcon from "../show-device-icon.component";
@@ -99,12 +99,6 @@ const ShowInventory = (props) => {
                   <Table.Row>
                     <Table.Cell collapsing>APPLICATION:</Table.Cell>
                     <Table.Cell>
-                      {props.inventory.name ? (
-                        <strong>{props.inventory.name}</strong>
-                      ) : (
-                        <NotAvailableComponent />
-                      )}
-
                       {normalizedType === "device" ? (
                         props.inventory.app_name ? (
                           <strong>{props.inventory.app_name}</strong>
@@ -143,43 +137,45 @@ const ShowInventory = (props) => {
                     </Table.Cell>
                   </Table.Row>
 
-                  <Table.Row>
-                    <Table.Cell collapsing>
-                      <Popup
-                        trigger={
-                          <span style={{ cursor: "pointer" }}>IMPORTANCE</span>
-                        }
-                      >
-                        The importance value indicates the user-defined
-                        relevance of the device into the organization. Can be
-                        set for each asset in the Inventory section.
-                      </Popup>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <ImportanceLabel
-                        importance={props.inventory.importance}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-
-                  <Table.Row>
-                    <Table.Cell collapsing>LABELS:</Table.Cell>
-                    <Table.Cell>
-                      {tags.map((tag) => (
-                        <Tag
-                          key={tag.id}
-                          id={tag.id}
-                          name={tag.name}
-                          color={tag.color}
-                          textColor="white"
-                          selectable={false}
-                          removable={false}
+                    <Table.Row>
+                      <Table.Cell collapsing>
+                        <Popup
+                          trigger={
+                            <span style={{ cursor: "pointer" }}>
+                              IMPORTANCE
+                            </span>
+                          }
+                        >
+                          The importance value indicates the user-defined
+                          relevance of the device into the organization. Can be
+                          set for each asset in the Inventory section.
+                        </Popup>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <ImportanceLabel
+                          importance={props.inventory.importance}
                         />
-                      ))}
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
-              </Table>
+                      </Table.Cell>
+                    </Table.Row>
+
+                    <Table.Row>
+                      <Table.Cell collapsing>LABELS:</Table.Cell>
+                      <Table.Cell>
+                        {tags.map((tag) => (
+                          <Tag
+                            key={tag.id}
+                            id={tag.id}
+                            name={tag.name}
+                            color={tag.color}
+                            textColor="white"
+                            selectable={false}
+                            removable={false}
+                          />
+                        ))}
+                      </Table.Cell>
+                    </Table.Row>
+                  </Table.Body>
+                </Table>
             </Grid.Column>
             <Grid.Column width={3}>
               <Segment>
