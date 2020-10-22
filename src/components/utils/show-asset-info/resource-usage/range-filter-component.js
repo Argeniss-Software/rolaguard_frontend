@@ -101,7 +101,7 @@ const RangeFilter = (props) => {
             ]}
           ></Range>
         </Grid.Column>
-        <Grid.Column width={6}>
+        <Grid.Column width={6} style={{zIndex: 2}}>
           <Popup
             trigger={
               <Label
