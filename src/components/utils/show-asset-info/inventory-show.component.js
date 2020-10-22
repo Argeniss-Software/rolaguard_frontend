@@ -184,7 +184,7 @@ const ShowInventory = (props) => {
                   <Geolocation
                     location={props.inventory.location}
                     gatewaysLocations={props.inventory.gateway_locations}
-                    radius={2000}
+                    radius={5000}
                     circleColor="blue"
                   />
                 </div>
