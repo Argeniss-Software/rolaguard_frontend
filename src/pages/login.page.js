@@ -36,7 +36,6 @@ class LoginPage extends React.Component {
 
 
     componentDidMount() {
-      debugger
       if (_.get(this, 'props.location.state.successSetPassword', false) === "true") {
         this.state.showPasswordUpdatedMsg = true
       } else {
