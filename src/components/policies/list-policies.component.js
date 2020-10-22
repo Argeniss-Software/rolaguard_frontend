@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Table, Popup, Label, Pagination, Grid, Message } from "semantic-ui-react";
+import { Table, Popup, Label, Pagination, Grid, Message, Header } from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 import "./new-policy.component.css";
 import DeletePolicyModal from './delete-policy.component';
@@ -76,19 +76,31 @@ class ListPoliciesComponent extends React.Component {
           <div className="view-header">
             <h1>{title}</h1>
             <div className="view-header-actions">
-              {isAdmin && <div onClick={() => history.push("/dashboard/policies/new")}>
-                <i className="fas fa-plus" />
-                <span>NEW POLICY</span>
-              </div>}
+              {isAdmin && (
+                <div onClick={() => history.push("/dashboard/policies/new")}>
+                  <i className="fas fa-plus" />
+                  <span>NEW POLICY</span>
+                </div>
+              )}
             </div>
-
+          </div>
+          <div>
+            <Header as="h5" style={{marginTop: "0.5em", marginBottom: "0.8em"}}>
+              The "default policy" cannot be edited. For a personalized
+              configuration, you can create a new policy with the new policy
+              button or clone the default policy and then edit them
+            </Header>
           </div>
           <div className="view-body">
-          { recentlyRemoved &&
-            <Message success icon='check' content='The policy has been removed!'/>
-          }
-          {!hasError && !isLoading && policies.length === 0 && (
-              <h3 style={{textAlign: 'center'}}>No registered policies.</h3>
+            {recentlyRemoved && (
+              <Message
+                success
+                icon="check"
+                content="The policy has been removed!"
+              />
+            )}
+            {!hasError && !isLoading && policies.length === 0 && (
+              <h3 style={{ textAlign: "center" }}>No registered policies.</h3>
             )}
 
             {isLoading && (
@@ -104,61 +116,90 @@ class ListPoliciesComponent extends React.Component {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {
-                    policies.map(policy => 
-                      <Table.Row key={policy.id}>
-                        <Table.Cell>{policy.name}</Table.Cell>
-                        <Table.Cell>{
-                          policy.dataCollectors.length > 0 ? policy.dataCollectors.map(
-                            dc => <Label key={dc.name} horizontal>{dc.name}</Label>
-                          )
-                          :
+                  {policies.map((policy) => (
+                    <Table.Row key={policy.id}>
+                      <Table.Cell>{policy.name}</Table.Cell>
+                      <Table.Cell>
+                        {policy.dataCollectors.length > 0 ? (
+                          policy.dataCollectors.map((dc) => (
+                            <Label key={dc.name} horizontal>
+                              {dc.name}
+                            </Label>
+                          ))
+                        ) : (
                           <i>None</i>
-                          }
-                        </Table.Cell>
-                        <Table.Cell className="wd-xl">
-                          <div className="td-actions">
+                        )}
+                      </Table.Cell>
+                      <Table.Cell className="wd-xl">
+                        <div className="td-actions">
+                          <Popup
+                            trigger={
+                              <button
+                                onClick={() => {
+                                  history.push(
+                                    `/dashboard/policies/${policy.id}/view`,
+                                    { policy }
+                                  );
+                                }}
+                              >
+                                <i className="fas fa-eye" />
+                              </button>
+                            }
+                            content="View policy"
+                          />
+                          {isAdmin && (
+                            <NewSimplifiedPolicy
+                              policy={policy}
+                              callback={this.callbackConfirm}
+                            />
+                          )}
+                          {isAdmin && !policy.isDefault && (
                             <Popup
-                                trigger={
-                                  <button
-                                    onClick={() => {
-                                      history.push(`/dashboard/policies/${policy.id}/view`, {policy});
-                                    }}>
-                                    <i className="fas fa-eye"/>
-                                  </button>
-                                }
-                                content="View policy"
-                              />
-                              {isAdmin && <NewSimplifiedPolicy policy={policy} callback={this.callbackConfirm}/>}
-                              {isAdmin && !policy.isDefault && <Popup
-                                trigger={
-                                  <button
-                                    onClick={() => history.push(`/dashboard/policies/${policy.id}/edit`)}>
-                                    <i className="fas fa-edit"/>
-                                  </button>
-                                }
-                                content="Edit policy"
-                              />}
-                              {isAdmin && !policy.isDefault && 
-                                <DeletePolicyModal policy={policy} onConfirm={this.callbackConfirm}/>
+                              trigger={
+                                <button
+                                  onClick={() =>
+                                    history.push(
+                                      `/dashboard/policies/${policy.id}/edit`
+                                    )
+                                  }
+                                >
+                                  <i className="fas fa-edit" />
+                                </button>
                               }
-                          </div>
-                        </Table.Cell>
-                      </Table.Row>
-                      )
-                  }
-
+                              content="Edit policy"
+                            />
+                          )}
+                          {isAdmin && !policy.isDefault && (
+                            <DeletePolicyModal
+                              policy={policy}
+                              onConfirm={this.callbackConfirm}
+                            />
+                          )}
+                        </div>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
                 </Table.Body>
               </Table>
             )}
-              { hasError && 
-                <Message error header='Oops!' content={'Something went wrong. Try again later.'} style={{maxWidth: '100%'}}/>
-              }
-              <Grid className="segment centered">
-                { totalPages > 1 && !isLoading &&
-                  <Pagination className="" activePage={page} onPageChange={this.handlePaginationChange} totalPages={totalPages} />
-                }
-              </Grid>
+            {hasError && (
+              <Message
+                error
+                header="Oops!"
+                content={"Something went wrong. Try again later."}
+                style={{ maxWidth: "100%" }}
+              />
+            )}
+            <Grid className="segment centered">
+              {totalPages > 1 && !isLoading && (
+                <Pagination
+                  className=""
+                  activePage={page}
+                  onPageChange={this.handlePaginationChange}
+                  totalPages={totalPages}
+                />
+              )}
+            </Grid>
           </div>
         </div>
       </div>
