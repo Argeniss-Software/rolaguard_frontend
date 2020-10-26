@@ -14,7 +14,7 @@ import Validation from "../util/validation";
 
 import logo from '../img/rolaguard-logo-white.svg'
 import BackToLogin from "../components/utils/back-to-login.component";
-
+import { Redirect } from "react-router-dom";
 @inject("authStore", "usersStore")
 @observer
 class PasswordCreatePage extends React.Component {
@@ -83,12 +83,11 @@ class PasswordCreatePage extends React.Component {
 
     if (!error) {
       this.setState({ loading: true });
-
       if (this.state.action === "activation") {
         this.props.usersStore
           .createPassword(this.state.user)
           .then(response => {
-            if (response.status !== 200) {
+            if (_.get(response, 'status') !== 200) {
               showErrors.invalidToken = true;
               showErrors.errorMessage= response.data.error;
               this.setState({
@@ -124,6 +123,7 @@ class PasswordCreatePage extends React.Component {
                 loading: false,
                 showSuccess: true
               });
+              // redirect with message!
             }
           })
           .catch(error => {
@@ -146,16 +146,23 @@ class PasswordCreatePage extends React.Component {
         className="login-form"
         style={{
           display: "flex",
-          justifyContent: "center"
-        }}>
+          justifyContent: "center",
+        }}
+      >
         >
         <Grid
           textAlign="center"
           style={{ margin: 0, height: "100%", width: "40%" }}
-          verticalAlign="middle">
+          verticalAlign="middle"
+        >
           <Grid.Column className="animated fadeIn" style={{ maxWidth: 800 }}>
             <Header as="h2" inverted color="black" textAlign="center">
-              <img id="login-logo" className="animated fadeIn" src={this.state.logoURL} alt=""/>
+              <img
+                id="login-logo"
+                className="animated fadeIn"
+                src={this.state.logoURL}
+                alt=""
+              />
             </Header>
             <Form size="large" error={loginError}>
               {!showSuccess && !invalidToken && (
@@ -202,7 +209,7 @@ class PasswordCreatePage extends React.Component {
                       )}
                     </Form.Field>
                   </Form.Group>
-                  <BackToLogin/>
+                  <BackToLogin />
                   <Button
                     color="blue"
                     size="large"
@@ -212,24 +219,32 @@ class PasswordCreatePage extends React.Component {
                       loading ||
                       Validation.isEmpty(user.password) ||
                       Validation.isEmpty(user.password2)
-                    }>
+                    }
+                  >
                     Save Password
                   </Button>
                 </Segment>
               )}
               {showSuccess && (
-                <Segment>
-                  <Message className="mh-auto" color='green'>Your password has been updated. You can login with your account now.</Message>
-                </Segment>
+                <Redirect
+                  to={{
+                    pathname: "/login",
+                    state: { successSetPassword: "true" },
+                  }}
+                />
               )}
               {errorMessage && (
                 <Segment>
-                  <Message className="mh-auto" color='red'>{errorMessage}</Message>
+                  <Message className="mh-auto" color="red">
+                    {errorMessage}
+                  </Message>
                 </Segment>
               )}
               {invalidToken && !errorMessage && (
                 <Segment>
-                  <Message className="mh-auto" color='red'>We are sorry, the token is invalid. Please contact support.</Message>
+                  <Message className="mh-auto" color="red">
+                    We are sorry, the token is invalid. Please contact support.
+                  </Message>
                 </Segment>
               )}
             </Form>

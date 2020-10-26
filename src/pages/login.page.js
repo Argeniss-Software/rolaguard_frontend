@@ -29,9 +29,20 @@ class LoginPage extends React.Component {
       password: "",
       errorHeader: "",
       errorText: "",
-      logoURL: logo
+      logoURL: logo,
+      showPasswordUpdatedMsg: false
     };
   }
+
+
+    componentDidMount() {
+      if (_.get(this, 'props.location.state.successSetPassword', false) === "true") {
+        this.state.showPasswordUpdatedMsg = true
+      } else {
+        this.state.showPasswordUpdatedMsg = false
+      }
+        
+    }
 
   login = () => {
     const userData = {
@@ -86,12 +97,31 @@ class LoginPage extends React.Component {
         <Grid
           textAlign="center"
           style={{ margin: 0, height: "100%" }}
-          verticalAlign="middle">
+          verticalAlign="middle"
+        >
           <Grid.Column className="animated fadeIn" style={{ maxWidth: 450 }}>
             <Header as="h2" inverted color="black" textAlign="center">
-              <img id="login-logo" className="animated fadeIn" src={this.state.logoURL} alt=""/>
+              <img
+                id="login-logo"
+                className="animated fadeIn"
+                src={this.state.logoURL}
+                alt=""
+              />
             </Header>
-            <Form className="form-label form-css-label" size="large" error={loginError}>
+            {this.state.showPasswordUpdatedMsg && (
+              <Segment>
+                <Message className="mh-auto" color="green">
+                  Your password has been updated. You can login with your
+                  account now.
+                </Message>
+              </Segment>
+            )}
+
+            <Form
+              className="form-label form-css-label"
+              size="large"
+              error={loginError}
+            >
               <Segment>
                 <Form.Input
                   fluid
@@ -102,7 +132,7 @@ class LoginPage extends React.Component {
                     this.setState({ username: data.value, loginError: false })
                   }
                 >
-                  <input/>
+                  <input />
                   <label>Username or email</label>
                 </Form.Input>
 
@@ -114,7 +144,7 @@ class LoginPage extends React.Component {
                     this.setState({ password: data.value, loginError: false })
                   }
                 >
-                  <input/>
+                  <input />
                   <label>Password</label>
                 </Form.Input>
                 {this.state.loginError && (
@@ -127,15 +157,27 @@ class LoginPage extends React.Component {
                   onClick={this.login}
                   loading={loading}
                   style={{ marginBottom: 10 }}
-                  disabled={loading || !this.state.password || !this.state.username}>
+                  disabled={
+                    loading || !this.state.password || !this.state.username
+                  }
+                >
                   Login
                 </Button>
-                <a onClick={this.toPasswordRecovery} className="cursor-pointer" style={{ marginBottom: "2em" }}>Forgot password?</a>
-                <br/>
+                <a
+                  onClick={this.toPasswordRecovery}
+                  className="cursor-pointer"
+                  style={{ marginBottom: "2em" }}
+                >
+                  Forgot password?
+                </a>
+                <br />
               </Segment>
             </Form>
             <Message>
-              Don't you have an account? <a onClick={this.toRegister} className="cursor-pointer">Sign Up</a>
+              Don't you have an account?{" "}
+              <a onClick={this.toRegister} className="cursor-pointer">
+                Sign Up
+              </a>
             </Message>
           </Grid.Column>
         </Grid>

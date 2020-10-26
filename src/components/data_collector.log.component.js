@@ -106,7 +106,7 @@ class DataCollectorLogComponent extends React.Component {
 
                 {/* VIEW BODY */}
                 {!hasError && !isLoadingDataCollector && <div className="view-body">
-                    <Grid columns={4} style={{marginBottom: 10}}>
+                    <Grid columns={4} style={{marginBottom: "10px", marginTop: "0.2em"}}>
                         <Grid.Column>
                             <Header as='h2'>Data source</Header>
                             <span style={{fontSize: 19}}>{dataCollector.name}</span>

@@ -299,7 +299,7 @@ class InventoryDetailsModal extends Component {
                     <Geolocation
                       location={item.location}
                       gatewaysLocations={this.state.gatewaysLocation}
-                      radius={2000}
+                      radius={5000}
                     />
                   </div>
                 </Grid.Column>

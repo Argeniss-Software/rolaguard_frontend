@@ -8,6 +8,7 @@ import {
   Grid,
   Pagination,
   Popup,
+  Container
 } from "semantic-ui-react";
 import Moment from "react-moment";
 import AlertUtil from "../../../util/alert-util";
@@ -121,108 +122,96 @@ const ShowCurrentIssues = (props) => {
           <EmptyComponent emptyMessage="There are no current issues to show" />
         )}
         {totalItems > 0 && !isLoading && (
-          <Table
-            striped
-            selectable
-            className="animated fadeIn"
-            basic="very"
-            compact="very"
-          >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
-                <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                <Table.HeaderCell
-                  collapsing
-                  onClick={() => toggleSort("since")}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Icon
-                    name={`sort content ${
-                      orderBy[1] === "ASC" ? "ascending" : "descending"
-                    }`}
-                    title={`toggle sort order content ${
-                      orderBy[1] === "ASC" ? "descending" : "ascending"
-                    }`}
-                  />
-                  DATE
-                </Table.HeaderCell>
-                <Table.HeaderCell collapsing>LAST CHECKED</Table.HeaderCell>
-                <Table.HeaderCell collapsing>
-                  {type === "gateway" ? "DEVICE" : "GATEWAY"}
-                </Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {currentIssues.map((current_issue, index) => {
-                return (
-                  <Table.Row key={index} style={{ cursor: "pointer" }}>
-                    <Table.Cell onClick={() => showAlertDetails(current_issue)}>
-                      <Label
-                        horizontal
-                        style={{
-                          backgroundColor: AlertUtil.getColorsMap()[
-                            current_issue.alert.type.risk
-                          ],
-                          color: "white",
-                          borderWidth: 1,
-                          width: "100px",
-                        }}
+          <Container>
+            <Table
+              striped
+              selectable
+              className="animated fadeIn"
+              basic="very"
+              compact="very"
+            >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
+                  <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
+                  <Table.HeaderCell
+                    collapsing
+                    onClick={() => toggleSort("since")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Icon
+                      name={`sort content ${
+                        orderBy[1] === "ASC" ? "ascending" : "descending"
+                      }`}
+                      title={`toggle sort order content ${
+                        orderBy[1] === "ASC" ? "descending" : "ascending"
+                      }`}
+                    />
+                    DATE
+                  </Table.HeaderCell>
+                  <Table.HeaderCell collapsing>
+                    LAST CHECKED
+                  </Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {currentIssues.map((current_issue, index) => {
+                  return (
+                    <Table.Row key={index} style={{ cursor: "pointer" }}>
+                      <Table.Cell
+                        onClick={() => showAlertDetails(current_issue)}
                       >
-                        {current_issue.alert.type.risk}
-                      </Label>
-                    </Table.Cell>
-                    <Table.Cell onClick={() => showAlertDetails(current_issue)}>
-                      {current_issue.alert.type.name}
-                    </Table.Cell>
-                    <Table.Cell
-                      singleLine
-                      onClick={() => showAlertDetails(current_issue)}
-                    >
-                      {
-                        <Moment
-                          format={
-                            globalConfigStore.dateFormats.moment.dateTimeFormat
-                          }
+                        <Label
+                          horizontal
+                          style={{
+                            backgroundColor: AlertUtil.getColorsMap()[
+                              current_issue.alert.type.risk
+                            ],
+                            color: "white",
+                            borderWidth: 1,
+                            width: "100px",
+                          }}
                         >
-                          {current_issue.since}
-                        </Moment>
-                      }
-                    </Table.Cell>
+                          {current_issue.alert.type.risk}
+                        </Label>
+                      </Table.Cell>
+                      <Table.Cell
+                        onClick={() => showAlertDetails(current_issue)}
+                      >
+                        {current_issue.alert.type.name}
+                      </Table.Cell>
+                      <Table.Cell
+                        singleLine
+                        onClick={() => showAlertDetails(current_issue)}
+                      
+                      >
+                        {
+                          <Moment
+                            format={
+                              globalConfigStore.dateFormats.moment
+                                .dateTimeFormat
+                            }
+                          >
+                            {current_issue.since}
+                          </Moment>
+                        }
+                      </Table.Cell>
 
-                    <Table.Cell
-                      singleLine
-                      onClick={() => showAlertDetails(current_issue)}
-                    >
-                      {
-                        <Moment
-                          format={
-                            globalConfigStore.dateFormats.moment.dateTimeFormat
-                          }
-                        >
-                          {current_issue.last_checked}
-                        </Moment>
-                      }
-                    </Table.Cell>
-                    <Table.Cell
-                      className="upper text-center aligned"
-                      style={{ maxWidth: "180px" }}
-                      collapsing
-                    >
-                      <AssetId
-                        id={
-                          type === "gateway"
-                            ? null
-                            : current_issue.alert.gateway_id
+                      <Table.Cell
+                        singleLine
+                        onClick={() => showAlertDetails(current_issue)}
+                      >
+                        {
+                          <Moment
+                            format={
+                              globalConfigStore.dateFormats.moment
+                                .dateTimeFormat
+                            }
+                          >
+                            {current_issue.last_checked}
+                          </Moment>
                         }
-                        type={type === "gateway" ? "device" : "gateway"}
-                        hexId={
-                          type === "gateway"
-                            ? "N/A"
-                            : current_issue.alert.parameters.gateway
-                        }
-                        showAsLink={!(type === "gateway")}
-                      />
+                      </Table.Cell>
                       {!_.isEmpty(selectedAlert.alert) && (
                         <DetailsAlertModal
                           loading={false}
@@ -230,12 +219,12 @@ const ShowCurrentIssues = (props) => {
                           onClose={closeAlertDetails}
                         />
                       )}
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table>
+          </Container>
         )}
         {totalPages > 1 && (
           <Grid className="centered bottom">
