@@ -1,3 +1,4 @@
+import _ from 'lodash'
 const AlertUtil = {
   colorsOpacityMap: {
     INFO: "rgba(93, 156, 236, 0.2)",
@@ -73,7 +74,32 @@ const AlertUtil = {
     new_longitude: "New Longitude",
     rssi: "Signal strenght (dBm)",
   },
-
+  policy: {
+    advance_settings: {
+      keys_dictionary: "Keys dictionary",
+      location_accuracy: "Location Accuracy",
+      max_join_request_fails: "Maximum join request fails",
+      disconnection_sensitivity: "Disconnection sensitivity",
+      min_activity_period: "Minimum activity period",
+      deviation_tolerance: "Deviation tolerance",
+      moving_average_weight: "Moving average weight",
+      minimum_rssi: "Minimum RSSI",
+      minimum_lsnr: "Minimum LSNR",
+      jr_tdiff_sensitivity: "Join Request Time difference sensitivity",
+      max_lost_packets: "Maximum lost packets",
+      time_window: "Time window",
+      rssi_sensitivity: "Rssi sensitivity",
+      size_sensitivity: "Size sensitivity",
+      tdiff_sensitivity: "Time difference sensitivity",
+      cdiff_sensitivity: "Cont difference sensitivity",
+      max_suspicious: "Maximum suspicious",
+      grace_period: "Grace period",
+      max_retransmissions: "Maximum retransmissions",
+    }
+  },
+  getPolicyAdvanceSetting(key) {
+    return this.policy.advance_settings[key] || _.startCase(key)
+  },
   getParameterHeader(key) {
     return this.alertParameters[key] ? this.alertParameters[key] : "";
   },
