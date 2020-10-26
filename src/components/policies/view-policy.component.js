@@ -62,7 +62,7 @@ class ViewPolicyComponent extends React.Component {
             <Card.Header></Card.Header>
             <Card.Content>
               <div>
-                <h3>{key}</h3>
+                <h3>{AlertUtil.getPolicyAdvanceSetting(key)}</h3>
                 <div style={{marginLeft: 3, marginBottom:3, marginTop: 0}}><p>{item.alertType.parameters[key].description}</p></div>
                 <div style={{marginLeft: 3}}><i>Default value: {item.alertType.parameters[key].default}</i></div>
               </div>
@@ -85,28 +85,46 @@ class ViewPolicyComponent extends React.Component {
   }
 
   getKeysManager = (index, activeIndex) => {
-    return(
+    return (
       <Accordion>
-        <Accordion.Title active={activeIndex === index} index={index} onClick={this.handleAccordionClick}>
-          <Icon name='dropdown' />
+        <Accordion.Title
+          active={activeIndex === index}
+          index={index}
+          onClick={this.handleAccordionClick}
+        >
+          <Icon name="dropdown" />
           <strong>Advanced settings</strong>
         </Accordion.Title>
         <Accordion.Content active={activeIndex === index}>
-          <Message warning style={{display: 'block', maxWidth: '100%'}}>
+          <Message warning style={{ display: "block", maxWidth: "100%" }}>
             <Message.Header>Security Warning!</Message.Header>
-            <p>Changes on these parameters will affect the security analysis.</p>
+            <p>
+              Changes on these parameters will affect the security analysis.
+            </p>
           </Message>
-          You can configure new keys to check whenever the system scans the devices. These keys are global for the organization, that means if you add a new key, it will be use in all the organization's policies (old and new).
-          
+          You can configure new keys to check whenever the system scans the
+          devices. These keys are global for the organization, that means if you
+          add a new key, it will be use in all the organization's policies (old
+          and new).
           <Card className="policy-component-card">
             <Card.Header></Card.Header>
             <Card.Content>
               <div>
-                <h3>keys_dictionary</h3>
-                <div style={{marginLeft: 3, marginBottom:3, marginTop: 0}}><p>Organization's keys to check alogside the system keys. These keys are only visible to users in your organization.</p></div>
-                <div style={{marginLeft: 3}}><i>Default value: The system has its own keys that contains the most common used keys.</i></div>
+                <h3>{AlertUtil.getPolicyAdvanceSetting("keys_dictionary")}</h3>
+                <div style={{ marginLeft: 3, marginBottom: 3, marginTop: 0 }}>
+                  <p>
+                    Organization's keys to check alogside the system keys. These
+                    keys are only visible to users in your organization.
+                  </p>
+                </div>
+                <div style={{ marginLeft: 3 }}>
+                  <i>
+                    Default value: The system has its own keys that contains the
+                    most common used keys.
+                  </i>
+                </div>
               </div>
-              <Divider/>
+              <Divider />
               <KeysManager />
             </Card.Content>
           </Card>
