@@ -10,6 +10,7 @@ class ResourceUsageStore {
     type: null, // device or gateway
     status: null, // connected or disconnected
     gateways: [],
+    data_collectors: [],
     signal_strength: { from: -150, to: 0 },
     packet_lost_range: { from: 0, to: 100 },
   };
@@ -50,6 +51,7 @@ class ResourceUsageStore {
     isLoading: false,
     series: [],
   };
+  
 
   @action setModelLoading(val) {
     this.model.isLoading = val;
@@ -269,6 +271,7 @@ class ResourceUsageStore {
       this.setCriteria({
         type: null, // device or gateway
         status: null, // connected or disconnected
+        data_collectors: [],
         gateways: [],
         signal_strength: { from: -150, to: 0 },
         packet_lost_range: { from: 0, to: 100 },
@@ -282,6 +285,9 @@ class ResourceUsageStore {
           break;
         case "type":
           this.setCriteria({ type: null });
+          break;
+        case "data_colectors":
+          this.setCriteria({ data_collectors: data.data_collectors });
           break;
         case "gateways":
           this.setCriteria({ gateways: data.gateways });
@@ -304,7 +310,6 @@ class ResourceUsageStore {
     this.getDataGatewaysFromApi();
     this.getDataPacketsLostFromApi();
     this.getDataSignalStrengthFromApi();
-
   }
 
   @action setCriteria(data) {
@@ -316,6 +321,9 @@ class ResourceUsageStore {
           ...this.criteria,
           ...(_.isFunction(data) ? data.call() : data),
         };
+        break;
+      case "data_collectors":
+        this.criteria.data_collectors = data.data_collectors
         break;
       case "gateways":
         let foundItemToDelete = this.criteria.gateways.findIndex(
@@ -353,13 +361,14 @@ class ResourceUsageStore {
   /* used it on list device and gateway on resrouce ussages */
   @action getAssets(pagination) {
     const { page, size } = pagination || {};
-    const { status, type, gateways, packet_lost_range, signal_strength } =
+    const { status, type, gateways, packet_lost_range, signal_strength, data_collectors } =
       this.criteria || {};
 
     const headers = this.getHeaders();
     const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
+      ...(status && { asset_status: status }),
+      ...(type && { asset_type: type }),
+      ...(data_collectors && { data_collector_ids: data_collectors }),
       ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
       ...(packet_lost_range && {
         min_packet_loss:
@@ -381,15 +390,18 @@ class ResourceUsageStore {
 
   // return for graphs associated to resource usage
   @action getAssetsCount(criteria) {
-    const { status, type, gateways, packet_lost_range, signal_strength } =
+    const { status, type, gateways, packet_lost_range, signal_strength, data_collectors } =
       this.criteria || {};
     const headers = this.getHeaders();
 
     const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
+      ...(status && { asset_status: status }),
+      ...(type && { asset_type: type }),
+      ...(data_collectors && {
+        data_collector_ids: data_collectors
+      }),
       ...(gateways && {
-        gateway_ids: this.criteria.gateways.map((e) => e.id),
+        gateway_ids: gateways.map((e) => e.id),
       }),
       ...(packet_lost_range && {
         min_packet_loss:
