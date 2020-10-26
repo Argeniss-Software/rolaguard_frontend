@@ -56,7 +56,7 @@ class MenuComponent extends React.Component {
                     </a>
                   }
                   style={popupStyle}
-                  content="Quarantine"
+                  content="Current Issues"
                 />
                 <Popup
                   trigger={
@@ -88,7 +88,7 @@ class MenuComponent extends React.Component {
                     </a>
                   }
                   style={popupStyle}
-                  content="Resources Usage"
+                  content="Network Overview"
                 />
 
                 <h3></h3>

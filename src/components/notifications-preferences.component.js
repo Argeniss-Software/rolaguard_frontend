@@ -142,154 +142,273 @@ class NotificationsPreferencesComponent extends React.Component {
               <div className="view-header mb-lg">
                 <h1>EVENTS MANAGER</h1>
               </div>
-              { hasError && (<div id="error-message-wrapper">
-                <Message error header='Oops!' content={'Something went wrong. Try again later.'} className="error-message"/>
-              </div>) }
-              { showMessage && (<div id="success-message-wrapper" onClick= {() => this.setState({showMessage: false})} >
-                <Message success header='Done!' content={'Changes were saved, click to hide.'} className= "success-message"/>
-              </div>) }
+              {hasError && (
+                <div id="error-message-wrapper">
+                  <Message
+                    error
+                    header="Oops!"
+                    content={"Something went wrong. Try again later."}
+                    className="error-message"
+                  />
+                </div>
+              )}
+              {showMessage && (
+                <div
+                  id="success-message-wrapper"
+                  onClick={() => this.setState({ showMessage: false })}
+                >
+                  <Message
+                    success
+                    header="Done!"
+                    content={"Changes were saved, click to hide."}
+                    className="success-message"
+                    style={{ height: "100%" }}
+                  />
+                </div>
+              )}
               {!hasError && isLoading && (
-                <LoaderComponent loadingMessage="Loading preferences..."/>
+                <LoaderComponent loadingMessage="Loading preferences..." />
               )}
               {/* VIEW BODY */}
-              {!hasError && !isLoading && <div id="notification-preferences-body" className="view-body">
-              <div id="notification-preferences-container">
-                <Accordion fluid styled>
-                <Accordion.Title
-                    active={activeIndex === 2}
-                    index={2}
-                    onClick={this.handleAccordionClick}
-                  >
-                    <Icon name='dropdown' />
-                    Sources ({dataCollectors.length})
-                  </Accordion.Title>
-                <Accordion.Content active={activeIndex === 2}>
-                  <Table className="animated fadeIn" unstackable basic="very">
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
-                        <Table.HeaderCell className="border-bottom-none pb0">NAME</Table.HeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {
-                        dataCollectors.map( (item, index) => {
-                          return (
-                            <Table.Row key={index}>
+              {!hasError && !isLoading && (
+                <div id="notification-preferences-body" className="view-body">
+                  <div id="notification-preferences-container">
+                    <Accordion fluid styled>
+                      <Accordion.Title
+                        active={activeIndex === 2}
+                        index={2}
+                        onClick={this.handleAccordionClick}
+                      >
+                        <Icon name="dropdown" />
+                        Sources ({dataCollectors.length})
+                      </Accordion.Title>
+                      <Accordion.Content active={activeIndex === 2}>
+                        <Table
+                          className="animated fadeIn"
+                          unstackable
+                          basic="very"
+                        >
+                          <Table.Header>
+                            <Table.Row>
+                              <Table.HeaderCell className="border-bottom-none pb0">
+                                STATUS
+                              </Table.HeaderCell>
+                              <Table.HeaderCell className="border-bottom-none pb0">
+                                NAME
+                              </Table.HeaderCell>
+                            </Table.Row>
+                          </Table.Header>
+                          <Table.Body>
+                            {dataCollectors.map((item, index) => {
+                              return (
+                                <Table.Row key={index}>
+                                  <Table.Cell className="status-column">
+                                    <Popup
+                                      content={
+                                        item.enabled ? "Disable" : "Enable"
+                                      }
+                                      trigger={
+                                        <Checkbox
+                                          toggle
+                                          onChange={() =>
+                                            this.toggle("dataCollectors", index)
+                                          }
+                                          checked={item.enabled}
+                                        />
+                                      }
+                                    />
+                                  </Table.Cell>
+                                  <Table.Cell>
+                                    <p>{item.dataCollector.name}</p>
+                                  </Table.Cell>
+                                </Table.Row>
+                              );
+                            })}
+                          </Table.Body>
+                        </Table>
+                      </Accordion.Content>
+                      <Accordion.Title
+                        active={activeIndex === 1}
+                        index={1}
+                        onClick={this.handleAccordionClick}
+                      >
+                        <Icon name="dropdown" />
+                        Triggers
+                      </Accordion.Title>
+                      <Accordion.Content active={activeIndex === 1}>
+                        <Grid celled="internally" stackable columns={2}>
+                          <Grid.Row>
+                            <Grid.Column>
+                              <Table
+                                className="animated fadeIn"
+                                unstackable
+                                basic="very"
+                                style={{ margin: "20px" }}
+                              >
+                                <Table.Header>
+                                  <Table.Row>
+                                    <Table.HeaderCell className="border-bottom-none pb0">
+                                      STATUS
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell className="border-bottom-none pb0">
+                                      RISK
+                                    </Table.HeaderCell>
+                                  </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                  {risks.map((item, index) => {
+                                    return (
+                                      <Table.Row key={index}>
+                                        <Table.Cell className="status-column">
+                                          <Popup
+                                            content={
+                                              item.enabled
+                                                ? "Disable"
+                                                : "Enable"
+                                            }
+                                            trigger={
+                                              <Checkbox
+                                                toggle
+                                                onChange={() =>
+                                                  this.toggle("risks", index)
+                                                }
+                                                checked={item.enabled}
+                                              />
+                                            }
+                                          />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          <Label
+                                            horizontal
+                                            style={{
+                                              backgroundColor: this.colors[
+                                                item.name.toUpperCase()
+                                              ],
+                                              color: "white",
+                                              width: "100px",
+                                              borderColor: this.colors[
+                                                item.name.toUpperCase()
+                                              ],
+                                            }}
+                                          >
+                                            {item.name.toUpperCase()}
+                                          </Label>
+                                        </Table.Cell>
+                                      </Table.Row>
+                                    );
+                                  })}
+                                </Table.Body>
+                              </Table>
+                            </Grid.Column>
+                            <Grid.Column>
+                              <Table
+                                className="animated fadeIn"
+                                unstackable
+                                basic="very"
+                                style={{ margin: "20px" }}
+                              >
+                                <Table.Header>
+                                  <Table.Row>
+                                    <Table.HeaderCell className="border-bottom-none pb0">
+                                      STATUS
+                                    </Table.HeaderCell>
+                                    <Table.HeaderCell className="border-bottom-none pb0">
+                                      IMPORTANCE
+                                    </Table.HeaderCell>
+                                  </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                  {asset_importance.map((item, index) => {
+                                    return (
+                                      <Table.Row key={index}>
+                                        <Table.Cell className="status-column">
+                                          <Popup
+                                            content={
+                                              item.enabled
+                                                ? "Disable"
+                                                : "Enable"
+                                            }
+                                            trigger={
+                                              <Checkbox
+                                                toggle
+                                                onChange={() =>
+                                                  this.toggle(
+                                                    "asset_importance",
+                                                    index
+                                                  )
+                                                }
+                                                checked={item.enabled}
+                                              />
+                                            }
+                                          />
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                          <ImportanceLabel
+                                            importance={item.name.toUpperCase()}
+                                          />
+                                        </Table.Cell>
+                                      </Table.Row>
+                                    );
+                                  })}
+                                </Table.Body>
+                              </Table>
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
+                      </Accordion.Content>
+                      <Accordion.Title
+                        active={activeIndex === 0}
+                        index={0}
+                        onClick={this.handleAccordionClick}
+                      >
+                        <Icon name="dropdown" />
+                        Action
+                      </Accordion.Title>
+                      <Accordion.Content active={activeIndex === 0}>
+                        <Table
+                          className="animated fadeIn"
+                          unstackable
+                          basic="very"
+                        >
+                          <Table.Header>
+                            <Table.Row>
+                              <Table.HeaderCell className="border-bottom-none pb0">
+                                STATUS
+                              </Table.HeaderCell>
+                              <Table.HeaderCell className="border-bottom-none pb0"></Table.HeaderCell>
+                            </Table.Row>
+                          </Table.Header>
+                          <Table.Body>
+                            <Table.Row>
                               <Table.Cell className="status-column">
-                                <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
-                                  <Checkbox toggle onChange={() => this.toggle('dataCollectors', index)} checked={item.enabled} />
-                                }/>
+                                <Popup
+                                  content={
+                                    pushItem.enabled ? "Disable" : "Enable"
+                                  }
+                                  trigger={
+                                    <Checkbox
+                                      toggle
+                                      onChange={() =>
+                                        this.toggleDestination(
+                                          pushItem.destination
+                                        )
+                                      }
+                                      checked={pushItem.enabled}
+                                    />
+                                  }
+                                />
                               </Table.Cell>
                               <Table.Cell>
-                                <p>{item.dataCollector.name}</p>
+                                <Header
+                                  as="h4"
+                                  className="notification-preferences-header"
+                                >
+                                  Push notifications
+                                </Header>
                               </Table.Cell>
                             </Table.Row>
-                          );
-                        })
-                      }
-                      </Table.Body>
-                    </Table>
-                  </Accordion.Content>
-                  <Accordion.Title
-                    active={activeIndex === 1}
-                    index={1}
-                    onClick={this.handleAccordionClick}
-                  >
-                    <Icon name='dropdown' />
-                    Triggers
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === 1}>
-                    <Grid  celled='internally' stackable columns={2}>
-                      <Grid.Row>
-                        <Grid.Column>
-                          <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
-                                <Table.HeaderCell className="border-bottom-none pb0">RISK</Table.HeaderCell>
-                              </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                            {
-                              risks.map( (item, index) => {
-                                return (
-                                  <Table.Row key={index}>
-                                    <Table.Cell className="status-column">
-                                      <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
-                                        <Checkbox toggle onChange={() => this.toggle('risks', index)} checked={item.enabled} />
-                                      }/>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <Label horizontal style={{backgroundColor: this.colors[item.name.toUpperCase()], color: 'white', width: "100px", borderColor: this.colors[item.name.toUpperCase()]}}>{item.name.toUpperCase()}</Label>                                  
-                                    </Table.Cell>
-                                  </Table.Row>
-                                );
-                              })
-                            }
-                            </Table.Body>
-                          </Table>
-                      </Grid.Column>
-                      <Grid.Column>
-                          <Table className="animated fadeIn" unstackable basic="very" style={{margin:"20px"}}>
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
-                                <Table.HeaderCell className="border-bottom-none pb0">IMPORTANCE</Table.HeaderCell>
-                              </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                            {
-                              asset_importance.map( (item, index) => {
-                                return (
-                                  <Table.Row key={index}>
-                                    <Table.Cell className="status-column">
-                                      <Popup content={item.enabled ? 'Disable' : 'Enable'} trigger={
-                                        <Checkbox toggle onChange={() => this.toggle('asset_importance', index)} checked={item.enabled} />
-                                      }/>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <ImportanceLabel importance={item.name.toUpperCase()} />
-                                    </Table.Cell>
-                                  </Table.Row>
-                                );
-                              })
-                            }
-                            </Table.Body>
-                          </Table>
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
-                  </Accordion.Content>
-                  <Accordion.Title
-                    active={activeIndex === 0}
-                    index={0}
-                    onClick={this.handleAccordionClick}
-                  >
-                    <Icon name='dropdown' />
-                    Action
-                  </Accordion.Title>
-                  <Accordion.Content active={activeIndex === 0}>
-                    <Table className="animated fadeIn" unstackable basic="very">
-                      <Table.Header>
-                        <Table.Row>
-                          <Table.HeaderCell className="border-bottom-none pb0">STATUS</Table.HeaderCell>
-                          <Table.HeaderCell className="border-bottom-none pb0"></Table.HeaderCell>
-                        </Table.Row>
-                      </Table.Header>
-                      <Table.Body>
-                        <Table.Row>
-                          <Table.Cell className="status-column">
-                            <Popup content={pushItem.enabled ? 'Disable' : 'Enable'} trigger={
-                              <Checkbox toggle onChange={() => this.toggleDestination(pushItem.destination)} checked={pushItem.enabled} />
-                            }/>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Header as='h4' className="notification-preferences-header">Push notifications</Header>
-                          </Table.Cell>
-                        </Table.Row>
 
-                        <Table.Row>
+                            {/* <Table.Row>
                           <Table.Cell className="status-column">
                             <Popup content={smsItem.enabled ? 'Disable' : 'Enable'} trigger={
                               <Checkbox toggle onChange={() => this.toggleDestination(smsItem.destination)} checked={smsItem.enabled} />
@@ -313,43 +432,119 @@ class NotificationsPreferencesComponent extends React.Component {
                               </div>
                             </Form>
                           </Table.Cell>
-                        </Table.Row>}
+                        </Table.Row>} */}
 
-                        <Table.Row>
-                          <Table.Cell className="status-column">
-                            <Popup content={emailItem.enabled ? 'Disable' : 'Enable'} trigger={
-                              <Checkbox toggle onChange={() => this.toggleDestination(emailItem.destination)} checked={emailItem.enabled} />
-                            }/>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Header as='h4' className="notification-preferences-header">Email</Header>
-                          </Table.Cell>
-                        </Table.Row>
-                        {emailItem.enabled && <Table.Row>
-                          <Table.Cell colSpan="2">
-                            <Form className="form-label form-css-label" noValidate="novalidate">
-                                <Form.Group inline>
-                                  <Input style={{width:"100%", marginRight:"25px"}} placeholder="Add additional email" name="newEmail" value={newEmail} onChange={this.onAdditionalChange}/>
-                                  <Button content="Add" disabled={isSaving || isLoading || newEmail.length === 0} onClick={this.onAdditionalEmailAdded}/>
-                                </Form.Group>
-                              <div className="mt-lg ml-xs">
-                                {emailItem.additional.map((item, index) => <div className="mt" key={index}><Icon name={item.active ? 'check' : 'clock' } color={item.active ? 'green' : 'yellow'} className="mr"></Icon><span>{item.email}</span><Icon name="close" color="red" style={{marginLeft:10, cursor: 'pointer'}} onClick={() => this.removeEmail(index)}></Icon></div>)}
-                              </div>
-                                </Form>
-                            </Table.Cell>
-                        </Table.Row>}
-                      </Table.Body>
-                    </Table>
-                  </Accordion.Content>
-                </Accordion>
-                <div style={{display: "flex", justifyContent: "flex-end"}}>
-                  {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
-                  <Form.Button color="green" disabled={isLoading || isSaving} loading={isSaving} content="Save" style={{marginTop: 25, marginLeft: 10}} onClick={this.save}/>
+                            <Table.Row>
+                              <Table.Cell className="status-column">
+                                <Popup
+                                  content={
+                                    emailItem.enabled ? "Disable" : "Enable"
+                                  }
+                                  trigger={
+                                    <Checkbox
+                                      toggle
+                                      onChange={() =>
+                                        this.toggleDestination(
+                                          emailItem.destination
+                                        )
+                                      }
+                                      checked={emailItem.enabled}
+                                    />
+                                  }
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                <Header
+                                  as="h4"
+                                  className="notification-preferences-header"
+                                >
+                                  Email
+                                </Header>
+                              </Table.Cell>
+                            </Table.Row>
+                            {emailItem.enabled && (
+                              <Table.Row>
+                                <Table.Cell colSpan="2">
+                                  <Form
+                                    className="form-label form-css-label"
+                                    noValidate="novalidate"
+                                  >
+                                    <Form.Group inline>
+                                      <Input
+                                        style={{
+                                          width: "100%",
+                                          marginRight: "25px",
+                                        }}
+                                        placeholder="Add additional email"
+                                        name="newEmail"
+                                        value={newEmail}
+                                        onChange={this.onAdditionalChange}
+                                      />
+                                      <Button
+                                        content="Add"
+                                        disabled={
+                                          isSaving ||
+                                          isLoading ||
+                                          newEmail.length === 0
+                                        }
+                                        onClick={this.onAdditionalEmailAdded}
+                                      />
+                                    </Form.Group>
+                                    <div className="mt-lg ml-xs">
+                                      {emailItem.additional.map(
+                                        (item, index) => (
+                                          <div className="mt" key={index}>
+                                            <Icon
+                                              name={
+                                                item.active ? "check" : "clock"
+                                              }
+                                              color={
+                                                item.active ? "green" : "yellow"
+                                              }
+                                              className="mr"
+                                            ></Icon>
+                                            <span>{item.email}</span>
+                                            <Icon
+                                              name="close"
+                                              color="red"
+                                              style={{
+                                                marginLeft: 10,
+                                                cursor: "pointer",
+                                              }}
+                                              onClick={() =>
+                                                this.removeEmail(index)
+                                              }
+                                            ></Icon>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </Form>
+                                </Table.Cell>
+                              </Table.Row>
+                            )}
+                          </Table.Body>
+                        </Table>
+                      </Accordion.Content>
+                    </Accordion>
+                    <div
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
+                      <Form.Button
+                        color="green"
+                        disabled={isLoading || isSaving}
+                        loading={isSaving}
+                        content="Save"
+                        style={{ marginTop: 25, marginLeft: 10 }}
+                        onClick={this.save}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>}
+              )}
+            </div>
           </div>
-        </div>
         );
     }
 }
