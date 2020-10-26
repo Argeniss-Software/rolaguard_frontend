@@ -366,8 +366,8 @@ class ResourceUsageStore {
 
     const headers = this.getHeaders();
     const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
+      ...(status && { asset_status: status }),
+      ...(type && { asset_type: type }),
       ...(data_collectors && { data_collector_ids: data_collectors }),
       ...(gateways && { gateway_ids: gateways.map((e) => e.id) }),
       ...(packet_lost_range && {
@@ -395,13 +395,13 @@ class ResourceUsageStore {
     const headers = this.getHeaders();
 
     const params = {
-      ...(status && { asset_status: this.criteria.status }),
-      ...(type && { asset_type: this.criteria.type }),
+      ...(status && { asset_status: status }),
+      ...(type && { asset_type: type }),
       ...(data_collectors && {
-        data_collector_ids: this.criteria.data_collectors
+        data_collector_ids: data_collectors
       }),
       ...(gateways && {
-        gateway_ids: this.criteria.gateways.map((e) => e.id),
+        gateway_ids: gateways.map((e) => e.id),
       }),
       ...(packet_lost_range && {
         min_packet_loss:
