@@ -58,9 +58,9 @@ const DateFilterBar = (props) => {
 
   const clearDateFilters = () => {
     // clear filter
-    setDateFilterRange("");
-    setDateFilterTmp({ from: "", to: "" });
-    setDateFilter({ from: "", to: "" });
+    setDateFilterRange(null);
+    setDateFilterTmp({ from: null, to: null });
+    setDateFilter({ from: null, to: null });
   };
 
   const updateRange = (range) => {
@@ -71,12 +71,15 @@ const DateFilterBar = (props) => {
     let from = moment();
     switch (range) {
       case "DAY":
+        debugger
         from = from.subtract(1, "days");
         break;
       case "WEEK":
+        debugger;
         from = from.subtract(1, "week");
         break;
       case "MONTH":
+        debugger
         from = from.subtract(1, "month");
         break;
       default:
@@ -85,16 +88,16 @@ const DateFilterBar = (props) => {
     let to = moment();
 
     setDateFilterTmp({
-      from: from.format(dateTimePickerFormat),
-      to: to.format(dateTimePickerFormat),
+      from: from.toDate(),
+      to: to.toDate(),
     });
 
     setDateFilter((actualDateRange) => {
       return {
         ...actualDateRange,
         ...{
-          from: from.format(dateTimeApiFormat) + "Z",
-          to: to.format(dateTimeApiFormat) + "Z",
+          from: from.toDate(),
+          to: to.toDate(),
         },
       };
     });
@@ -119,23 +122,11 @@ const DateFilterBar = (props) => {
               <DatePicker
                 selectsStart
                 todayButton="Today"
-                startDate={
-                  dateFilterTmp.from
-                    ? moment(dateFilterTmp.from).toDate()
-                    : null
-                }
-                endDate={
-                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
-                }
-                maxDate={
-                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
-                }
+                startDate={dateFilterTmp.from}
+                endDate={dateFilterTmp.to}
+                maxDate={dateFilterTmp.to}
                 placeholderText="Select a start date"
-                selected={
-                  dateFilterTmp.from
-                    ? moment(dateFilterTmp.from).toDate()
-                    : null
-                }
+                selected={dateFilterTmp.from}
                 onChange={handleDateFilterFromTmp}
                 showTimeSelect
                 timeFormat={timeFormat}
@@ -152,21 +143,11 @@ const DateFilterBar = (props) => {
                 fluid
                 selectsEnd
                 todayButton="Today"
-                startDate={
-                  dateFilterTmp.from
-                    ? moment(dateFilterTmp.from).toDate()
-                    : null
-                }
-                endDate={
-                  dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null
-                }
-                minDate={
-                  dateFilterTmp.from
-                    ? moment(dateFilterTmp.from).toDate()
-                    : null
-                }
+                startDate={dateFilterTmp.from}
+                endDate={dateFilterTmp.to}
+                minDate={dateFilterTmp.from}
                 placeholderText="Select a finish date"
-                selected={dateFilterTmp.to ? moment(dateFilterTmp.to).toDate() : null}
+                selected={dateFilterTmp.to}
                 onChange={handleDateFilterToTmp}
                 showTimeSelect
                 timeFormat={timeFormat}
