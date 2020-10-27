@@ -150,7 +150,7 @@ const ShowCurrentIssues = (props) => {
                     DATE
                   </Table.HeaderCell>
                   <Table.HeaderCell collapsing>
-                    LAST CHECKED
+                    LAST CHECK
                   </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
