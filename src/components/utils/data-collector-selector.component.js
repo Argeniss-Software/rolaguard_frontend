@@ -63,9 +63,19 @@ const DataCollectorSelector = (props) => {
 
   useEffect(() => {
     if (_.isFunction(props.onChange)) {
-      props.onChange({ selected: dataCollectorsSelected, totalCollectors: totalCollectors, activeCollectors: activeCollectors });
+      props.onChange({
+        selected: dataCollectorsSelected,
+        totalCollectors: totalCollectors,
+        activeCollectors: activeCollectors,
+        dataCollectorsOptions: dataCollectorsOptions
+      });
     }
-  }, [dataCollectorsSelected, totalCollectors, activeCollectors]);
+  }, [
+    dataCollectorsSelected,
+    totalCollectors,
+    activeCollectors,
+    dataCollectorsOptions,
+  ]);
 
   return (
       <Dropdown
