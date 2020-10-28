@@ -1,22 +1,29 @@
 const ColorUtil = {
-  getByIndex: (i) => {
-    const colors = [
-      "#5d9cec",
-      "#fad732",
-      "#ff902b",
-      "#f05050",
-      "#B03060",
+  colorList: () => { return [
+      "#7138DC",
+      "#5F6B73",
+      "#103350",
+      "#9467bd",
+      "#16A984",
+      "#bd00bd",
+      "#ff85c2",
+      "#6666ff",
+      "#009999",
+      "#808080",
+      "#c0955d",
+      "#999900",
+      "#00bdbd",
+      "#000066",
       "#FE9A76",
-      "#FFD700",
-      "#32CD32",
-      "#016936",
-      "#008080",
-      "#0E6EB8",
-      "#EE82EE",
-      "#B413EC",
-      "#FF1493",
-      "#A52A2A",
+      "#6b00bd",
+      "#ff33ff",
+      "#d600d6",
+      "#000080",
+      "#ff52a8",
     ];
+  },
+  getByIndex: (i) => {
+    const colors = ColorUtil.colorList()
     const index = i < colors.length ? i : i % colors.length;
 
     return colors[index];

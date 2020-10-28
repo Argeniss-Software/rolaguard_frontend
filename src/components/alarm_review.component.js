@@ -29,6 +29,7 @@ import AlertListComponent from "./alert.list.component";
 import "./alarm_review.component.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./utils/react-datetimepicker-custom.css";
+import ColorUtil from "../util/colors";
 
 @inject(
   "generalDataStore",
@@ -180,8 +181,8 @@ class AlarmReviewComponent extends React.Component {
           color: this.colorsMap[key],
         };
       });
-      const colors = ["#38b9dc", "#1f77b4", "#103350", "#9467bd", "#2185d0"];
 
+      const colors = ColorUtil.colorList()
       const filteredRisks = risks.filter((r) => r.value !== 0);
       const filteredTypes = types.filter((t) => t.value !== 0);
       const filteredDataCollectors = dataCollectors.filter(
