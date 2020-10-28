@@ -160,12 +160,17 @@ class UsersNewComponent extends React.Component {
     return this.state.user.username === this.props.usersStore.currentUser.username || !Validation.isUserAdmin(this.props.usersStore.currentUser);
   }
 
+  showPasswordEmailChange() {
+    return this.state.user.username === this.props.usersStore.currentUser.username;
+  }
+
   render() {
     const { user, title, activeIndex } = this.state;
     const hideSave = Validation.isEmpty(user.full_name) || user.user_roles.length === 0;
     const isAdmin = Validation.isUserAdmin(this.props.usersStore.currentUser);
 
     const roleDropdownDisabled = this.roleDropdownDisabled();
+    const showPasswordEmailChange = this.showPasswordEmailChange();
 
     return (      
       <div className="app-body-container-view">
@@ -250,22 +255,27 @@ class UsersNewComponent extends React.Component {
                     )}
                   </Form>
                 </Accordion.Content>
-
-                <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleAccordionClick}>
-                  <Icon name='dropdown' />
-                  Change email
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 1}>
-                  <EmailAccordion user={{ user }} />
-                </Accordion.Content>
-
-                <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleAccordionClick}>
-                  <Icon name='dropdown' />
-                  Change password
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === 2}>
-                  <PasswordAccordion />
-                </Accordion.Content>
+                
+                {showPasswordEmailChange && 
+                <React.Fragment>
+                    <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleAccordionClick}>    
+                    
+                    <Icon name='dropdown' />
+                    Change email
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === 1}>
+                    <EmailAccordion user={{ user }} />
+                  </Accordion.Content>
+  
+                  <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleAccordionClick}>
+                    <Icon name='dropdown' />
+                    Change password
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === 2}>
+                    <PasswordAccordion />
+                  </Accordion.Content>
+                </React.Fragment> 
+                }
               </Accordion>
             </div>
           </div>
