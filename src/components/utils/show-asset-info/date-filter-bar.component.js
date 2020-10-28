@@ -71,15 +71,12 @@ const DateFilterBar = (props) => {
     let from = moment();
     switch (range) {
       case "DAY":
-        debugger
         from = from.subtract(1, "days");
         break;
       case "WEEK":
-        debugger;
         from = from.subtract(1, "week");
         break;
       case "MONTH":
-        debugger
         from = from.subtract(1, "month");
         break;
       default:
