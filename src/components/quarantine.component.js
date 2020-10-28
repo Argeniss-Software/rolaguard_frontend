@@ -474,7 +474,7 @@ class QuarantineComponent extends React.Component {
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                           <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
                           <Table.HeaderCell collapsing>
-                            LAST CHECKED
+                            LAST CHECK
                           </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             DevEUI/ADDRESS
