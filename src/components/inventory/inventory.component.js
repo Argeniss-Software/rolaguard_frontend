@@ -418,12 +418,12 @@ class InventoryReviewComponent extends React.Component {
               <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-            <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
+            <Table.HeaderCell>NAME</Table.HeaderCell>
 
-            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+            <Table.HeaderCell>
               VENDOR
             </Table.HeaderCell>
-            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+            <Table.HeaderCell>
               APPLICATION
             </Table.HeaderCell>
             <Table.HeaderCell className="hide-old-computer">
@@ -503,24 +503,23 @@ class InventoryReviewComponent extends React.Component {
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
-                      collapsing
                     >
-                      {item.name}
+                      <TruncateMarkup>
+                        <span>{item.name}</span>
+                      </TruncateMarkup>
                     </Table.Cell>
 
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.vendor && (
                         <TruncateMarkup>
-                          <div>{item.vendor}</div>
+                          <span>{item.vendor}</span>
                         </TruncateMarkup>
                       )}
                     </Table.Cell>
-                    <Table.Cell
-                      onClick={() => this.showAssetDetails(index)}
-                    >
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.app_name && (
                         <TruncateMarkup>
-                          <div>{item.app_name}</div>
+                          <span>{item.app_name}</span>
                         </TruncateMarkup>
                       )}
                     </Table.Cell>
