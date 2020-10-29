@@ -300,7 +300,7 @@ class QuarantineComponent extends React.Component {
               <EmptyComponent emptyMessage="There are no issues" />
             )}
             {quarantineDeviceCount > 0 && (
-              <div>
+              <React.Fragment>
                 <Segment>
                   <Grid className="animated fadeIn">
                     <Grid.Row columns={16} className="data-container pl pr">
@@ -472,7 +472,12 @@ class QuarantineComponent extends React.Component {
                         <Table.Row>
                           <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                           <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
-                          <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
+                          <Table.HeaderCell
+                            collapsing
+                            className="hide-old-computer"
+                          >
+                            DATE
+                          </Table.HeaderCell>
                           <Table.HeaderCell collapsing>
                             LAST CHECK
                           </Table.HeaderCell>
@@ -494,7 +499,9 @@ class QuarantineComponent extends React.Component {
                             </Popup>
                           </Table.HeaderCell>
                           <Table.HeaderCell>GATEWAY</Table.HeaderCell>
-                          <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
+                          <Table.HeaderCell className="hide-old-computer">
+                            DATA SOURCE
+                          </Table.HeaderCell>
                           {/*<Table.HeaderCell collapsing>
                             ACTIONS
                           </Table.HeaderCell>
@@ -534,6 +541,7 @@ class QuarantineComponent extends React.Component {
                                 <Table.Cell
                                   singleLine
                                   onClick={() => this.showAlertDetails(index)}
+                                  className="hide-old-computer"
                                 >
                                   {
                                     <Moment
@@ -602,6 +610,7 @@ class QuarantineComponent extends React.Component {
                                   />
                                 </Table.Cell>
                                 <Table.Cell
+                                  className="hide-old-computer"
                                   onClick={() => this.showAlertDetails(index)}
                                 >
                                   {item.data_collector_name}
@@ -647,7 +656,7 @@ class QuarantineComponent extends React.Component {
                     onNavigate={this.goToQuarantine}
                   />
                 )}
-              </div>
+              </React.Fragment>
             )}
           </div>
         </div>
