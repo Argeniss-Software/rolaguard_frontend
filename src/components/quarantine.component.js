@@ -594,7 +594,7 @@ class QuarantineComponent extends React.Component {
                                     title={
                                       item.alert.parameters.gateway +
                                       (item.alert.parameters.gw_name
-                                        ? `(${item.alert.parameters.gw_name})`
+                                        ? ` (${item.alert.parameters.gw_name})`
                                         : "")
                                     }
                                     id={item.alert.gateway_id}
