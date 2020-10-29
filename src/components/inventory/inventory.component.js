@@ -426,7 +426,9 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell style={{ maxWidth: "100px" }}>
               APPLICATION
             </Table.HeaderCell>
-            <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
+            <Table.HeaderCell className="hide-old-computer">
+              JOIN EUI/APP EUI
+            </Table.HeaderCell>
             <Table.HeaderCell collapsing>
               <Popup
                 trigger={
@@ -446,7 +448,9 @@ class InventoryReviewComponent extends React.Component {
                 Inventory section.
               </Popup>
             </Table.HeaderCell>
-            <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
+            <Table.HeaderCell className="hide-old-computer">
+              DATA SOURCE
+            </Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -513,7 +517,6 @@ class InventoryReviewComponent extends React.Component {
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
-                      collapsing
                     >
                       {item.app_name && (
                         <TruncateMarkup>
@@ -521,7 +524,10 @@ class InventoryReviewComponent extends React.Component {
                         </TruncateMarkup>
                       )}
                     </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                    <Table.Cell
+                      onClick={() => this.showAssetDetails(index)}
+                      className="hide-old-computer"
+                    >
                       {item.join_eui && item.join_eui.toUpperCase()}
                     </Table.Cell>
                     <Table.Cell collapsing>
@@ -547,6 +553,7 @@ class InventoryReviewComponent extends React.Component {
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
                     <Table.Cell
+                      className="hide-old-computer"
                       onClick={() => this.showAssetDetails(index)}
                       collapsing
                     >
@@ -562,7 +569,7 @@ class InventoryReviewComponent extends React.Component {
                         ellipsis={tagsLeftEllipsis}
                       >
                         <div
-                          style={{ width: "250px" }}
+                          style={{ width: "150px" }}
                           dataCount={item.tags.length}
                         >
                           {item.tags.map((tag) => {

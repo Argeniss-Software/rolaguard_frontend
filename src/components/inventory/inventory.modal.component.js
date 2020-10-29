@@ -14,6 +14,7 @@ import ImportanceLabel from "../utils/importance-label.component";
 import Geolocation from "../utils/geolocation/geolocation.component";
 import AssetLink from "../utils/asset-link.component";
 import moment from "moment"
+import NotAvailableComponent from "../utils/not-available-value/not-available-value.component";
 
 @inject("tagsStore", "commonStore", "globalConfigStore")
 @observer
@@ -103,20 +104,30 @@ class InventoryDetailsModal extends Component {
         { title: "Item type", value: item.type },
         {
           title: "DevEUI",
-          value: item.hex_id ? item.hex_id.toUpperCase() : null,
+          value: item.hex_id ? (
+            item.hex_id.toUpperCase()
+          ) : (
+            <NotAvailableComponent />
+          ),
         },
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
           title: "JOIN EUI/APP EUI",
-          value: item.join_eui ? item.join_eui.toUpperCase() : null,
+          value: item.join_eui ? (
+            item.join_eui.toUpperCase()
+          ) : (
+            <NotAvailableComponent />
+          ),
         },
         {
           title: "First Activity",
-          value: _.isNull(item.first_activity)
-            ? "N/A"
-            : moment.unix(item.first_activity).format(dateFormat),
+          value: _.isNull(item.first_activity) ? (
+            <NotAvailableComponent />
+          ) : (
+            moment.unix(item.first_activity).format(dateFormat)
+          ),
         },
         { title: "Data Source", value: item.data_collector },
       ];
@@ -126,18 +137,30 @@ class InventoryDetailsModal extends Component {
         { title: "Item type", value: item.type },
         {
           title: "Gateway ID",
-          value: item.hex_id ? item.hex_id.toUpperCase() : null,
+          value: item.hex_id ? (
+            item.hex_id.toUpperCase()
+          ) : (
+            <NotAvailableComponent />
+          ),
         },
         { title: "Name", value: item.name },
         { title: "Vendor", value: item.vendor },
         { title: "Application", value: item.app_name },
         {
           title: "JOIN EUI/APP EUI",
-          value: item.join_eui ? item.join_eui.toUpperCase() : null,
+          value: item.join_eui ? (
+            item.join_eui.toUpperCase()
+          ) : (
+            <NotAvailableComponent />
+          ),
         },
         {
           title: "First Activity",
-          value: _.isNull(item.first_activity)? 'N/A' : moment.unix(item.first_activity).format(dateFormat),
+          value: _.isNull(item.first_activity) ? (
+            <NotAvailableComponent />
+          ) : (
+            moment.unix(item.first_activity).format(dateFormat)
+          ),
         },
         { title: "Data Source", value: item.data_collector },
       ];

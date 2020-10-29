@@ -62,11 +62,11 @@ const ResourceUsageList = (props) => {
                 trigger={
                   <span style={{ cursor: "pointer" }}>
                     <Icon color="blue" name="wifi" type="icon" />
-                    SIGNAL STRENGTH (RSSI)
+                    RSSI
                   </span>
                 }
                 basic
-              >                
+              >
                 <Popup.Header>Signal strength references</Popup.Header>
                 <Popup.Content>
                   <SignalStrengthHelp></SignalStrengthHelp>
@@ -76,10 +76,18 @@ const ResourceUsageList = (props) => {
             <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
               SNR
             </Table.HeaderCell>
-            <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Table.HeaderCell
+              collapsing
+              className="hide-old-computer"
+              style={{ textAlign: "center" }}
+            >
               Payload
             </Table.HeaderCell>
-            <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Table.HeaderCell
+              collapsing
+              style={{ textAlign: "center" }}
+              className="hide-old-computer"
+            >
               <Popup
                 flowing
                 size="mini"
@@ -170,7 +178,7 @@ const ResourceUsageList = (props) => {
                         item.connected ? "" : "lightgray"
                       }`}
                     >
-                      <ShowMessageFrequency asset={item}/>
+                      <ShowMessageFrequency asset={item} />
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => showModal({ item: item, index: index })}
@@ -182,7 +190,7 @@ const ResourceUsageList = (props) => {
                     >
                       <Grid>
                         <Grid.Row style={{ padding: "0px" }}>
-                          <Grid.Column width={2} floated="right">
+                          <Grid.Column width={4} floated="right">
                             {item.type.toLowerCase().trim() === "device" && (
                               <Popup
                                 basic
@@ -205,15 +213,13 @@ const ResourceUsageList = (props) => {
                               ></Popup>
                             )}
                           </Grid.Column>
-                          <Grid.Column width={4} floated="left">
-                            <strong style={{ marginLeft: "5px" }}>
+                          <Grid.Column width={12} floated="left">
                               <NumberFormat
                                 value={item.max_rssi}
                                 displayType={"text"}
                                 suffix={" dBm"}
                                 decimalScale="1"
                               />
-                            </strong>
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
@@ -232,7 +238,9 @@ const ResourceUsageList = (props) => {
                     </Table.Cell>
                     <Table.Cell
                       style={{ textAlign: "center" }}
-                      className={item.connected ? "" : "lightgray"}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
                       onClick={() => showModal({ item: item, index: index })}
                     >
                       <NumberFormat
@@ -245,7 +253,9 @@ const ResourceUsageList = (props) => {
 
                     <Table.Cell
                       style={{ textAlign: "center" }}
-                      className={item.connected ? "" : "lightgray"}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
                       onClick={() => showModal({ item: item, index: index })}
                     >
                       <NumberFormat
