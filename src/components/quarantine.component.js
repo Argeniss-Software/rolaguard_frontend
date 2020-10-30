@@ -18,7 +18,7 @@ import ColorUtil from "../util/colors";
 import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
 import AssetLink from "./utils/asset-link.component"
-
+import TruncateMarkup from "react-truncate-markup";
 @inject("deviceStore", "globalConfigStore")
 @observer
 class QuarantineComponent extends React.Component {
@@ -598,16 +598,22 @@ class QuarantineComponent extends React.Component {
                                   className="upper"
                                   style={{ maxWidth: "180px" }}
                                 >
-                                  <AssetLink
-                                    title={
-                                      item.alert.parameters.gateway +
-                                      (item.alert.parameters.gw_name
-                                        ? ` (${item.alert.parameters.gw_name})`
-                                        : "")
-                                    }
-                                    id={item.alert.gateway_id}
-                                    type="gateway"
-                                  />
+                                  <TruncateMarkup>
+                                    <div>
+                                      <TruncateMarkup.Atom key={item.alert.id}>
+                                        <AssetLink
+                                          title={
+                                            item.alert.parameters.gateway +
+                                            (item.alert.parameters.gw_name
+                                              ? ` (${item.alert.parameters.gw_name})`
+                                              : "")
+                                          }
+                                          id={item.alert.gateway_id}
+                                          type="gateway"
+                                        />
+                                      </TruncateMarkup.Atom>
+                                    </div>
+                                  </TruncateMarkup>
                                 </Table.Cell>
                                 <Table.Cell
                                   className="hide-old-computer"
