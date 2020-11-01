@@ -165,7 +165,7 @@ class UsersNewComponent extends React.Component {
     );
   }
 
-  showPasswordEmailChange() {
+  isCurrentUser() {
     return (
       this.state.user.username === this.props.usersStore.currentUser.username
     );
@@ -176,9 +176,10 @@ class UsersNewComponent extends React.Component {
     const hideSave =
       Validation.isEmpty(user.full_name) || user.user_roles.length === 0;
     const isAdmin = Validation.isUserAdmin(this.props.usersStore.currentUser);
+    const isAllowed = isAdmin || this.isCurrentUser();
 
     const roleDropdownDisabled = this.roleDropdownDisabled();
-    const showPasswordEmailChange = this.showPasswordEmailChange();
+    const showPasswordEmailChange = this.isCurrentUser();
 
     return (
       <div className="app-body-container-view">
@@ -189,7 +190,7 @@ class UsersNewComponent extends React.Component {
           </div>
 
           {/* VIEW BODY CHECK IF USER IS ADMIN*/}
-          {isAdmin && (
+          {isAllowed && (
             <div className="view-body">
               <div style={{ paddingTop: "10px", paddingRight: "5px" }}>
                 <Accordion fluid styled>
@@ -324,7 +325,7 @@ class UsersNewComponent extends React.Component {
             </div>
           )}
           {/* SHOW FORBIDDEN ERROR */}
-          {!isAdmin && <Route component={ForbiddenPage} />}
+          {!isAllowed && <Route component={ForbiddenPage} />}
         </div>
       </div>
     );
