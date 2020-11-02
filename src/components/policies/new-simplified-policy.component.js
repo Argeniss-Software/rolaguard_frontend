@@ -46,7 +46,6 @@ class NewSimplifiedPolicyModal extends Component {
   }
 
   handleApiError = error => {
-    console.error(error);
     if(!error.response || error.response.status !== 400) {
       this.setState({ isSaving: false, error: null, fatalError: true });
     } else {
@@ -83,7 +82,9 @@ class NewSimplifiedPolicyModal extends Component {
         closeOnDimmerClick={false}
         closeOnEscape={false}
       >
-        <Modal.Header>Clone a policy</Modal.Header>
+        <Modal.Header>
+          Clone <i>{_.get(this, "props.policy.name")}</i> policy
+        </Modal.Header>
         <Modal.Content>
           <Form>
             <Form.Input
