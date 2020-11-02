@@ -7,6 +7,7 @@ import {
   Button,
   Accordion,
   Icon,
+  Header,
 } from "semantic-ui-react/dist/commonjs";
 import Validation from "../util/validation";
 import PasswordAccordion from "./utils/password.accordion.component";
@@ -179,7 +180,7 @@ class UsersNewComponent extends React.Component {
     const isAllowed = isAdmin || this.isCurrentUser();
 
     const roleDropdownDisabled = this.roleDropdownDisabled();
-    const showPasswordEmailChange = this.isCurrentUser();
+    const editingCurrentUser = this.isCurrentUser();
 
     return (
       <div className="app-body-container-view">
@@ -203,29 +204,42 @@ class UsersNewComponent extends React.Component {
                     User
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 0}>
+                    {!editingCurrentUser && (
+                      <Header
+                        style={{
+                          marginTop: "3px",
+                          marginBottom: "20px",
+                        }}
+                      >
+                        <Icon name="user" />
+                        User Name: {user.username}
+                      </Header>
+                    )}
                     <Form
                       className="form-label form-css-label text-center"
                       onSubmit={this.handleSubmit}
                       noValidate="novalidate"
                     >
-                      <Form.Field required>
-                        <Form.Input
-                          required
-                          name="full_name"
-                          value={user.full_name}
-                          onChange={this.handleChange}
-                          error={this.state.showErrors.fullNameTooLong}
-                        >
-                          <input />
-                          <label>Full Name</label>
-                        </Form.Input>
-                        {this.state.showErrors.fullNameTooLong && (
-                          <Label className="mt0" basic color="red" pointing>
-                            Full name is too long. Please enter a maximum of 64
-                            letters.
-                          </Label>
-                        )}
-                      </Form.Field>
+                      {editingCurrentUser && (
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="full_name"
+                            value={user.full_name}
+                            onChange={this.handleChange}
+                            error={this.state.showErrors.fullNameTooLong}
+                          >
+                            <input />
+                            <label>Full Name</label>
+                          </Form.Input>
+                          {this.state.showErrors.fullNameTooLong && (
+                            <Label className="mt0" basic color="red" pointing>
+                              Full name is too long. Please enter a maximum of
+                              64 letters.
+                            </Label>
+                          )}
+                        </Form.Field>
+                      )}
                       <Form.Field required>
                         <div className="dropdown-label-wrapper">
                           <label className="dropdown-label">User role</label>
@@ -240,12 +254,14 @@ class UsersNewComponent extends React.Component {
                           />
                         </div>
                       </Form.Field>
-                      <Form.Field>
-                        <PhoneComponent
-                          currentPhone={this.state.user.phone}
-                          onPhoneChange={this.onPhoneChange}
-                        ></PhoneComponent>
-                      </Form.Field>
+                      {editingCurrentUser && (
+                        <Form.Field>
+                          <PhoneComponent
+                            currentPhone={this.state.user.phone}
+                            onPhoneChange={this.onPhoneChange}
+                          ></PhoneComponent>
+                        </Form.Field>
+                      )}
                       <div
                         style={{
                           display: "flex",
@@ -293,7 +309,7 @@ class UsersNewComponent extends React.Component {
                     </Form>
                   </Accordion.Content>
 
-                  {showPasswordEmailChange && (
+                  {editingCurrentUser && (
                     <React.Fragment>
                       <Accordion.Title
                         active={activeIndex === 1}
