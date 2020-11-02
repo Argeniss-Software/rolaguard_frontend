@@ -88,7 +88,7 @@ class ListPoliciesComponent extends React.Component {
             <Header as="h5" style={{marginTop: "0.5em", marginBottom: "0.8em"}}>
               The "default policy" cannot be edited. For a personalized
               configuration, you can create a new policy with the new policy
-              button or clone the default policy and then edit them
+              button or clone the default policy and then edit it
             </Header>
           </div>
           <div className="view-body">

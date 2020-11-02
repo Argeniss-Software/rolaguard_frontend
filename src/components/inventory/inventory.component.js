@@ -418,15 +418,17 @@ class InventoryReviewComponent extends React.Component {
               <ShowDeviceIcon type={criteria.type}></ShowDeviceIcon>
             </Table.HeaderCell>
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
-            <Table.HeaderCell collapsing>NAME</Table.HeaderCell>
+            <Table.HeaderCell>NAME</Table.HeaderCell>
 
-            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+            <Table.HeaderCell>
               VENDOR
             </Table.HeaderCell>
-            <Table.HeaderCell style={{ maxWidth: "100px" }}>
+            <Table.HeaderCell>
               APPLICATION
             </Table.HeaderCell>
-            <Table.HeaderCell>JOIN EUI/APP EUI</Table.HeaderCell>
+            <Table.HeaderCell className="hide-old-computer">
+              JOIN EUI/APP EUI
+            </Table.HeaderCell>
             <Table.HeaderCell collapsing>
               <Popup
                 trigger={
@@ -446,7 +448,9 @@ class InventoryReviewComponent extends React.Component {
                 Inventory section.
               </Popup>
             </Table.HeaderCell>
-            <Table.HeaderCell>DATA SOURCE</Table.HeaderCell>
+            <Table.HeaderCell className="hide-old-computer">
+              DATA SOURCE
+            </Table.HeaderCell>
             <Table.HeaderCell>LABELS</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -499,29 +503,30 @@ class InventoryReviewComponent extends React.Component {
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
-                      collapsing
                     >
-                      {item.name}
+                      <TruncateMarkup>
+                        <span>{item.name}</span>
+                      </TruncateMarkup>
                     </Table.Cell>
 
                     <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.vendor && (
                         <TruncateMarkup>
-                          <div>{item.vendor}</div>
+                          <span>{item.vendor}</span>
+                        </TruncateMarkup>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
+                      {item.app_name && (
+                        <TruncateMarkup>
+                          <span>{item.app_name}</span>
                         </TruncateMarkup>
                       )}
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => this.showAssetDetails(index)}
-                      collapsing
+                      className="hide-old-computer"
                     >
-                      {item.app_name && (
-                        <TruncateMarkup>
-                          <div>{item.app_name}</div>
-                        </TruncateMarkup>
-                      )}
-                    </Table.Cell>
-                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       {item.join_eui && item.join_eui.toUpperCase()}
                     </Table.Cell>
                     <Table.Cell collapsing>
@@ -547,6 +552,7 @@ class InventoryReviewComponent extends React.Component {
                       <ImportanceLabel importance={item.importance} />
                     </Table.Cell>
                     <Table.Cell
+                      className="hide-old-computer"
                       onClick={() => this.showAssetDetails(index)}
                       collapsing
                     >
@@ -562,7 +568,7 @@ class InventoryReviewComponent extends React.Component {
                         ellipsis={tagsLeftEllipsis}
                       >
                         <div
-                          style={{ width: "250px" }}
+                          style={{ width: "150px" }}
                           dataCount={item.tags.length}
                         >
                           {item.tags.map((tag) => {

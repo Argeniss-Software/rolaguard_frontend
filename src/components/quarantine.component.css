@@ -1,3 +1,9 @@
 .upper {
     text-transform: uppercase !important;
 }
+
+@media all and (max-width: 1400px) {
+    .hide-old-computer {
+        display: none;
+    }
+}

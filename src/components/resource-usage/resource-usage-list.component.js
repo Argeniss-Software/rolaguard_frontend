@@ -17,6 +17,7 @@ import "./resource-usage.component.css";
 import { observer } from "mobx-react";
 import ModalResourceUsage from "./resource-usage-modal.component";
 import _ from "lodash";
+import TruncateMarkup from "react-truncate-markup";
 
 const ResourceUsageList = (props) => {
   const [itemSelected, setItemSelected] = useState(null);
@@ -62,24 +63,36 @@ const ResourceUsageList = (props) => {
                 trigger={
                   <span style={{ cursor: "pointer" }}>
                     <Icon color="blue" name="wifi" type="icon" />
-                    SIGNAL STRENGTH (RSSI)
+                    RSSI
                   </span>
                 }
                 basic
-              >                
+              >
                 <Popup.Header>Signal strength references</Popup.Header>
                 <Popup.Content>
                   <SignalStrengthHelp></SignalStrengthHelp>
                 </Popup.Content>
               </Popup>
             </Table.HeaderCell>
-            <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Table.HeaderCell
+              collapsing
+              style={{ textAlign: "center" }}
+              className="hide-old-computer"
+            >
               SNR
             </Table.HeaderCell>
-            <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Table.HeaderCell
+              collapsing
+              className="hide-old-computer"
+              style={{ textAlign: "center" }}
+            >
               Payload
             </Table.HeaderCell>
-            <Table.HeaderCell collapsing style={{ textAlign: "center" }}>
+            <Table.HeaderCell
+              collapsing
+              style={{ textAlign: "center" }}
+              className="hide-old-computer"
+            >
               <Popup
                 flowing
                 size="mini"
@@ -170,7 +183,7 @@ const ResourceUsageList = (props) => {
                         item.connected ? "" : "lightgray"
                       }`}
                     >
-                      <ShowMessageFrequency asset={item}/>
+                      <ShowMessageFrequency asset={item} />
                     </Table.Cell>
                     <Table.Cell
                       onClick={() => showModal({ item: item, index: index })}
@@ -181,46 +194,43 @@ const ResourceUsageList = (props) => {
                       }`}
                     >
                       <Grid>
-                        <Grid.Row style={{ padding: "0px" }}>
-                          <Grid.Column width={2} floated="right">
-                            {item.type.toLowerCase().trim() === "device" && (
-                              <Popup
-                                basic
-                                trigger={
-                                  <WifiIndicator
-                                    strength={DBMToSignalStrength(
-                                      item.max_rssi
-                                    )}
-                                    statusImages={statusImages}
-                                    style={{
-                                      height: 20,
-                                      verticalAlign: "bottom",
-                                    }}
-                                  />
-                                }
-                                content={DBMToSignalStrength(
-                                  item.max_rssi,
-                                  true
-                                )}
-                              ></Popup>
-                            )}
-                          </Grid.Column>
-                          <Grid.Column width={4} floated="left">
-                            <strong style={{ marginLeft: "5px" }}>
-                              <NumberFormat
-                                value={item.max_rssi}
-                                displayType={"text"}
-                                suffix={" dBm"}
-                                decimalScale="1"
-                              />
-                            </strong>
-                          </Grid.Column>
+                        <Grid.Row>
+                          {item.type.toLowerCase().trim() === "device" && (
+                            <Popup
+                              basic
+                              trigger={
+                                <WifiIndicator
+                                  strength={DBMToSignalStrength(item.max_rssi)}
+                                  statusImages={statusImages}
+                                  style={{
+                                    height: 20,
+                                    verticalAlign: "bottom",
+                                  }}
+                                />
+                              }
+                              content={DBMToSignalStrength(item.max_rssi, true)}
+                            ></Popup>
+                          )}
+                          <TruncateMarkup>
+                            <div>
+                              <TruncateMarkup.Atom key={item.id}>
+                                <NumberFormat
+                                  value={item.max_rssi}
+                                  displayType={"text"}
+                                  suffix={" dBm"}
+                                  decimalScale="1"
+                                />
+                              </TruncateMarkup.Atom>
+                            </div>
+                          </TruncateMarkup>
                         </Grid.Row>
                       </Grid>
                     </Table.Cell>
                     <Table.Cell
                       style={{ textAlign: "center" }}
-                      className={item.connected ? "" : "lightgray"}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
                       onClick={() => showModal({ item: item, index: index })}
                     >
                       <NumberFormat
@@ -232,7 +242,9 @@ const ResourceUsageList = (props) => {
                     </Table.Cell>
                     <Table.Cell
                       style={{ textAlign: "center" }}
-                      className={item.connected ? "" : "lightgray"}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
                       onClick={() => showModal({ item: item, index: index })}
                     >
                       <NumberFormat
@@ -245,7 +257,9 @@ const ResourceUsageList = (props) => {
 
                     <Table.Cell
                       style={{ textAlign: "center" }}
-                      className={item.connected ? "" : "lightgray"}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
                       onClick={() => showModal({ item: item, index: index })}
                     >
                       <NumberFormat

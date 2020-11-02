@@ -29,7 +29,7 @@ import AlertListComponent from "./alert.list.component";
 import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
-
+import DataCollectorSelector from "./utils/data-collector-selector.component"
 @inject(
   "generalDataStore",
   "usersStore",
@@ -199,10 +199,25 @@ class DashboardComponent extends React.Component {
     this.getTopAlerts();
   };
 
-  handleDataCollectorSelection = (e, { value }) => {
+  handleDataCollectorSelection = (params) => {
+    const {
+      totalCollectors,
+      activeCollectors,
+      dataCollectorsOptions,
+    } = params;
+    
+    const dataCollectors = dataCollectorsOptions;
+
+     this.setState({
+       totalCollectors,
+       activeCollectors,
+       dataCollectorsLoading: false,
+       isLoading: false,
+       dataCollectors,
+     });
     const { range } = this.state;
 
-    this.setState({ selectedDataCollectors: value }, () => {
+    this.setState({ selectedDataCollectors: params.selected }, () => {
       this.updateRange(range, true);
       this.getTopAlerts();
     });
@@ -212,48 +227,6 @@ class DashboardComponent extends React.Component {
     this.setState({
       dataCollectorsLoading: true,
     });
-
-    const dataCollectorsPromise = this.props.dataCollectorStore.getDataCollectorApi();
-    const dataCollectorsCountPromise = this.props.generalDataStore.getDataCollectorsCount();
-
-    Promise.all([dataCollectorsPromise, dataCollectorsCountPromise]).then(
-      (response) => {
-        const totalCollectors = this.props.generalDataStore.dataCollectorsCount;
-        let activeCollectors =
-          this.props.dataCollectorStore.dataCollectorList.filter(
-            (collector) => collector.status === "CONNECTED"
-          ).length || 0;
-
-        const dataCollectors = this.props.dataCollectorStore.dataCollectorList
-          .filter(
-            (collector) =>
-              collector.status === "CONNECTED" ||
-              collector.status === "DISCONNECTED"
-          )
-          .sort((collector1, collector2) =>
-            collector1.name.localeCompare(collector2.name)
-          )
-          .map((collector, index) => ({
-            key: collector.id,
-            text: collector.name,
-            value: collector.id,
-            label: {
-              color: collector.status === "CONNECTED" ? "green" : "red",
-              empty: true,
-              circular: true,
-              size: "mini",
-            },
-          }));
-
-        this.setState({
-          totalCollectors,
-          activeCollectors,
-          dataCollectorsLoading: false,
-          isLoading: false,
-          dataCollectors,
-        });
-      }
-    );
   }
 
   getTopAlerts(silent) {
@@ -473,25 +446,8 @@ class DashboardComponent extends React.Component {
                       marginBottom: "0.9rem",
                     }}
                   >
-                    <Dropdown
-                      placeholder="Filter by data source"
-                      fluid
-                      clearable
-                      multiple
-                      search
-                      selection
-                      closeOnChange
-                      options={dataCollectors}
-                      loading={dataCollectorsLoading}
+                    <DataCollectorSelector
                       onChange={this.handleDataCollectorSelection}
-                      icon={{
-                        name:
-                          this.state.selectedDataCollectors &&
-                          this.state.selectedDataCollectors.length > 0
-                            ? "delete"
-                            : "dropdown",
-                        link: true,
-                      }}
                     />
                   </div>
                   <div
