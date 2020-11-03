@@ -287,7 +287,7 @@ class InventoryDetailsModal extends Component {
               <AssetLink
                 id={this.state.item.id}
                 type={this.state.item.type}
-                title="VIEW ASSET 360"
+                title="360° VIEW"
               />
               <Icon name="linkify" />
             </Button>

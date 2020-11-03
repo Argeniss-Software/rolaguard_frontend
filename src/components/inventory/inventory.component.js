@@ -444,7 +444,7 @@ class InventoryReviewComponent extends React.Component {
                 trigger={<span style={{ cursor: "pointer" }}>IMPORTANCE</span>}
               >
                 The importance value indicates the user-defined relevance of the
-                device into the organization. Can be set for each asset in the
+                device into the organization. Can be set for each device in the
                 Inventory section.
               </Popup>
             </Table.HeaderCell>
@@ -458,7 +458,7 @@ class InventoryReviewComponent extends React.Component {
         {assetsCount === 0 && (
           <Table.Row>
             <Table.Cell colSpan="100%">
-              <EmptyComponent emptyMessage="No assets found" />
+              <EmptyComponent emptyMessage="No devices found" />
             </Table.Cell>
           </Table.Row>
         )}

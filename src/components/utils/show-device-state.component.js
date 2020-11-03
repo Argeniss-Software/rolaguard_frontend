@@ -12,7 +12,7 @@ const ShowDeviceState = (props) => {
   if (props.showPopup) {
     return (
       <Popup trigger={<Icon color={colorStatus} name="circle" />}>
-        <Popup.Header>Asset Status</Popup.Header>
+        <Popup.Header>Device Status</Popup.Header>
         <Popup.Content>
           <Icon color={colorStatus} name="circle" /> {statusText}
         </Popup.Content>
