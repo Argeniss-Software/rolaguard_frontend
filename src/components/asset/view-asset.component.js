@@ -14,7 +14,7 @@ const ViewAsset = (props) => {
      <div className="app-body-container-view">
        <div className="animated fadeIn animation-view">
          <div className="view-header">
-           <h1 className="mb0">ASSET 360 VIEW</h1>
+           <h1 className="mb0">360° VIEW</h1>
          </div>
            {id && type && (
              <ShowAssetInfo

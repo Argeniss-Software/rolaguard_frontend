@@ -56,7 +56,7 @@ const ModalResourceUsage = (props) => {
             <AssetLink
               id={props.asset.id}
               type={props.asset.type}
-              title="VIEW ASSET 360"
+              title="360° VIEW"
             />
             <Icon name="linkify" />
           </Button>

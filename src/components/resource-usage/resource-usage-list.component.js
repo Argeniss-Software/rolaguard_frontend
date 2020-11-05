@@ -111,7 +111,7 @@ const ResourceUsageList = (props) => {
             <Table.Body>
               <Table.Row>
                 <Table.Cell colSpan="100%">
-                  <EmptyComponent emptyMessage="No assets found" />
+                  <EmptyComponent emptyMessage="No devices found" />
                 </Table.Cell>
               </Table.Row>
             </Table.Body>
