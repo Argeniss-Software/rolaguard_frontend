@@ -1,52 +1,72 @@
-import PropTypes from "prop-types";
-import _ from "lodash";
 import faker from "faker";
-import React, { Component } from "react";
-import { Search, Grid, Header, Segment, Label } from "semantic-ui-react";
+import React, { useState, useContext } from "react";
+import { Search, Grid, Header, Segment, Label, Table } from "semantic-ui-react";
+import { MobXProviderContext } from "mobx-react";
+import ShowDeviceIcon from "../show-device-icon.component";
+import ShowDeviceState from "../show-device-state.component";
+import AssetIdComponent from "../asset-id.component";
 
-const categoryLayoutRenderer = ({ categoryContent, resultsContent }) => (
-  <div class="category">
-    {categoryContent}
-    <div className="results">
-      {resultsContent}
+const categoryLayoutRenderer = ({ categoryContent, resultsContent }) => {
+  return (
+    <div class="category">
+      {categoryContent}
+      <div className="results">{resultsContent}</div>
     </div>
-  </div>
-);
-/*
-categoryLayoutRenderer.propTypes = {
-  categoryContent: PropTypes.node,
-  resultsContent: PropTypes.node,
+  );
 };
-*/
-const categoryRenderer = ({ name }) => <div class="name">{name}</div>;
-/*
-categoryRenderer.propTypes = {
-  name: PropTypes.string,
+
+const categoryRenderer = ({ name }) => {
+  return <div class="name">{name}</div>;
 };
-*/
-const resultRenderer = ({ image, price, title, description }) => [
-    image && (
-    <div key="image" className="image">
-      {//createHTMLImage(image, { autoGenerateKey: false })
-      }
-      image
-    </div>
-    ),
-    <div key="content" className="content">
-      {price && <div className="price">{price}</div>}
-      {title && <div className="title">{title}</div>}
-      {description && <div className="description">{description}</div>}
-    </div>
-];
 
-const initialState = { isLoading: false, results: [], value: "" };
+const resultRenderer = (data) => {
+  return (
+    <React.Fragment>
+      <div key="content" className="content">
+        <div className="price">
+          <Label color="black">{data.data_collector}</Label>
+        </div>
+        <div className="title">
+          <ShowDeviceState state={data.connected} />
+          <ShowDeviceIcon type={data.type}></ShowDeviceIcon>&nbsp;
+          <AssetIdComponent type={data.type} hexId={data.hex_id} id={data.id} />
+        </div>
 
+        <div>
+          <Grid columns="equal" stretched style={{ width: "100%" }} celled>
+            <Grid.Row>
+              <Grid.Column>Name:</Grid.Column>
+              <Grid.Column width={4}>
+                <strong>{data.name}</strong>
+              </Grid.Column>
+              <Grid.Column width={2}>App name:</Grid.Column>
+              <Grid.Column width={8}>
+                <strong>{data.app_name}</strong>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>Join EUI:</Grid.Column>
+              <Grid.Column width={4}>
+                <strong>{data.join_eui}</strong>
+              </Grid.Column>
+              <Grid.Column widht={2}>Vendor:</Grid.Column>
+              <Grid.Column width={8}>
+                <strong>{data.vendor}</strong>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
 const getResults = () =>
   _.times(5, () => ({
     title: faker.company.companyName(),
     description: faker.company.catchPhrase(),
     image: faker.internet.avatar(),
     price: faker.finance.amount(0, 100, 2, "$"),
+    other: "other",
   }));
 
 const source = _.range(0, 3).reduce((memo) => {
@@ -61,64 +81,65 @@ const source = _.range(0, 3).reduce((memo) => {
   return memo;
 }, {});
 
-export default class AssetShowSearchComponent extends Component {
-  state = initialState;
+const handleResultSelect = (e, { result }) => {
+  setValue(result.title);
+  // todo:_ redirecT!
+}
 
-  handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.title });
+const AssetShowSearchComponent = (props) => {
+  const { commonStore } = useContext(MobXProviderContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [results, setResults] = useState([]);
+  const [value, setValue] = useState("");
+  const [debug, setDebug] = useState(false);
 
-  handleSearchChange = (e, { value }) => {
-    this.setState({ isLoading: true, value });
-
-    setTimeout(() => {
-      if (this.state.value.length < 1) return this.setState(initialState);
-
-      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
-      const isMatch = (result) => re.test(result.title);
-
-      const filteredResults = _.reduce(
-        source,
-        (memo, data, name) => {
-          const results = _.filter(data.results, isMatch);
-          if (results.length) memo[name] = { name, results }; // eslint-disable-line no-param-reassign
-
-          return memo;
+  const handleSearchChange = (e, { value }) => {
+    setIsLoading(true);
+    setValue(value);
+    commonStore.searchAssets(value).then((data) => {
+      const { devices, gateways } = data.data;
+      //items_ids, total_pages, total_items
+      setResults({
+        devices: {
+          name: "Devices",
+          results: devices.items,
         },
-        {}
-      );
-
-      this.setState({
-        isLoading: false,
-        results: filteredResults,
+        gateways: {
+          name: "Gateways",
+          results: gateways.items,
+        },
       });
-    }, 300);
+      setIsLoading(false);
+    });
   };
 
-  render() {
-    const { isLoading, value, results } = this.state;
-
-    return (
-      <Grid>
-        <Grid.Column width={8}>
-          <Search
-            category
-            categoryLayoutRenderer={categoryLayoutRenderer}
-            categoryRenderer={categoryRenderer}
-            loading={isLoading}
-            onResultSelect={this.handleResultSelect}
-            onSearchChange={_.debounce(this.handleSearchChange, 500, {
-              leading: true,
-            })}
-            resultRenderer={resultRenderer}
-            results={results}
-            value={value}
-          />
-        </Grid.Column>
-        <Grid.Column width={8}>
+  return (
+    <Grid>
+      <Grid.Column width={debug ? 8 : 16}>
+        <Search
+          fluid
+          placeholder="Find device or gateway"
+          style={{ width: "100%" }}
+          input={{ icon: "search", iconPosition: "left", style: {width: "100%"} }}
+          category
+          categoryLayoutRenderer={categoryLayoutRenderer}
+          categoryRenderer={categoryRenderer}
+          loading={isLoading}
+          onResultSelect={handleResultSelect}
+          onSearchChange={_.debounce(handleSearchChange, 2000, {
+            leading: true,
+          })}
+          resultRenderer={resultRenderer}
+          results={results}
+          value={value}
+        />
+      </Grid.Column>
+      {debug && (
+        <Grid.Column width={debug ? 8 : 16}>
           <Segment>
             <Header>State</Header>
             <pre style={{ overflowX: "auto" }}>
-              {JSON.stringify(this.state, null, 2)}
+              {JSON.stringify({ isLoading, value, results }, null, 2)}
             </pre>
             <Header>Options</Header>
             <pre style={{ overflowX: "auto" }}>
@@ -126,7 +147,8 @@ export default class AssetShowSearchComponent extends Component {
             </pre>
           </Segment>
         </Grid.Column>
-      </Grid>
-    );
-  }
-}
+      )}
+    </Grid>
+  );
+};
+export default AssetShowSearchComponent;
