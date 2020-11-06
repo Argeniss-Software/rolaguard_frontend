@@ -29,7 +29,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component"
-import AssetShowSearchComponent from "./utils/asset/asset-show-search.component"
+
 @inject(
   "generalDataStore",
   "usersStore",
@@ -364,8 +364,7 @@ class DashboardComponent extends React.Component {
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
-            <h1>DASHBOARD</h1>
-            <AssetShowSearchComponent />
+            <h1>DASHBOARD</h1>            
           </div>
 
           {/* VIEW BODY */}

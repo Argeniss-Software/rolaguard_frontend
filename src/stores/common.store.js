@@ -4,7 +4,6 @@ import API from "../util/api";
 import _ from "lodash";
 
 class CommonStore {
-  
   /**********************************************************/
   /**********************************************************/
   getHeaders() {
@@ -63,6 +62,20 @@ class CommonStore {
       min_lsnr: _.get(filter_params, "min_lsnr", null),
       max_lsnr: _.get(filter_params, "max_lsnr", null),
     };
+    return API.get(uri, { headers, params });
+  }
+
+  /**
+   * search asset by different fields (device or gateway globally)
+   * 
+   * @param {string} search_param string to search
+   */
+  @action searchAssets(search_param) {
+    const headers = this.getHeaders();
+    let uri = 'assets';
+    const params = {
+      search_param: search_param,
+    }
     return API.get(uri, { headers, params });
   }
 }
