@@ -1,16 +1,24 @@
-import faker from "faker";
 import React, { useState, useContext } from "react";
-import { Search, Grid, Header, Segment, Label, Table } from "semantic-ui-react";
+import { Search, Grid, Header, Segment, Label } from "semantic-ui-react";
 import { MobXProviderContext } from "mobx-react";
 import ShowDeviceIcon from "../show-device-icon.component";
 import ShowDeviceState from "../show-device-state.component";
 import AssetIdComponent from "../asset-id.component";
+import Highlighter from "react-highlight-words";
 
 const categoryLayoutRenderer = ({ categoryContent, resultsContent }) => {
   return (
     <div class="category">
       {categoryContent}
-      <div className="results">{resultsContent}</div>
+      <div className="results">
+        {resultsContent ? (
+          resultsContent
+        ) : (
+          <div key="content" className="content" style={{ minHeight: "32px" }}>
+              <strong style={{verticalAlign: "-webkit-baseline-middle"}}>No results found...</strong>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -19,71 +27,17 @@ const categoryRenderer = ({ name }) => {
   return <div class="name">{name}</div>;
 };
 
-const resultRenderer = (data) => {
-  return (
-    <React.Fragment>
-      <div key="content" className="content">
-        <div className="price">
-          <Label color="black">{data.data_collector}</Label>
-        </div>
-        <div className="title">
-          <ShowDeviceState state={data.connected} />
-          <ShowDeviceIcon type={data.type}></ShowDeviceIcon>&nbsp;
-          <AssetIdComponent type={data.type} hexId={data.hex_id} id={data.id} />
-        </div>
-
-        <div>
-          <Grid columns="equal" stretched style={{ width: "100%" }} celled>
-            <Grid.Row>
-              <Grid.Column>Name:</Grid.Column>
-              <Grid.Column width={4}>
-                <strong>{data.name}</strong>
-              </Grid.Column>
-              <Grid.Column width={2}>App name:</Grid.Column>
-              <Grid.Column width={8}>
-                <strong>{data.app_name}</strong>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>Join EUI:</Grid.Column>
-              <Grid.Column width={4}>
-                <strong>{data.join_eui}</strong>
-              </Grid.Column>
-              <Grid.Column widht={2}>Vendor:</Grid.Column>
-              <Grid.Column width={8}>
-                <strong>{data.vendor}</strong>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </div>
-      </div>
-    </React.Fragment>
-  );
-};
-const getResults = () =>
-  _.times(5, () => ({
-    title: faker.company.companyName(),
-    description: faker.company.catchPhrase(),
-    image: faker.internet.avatar(),
-    price: faker.finance.amount(0, 100, 2, "$"),
-    other: "other",
-  }));
-
-const source = _.range(0, 3).reduce((memo) => {
-  const name = faker.hacker.noun();
-
-  // eslint-disable-next-line no-param-reassign
-  memo[name] = {
-    name,
-    results: getResults(),
-  };
-
-  return memo;
-}, {});
-
 const handleResultSelect = (e, { result }) => {
-  setValue(result.title);
-  // todo:_ redirecT!
+    const { id, type } = result;
+    const assetType = type ? type : "device";
+    const normalizedType = assetType && assetType.toLowerCase().trim();
+    if (
+      !_.isNull(id) &&
+      !_.isUndefined(id) &&
+      ["gateway", "device"].includes(normalizedType)
+    ) {
+      history.go(`/dashboard/assets/${normalizedType}/${id}/view`);
+  };
 }
 
 const AssetShowSearchComponent = (props) => {
@@ -92,6 +46,95 @@ const AssetShowSearchComponent = (props) => {
   const [results, setResults] = useState([]);
   const [value, setValue] = useState("");
   const [debug, setDebug] = useState(false);
+
+const resultRenderer = (data) => {
+  return (
+    <React.Fragment>
+      <div key="content" className="content">
+        <div className="price">
+          <Label color="black">
+            {data.data_collector && (
+              <Highlighter
+                highlightClassName="YourHighlightClass"
+                searchWords={[value]}
+                autoEscape={true}
+                textToHighlight={data.data_collector}
+              />
+            )}
+          </Label>
+        </div>
+        <div className="title">
+          <ShowDeviceState state={data.connected} />
+          <ShowDeviceIcon type={data.type}></ShowDeviceIcon>&nbsp;
+          <AssetIdComponent
+            showAsLink={false}
+            highlightSearchValue={value}
+            type={data.type}
+            hexId={data.hex_id}
+            id={data.id}
+          />
+        </div>
+
+        <div>
+          <Grid
+            columns="equal"
+            stretched="true"
+            style={{ width: "100%" }}
+            celled
+          >
+            <Grid.Row>
+              <Grid.Column>Name:</Grid.Column>
+              <Grid.Column width={4}>
+                {data.data_collector && (
+                  <strong>
+                    <Highlighter
+                      highlightClassName="YourHighlightClass"
+                      searchWords={[value]}
+                      autoEscape={true}
+                      textToHighlight={data.name}
+                    />
+                  </strong>
+                )}
+              </Grid.Column>
+              <Grid.Column width={2}>App name:</Grid.Column>
+              <Grid.Column width={8}>
+                {data.app_name && (
+                  <strong>
+                    <Highlighter
+                      highlightClassName="YourHighlightClass"
+                      searchWords={[value]}
+                      autoEscape={true}
+                      textToHighlight={data.app_name}
+                    />
+                  </strong>
+                )}
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column>Join EUI:</Grid.Column>
+              <Grid.Column width={4}>
+                <strong>{data.join_eui}</strong>
+              </Grid.Column>
+              <Grid.Column width={2}>Vendor:</Grid.Column>
+              <Grid.Column width={8}>
+                {data.vendor && (
+                  <strong>
+                    <Highlighter
+                      highlightClassName="YourHighlightClass"
+                      searchWords={[value]}
+                      autoEscape={true}
+                      textToHighlight={data.vendor}
+                    />
+                  </strong>
+                )}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
 
   const handleSearchChange = (e, { value }) => {
     setIsLoading(true);
