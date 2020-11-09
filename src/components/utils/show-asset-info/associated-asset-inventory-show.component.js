@@ -112,7 +112,7 @@ const AssociatedAssetInventoryShow = (props) => {
           onClose={closeInventoryDetails}
         />
       )}
-      <Segment attached stretched>
+      <Segment attached stretched="true">
         <Grid>
           <Grid.Row>
             <Grid.Column width={4}>
@@ -252,7 +252,6 @@ const AssociatedAssetInventoryShow = (props) => {
                     <Pagination
                       size="mini"
                       activePage={activePage}
-                      const
                       onPageChange={handlePaginationChange}
                       totalPages={totalPages}
                     />

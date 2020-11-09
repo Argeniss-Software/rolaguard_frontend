@@ -61,7 +61,7 @@ const ShowInventory = (props) => {
       </h5>
       <Segment attached>
         <Grid>
-          <Grid.Row stretched>
+          <Grid.Row stretched={true}>
             <Grid.Column width={5}>
               <Table basic celled striped style={{ height: "100%" }}>
                 <Table.Body>
@@ -137,45 +137,43 @@ const ShowInventory = (props) => {
                     </Table.Cell>
                   </Table.Row>
 
-                    <Table.Row>
-                      <Table.Cell collapsing>
-                        <Popup
-                          trigger={
-                            <span style={{ cursor: "pointer" }}>
-                              IMPORTANCE
-                            </span>
-                          }
-                        >
-                          The importance value indicates the user-defined
-                          relevance of the device into the organization. Can be
-                          set for each device in the Inventory section.
-                        </Popup>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <ImportanceLabel
-                          importance={props.inventory.importance}
-                        />
-                      </Table.Cell>
-                    </Table.Row>
+                  <Table.Row>
+                    <Table.Cell collapsing>
+                      <Popup
+                        trigger={
+                          <span style={{ cursor: "pointer" }}>IMPORTANCE</span>
+                        }
+                      >
+                        The importance value indicates the user-defined
+                        relevance of the device into the organization. Can be
+                        set for each asset in the Inventory section.
+                      </Popup>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <ImportanceLabel
+                        importance={props.inventory.importance}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
 
-                    <Table.Row>
-                      <Table.Cell collapsing>LABELS:</Table.Cell>
-                      <Table.Cell>
-                        {tags.map((tag) => (
-                          <Tag
-                            key={tag.id}
-                            id={tag.id}
-                            name={tag.name}
-                            color={tag.color}
-                            textColor="white"
-                            selectable={false}
-                            removable={false}
-                          />
-                        ))}
-                      </Table.Cell>
-                    </Table.Row>
-                  </Table.Body>
-                </Table>
+                  <Table.Row>
+                    <Table.Cell collapsing>LABELS:</Table.Cell>
+                    <Table.Cell>
+                      {tags.map((tag) => (
+                        <Tag
+                          key={tag.id}
+                          id={tag.id}
+                          name={tag.name}
+                          color={tag.color}
+                          textColor="white"
+                          selectable={false}
+                          removable={false}
+                        />
+                      ))}
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
             </Grid.Column>
             <Grid.Column width={3}>
               <Segment>

@@ -106,7 +106,7 @@ const DateFilterBar = (props) => {
         attached
         style={{ display: props.showFilters ? "block" : "none" }}
       >
-        <Grid flex>
+        <Grid flex="true">
           <Grid.Column width={6}>
             <div
               style={{
