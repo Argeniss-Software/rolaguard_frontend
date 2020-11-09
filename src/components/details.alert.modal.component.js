@@ -164,7 +164,7 @@ class DetailsAlertModal extends Component {
               floated={"left"}
               style={{ marginRight: "3em" }}
             >
-              <AssetLink id={idAsset} type={typeAsset} title="VIEW ASSET 360" />
+              <AssetLink id={idAsset} type={typeAsset} title="360° VIEW" />
               <Icon name="linkify" />
             </Button>
             {this.props.onNavigate && (

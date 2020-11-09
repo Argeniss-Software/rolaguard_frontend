@@ -495,7 +495,7 @@ class QuarantineComponent extends React.Component {
                             >
                               The importance value indicates the user-defined
                               relevance of the device into the organization. Can
-                              be set for each asset in the Inventory section.
+                              be set for each device in the Inventory section.
                             </Popup>
                           </Table.HeaderCell>
                           <Table.HeaderCell>GATEWAY</Table.HeaderCell>
