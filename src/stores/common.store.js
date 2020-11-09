@@ -72,7 +72,7 @@ class CommonStore {
    */
   @action searchAssets(search_param) {
     const headers = this.getHeaders();
-    let uri = 'assets';
+    let uri = 'assets/search';
     const params = {
       search_param: search_param,
     }

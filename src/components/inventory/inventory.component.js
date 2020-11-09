@@ -30,6 +30,8 @@ import ImportanceLabel from "../utils/importance-label.component";
 import TruncateMarkup from "react-truncate-markup";
 import moment from "moment";
 import _ from "lodash";
+import AssetShowSearchComponent from "../utils/asset/asset-show-search.component";
+
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
 class InventoryReviewComponent extends React.Component {
@@ -720,6 +722,9 @@ class InventoryReviewComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             <h1 className="mb0">INVENTORY</h1>
+            <Grid.Column style={{ width: "50%" }}>
+              <AssetShowSearchComponent />
+            </Grid.Column>
             <div className="view-header-actions">
               {!showFilters && (
                 <div onClick={() => this.setState({ showFilters: true })}>
