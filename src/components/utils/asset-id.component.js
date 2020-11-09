@@ -1,9 +1,10 @@
 import * as React from "react";
 import { Popup } from "semantic-ui-react";
 import AssetLink from '../utils/asset-link.component'
+import Highlighter from "react-highlight-words";
 
 const AssetIdComponent = (props) => {
-  const { id, type, hexId, showAsLink } = props;
+  const { id, type, hexId, showAsLink, highlightSearchValue } = props;
   const normalizedType = type && type.toLowerCase().trim();
 
   const normalizedHexId = hexId ? hexId.toUpperCase() : "ID UNDEFINED";
@@ -23,8 +24,25 @@ const AssetIdComponent = (props) => {
       <Popup
         trigger={
           <span>
-            {showLink && <AssetLink title={normalizedHexId} id={id} type={normalizedType} />}
-            {!showLink && normalizedHexId}
+            {showLink && (
+              <AssetLink
+                title={normalizedHexId}
+                id={id}
+                type={normalizedType}
+              />
+            )}
+
+            {!showLink &&
+              (highlightSearchValue ? (
+                <Highlighter
+                  highlightClassName="YourHighlightClass"
+                  searchWords={[highlightSearchValue]}
+                  autoEscape={true}
+                  textToHighlight={normalizedHexId}
+                />
+              ) : (
+                normalizedHexId
+              ))}
           </span>
         }
         content={popupContent}
