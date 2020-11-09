@@ -67,7 +67,7 @@ const ShowAssetInfo = (props) => {
     }
   }, [props.id, props.type]);
   if (isLoading) {
-    return <LoaderComponent loadingMessage="Loading asset info..." />;
+    return <LoaderComponent loadingMessage="Loading device info..." />;
   } else if (errorOnRequest && _.get(statusResponse, 'isError')) {
     return (
       <NotFoundPage
