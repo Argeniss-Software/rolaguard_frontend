@@ -36,7 +36,7 @@ const handleResultSelect = (e, { result }) => {
       !_.isUndefined(id) &&
       ["gateway", "device"].includes(normalizedType)
     ) {
-      history.go(`/dashboard/assets/${normalizedType}/${id}/view`);
+      window.location.href = `/dashboard/assets/${normalizedType}/${id}/view`;
   };
 }
 
