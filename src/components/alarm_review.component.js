@@ -30,6 +30,7 @@ import "./alarm_review.component.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./utils/react-datetimepicker-custom.css";
 import ColorUtil from "../util/colors";
+import AssetShowSearchComponent from "./utils/asset/asset-show-search.component";
 
 @inject(
   "generalDataStore",
@@ -537,6 +538,9 @@ class AlarmReviewComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             <h1 className="mb0">ALERTS</h1>
+            <Grid.Column style={{ width: "50%" }}>
+              <AssetShowSearchComponent />
+            </Grid.Column>
             <div className="view-header-actions">
               {!showFilters && (
                 <div onClick={() => this.setState({ showFilters: true })}>
