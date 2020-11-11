@@ -19,7 +19,6 @@ import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
 import AssetLink from "./utils/asset-link.component"
 import TruncateMarkup from "react-truncate-markup";
-import AssetShowSearchComponent from "./utils/asset/asset-show-search.component";
 @inject("deviceStore", "globalConfigStore")
 @observer
 class QuarantineComponent extends React.Component {
@@ -290,9 +289,6 @@ class QuarantineComponent extends React.Component {
           <div className="view-header">
             {/* HEADER TITLE */}
             <h1>CURRENT ISSUES</h1>
-            <Grid.Column style={{ width: "50%" }}>
-              <AssetShowSearchComponent />
-            </Grid.Column>
           </div>
 
           {/* VIEW BODY */}

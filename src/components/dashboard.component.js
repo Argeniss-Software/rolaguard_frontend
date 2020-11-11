@@ -29,7 +29,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component"
-import AssetShowSearchComponent from "./utils/asset/asset-show-search.component";
+
 @inject(
   "generalDataStore",
   "usersStore",
@@ -365,9 +365,6 @@ class DashboardComponent extends React.Component {
           <div className="view-header">
             {/* HEADER TITLE */}
             <h1>DASHBOARD</h1>
-            <Grid.Column style={{ width: "50%" }}>
-              <AssetShowSearchComponent />
-            </Grid.Column>
           </div>
 
           {/* VIEW BODY */}
