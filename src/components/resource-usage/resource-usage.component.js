@@ -141,9 +141,6 @@ const ResourceUsageComponent = (props) => {
       <div className="animated fadeIn animation-view">
         <div className="view-header">
           <h1 className="mb0">NETWORK OVERVIEW</h1>
-          <Grid.Column style={{ width: "50%" }}>
-            <AssetShowSearchComponent />
-          </Grid.Column>
           <div className="view-header-actions">
             {!showFilters && (
               <div onClick={() => setShowFilters(true)}>

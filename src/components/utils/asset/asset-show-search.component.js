@@ -36,7 +36,12 @@ const handleResultSelect = (e, { result }) => {
       !_.isUndefined(id) &&
       ["gateway", "device"].includes(normalizedType)
     ) {
-      window.location.href = `/dashboard/assets/${normalizedType}/${id}/view`;
+      const URI = `/dashboard/assets/${normalizedType}/${id}/view`;
+      window.open(
+        URI,
+        "_blank"
+      );
+      
   };
 }
 

@@ -15,9 +15,6 @@ const ViewAsset = (props) => {
        <div className="animated fadeIn animation-view">
          <div className="view-header">
            <h1 className="mb0">360° VIEW</h1>
-           <Grid.Column style={{ width: "50%" }}>
-             <AssetShowSearchComponent />            
-           </Grid.Column>
          </div>
          {id && type && (
            <ShowAssetInfo
