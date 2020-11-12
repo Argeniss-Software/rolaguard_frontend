@@ -14,12 +14,14 @@ const TagSelector = (props) => {
     const [open, setOpen] = React.useState(false);
     const [tags, setTags] = React.useState([]);
     const [tagsFiltered, setTagsFiltered] = React.useState([])
+    const [tagCreate, setTagCreate] = React.useState("")
     const [loading, setLoading] = React.useState(true);
     const [showTagCreatorModal, setShowTagCreatorModal] = React.useState(false);
 
 
     const handleSearch = (search) => {
         setTagsFiltered(tags.filter((tag) => tag.name.includes(search.target.value)));
+        setTagCreate(search.target.value);
     }
 
     const handleTagSelection = (selectedTag) => {
@@ -77,9 +79,10 @@ const TagSelector = (props) => {
                 }
                 {/* No items to show */}
                 {!loading && tagsFiltered && tagsFiltered.length === 0 &&
-                    <div className="no-tags">
-                        <span style={{color: "gray"}}><i>No tags to show</i></span>
+                    <div className="tag-list-selector center">
+                        {<Tag selectable={true} creatable={true} name={tagCreate}  color={"#f05050"} onClick={() => {setShowTagCreatorModal(true); setOpen(false);}}/>}
                     </div>
+                   
                 }
                 {/* Loading state */}
                 {loading &&
@@ -97,7 +100,9 @@ const TagSelector = (props) => {
         {showTagCreatorModal &&
             <TagsCreatorModal
             open={showTagCreatorModal}
-            onClose={() => setShowTagCreatorModal(false)}/>}
+            name={tagCreate}
+            onClose={() => setShowTagCreatorModal(false)}/>
+            }
         </React.Fragment>
     );
 }

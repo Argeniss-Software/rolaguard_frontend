@@ -10,8 +10,10 @@ const Tag = (props) => {
             textColor: text color
             id: tag id
             selectable: boolean that indicates if the tag is selectable
-            removable: boolean that indicates if the tag can be remove
+            removable: boolean that indicates if the tag can be removed
                 from where it is (shows a close "button")
+            creatable: boolean that indicates if the tag can be created
+                (shows a create "button")
 
             fontSize: in case you need to change it
             opacity: backgorund opacity values from 0 to 1
@@ -20,7 +22,7 @@ const Tag = (props) => {
     */
 
 
-    const { name, color, textColor, onClick, removable, selectable} = props;
+    const { name, color, textColor, onClick, removable, selectable, creatable} = props;
     return (
       <div
         className={selectable ? "container selectable" : "container"}
@@ -47,6 +49,14 @@ const Tag = (props) => {
               style={{ cursor: "pointer" }}
               onClick={props.onRemoveClick}
               className="fas fa-times-circle fa-sm"
+            ></i>
+          ) : (
+            ""
+          )}
+          {creatable ? (
+            <i
+              style={{ cursor: "pointer" }}
+              className="fas fa-plus-circle fa-sm"
             ></i>
           ) : (
             ""
