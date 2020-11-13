@@ -1,9 +1,8 @@
 import * as React from "react";
-import "./tag.component.css"
+import "./tag.component.css";
 
 const Tag = (props) => {
-
-    /*
+  /*
         props:
             name: name to display
             color: background color
@@ -21,49 +20,56 @@ const Tag = (props) => {
             onRemoveClick: function to run when close button clicked
     */
 
-
-    const { name, color, textColor, onClick, removable, selectable, creatable} = props;
-    return (
-      <div
-        className={selectable ? "container selectable" : "container"}
+  const {
+    name,
+    color,
+    textColor,
+    onClick,
+    removable,
+    selectable,
+    creatable,
+  } = props;
+  return (
+    <div
+      className={selectable ? "container selectable" : "container"}
+      style={{
+        backgroundColor: color,
+        fontSize: props.fontSize,
+        opacity: props.opacity,
+      }}
+      onClick={onClick}
+    >
+      <span
+        className="tag-text"
         style={{
-          backgroundColor: color,
-          fontSize: props.fontSize,
-          opacity: props.opacity,
+          color: textColor,
+          paddingLeft: "0.3em",
+          paddingRight: "0.3em",
+          paddingTop: "0.15em",
+          paddingBottom: "0.2em",
         }}
-        onClick={onClick}
       >
-        <span
-          className="tag-text"
-          style={{
-            color: textColor,
-            paddingLeft: "0.3em",
-            paddingRight: "0.3em",
-            paddingTop: "0.15em",
-            paddingBottom: "0.2em",
-          }}
-        >
-          {name}{" "}
-          {removable ? (
-            <i
-              style={{ cursor: "pointer" }}
-              onClick={props.onRemoveClick}
-              className="fas fa-times-circle fa-sm"
-            ></i>
-          ) : (
-            ""
-          )}
-          {creatable ? (
-            <i
-              style={{ cursor: "pointer" }}
-              className="fas fa-plus-circle fa-sm"
-            ></i>
-          ) : (
-            ""
-          )}
-        </span>
-      </div>
-    );
-}
+        {name}{" "}
+        {removable ? (
+          <i
+            style={{ cursor: "pointer" }}
+            onClick={props.onRemoveClick}
+            className="fas fa-times-circle fa-sm"
+          ></i>
+        ) : (
+          ""
+        )}
+        {creatable ? (
+          <i
+            style={{ cursor: "pointer" }}
+            className="fas fa-plus-circle fa-sm"
+          ></i>
+        ) : (
+          ""
+        )}
+      </span>
+    </div>
+  );
+};
 
 export default Tag;
