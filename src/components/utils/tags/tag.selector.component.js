@@ -12,7 +12,7 @@ const TagSelector = (props) => {
   const [open, setOpen] = React.useState(false);
   const [tags, setTags] = React.useState([]);
   const [tagsFiltered, setTagsFiltered] = React.useState([]);
-  const [tagCreate, setTagCreate] = React.useState("");
+  const [tagCreate, setTagCreate] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const [showTagCreatorModal, setShowTagCreatorModal] = React.useState(false);
 
@@ -25,6 +25,7 @@ const TagSelector = (props) => {
 
   const handleTagSelection = (selectedTag) => {
     setOpen(false);
+    setTagCreate(null);
     props.onSelection(selectedTag);
   };
 
@@ -97,7 +98,7 @@ const TagSelector = (props) => {
           {!loading && tagsFiltered && tagsFiltered.length === 0 && (
             <div className="tag-list-selector center">
               {
-                <Tag
+                tagCreate && <Tag
                   selectable={true}
                   creatable={true}
                   name={tagCreate}
@@ -107,6 +108,13 @@ const TagSelector = (props) => {
                     setOpen(false);
                   }}
                 />
+              }
+              {
+                !tagCreate && 
+                  <div className="no-tags">
+                        <span style={{color: "gray"}}><i>No tags to show</i></span>
+                  </div>
+                
               }
             </div>
           )}
@@ -138,7 +146,8 @@ const TagSelector = (props) => {
         <TagsCreatorModal
           open={showTagCreatorModal}
           name={tagCreate}
-          onClose={() => setShowTagCreatorModal(false)}
+          onClose={() => {setShowTagCreatorModal(false);
+                          setTagCreate(null)}}
           onCreation={handleTagSelection}
         />
       )}
