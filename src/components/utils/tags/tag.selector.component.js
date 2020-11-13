@@ -101,8 +101,9 @@ const TagSelector = (props) => {
             <TagsCreatorModal
             open={showTagCreatorModal}
             name={tagCreate}
-            onClose={() => setShowTagCreatorModal(false)}/>
-            }
+            onClose={() => setShowTagCreatorModal(false)}
+            onCreation={handleTagSelection}/>
+        }
         </React.Fragment>
     );
 }

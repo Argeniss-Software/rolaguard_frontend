@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MobXProviderContext } from "mobx-react";
-import { Input, Button, Modal} from "semantic-ui-react";
+import { Input, Button, Modal, Message} from "semantic-ui-react";
 
 import "./tag.creator.component.css";
 import Tag from "./tag.component";
@@ -31,6 +31,8 @@ const TagsCreatorModal = (props) => {
     const [color, setColor] = React.useState("#AAAAAA");
     const [colorDefault, setColorDefault] = React.useState(true);
     const [sended, setSended] = React.useState(false);
+    const [creationError, setCreationError] = React.useState(false);
+    const [creationErrorMsg, setCreationErrorMsg] = React.useState("");
 
 
 
@@ -48,14 +50,25 @@ const TagsCreatorModal = (props) => {
         setSended(true);
         tagsStore.createTag(name, color).then(
             (response) => {
-                if(response.status !== 200) console.log(response.status, response.data)
-                else {
+                if(response.status === 200) {
+                    let tag = response.data;
                     setSended(false);
                     setOpen(false);
+                    props.onCreation(tag);
                     props.onClose();
                 }
             }
-        ).catch((error) => console.log(error));
+        ).catch((error) => {
+            switch(error.response.data[0].code) {
+                case 'EXISTING_NAME':
+                  setCreationErrorMsg(error.response.data[0].message);
+                  break;
+                default:
+                  setCreationErrorMsg("The tag could not be created.");
+              }
+            setCreationError(true);
+            setSended(false);
+        })
     }
 
     const colors = [
@@ -100,6 +113,12 @@ const TagsCreatorModal = (props) => {
                     </div>
                 </div>
             </Modal.Content>
+
+            { creationError &&
+                <Modal.Content>
+                    <Message error header='Oops!' content={'An error ocurred. ' + creationErrorMsg} />
+                </Modal.Content>
+            }
 
             <Modal.Actions>
                 <Button
