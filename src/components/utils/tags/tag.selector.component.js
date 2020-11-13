@@ -97,8 +97,8 @@ const TagSelector = (props) => {
           {/* No items to show */}
           {!loading && tagsFiltered && tagsFiltered.length === 0 && (
             <div className="tag-list-selector center">
-              {
-                tagCreate && <Tag
+              {tagCreate && (
+                <Tag
                   selectable={true}
                   creatable={true}
                   name={tagCreate}
@@ -108,14 +108,14 @@ const TagSelector = (props) => {
                     setOpen(false);
                   }}
                 />
-              }
-              {
-                !tagCreate && 
-                  <div className="no-tags">
-                        <span style={{color: "gray"}}><i>No tags to show</i></span>
-                  </div>
-                
-              }
+              )}
+              {!tagCreate && (
+                <div className="no-tags">
+                  <span style={{ color: "gray" }}>
+                    <i>No tags to show</i>
+                  </span>
+                </div>
+              )}
             </div>
           )}
           {/* Loading state */}
@@ -146,8 +146,10 @@ const TagSelector = (props) => {
         <TagsCreatorModal
           open={showTagCreatorModal}
           name={tagCreate}
-          onClose={() => {setShowTagCreatorModal(false);
-                          setTagCreate(null)}}
+          onClose={() => {
+            setShowTagCreatorModal(false);
+            setTagCreate(null);
+          }}
           onCreation={handleTagSelection}
         />
       )}
