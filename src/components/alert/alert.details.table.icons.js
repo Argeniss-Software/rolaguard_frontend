@@ -83,13 +83,13 @@ class AlertDetailTableIcon extends Component {
             </Table.Header>
             <Table.Body>
                 <Table.Row>
-                    {dev_name && <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>}
-                    {dev_name && <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"}></Table.Cell>}
+                    <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"} textAlign= "center">{dev_name? dev_name : ""}</Table.Cell>
+                    <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"}></Table.Cell>
                     <Table.Cell className={(dev_name || gw_name) ? "icon-description" : "hide"} textAlign= "center">{gw_name? gw_name : ""}</Table.Cell>
                 </Table.Row>
                 <Table.Row>
-                    {dev_vendor && <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"} textAlign= "center">{dev_vendor? dev_vendor : ""}</Table.Cell>}
-                    {dev_vendor && <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"}></Table.Cell>}
+                    <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"} textAlign= "center">{dev_vendor? dev_vendor : ""}</Table.Cell>
+                    <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"}></Table.Cell>
                     <Table.Cell className={(dev_vendor || gw_vendor) ? "icon-description" : "hide"} textAlign= "center">{gw_vendor? gw_vendor : ""}</Table.Cell>
                 </Table.Row>
                 <Table.Row>

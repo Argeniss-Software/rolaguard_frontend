@@ -8,6 +8,7 @@ import "./resource-usage.component.css";
 import ResourceUssageGraph from "./graphs/resource-usage.graph.component";
 import ResourceUsageList from "./resource-usage-list.component";
 import _ from "lodash";
+import AssetShowSearchComponent from "../utils/asset/asset-show-search.component";
 
 const ResourceUsageComponent = (props) => {
   const { resourceUsageStore } = useContext(MobXProviderContext);

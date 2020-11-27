@@ -5,7 +5,6 @@ import {
   Loader,
   Segment,
   Button,
-  Dropdown,
   Popup,
   Grid,
   Header,
@@ -30,6 +29,7 @@ import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component"
+
 @inject(
   "generalDataStore",
   "usersStore",
@@ -382,7 +382,7 @@ class DashboardComponent extends React.Component {
                     centered
                   >
                     <Grid.Row>
-                      <Grid.Column floated="left" width={11}>
+                      <Grid.Column floated="left" width={6}>
                         <h3>
                           <i className="fas fa-sitemap" /> | DATA SOURCES{" "}
                           {dataCollectorsLoading === true ? (
@@ -396,9 +396,8 @@ class DashboardComponent extends React.Component {
                           )}
                         </h3>
                       </Grid.Column>
-
                       <Grid.Column
-                        width={5}
+                        width={10}
                         floated="right"
                         className="pull-right aligned"
                         stretched
@@ -623,8 +622,8 @@ class DashboardComponent extends React.Component {
                                 >
                                   The importance value indicates the
                                   user-defined relevance of the device into the
-                                  organization. Can be set for each device in the
-                                  Inventory section.
+                                  organization. Can be set for each device in
+                                  the Inventory section.
                                 </Popup>
                               </Table.HeaderCell>
                               <Table.HeaderCell style={{ maxWidth: "160px" }}>
