@@ -106,6 +106,23 @@ class DataCollectorStore {
     });
   }
 
+  saveTTNCredentials(user, password) {
+    const headers = this.getHeaders();
+    const creds = { user: user , password: password };
+
+    return API.post("data_collectors/ttn_credentials", creds, {
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+      withCredentials: true
+    });
+  }
+
+  getTTNGateways() {
+    return API.get(`data_collectors/user_gateways`, {
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+      withCredentials: true
+    })
+  }
+
   query(pagination) {
     const { page, size } = pagination;
     const params = { page, size };
