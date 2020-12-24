@@ -679,7 +679,7 @@ class DataCollectorsNewComponent extends React.Component {
                         )}
                     </span>
                   }
-                  {this.state.finishedGateways && ttn_gateways.length > 0 && (
+                  { dataCollectorTypeCode === "ttn_collector" && this.state.finishedGateways && ttn_gateways.length > 0 && (
                     <Form.Group grouped>
                       <Table
                         className="animated fadeIn"
