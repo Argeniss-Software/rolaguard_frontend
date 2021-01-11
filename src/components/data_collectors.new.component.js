@@ -8,10 +8,10 @@ import {
   Message,
   Table,
   Checkbox,
+  Popup,
 } from "semantic-ui-react";
 import Validation from "../util/validation";
 import LoaderComponent from "./utils/loader.component";
-
 import "./data_collectors.new.component.css";
 import API from "../util/api";
 import AuthStore from "../stores/auth.store";
@@ -50,6 +50,7 @@ class DataCollectorsNewComponent extends React.Component {
       selectAllGateways: false,
       isGettingGateways: false,
       errorGateways: false,
+      errorMsgGateways: "",
       finishedGateways: false,
       newTopic: "",
       isSaving: false,
@@ -356,6 +357,7 @@ class DataCollectorsNewComponent extends React.Component {
               this.setState({
                 ttn_gateways,
                 isGettingGateways: false,
+                errorMsgGateways: "",
                 errorGateways: false,
                 finishedGateways: true,
               });
@@ -372,14 +374,19 @@ class DataCollectorsNewComponent extends React.Component {
         } else {
           this.setState({
             isGettingGateways: false,
+            errorMsgGateways: response.data.error,
             errorGateways: true,
             finishedGateways: true,
           });
         }
       })
-      .catch(() => {
+      .catch((err) => {
         this.setState({
           isGettingGateways: false,
+          errorMsgGateways:
+            typeof err.response.data.error !== "undefined"
+              ? err.response.data.error
+              : "",
           errorGateways: true,
           finishedGateways: true,
         });
@@ -667,7 +674,9 @@ class DataCollectorsNewComponent extends React.Component {
                     <span>
                       {this.state.errorGateways && (
                         <Label basic color={"red"} size="medium">
-                          An error ocurred while trying to get the gateways.
+                          {this.state.errorMsgGateways.length > 0
+                            ? this.state.errorMsgGateways
+                            : "An error ocurred while trying to get the gateways."}
                         </Label>
                       )}
                       {!this.state.errorGateways &&
@@ -679,57 +688,59 @@ class DataCollectorsNewComponent extends React.Component {
                         )}
                     </span>
                   }
-                  { dataCollectorTypeCode === "ttn_collector" && this.state.finishedGateways && ttn_gateways.length > 0 && (
-                    <Form.Group grouped>
-                      <Table
-                        className="animated fadeIn"
-                        basic="very"
-                        compact="very"
-                      >
-                        <Table.Header>
-                          <Table.Row>
-                            <Table.HeaderCell>
-                              <Checkbox
-                                checked={selectAllGateways}
-                                onChange={(e) => this.toggleSelection(e)}
-                              />
-                            </Table.HeaderCell>
+                  {dataCollectorTypeCode === "ttn_collector" &&
+                    this.state.finishedGateways &&
+                    ttn_gateways.length > 0 && (
+                      <Form.Group grouped>
+                        <Table
+                          className="animated fadeIn"
+                          basic="very"
+                          compact="very"
+                        >
+                          <Table.Header>
+                            <Table.Row>
+                              <Table.HeaderCell>
+                                <Checkbox
+                                  checked={selectAllGateways}
+                                  onChange={(e) => this.toggleSelection(e)}
+                                />
+                              </Table.HeaderCell>
 
-                            <Table.HeaderCell>Gateway ID</Table.HeaderCell>
-                            <Table.HeaderCell>Description</Table.HeaderCell>
-                          </Table.Row>
-                        </Table.Header>
-                        <Table.Body>
-                          {ttn_gateways.map((gateway, index) => {
-                            return (
-                              <Table.Row
-                                key={index}
-                                style={{ cursor: "pointer" }}
-                              >
-                                <Table.Cell>
-                                  <Checkbox
-                                    checked={gateway.selected}
-                                    onChange={(event) =>
-                                      this.toggleSingleSelect(
-                                        gateway,
-                                        index,
-                                        event
-                                      )
-                                    }
-                                  />
-                                </Table.Cell>
-                                <Table.Cell>{gateway.gateway_id}</Table.Cell>
+                              <Table.HeaderCell>Gateway ID</Table.HeaderCell>
+                              <Table.HeaderCell>Description</Table.HeaderCell>
+                            </Table.Row>
+                          </Table.Header>
+                          <Table.Body>
+                            {ttn_gateways.map((gateway, index) => {
+                              return (
+                                <Table.Row
+                                  key={index}
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  <Table.Cell>
+                                    <Checkbox
+                                      checked={gateway.selected}
+                                      onChange={(event) =>
+                                        this.toggleSingleSelect(
+                                          gateway,
+                                          index,
+                                          event
+                                        )
+                                      }
+                                    />
+                                  </Table.Cell>
+                                  <Table.Cell>{gateway.gateway_id}</Table.Cell>
 
-                                <Table.Cell>{gateway.description}</Table.Cell>
-                              </Table.Row>
-                            );
-                          })}
+                                  <Table.Cell>{gateway.description}</Table.Cell>
+                                </Table.Row>
+                              );
+                            })}
 
-                          {console.log(ttn_gateways)}
-                        </Table.Body>
-                      </Table>
-                    </Form.Group>
-                  )}
+                            {console.log(ttn_gateways)}
+                          </Table.Body>
+                        </Table>
+                      </Form.Group>
+                    )}
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
@@ -761,19 +772,36 @@ class DataCollectorsNewComponent extends React.Component {
                           this.props.history.push("/dashboard/data_collectors")
                         }
                       />
-                      <Form.Button
-                        color="green"
-                        disabled={
-                          !validForm ||
-                          isLoading ||
-                          isSaving ||
-                          isTesting ||
-                          !testSuccess
-                        }
-                        loading={isSaving}
-                        content="Save"
-                        style={{ marginTop: 25, marginLeft: 10 }}
-                      />
+                      <div
+                        style={{
+                          display: "inline-block",
+                          marginTop: 25,
+                          marginLeft: 10,
+                        }}
+                      >
+                        <Popup
+                          trigger={
+                            <span>
+                              <Form.Button
+                                color="green"
+                                disabled={
+                                  !validForm ||
+                                  isLoading ||
+                                  isSaving ||
+                                  isTesting ||
+                                  !testSuccess
+                                }
+                                loading={isSaving}
+                                content="Save"
+                              />
+                            </span>
+                          }
+                          style={{ marginTop: 25, marginLeft: 10 }}
+                          position="top right"
+                        >
+                          Test the connection before saving the Data Source.
+                        </Popup>
+                      </div>
                     </div>
                   </div>
                   {error && (
