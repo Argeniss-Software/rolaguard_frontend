@@ -34,6 +34,9 @@ class DataCollectorsNewComponent extends React.Component {
         name: "",
         description: "",
         ip: "",
+        ca_cert: null,
+        client_cert: null,
+        client_key: null,
         port: "",
         user: "",
         password: "",
@@ -163,6 +166,9 @@ class DataCollectorsNewComponent extends React.Component {
         name: "",
         description: "",
         ip: "",
+        ca_cert: null,
+        client_cert: null,
+        client_key: null,
         port: "",
         user: "",
         password: "",
@@ -239,6 +245,9 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
+            ca_cert,
+            client_cert,
+            client_key
           } = response.data;
           const dataCollector = {
             name,
@@ -252,6 +261,9 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
+            ca_cert,
+            client_cert,
+            client_key
           };
           this.setState({ dataCollector, dataCollectorId, typeForm: "Edit" });
           this.setState({ isLoading: false });
@@ -399,6 +411,9 @@ class DataCollectorsNewComponent extends React.Component {
       data_collector_type_id,
       policy_id,
       gateway_id,
+      ca_cert,
+      client_cert,
+      client_key
     } = this.state.dataCollector;
     const {
       newTopic,
@@ -423,7 +438,7 @@ class DataCollectorsNewComponent extends React.Component {
       name.length <= 120 &&
       (!description || description.length <= 1000) &&
       (dataCollectorTypeCode === "ttn_collector" ||
-        (Validation.isValidIp(ip) && Validation.isValidPort(port))) &&
+        ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) && Validation.isValidPort(port))) &&
       data_collector_type_id &&
       policy_id &&
       ((dataCollectorTypeCode !== "ttn_collector" &&
@@ -522,10 +537,10 @@ class DataCollectorsNewComponent extends React.Component {
                           name="ip"
                           value={ip}
                           onChange={this.handleChange}
-                          error={!!ip && !Validation.isValidIp(ip)}
+                          error={!!ip && !(Validation.isValidIp(ip) || Validation.isValidHostname(ip))}
                         >
                           <input />
-                          <label>Server IP Address</label>
+                          <label>Server IP Address/Hostname</label>
                         </Form.Input>
                       </Form.Field>
                       <Form.Field required>
@@ -661,6 +676,19 @@ class DataCollectorsNewComponent extends React.Component {
                           </div>
                         )}
                       </Form.Group>
+                      {ssl &&
+                        <Form.Group>
+                          <Form.Field>
+                            <Form.TextArea name='ca_cert' value={ca_cert || ""} onChange={this.handleChange} label="CA Certificate" />
+                          </Form.Field>
+                          <Form.Field>
+                            <Form.TextArea name='client_cert' value={client_cert || ""} onChange={this.handleChange} label="Client Certificate" />
+                          </Form.Field>
+                          <Form.Field>
+                            <Form.TextArea name='client_key' value={client_key || ""} onChange={this.handleChange} label="Client Private Key" />
+                          </Form.Field>
+                        </Form.Group>
+                      }
                     </div>
                   )}
                   {
