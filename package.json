@@ -34,7 +34,7 @@
     "react-spinners": "^0.9.0",
     "react-truncate-markup": "^5.0.0",
     "react-wifi-indicator": "^1.0.1",
-    "sanitize-html": "^1.27.4",
+    "sanitize-html": "^2.3.2",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "^1.2.0",
     "socket.io-client": "2.2.0",
