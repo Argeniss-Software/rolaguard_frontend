@@ -9,6 +9,7 @@
     "file-saver": "^2.0.2",
     "http-status-codes": "^1.4.0",
     "interweave": "^11.1.0",
+    "is-valid-hostname": "^1.0.0",
     "jwt-decode": "^2.2.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.20",
