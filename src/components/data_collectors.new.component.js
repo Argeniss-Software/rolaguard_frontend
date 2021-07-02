@@ -45,6 +45,9 @@ class DataCollectorsNewComponent extends React.Component {
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
+        region: null,
+        gateway_name: null,
+        gateway_api_key: null,
       },
       types: [],
       policies: [],
@@ -178,6 +181,9 @@ class DataCollectorsNewComponent extends React.Component {
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
+        region: null,
+        gateway_name: null,
+        gateway_api_key: null,
       },
       newTopic: "",
     });
@@ -246,6 +252,9 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
+            region,
+            gateway_name,
+            gateway_api_key,
             ca_cert,
             client_cert,
             client_key
@@ -262,6 +271,9 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
+            region,
+            gateway_name,
+            gateway_api_key,
             ca_cert,
             client_cert,
             client_key
@@ -418,6 +430,9 @@ class DataCollectorsNewComponent extends React.Component {
       data_collector_type_id,
       policy_id,
       gateway_id,
+      region,
+      gateway_name,
+      gateway_api_key,
       ca_cert,
       client_cert,
       client_key
@@ -445,10 +460,11 @@ class DataCollectorsNewComponent extends React.Component {
       name.length <= 120 &&
       (!description || description.length <= 1000) &&
       (dataCollectorTypeCode === "ttn_collector" ||
+        dataCollectorTypeCode === "ttn_v3_collector" ||
         ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) && Validation.isValidPort(port))) &&
       data_collector_type_id &&
       policy_id &&
-      ((dataCollectorTypeCode !== "ttn_collector" &&
+      ((dataCollectorTypeCode === "chirpstack_collector" &&
         (!user || (user && user.length < 120)) &&
         (!password || (password && password.length < 120))) ||
         (dataCollectorTypeCode === "ttn_collector" &&
@@ -456,7 +472,13 @@ class DataCollectorsNewComponent extends React.Component {
           user.length < 120 &&
           password &&
           password.length < 120 &&
-          gateway_id));
+          gateway_id) ||
+        (dataCollectorTypeCode === "ttn_v3_collector" &&
+          region &&
+          gateway_name &&
+          gateway_name.length <= 36 &&
+          gateway_api_key &&
+          gateway_api_key.length < 120));
 
     return (
       <div className="app-body-container-view">
@@ -521,22 +543,26 @@ class DataCollectorsNewComponent extends React.Component {
                       </div>
                     </Form.Field>
                   </Form.Group>
-                  <Form.Group>
-                    <Form.Field>
-                      {/* <label>Description</label> */}
-                      <Form.Input
-                        required
-                        name="description"
-                        value={description}
-                        onChange={this.handleChange}
-                        error={!!description && description.length > 1000}
-                      >
-                        <input />
-                        <label>Description</label>
-                      </Form.Input>
-                    </Form.Field>
-                  </Form.Group>
-                  {dataCollectorTypeCode !== "ttn_collector" && (
+
+                  {dataCollectorTypeCode !== null && (
+                    <Form.Group>
+                      <Form.Field>
+                        {/* <label>Description</label> */}
+                        <Form.Input
+                          required
+                          name="description"
+                          value={description}
+                          onChange={this.handleChange}
+                          error={!!description && description.length > 1000}
+                        >
+                          <input />
+                          <label>Description</label>
+                        </Form.Input>
+                      </Form.Field>
+                    </Form.Group>
+                  )}
+
+                  {dataCollectorTypeCode === "chirpstack_collector" && (
                     <Form.Group>
                       <Form.Field required>
                         <Form.Input
@@ -564,50 +590,100 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-                  <Form.Group>
-                    <Form.Field
-                      required={dataCollectorTypeCode === "ttn_collector"}
-                    >
-                      <Form.Input
-                        required
-                        name="user"
-                        value={user}
-                        onChange={this.handleChange}
-                        error={!!user && user.length > 120}
-                      >
-                        <input />
-                        <label>User</label>
-                      </Form.Input>
-                    </Form.Field>
-                    <Form.Field
-                      required={dataCollectorTypeCode === "ttn_collector"}
-                    >
-                      <Form.Input
-                        required
-                        type="password"
-                        autoComplete="new-password"
-                        name="password"
-                        value={password}
-                        onChange={this.handleChange}
-                        error={!!password && password.length > 120}
-                      >
-                        <input />
-                        <label>Password</label>
-                      </Form.Input>
-                    </Form.Field>
-                    {dataCollectorTypeCode === "ttn_collector" && (
-                      <Form.Button
-                        type="button"
-                        disabled={!user || !password || isLoading}
-                        loading={isGettingGateways}
-                        content="Get Gateways"
-                        onClick={() => this.getUserGateways()}
-                        floated="left"
-                      />
-                    )}
-                  </Form.Group>
 
-                  {dataCollectorTypeCode !== "ttn_collector" && (
+                  {(dataCollectorTypeCode === "chirpstack_collector" ||
+                   dataCollectorTypeCode === "ttn_collector") && (
+                    <Form.Group>
+                      <Form.Field
+                        required={dataCollectorTypeCode === "ttn_collector"}
+                      >
+                        <Form.Input
+                          required
+                          name="user"
+                          value={user}
+                          onChange={this.handleChange}
+                          error={!!user && user.length > 120}
+                        >
+                          <input />
+                          <label>User</label>
+                        </Form.Input>
+                      </Form.Field>
+                      <Form.Field
+                        required={dataCollectorTypeCode === "ttn_collector"}
+                      >
+                        <Form.Input
+                          required
+                          type="password"
+                          autoComplete="new-password"
+                          name="password"
+                          value={password}
+                          onChange={this.handleChange}
+                          error={!!password && password.length > 120}
+                        >
+                          <input />
+                          <label>Password</label>
+                        </Form.Input>
+                      </Form.Field>
+                      {dataCollectorTypeCode === "ttn_collector" && (
+                        <Form.Button
+                          type="button"
+                          disabled={!user || !password || isLoading}
+                          loading={isGettingGateways}
+                          content="Get Gateways"
+                          onClick={() => this.getUserGateways()}
+                          floated="left"
+                        />
+                      )}
+                    </Form.Group>
+                  )}
+
+                  {dataCollectorTypeCode === "ttn_v3_collector" && (
+                    <div>
+                      <Form.Group>
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="Region"
+                            value={region}
+                            onChange={this.handleChange}
+                            // error={!!user && user.length > 120}
+                          >
+                            <input />
+                            <label>Region</label>
+                          </Form.Input>
+                        </Form.Field>
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="Gateway Name"
+                            value={gateway_name}
+                            onChange={this.handleChange}
+                            error={!!gateway_name && gateway_name.length > 36}
+                          >
+                            <input />
+                            <label>Gateway ID</label>
+                          </Form.Input>
+                        </Form.Field>
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="Gateway API Key"
+                            value={gateway_api_key}
+                            onChange={this.handleChange}
+                            error={!!gateway_api_key && gateway_api_key.length > 120}
+                          >
+                            <input />
+                            <label>Gateway API Key</label>
+                          </Form.Input>
+                        </Form.Field>
+                      </Form.Group>
+                    </div>
+                  )}
+
+                  {dataCollectorTypeCode === "chirpstack_collector" && (
                     <div>
                       <Form.Group>
                         <Form.Field required className="mb0">
