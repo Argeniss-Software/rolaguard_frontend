@@ -45,7 +45,7 @@ class DataCollectorsNewComponent extends React.Component {
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
-        region: null,
+        region_id: null,
         gateway_name: null,
         gateway_api_key: null,
       },
@@ -53,6 +53,7 @@ class DataCollectorsNewComponent extends React.Component {
       policies: [],
       ttn_gateways: [],
       selected_gateways: [],
+      regions: [],
       selectAllGateways: false,
       isGettingGateways: false,
       errorGateways: false,
@@ -181,7 +182,7 @@ class DataCollectorsNewComponent extends React.Component {
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
-        region: null,
+        region_id: null,
         gateway_name: null,
         gateway_api_key: null,
       },
@@ -206,6 +207,25 @@ class DataCollectorsNewComponent extends React.Component {
         });
 
         this.setState({ types });
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({ isLoading: false, error: err });
+        setTimeout(() => this.setState({ error: null }), 5000);
+      });
+
+      this.props.dataCollectorStore
+      .getDataCollectorTTNRegions()
+      .then((response) => {
+        const regions = response.data.map((region) => {
+          return {
+            key: region.id,
+            value: region.id,
+            text: region.name,
+          };
+        });
+
+        this.setState({ regions });
       })
       .catch((err) => {
         console.error(err);
@@ -252,7 +272,7 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
-            region,
+            region_id,
             gateway_name,
             gateway_api_key,
             ca_cert,
@@ -271,7 +291,7 @@ class DataCollectorsNewComponent extends React.Component {
             data_collector_type_id,
             policy_id,
             gateway_id,
-            region,
+            region_id,
             gateway_name,
             gateway_api_key,
             ca_cert,
@@ -430,7 +450,7 @@ class DataCollectorsNewComponent extends React.Component {
       data_collector_type_id,
       policy_id,
       gateway_id,
-      region,
+      region_id,
       gateway_name,
       gateway_api_key,
       ca_cert,
@@ -444,6 +464,7 @@ class DataCollectorsNewComponent extends React.Component {
       title,
       error,
       types,
+      regions,
       policies,
       isTesting,
       isGettingGateways,
@@ -474,7 +495,7 @@ class DataCollectorsNewComponent extends React.Component {
           password.length < 120 &&
           gateway_id) ||
         (dataCollectorTypeCode === "ttn_v3_collector" &&
-          region &&
+          region_id &&
           gateway_name &&
           gateway_name.length <= 36 &&
           gateway_api_key &&
@@ -641,21 +662,22 @@ class DataCollectorsNewComponent extends React.Component {
                     <div>
                       <Form.Group>
                         <Form.Field required>
-                          <Form.Input
-                            required
-                            name="Region"
-                            value={region}
-                            onChange={this.handleChange}
-                            // error={!!user && user.length > 120}
-                          >
-                            <input />
-                            <label>Region</label>
-                          </Form.Input>
+                          <div className="dropdown-label-wrapper">
+                            <label className="dropdown-label">Region</label>
+                            <Form.Dropdown
+                              search
+                              selection
+                              options={regions}
+                              name="region_id"
+                              value={region_id}
+                              onChange={this.handleChange}
+                            />
+                          </div>
                         </Form.Field>
                         <Form.Field required>
                           <Form.Input
                             required
-                            name="Gateway Name"
+                            name="gateway_name"
                             value={gateway_name}
                             onChange={this.handleChange}
                             error={!!gateway_name && gateway_name.length > 36}
@@ -670,7 +692,7 @@ class DataCollectorsNewComponent extends React.Component {
                         <Form.Field required>
                           <Form.Input
                             required
-                            name="Gateway API Key"
+                            name="gateway_api_key"
                             value={gateway_api_key}
                             onChange={this.handleChange}
                             error={!!gateway_api_key && gateway_api_key.length > 120}
