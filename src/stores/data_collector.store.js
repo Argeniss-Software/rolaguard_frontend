@@ -93,6 +93,13 @@ class DataCollectorStore {
   }
 
   @action
+  getDataCollectorTTNRegions() {
+    return API.get(`data_collectors/ttn_regions`, {
+      headers: { Authorization: "Bearer " + AuthStore.access_token }
+    })
+  }
+
+  @action
   getDataCollectorsActivity() {
     return API.get(`data_collectors/activity`, {
       headers: { Authorization: "Bearer " + AuthStore.access_token }
