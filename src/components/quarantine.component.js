@@ -41,7 +41,7 @@ class QuarantineComponent extends React.Component {
       byRiskViz: [],
       byCollectorViz: [],
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       criteria: {
         type: [],
         risk: [],
@@ -645,6 +645,15 @@ class QuarantineComponent extends React.Component {
                   )}
                   {!this.state.isLoadingTable && totalPages > 1 && (
                     <Grid className="segment centered">
+                      <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
+                        {
+                          [10,25,50].map(pageSize => (
+                            <option key={pageSize} value={pageSize}>
+                              Show{pageSize}
+                            </option>
+                          ))
+                        }
+                        </select>
                       <Pagination
                         className=""
                         activePage={activePage}

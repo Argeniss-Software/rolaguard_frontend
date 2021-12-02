@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext, observer } from "mobx-react";
 
-import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
+import { Segment, Grid, Pagination, Label, Icon} from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 
 import "./resource-usage.component.css";
@@ -14,7 +14,7 @@ const ResourceUsageComponent = (props) => {
   const { resourceUsageStore } = useContext(MobXProviderContext);
   const [showFilters, setShowFilters] = useState(true);
   const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
-
+  
   const clearFilters = () => {
     // clean all criteria filtering
     resourceUsageStore.deleteCriteria();
@@ -221,7 +221,7 @@ const ResourceUsageComponent = (props) => {
                       <Pagination
                         activePage={resourceUsageStore.model.activePage}
                         onPageChange={handlePaginationChange}
-                        totalPages={resourceUsageStore.model.totalPages}
+                        totalPages={Math.ceil(resourceUsageStore.model.totalPages/5)}
                       />
                     </Grid>
                   )}

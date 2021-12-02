@@ -63,7 +63,7 @@ class AlarmReviewComponent extends React.Component {
       isGraphsLoading: true,
       isStatusLoading: false,
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       alerts: [],
       count: null,
       alertsCount: null,
@@ -120,10 +120,11 @@ class AlarmReviewComponent extends React.Component {
       resolved: false,
     });
 
-    const dataCollectorsPromise = this.props.dataCollectorStore.getDataCollectorApi(
-      this.state.criteria.from,
-      this.state.criteria.to
-    );
+    const dataCollectorsPromise =
+      this.props.dataCollectorStore.getDataCollectorApi(
+        this.state.criteria.from,
+        this.state.criteria.to
+      );
 
     Promise.all([
       alarmsDataPromise,
@@ -182,7 +183,7 @@ class AlarmReviewComponent extends React.Component {
         };
       });
 
-      const colors = ColorUtil.colorList()
+      const colors = ColorUtil.colorList();
       const filteredRisks = risks.filter((r) => r.value !== 0);
       const filteredTypes = types.filter((t) => t.value !== 0);
       const filteredDataCollectors = dataCollectors.filter(
@@ -207,6 +208,10 @@ class AlarmReviewComponent extends React.Component {
         alarmsTypesMap,
       });
     });
+  };
+
+  handlePageSizeChange = (e) => {
+    this.setState({ pageSize: e.target.value }, this.loadAlertsAndCounts);
   };
 
   /*handleAlertResolution = () => {
@@ -282,16 +287,15 @@ class AlarmReviewComponent extends React.Component {
     if (dateTo) {
       let validTo = dateTo;
       if (dateTo < criteria.from) {
-        dateTo = criteria.from
-        validTo = moment(
-          dateTo.setSeconds(dateTo.getSeconds() + 1)
-        ).toDate();
+        dateTo = criteria.from;
+        validTo = moment(dateTo.setSeconds(dateTo.getSeconds() + 1)).toDate();
         criteria["to"] = validTo;
       } else {
         criteria["to"] = null;
       }
     } else {
-      criteria["to"]=null    }
+      criteria["to"] = null;
+    }
     this.setState({ criteria, range: null });
   };
 
@@ -951,6 +955,7 @@ class AlarmReviewComponent extends React.Component {
                         style={{ marginBottom: 20 }}
                       />
                     )}
+
                     {totalPages > 1 && !this.state.isLoading && (
                       <Pagination
                         className=""
@@ -959,6 +964,16 @@ class AlarmReviewComponent extends React.Component {
                         totalPages={totalPages}
                       />
                     )}
+                    <select
+                      value={pageSize}
+                      onChange={this.handlePageSizeChange}
+                    >
+                      {[10, 25, 50].map((pageSize) => (
+                        <option key={pageSize} value={pageSize}>
+                          Show {pageSize}
+                        </option>
+                      ))}
+                    </select>
                   </Grid>
                 </Segment>
 
