@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup } from "semantic-ui-react";
+import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup, Dropdown, Menu } from "semantic-ui-react";
 import "./quarantine.component.css";
 import AlertUtil from '../util/alert-util';
 import "./quarantine.component.css";
@@ -82,6 +82,10 @@ class QuarantineComponent extends React.Component {
       }
     );
   }
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadQuarantineData(1));
+  };
 
   componentDidMount() {
     this.loadViz();
@@ -645,21 +649,21 @@ class QuarantineComponent extends React.Component {
                   )}
                   {!this.state.isLoadingTable && totalPages > 1 && (
                     <Grid className="segment centered">
-                      <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))}>
-                        {
-                          [10,25,50].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                              Show{pageSize}
-                            </option>
-                          ))
-                        }
-                        </select>
                       <Pagination
                         className=""
                         activePage={activePage}
                         onPageChange={this.handlePaginationChange}
                         totalPages={totalPages}
                       />
+                      <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>       
                     </Grid>
                   )}
                 </Segment>

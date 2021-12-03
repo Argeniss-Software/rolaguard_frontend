@@ -13,6 +13,8 @@ import {
   Popup,
   Message,
   Divider,
+  Dropdown,
+  Menu,
 } from "semantic-ui-react";
 import AlertUtil from "../util/alert-util";
 import Pie from "./visualizations/Pie";
@@ -210,8 +212,8 @@ class AlarmReviewComponent extends React.Component {
     });
   };
 
-  handlePageSizeChange = (e) => {
-    this.setState({ pageSize: e.target.value }, this.loadAlertsAndCounts);
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadAlertsAndCounts);
   };
 
   /*handleAlertResolution = () => {
@@ -535,7 +537,10 @@ class AlarmReviewComponent extends React.Component {
     const filteredRisks = risks.filter((risk) => risk.selected);
     const filteredTypes = types.filter((type) => type.selected);
     const filteredDataCollectors = dataCollectors.filter((dc) => dc.selected);
-
+    const pageSizeOptions = [ 
+    { key: 1, text: 'Show 50', value: 50 },
+    { key: 2, text: 'Show 25', value: 25 },
+    { key: 3, text: 'Show 10', value: 10 },]
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view">
@@ -955,7 +960,6 @@ class AlarmReviewComponent extends React.Component {
                         style={{ marginBottom: 20 }}
                       />
                     )}
-
                     {totalPages > 1 && !this.state.isLoading && (
                       <Pagination
                         className=""
@@ -963,17 +967,18 @@ class AlarmReviewComponent extends React.Component {
                         onPageChange={this.handlePaginationChange}
                         totalPages={totalPages}
                       />
-                    )}
-                    <select
-                      value={pageSize}
-                      onChange={this.handlePageSizeChange}
-                    >
-                      {[10, 25, 50].map((pageSize) => (
-                        <option key={pageSize} value={pageSize}>
-                          Show {pageSize}
-                        </option>
-                      ))}
-                    </select>
+                      )}
+                    {totalPages > 1 && !this.state.isLoading && (
+                      <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>
+                      )}
                   </Grid>
                 </Segment>
 
