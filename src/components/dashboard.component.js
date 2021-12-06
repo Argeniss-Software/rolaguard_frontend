@@ -37,9 +37,7 @@ function TourButton() {
   const tour = useContext(ShepherdTourContext);
 
   return (
-    <button className="button dark" onClick={tour.start}>
-      Start Tour
-    </button>
+    <Button content='Start Tour' primary onClick={tour.start}></Button>
   );
 }
 
@@ -392,7 +390,6 @@ class DashboardComponent extends React.Component {
               </ShepherdTour>
             </div>
           </div>
-
           {/* VIEW BODY */}
           <div className="view-body">
             {this.state.isLoading && (

@@ -1467,10 +1467,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@popperjs/core@^2.5.2":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.5.4.tgz#de25b5da9f727985a3757fd59b5d028aba75841a"
-  integrity sha512-ZpKr+WTb8zsajqgDkvCEWgp6d5eJT6Q63Ng2neTbzBO76Lbe91vX/iVIW9dikq+Fs3yEo+ls4cxeXABD2LtcbQ==
+"@popperjs/core@^2.9.2":
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.0.tgz#6734f8ebc106a0860dff7f92bf90df193f0935d7"
+  integrity sha512-zrsUxjLOKAzdewIDRWy9nsV1GQsKBCWaGwsZQlCgr6/q+vjyZhFgqedLfFBuI9anTPEUT4APq9Mu0SZBTzIcGQ==
 
 "@rescripts/cli@0.0.14":
   version "0.0.14"
@@ -10092,12 +10092,12 @@ react-semantic-ui@^0.2.0:
   resolved "https://registry.yarnpkg.com/react-semantic-ui/-/react-semantic-ui-0.2.0.tgz#3b1a4f0a9ee999efed9d2691def24bc17c97ff14"
   integrity sha1-OxpPCp7pme/tnSaR3vJLwXyX/xQ=
 
-react-shepherd@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-shepherd/-/react-shepherd-3.3.0.tgz#7b231fea26db1104be92e54921af838e16cd56f0"
-  integrity sha512-w9ulB7ILt+uNJpRQmLsdBZSS600UkquDcToOsWGg2xv52FgcbMkGAIFtHAx7beXha/Pu6FFHy0SM67ZqUGWAxA==
+react-shepherd@^3.3.6:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/react-shepherd/-/react-shepherd-3.3.6.tgz#e9886f8456a35b52c81dfbc53c9d2dbe4e853109"
+  integrity sha512-pYa6WuK+nHTwi1k/WFBSKj2WxQUCwGKjIxRVtAO9wDfRJwF6+hA9UVP7l0paGYaz4ZfU7ZxiOEsUFbXUyWs4xg==
   dependencies:
-    shepherd.js "^8.0.0"
+    shepherd.js "^8.3.1"
 
 react-spinners@^0.9.0:
   version "0.9.0"
@@ -10889,12 +10889,12 @@ shellwords@^0.1.1:
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
   integrity sha512-vFwSUfQvqybiICwZY5+DAWIPLKsWO31Q91JSKl3UYv+K5c2QRPzn0qzec6QPu1Qc9eHYItiP3NdJqNVqetYAww==
 
-shepherd.js@^8.0.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/shepherd.js/-/shepherd.js-8.1.0.tgz#810b72a6ddf16f6e953126a1315108cc5709f7ce"
-  integrity sha512-mWab5hn2cdSdv5XF3IbBYyT2wPejAjK0flycbkRxqS1c+4epkKRMhpW9Eco6swDCu65wUP7PcecdjayokwI+Vg==
+shepherd.js@^8.3.1:
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/shepherd.js/-/shepherd.js-8.3.1.tgz#131eeefc5eb2bc44c9e23d0da139db46b2b55339"
+  integrity sha512-IhxZNhnK2m/pNTXudNfYrcwvcZNWkeYngQbQee8nC3xJ2GjeIatGqivhdZAMZ+LeogZvKMakB931d/V534uhrw==
   dependencies:
-    "@popperjs/core" "^2.5.2"
+    "@popperjs/core" "^2.9.2"
     deepmerge "^4.2.2"
     smoothscroll-polyfill "^0.4.4"
 

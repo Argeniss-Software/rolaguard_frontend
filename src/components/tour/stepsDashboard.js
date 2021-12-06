@@ -4,13 +4,10 @@ export default [
     text: [
       `
       <p>
-      Shepherd is a JavaScript library for guiding users through your app.
-      It uses <a href="https://popper.js.org/">Popper.js</a>,
-      another open source library, to render dialogs for each tour "step".
+      Welcome!
       </p>
       <p>
-      Among many things, Popper makes sure your steps never end up off screen or
-      cropped by an overflow. (Try resizing your browser to see what we mean.)
+      ¿Are you ready to take the tour on RolaGuard?
       </p>
       `,
     ],
@@ -23,6 +20,7 @@ export default [
       },
       {
         type: "next",
+        classes: "shepherd-button-primary",
         text: "Next",
       },
     ],
@@ -40,6 +38,7 @@ export default [
       },
       {
         type: "next",
+        classes: "shepherd-button-primary",
         text: "Next",
       },
     ],
@@ -59,6 +58,7 @@ export default [
       },
       {
         type: "next",
+        classes: "shepherd-button-primary",
         text: "Next",
       },
     ],
@@ -77,6 +77,7 @@ export default [
       },
       {
         type: "next",
+        classes: "shepherd-button-primary",
         text: "Next",
       },
     ],
@@ -95,6 +96,7 @@ export default [
       },
       {
         type: "next",
+        classes: "shepherd-button-primary",
         text: "Done",
       },
     ],
