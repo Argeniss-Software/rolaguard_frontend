@@ -136,7 +136,6 @@ class AlarmReviewComponent extends React.Component {
       dataCollectorsPromise,
     ]).then((responses) => {
       this.alarmsTypesMap = {};
-
       const alarmsTypesMap = {};
       responses[1].forEach((alarmType) => {
         alarmsTypesMap[alarmType.code] = alarmType;
