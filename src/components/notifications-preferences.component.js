@@ -24,7 +24,8 @@ class NotificationsPreferencesComponent extends React.Component {
         preferences: {},
         newEmail: '',
         newPhone: '',
-        newWebhook: '',
+        newWebhookUrl: '',
+        newSecret: '',
         showMessage: false
       }
 
@@ -87,10 +88,10 @@ class NotificationsPreferencesComponent extends React.Component {
     }
 
     onAdditionalWebhookAdded = () => {
-      const { newWebhook, preferences } = this.state;
+      const { newWebhookUrl, newSecret, preferences } = this.state;
       const webhookItem = preferences.destinations.find(item => item.destination === 'webhook');
-      webhookItem.additional.push({active: false, url: newWebhook});
-      this.setState({newWebhook: '', preferences});
+      webhookItem.additional.push({active: false, url: newWebhookUrl, secret: newSecret});
+      this.setState({newWebhookUrl: '', newSecret:'', preferences});
     }
 
     removeEmail = index => {
@@ -140,7 +141,7 @@ class NotificationsPreferencesComponent extends React.Component {
     }
 
     render() {
-        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage,newWebhook } = this.state;
+        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage, newWebhookUrl, newSecret } = this.state;
         const { risks, dataCollectors, destinations, asset_importance} = preferences;
         let emailItem = null, smsItem = null, pushItem, webhookItem=null;
         if(destinations) {
@@ -574,15 +575,25 @@ class NotificationsPreferencesComponent extends React.Component {
                                     className="form-label form-css-label"
                                     noValidate="novalidate"
                                   >
-                                    <Form.Group inline>
+                                    <Form.Group>
                                       <Input
                                         style={{
                                           width: "100%",
                                           marginRight: "25px",
                                         }}
-                                        placeholder="Add additional webhook"
-                                        name="newWebhook"
-                                        value={newWebhook}
+                                        placeholder="Enter webhook url"
+                                        name="newWebhookUrl"
+                                        value={newWebhookUrl}
+                                        onChange={this.onAdditionalChange}
+                                      />
+                                      <Input
+                                        style={{
+                                          width: "100%",
+                                          marginRight: "25px",
+                                        }}
+                                        placeholder="Enter SHA-256 secret"
+                                        name="newSecret"
+                                        value={newSecret}
                                         onChange={this.onAdditionalChange}
                                       />
                                       <Button
@@ -590,7 +601,7 @@ class NotificationsPreferencesComponent extends React.Component {
                                         disabled={
                                           isSaving ||
                                           isLoading ||
-                                          newWebhook.length === 0
+                                          newWebhookUrl.length === 0
                                         }
                                         onClick={this.onAdditionalWebhookAdded}
                                       />
