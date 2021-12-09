@@ -1,4 +1,4 @@
-import React, {Component, useContext} from "react";
+import React, { Component, useContext } from "react";
 import { observer, inject } from "mobx-react";
 import {
   Table,
@@ -28,17 +28,15 @@ import AlertListComponent from "./alert.list.component";
 import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
-import DataCollectorSelector from "./utils/data-collector-selector.component"
+import DataCollectorSelector from "./utils/data-collector-selector.component";
 import { ShepherdTour, ShepherdTourContext } from "react-shepherd";
-import stepsDashboard from "./tour/stepsDashboard"
-import "shepherd.js/dist/css/shepherd.css"
+import stepsDashboard from "./tour/stepsDashboard";
+import "shepherd.js/dist/css/shepherd.css";
 
 function TourButton() {
   const tour = useContext(ShepherdTourContext);
 
-  return (
-    <Button content='Start Tour' primary onClick={tour.start}></Button>
-  );
+  return <Button content="Start Tour" primary onClick={tour.start}></Button>;
 }
 
 @inject(
@@ -382,6 +380,7 @@ class DashboardComponent extends React.Component {
                     cancelIcon: {
                       enabled: true,
                     },
+                    classes: "shepherd-theme-custom",
                   },
                   useModalOverlay: true,
                 }}
