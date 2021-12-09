@@ -30,12 +30,11 @@ import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component";
 import { ShepherdTour, ShepherdTourContext } from "react-shepherd";
-import stepsDashboard from "./tour/stepsDashboard";
+import stepsDashboard from "./tour/steps-dashboard.component";
 import "shepherd.js/dist/css/shepherd.css";
 
 function TourButton() {
   const tour = useContext(ShepherdTourContext);
-
   return <Button content="Start Tour" primary onClick={tour.start}></Button>;
 }
 
@@ -374,7 +373,7 @@ class DashboardComponent extends React.Component {
             <h1>DASHBOARD</h1>
             <div>
               <ShepherdTour
-                steps={stepsDashboard}
+                steps={stepsDashboard(this.props)}
                 tourOptions={{
                   defaultStepOptions: {
                     cancelIcon: {

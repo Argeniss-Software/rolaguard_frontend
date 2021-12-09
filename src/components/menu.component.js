@@ -49,6 +49,7 @@ class MenuComponent extends React.Component {
                 this.selectedItem("dashboard", "/dashboard");
               }}
               className={this.state.activeItem === "dashboard" ? "active" : ""}
+              id="dashboard"
             >
               <i className="fas fa-tachometer-alt"></i>
               {this.props.sidebarCollapsed === false && <span>Dashboard</span>}
@@ -69,6 +70,7 @@ class MenuComponent extends React.Component {
               className={
                 this.state.activeItem === "current_issues" ? "active" : ""
               }
+              id="current_issues"
             >
               <i className="fas fa-exclamation-triangle"></i>
               {this.props.sidebarCollapsed === false && (
@@ -88,6 +90,7 @@ class MenuComponent extends React.Component {
               className={
                 this.state.activeItem === "alerts_review" ? "active" : ""
               }
+              id="alerts"
             >
               <i className="fas fa-exclamation-circle"></i>
               {this.props.sidebarCollapsed === false && <span>Alerts</span>}
@@ -104,6 +107,7 @@ class MenuComponent extends React.Component {
                 this.selectedItem("inventory", "/dashboard/inventory");
               }}
               className={this.state.activeItem === "inventory" ? "active" : ""}
+              id="inventory"
             >
               <i className="fas fa-microchip"></i>
               {this.props.sidebarCollapsed === false && <span>Inventory</span>}
@@ -125,6 +129,7 @@ class MenuComponent extends React.Component {
               className={
                 this.state.activeItem === "resources-usage" ? "active" : ""
               }
+              id="network_overview"
             >
               <i className="fas fa-chart-line"></i>
               {this.props.sidebarCollapsed === false && (
@@ -150,6 +155,7 @@ class MenuComponent extends React.Component {
               className={
                 this.state.activeItem === "events_manager" ? "active" : ""
               }
+              id="events_manager"
             >
               <i className="fas fa-project-diagram"></i>
 
@@ -185,6 +191,7 @@ class MenuComponent extends React.Component {
                 this.selectedItem("alarm", "/dashboard/policies");
               }}
               className={this.state.activeItem === "alarm" ? "active" : ""}
+              id="policies"
             >
               <i className="fas fa-shield-alt"></i>
               {this.props.sidebarCollapsed === false && <span>Policies</span>}
@@ -192,6 +199,7 @@ class MenuComponent extends React.Component {
           }
           style={popupStyle}
           content="Policies"
+
         />
 
         <Popup
@@ -206,6 +214,7 @@ class MenuComponent extends React.Component {
               className={
                 this.state.activeItem === "data_collector" ? "active" : ""
               }
+              id="data_sources"
             >
               <i className="fas fa-sitemap"></i>
               {this.props.sidebarCollapsed === false && (
@@ -225,6 +234,7 @@ class MenuComponent extends React.Component {
                   this.selectedItem("user", "/dashboard/users");
                 }}
                 className={this.state.activeItem === "user" ? "active" : ""}
+                id="users"
               >
                 <i className="fas fa-users"></i>
                 {this.props.sidebarCollapsed === false && <span>Users</span>}

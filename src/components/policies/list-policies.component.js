@@ -87,9 +87,9 @@ class ListPoliciesComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             <h1>{title}</h1>
-            <div className="view-header-actions">
+            <div className="view-header-actions" >
               {isAdmin && (
-                <div onClick={() => history.push("/dashboard/policies/new")}>
+                <div id="new_policy" onClick={() => history.push("/dashboard/policies/new")}>
                   <i className="fas fa-plus" />
                   <span>NEW POLICY</span>
                 </div>
