@@ -1,4 +1,4 @@
-import React, { Component, useContext } from "react";
+import React, { Component, createContext, useContext } from "react";
 import { observer, inject } from "mobx-react";
 import {
   Table,
@@ -365,6 +365,18 @@ class DashboardComponent extends React.Component {
       packetsCount = (packetsCount / 1000000).toFixed(1) + "M";
     }
 
+    const tour = this.tourContext;
+
+    const tourOptions = {
+      defaultStepOptions: {
+        cancelIcon: {
+          enabled: true,
+        },
+        classes: "shepherd-theme-custom",
+      },
+      useModalOverlay: true,
+    };
+
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view dashboard">
@@ -373,16 +385,8 @@ class DashboardComponent extends React.Component {
             <h1>DASHBOARD</h1>
             <div>
               <ShepherdTour
-                steps={stepsDashboard(this.props)}
-                tourOptions={{
-                  defaultStepOptions: {
-                    cancelIcon: {
-                      enabled: true,
-                    },
-                    classes: "shepherd-theme-custom",
-                  },
-                  useModalOverlay: true,
-                }}
+                steps={stepsDashboard(this.props, tour)}
+                tourOptions={tourOptions}
               >
                 <TourButton />
               </ShepherdTour>
