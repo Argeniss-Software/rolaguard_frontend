@@ -1,8 +1,8 @@
-function StepsDashboardComponent(props, tourContext) {
+function StepsDashboardComponent(props) {
   const steps = [
     {
       id: "welcome",
-      title: "Welcome!",
+      title: `<b> Welcome!<b>`,
       text: "Are you ready to take the Tour on RolaGuard?",
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -25,7 +25,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "menu",
-      title: "Menu",
+      title: "<b>Menu<b>",
       text: `This menu can allow you to interact with different sections of the system`,
       attachTo: { element: ".sidebar-menu ", on: "right" },
       buttons: [
@@ -48,7 +48,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "policies_step",
-      title: `Policies`,
+      title: `<b>Policies<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#policies", on: "right" },
       buttons: [
@@ -71,7 +71,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "policies",
-      title: `Policies`,
+      title: `<b>Policies<b>`,
       text: "This section displays the existing policies on the system. A policy is a set of configuration parameters for the different checks and alerts of RoLaGuard. You can interact with the items on the list by clicking the actions.",
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -94,7 +94,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "new_policy",
-      title: `New Policy`,
+      title: `<b>New Policy<b>`,
       text: `This button can allow you to open a form to add a new policy.`,
       attachTo: { element: "#new_policy", on: "left" },
       beforeShowPromise: function () {
@@ -125,7 +125,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "data_sources",
-      title: `Data Sources`,
+      title: `<b>Data Sources<b>`,
       text: "Continue to learn more about this section",
       attachTo: { element: "#data_sources", on: "right" },
       buttons: [
@@ -148,7 +148,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "data_sources",
-      title: `Data Sources`,
+      title: `<b>Data Sources<b>`,
       text: `This section displays the existing data sources on the system. Also, you can interact with the items on the list by clicking the actions.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -171,7 +171,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "new_data_sources",
-      title: `New Data Sources`,
+      title: `<b>New Data Source<b>`,
       text: "This button can allow you to open a form to add a new data source",
       beforeShowPromise: function () {
         return new Promise(function (resolve) {
@@ -202,7 +202,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "events_manager",
-      title: `Events Manager`,
+      title: `<b>Events Manager<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#events_manager", on: "right" },
       buttons: [
@@ -225,7 +225,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "events_manager",
-      title: `Events Manager`,
+      title: `<b>Events Manager<b>`,
       text: `This section can allow you to configure the notifications of the system.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -248,7 +248,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "sources",
-      title: `Sources`,
+      title: `<b>Sources<b>`,
       text: `These switches can allow you to select which data sources should generate notifications.`,
       attachTo: { element: "#sources", on: "right" },
       buttons: [
@@ -266,12 +266,16 @@ function StepsDashboardComponent(props, tourContext) {
       when: {
         show: () => {
           props.history.push("/dashboard/events_manager");
+          document.getElementById("sources").click();
+        },
+        hide: () => {
+          document.getElementById("sources").click();
         },
       },
     },
     {
       id: "triggers",
-      title: `Triggers`,
+      title: `<b>Triggers<b>`,
       text: `These switches allow you to configure which types of alerts will generate notifications.`,
       attachTo: { element: "#triggers", on: "right" },
       buttons: [
@@ -289,12 +293,16 @@ function StepsDashboardComponent(props, tourContext) {
       when: {
         show: () => {
           props.history.push("/dashboard/events_manager");
+          document.getElementById("triggers").click();
+        },
+        hide: () => {
+          document.getElementById("triggers").click();
         },
       },
     },
     {
       id: "action",
-      title: `Action`,
+      title: `<b>Action<b>`,
       text: `These switches can allow you to configure the type of notifications to receive: push or email notifications.`,
       attachTo: { element: "#action", on: "right" },
       buttons: [
@@ -312,12 +320,16 @@ function StepsDashboardComponent(props, tourContext) {
       when: {
         show: () => {
           props.history.push("/dashboard/events_manager");
+          document.getElementById("action").click();
+        },
+        hide: () => {
+          document.getElementById("action").click();
         },
       },
     },
     {
       id: "save",
-      title: `Save`,
+      title: `<b>Save<b>`,
       beforeShowPromise: function () {
         return new Promise(function (resolve) {
           setTimeout(function () {
@@ -327,7 +339,7 @@ function StepsDashboardComponent(props, tourContext) {
         });
       },
       text: `Don’t forget to click the save button before exiting this section if you made changes.`,
-      attachTo: { element: "#save", on: "left" },
+      attachTo: { element: "#save_button", on: "left" },
       buttons: [
         {
           type: "back",
@@ -348,7 +360,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "network_overview",
-      title: `Network Overview`,
+      title: `<b>Network Overview<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#network_overview", on: "right" },
       buttons: [
@@ -371,7 +383,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "network_overview",
-      title: `Network Overview`,
+      title: `<b>Network Overview<b>`,
       text: `This section displays statistics about the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by status, flow messages and signal strength. The list can allow you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -394,7 +406,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "inventory",
-      title: `Inventory`,
+      title: `<b>Inventory<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#inventory", on: "right" },
       buttons: [
@@ -417,7 +429,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "inventory",
-      title: `Inventory`,
+      title: `<b>Inventory<b>`,
       text: `This section lists the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by vendor, data source and importance.The list can allow you to interact with the items on the list by clicking on one or checking the box to set importance or assign labels.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -440,7 +452,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "alerts",
-      title: `Alerts`,
+      title: `<b>Alerts<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#alerts", on: "right" },
       buttons: [
@@ -463,7 +475,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "alerts",
-      title: `Alerts`,
+      title: `<b>Alerts<b>`,
       text: `This section displays the existing alerts on the system. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list can allow you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -486,7 +498,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "current_issues",
-      title: `Current Issues`,
+      title: `<b>Current Issues<b>`,
       text: `Continue to learn more about this section`,
       attachTo: { element: "#current_issues", on: "right" },
       buttons: [
@@ -509,7 +521,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "current_issues",
-      title: `Current Issues`,
+      title: `<b>Current Issues<b>`,
       text: `This section displays the current issues on the network. While an alert is a specific event in time that can affect the network, an issue is a problem/vulnerability that is persistent. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list can allow you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -532,7 +544,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "dashboard",
-      title: "Dashboard",
+      title: "<b>Dashboard<b>",
       text: `Continue to learn more about this section`,
       attachTo: { element: "#dashboard", on: "right" },
       buttons: [
@@ -555,7 +567,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "dashboard",
-      title: "Dashboard",
+      title: "<b>Dashboard<b>",
       text: `This section displays a summary of the state of the network: the latest alerts on the system, number of devices, messages, etc. If you want to start the tour again you can click the button on this section.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
@@ -578,7 +590,7 @@ function StepsDashboardComponent(props, tourContext) {
     },
     {
       id: "end",
-      title: "Tour finished",
+      title: "<b>Tour finished<b>",
       text: `Thanks for taking the tour on RolaGuard!`,
       buttons: [
         {

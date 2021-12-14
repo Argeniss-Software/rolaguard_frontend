@@ -29,7 +29,7 @@ class NotificationsPreferencesComponent extends React.Component {
     super(props);
 
     this.state = {
-      activeIndex: 2,
+      activeIndex: -1,
       isLoading: false,
       isSaving: false,
       hasError: false,
@@ -270,7 +270,10 @@ class NotificationsPreferencesComponent extends React.Component {
                     <Icon name="dropdown" />
                     Triggers
                   </Accordion.Title>
-                  <Accordion.Content active={activeIndex === 1}>
+                  <Accordion.Content
+                    id="triggers_content"
+                    active={activeIndex === 1}
+                  >
                     <Grid celled="internally" stackable columns={2}>
                       <Grid.Row>
                         <Grid.Column>
@@ -546,14 +549,14 @@ class NotificationsPreferencesComponent extends React.Component {
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
                   <Form.Button
-                    id="save"
+                    id="save_button"
                     color="green"
                     disabled={isLoading || isSaving}
                     loading={isSaving}
                     content="Save"
                     style={{ marginTop: 25, marginLeft: 10 }}
                     onClick={this.save}
-                  />
+                  ></Form.Button>
                 </div>
               </div>
             </div>

@@ -35,7 +35,14 @@ import "shepherd.js/dist/css/shepherd.css";
 
 function TourButton() {
   const tour = useContext(ShepherdTourContext);
-  return <Button content="Start Tour" primary onClick={tour.start}></Button>;
+  return (
+    <Button
+      content="Start Tour"
+      basic
+      color="blue"
+      onClick={tour.start}
+    ></Button>
+  );
 }
 
 @inject(
@@ -365,8 +372,6 @@ class DashboardComponent extends React.Component {
       packetsCount = (packetsCount / 1000000).toFixed(1) + "M";
     }
 
-    const tour = this.tourContext;
-
     const tourOptions = {
       defaultStepOptions: {
         cancelIcon: {
@@ -385,7 +390,7 @@ class DashboardComponent extends React.Component {
             <h1>DASHBOARD</h1>
             <div>
               <ShepherdTour
-                steps={stepsDashboard(this.props, tour)}
+                steps={stepsDashboard(this.props)}
                 tourOptions={tourOptions}
               >
                 <TourButton />
