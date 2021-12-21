@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Component, createContext, useContext } from "react";
 import { observer, inject } from "mobx-react";
 import {
   Table,
@@ -28,7 +28,22 @@ import AlertListComponent from "./alert.list.component";
 import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
-import DataCollectorSelector from "./utils/data-collector-selector.component"
+import DataCollectorSelector from "./utils/data-collector-selector.component";
+import { ShepherdTour, ShepherdTourContext } from "react-shepherd";
+import stepsDashboard from "./tour/steps-dashboard.component";
+import "shepherd.js/dist/css/shepherd.css";
+
+function TourButton() {
+  const tour = useContext(ShepherdTourContext);
+  return (
+    <Button
+      content="Start Tour"
+      basic
+      color="blue"
+      onClick={tour.start}
+    ></Button>
+  );
+}
 
 @inject(
   "generalDataStore",
@@ -40,6 +55,7 @@ import DataCollectorSelector from "./utils/data-collector-selector.component"
 )
 @observer
 class DashboardComponent extends React.Component {
+  static tourContext = ShepherdTourContext;
   subscriber = null;
 
   constructor(props) {
@@ -172,6 +188,7 @@ class DashboardComponent extends React.Component {
   }
 
   componentDidMount() {
+    const tour = this.context;
     this.getDataCollectors();
     this.updateRange("DAY");
     this.getTopAlerts();
@@ -200,21 +217,17 @@ class DashboardComponent extends React.Component {
   };
 
   handleDataCollectorSelection = (params) => {
-    const {
-      totalCollectors,
-      activeCollectors,
-      dataCollectorsOptions,
-    } = params;
-    
+    const { totalCollectors, activeCollectors, dataCollectorsOptions } = params;
+
     const dataCollectors = dataCollectorsOptions;
 
-     this.setState({
-       totalCollectors,
-       activeCollectors,
-       dataCollectorsLoading: false,
-       isLoading: false,
-       dataCollectors,
-     });
+    this.setState({
+      totalCollectors,
+      activeCollectors,
+      dataCollectorsLoading: false,
+      isLoading: false,
+      dataCollectors,
+    });
     const { range } = this.state;
 
     this.setState({ selectedDataCollectors: params.selected }, () => {
@@ -359,14 +372,31 @@ class DashboardComponent extends React.Component {
       packetsCount = (packetsCount / 1000000).toFixed(1) + "M";
     }
 
+    const tourOptions = {
+      defaultStepOptions: {
+        cancelIcon: {
+          enabled: true,
+        },
+        classes: "shepherd-theme-custom",
+      },
+      useModalOverlay: true,
+    };
+
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
             <h1>DASHBOARD</h1>
+            <div>
+              <ShepherdTour
+                steps={stepsDashboard(this.props)}
+                tourOptions={tourOptions}
+              >
+                <TourButton />
+              </ShepherdTour>
+            </div>
           </div>
-
           {/* VIEW BODY */}
           <div className="view-body">
             {this.state.isLoading && (
