@@ -41,7 +41,8 @@ class UsersStore {
       full_name: user.full_name,
       // phone: user.phone.replace(/\D/g, ""),
       phone: user.phone,
-      user_roles: user.user_roles
+      user_roles: user.user_roles,
+      first_login: user.first_login
     };
 
     return API.put("user/" + user.username, userData, {

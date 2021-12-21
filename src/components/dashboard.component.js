@@ -29,9 +29,10 @@ import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component";
-import { ShepherdTour, ShepherdTourContext } from "react-shepherd";
 import stepsDashboard from "./tour/steps-dashboard.component";
-import "shepherd.js/dist/css/shepherd.css";
+import "shepherd.js/dist/css/shepherd.css"; 
+import { ShepherdTour, ShepherdTourContext, TourMethods } from "react-shepherd";
+import StartTour from "./tour/start-tour";
 
 function TourButton() {
   const tour = useContext(ShepherdTourContext);
@@ -393,6 +394,9 @@ class DashboardComponent extends React.Component {
                 steps={stepsDashboard(this.props)}
                 tourOptions={tourOptions}
               >
+                <TourMethods>
+                  {(tourContext) => <StartTour startTour={tourContext} />}
+                </TourMethods>
                 <TourButton />
               </ShepherdTour>
             </div>
