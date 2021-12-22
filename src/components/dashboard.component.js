@@ -86,6 +86,7 @@ class DashboardComponent extends React.Component {
       },
       lastUpdated: Date.now(),
       override: null,
+      firstLogin: this.props.usersStore.currentUser.first_login
     };
   }
 
