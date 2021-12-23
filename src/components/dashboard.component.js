@@ -30,7 +30,7 @@ import { css } from "@emotion/core";
 import _ from "lodash";
 import DataCollectorSelector from "./utils/data-collector-selector.component";
 import stepsDashboard from "./tour/steps-dashboard.component";
-import "shepherd.js/dist/css/shepherd.css"; 
+import "shepherd.js/dist/css/shepherd.css";
 import { ShepherdTour, ShepherdTourContext, TourMethods } from "react-shepherd";
 import StartTour from "./tour/start-tour";
 
@@ -86,7 +86,7 @@ class DashboardComponent extends React.Component {
       },
       lastUpdated: Date.now(),
       override: null,
-      firstLogin: this.props.usersStore.currentUser.first_login
+      firstLogin: this.props.usersStore.currentUser.first_login,
     };
   }
 
@@ -348,6 +348,7 @@ class DashboardComponent extends React.Component {
 
   render() {
     let organization_name = this.props.usersStore.currentUser.organization_name;
+    const isFirstLogin = this.props.usersStore.currentUser.first_login;
 
     let {
       activeCollectors,
@@ -396,7 +397,12 @@ class DashboardComponent extends React.Component {
                 tourOptions={tourOptions}
               >
                 <TourMethods>
-                  {(tourContext) => <StartTour startTour={tourContext} />}
+                  {(tourContext) => (
+                    <StartTour
+                      {...this.props.usersStore.currentUser.first_login}
+                      startTour={tourContext}
+                    />
+                  )}
                 </TourMethods>
                 <TourButton />
               </ShepherdTour>

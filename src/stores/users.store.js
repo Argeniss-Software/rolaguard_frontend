@@ -4,20 +4,21 @@ import API from "../util/api";
 
 import axios from "axios";
 
-const API_HOST = window.RUNTIME_API_HOST ? window.RUNTIME_API_HOST : 'http://localhost:3000';
-
+const API_HOST = window.RUNTIME_API_HOST
+  ? window.RUNTIME_API_HOST
+  : "http://localhost:3000";
 
 class UsersStore {
   @observable usersList = [];
   @observable currentUser = [];
 
-  resourceUrl = API_HOST + 'user';
+  resourceUrl = API_HOST + "user";
 
   @action
   getUserApi() {
     return API.get("user", {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
-    }).then(response => {
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+    }).then((response) => {
       this.usersList = response.data.users;
     });
   }
@@ -25,10 +26,10 @@ class UsersStore {
   @action
   getUserByUsernameApi(username) {
     return API.get("user/" + username, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
     });
   }
-  
+
   @action
   addUser(user) {
     this.usersList.push(user);
@@ -42,43 +43,48 @@ class UsersStore {
       // phone: user.phone.replace(/\D/g, ""),
       phone: user.phone,
       user_roles: user.user_roles,
-      first_login: user.first_login
+      first_login: user.first_login,
     };
 
     return API.put("user/" + user.username, userData, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
-    }).then(response => {
-      this.getUserApi();
-    });
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+    })
+      .then((response) => {
+        if (this.currentUser.username == user.username) {
+          this.currentUser = response.data;
+        }
+      })
+      .catch((error) => {
+        return error.response;
+      });
   }
 
   @action
   saveUser(user_to_create) {
     return API.post("register", user_to_create, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
     })
-      .then(response => {
+      .then((response) => {
         if (response.access_token) {
           this.addUser(response.data);
         }
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
 
   @action
   register(user_to_create, recaptcha_token_to_validate) {
-
     var data = user_to_create;
-    data.recaptcha_token=recaptcha_token_to_validate;
+    data.recaptcha_token = recaptcha_token_to_validate;
 
     return API.post("register", data, {})
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -86,8 +92,8 @@ class UsersStore {
   @action
   deleteUser(user) {
     return API.delete("user/" + user.username, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
-    }).then(response => {
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+    }).then((response) => {
       this.getUserApi();
     });
   }
@@ -95,8 +101,8 @@ class UsersStore {
   @action
   resendActivation(user) {
     return API.put("resend_activation", user, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
-    }).then(response => {
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
+    }).then((response) => {
       this.getUserApi();
       return response;
     });
@@ -105,10 +111,10 @@ class UsersStore {
   @action
   createPassword(data) {
     return API.put("create_password/" + data.token, data)
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -116,10 +122,10 @@ class UsersStore {
   @action
   changePasswordByRecovery(data) {
     return API.put("change_password_by_recovery/" + data.token, data)
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -127,12 +133,12 @@ class UsersStore {
   @action
   changePassword(user) {
     return API.put("change_password", user, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
     })
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -140,12 +146,12 @@ class UsersStore {
   @action
   changeEmailRequest(user) {
     return API.post("change_email_request", user, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
     })
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -153,27 +159,25 @@ class UsersStore {
   @action
   confirmEmailChange(user) {
     return API.put("change_email/" + user.token, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
+      headers: { Authorization: "Bearer " + AuthStore.access_token },
     })
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
-
   }
 
   @action
   recoverPassword(data, recaptcha_token_to_validate) {
-
-    data.recaptcha_token=recaptcha_token_to_validate;
+    data.recaptcha_token = recaptcha_token_to_validate;
 
     return API.put("password_recovery", data)
-      .then(response => {
+      .then((response) => {
         return response;
       })
-      .catch(error => {
+      .catch((error) => {
         return error.response;
       });
   }
@@ -188,7 +192,6 @@ class UsersStore {
   getHeaders() {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
-
 }
 
 export default new UsersStore();
