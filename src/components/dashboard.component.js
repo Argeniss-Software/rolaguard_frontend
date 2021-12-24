@@ -32,7 +32,7 @@ import DataCollectorSelector from "./utils/data-collector-selector.component";
 import stepsDashboard from "./tour/steps-dashboard.component";
 import "shepherd.js/dist/css/shepherd.css";
 import { ShepherdTour, ShepherdTourContext, TourMethods } from "react-shepherd";
-import StartTour from "./tour/start-tour";
+import AutoStartTour from "./tour/auto-start-tour";
 
 function TourButton() {
   const tour = useContext(ShepherdTourContext);
@@ -398,7 +398,7 @@ class DashboardComponent extends React.Component {
               >
                 <TourMethods>
                   {(tourContext) => (
-                    <StartTour
+                    <AutoStartTour
                       {...this.props.usersStore.currentUser.first_login}
                       startTour={tourContext}
                     />

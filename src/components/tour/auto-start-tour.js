@@ -3,7 +3,7 @@ import { observer, inject } from "mobx-react";
 
 @inject("usersStore")
 @observer
-class StartTour extends React.Component {
+class AutoStartTour extends React.Component {
   constructor(props) {
     super(props);
 
@@ -33,4 +33,4 @@ class StartTour extends React.Component {
   }
 }
 
-export default StartTour;
+export default AutoStartTour;
