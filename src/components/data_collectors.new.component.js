@@ -42,7 +42,6 @@ class DataCollectorsNewComponent extends React.Component {
         password: "",
         topics: [],
         ssl: false,
-        custom_ip: false,
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
@@ -63,6 +62,7 @@ class DataCollectorsNewComponent extends React.Component {
       newTopic: "",
       isSaving: false,
       isLoading: false,
+      custom_ip: false,
       isTesting: false,
       typeForm: "Add",
       error: null,
@@ -79,7 +79,7 @@ class DataCollectorsNewComponent extends React.Component {
       dataCollector["ssl"] = !dataCollector["ssl"];
     }
     if (name === "custom_ip") {
-      dataCollector["custom_ip"] = !dataCollector["custom_ip"];
+      this.state.custom_ip = !this.state.custom_ip;
       dataCollector["gateway_api_key"] = null;
       dataCollector["gateway_id"] = null;
       dataCollector["gateway_name"] = null;
@@ -189,7 +189,6 @@ class DataCollectorsNewComponent extends React.Component {
         password: "",
         topics: [],
         ssl: false,
-        custom_ip: false,
         data_collector_type_id: null,
         policy_id: null,
         gateway_id: null,
@@ -198,6 +197,7 @@ class DataCollectorsNewComponent extends React.Component {
         gateway_api_key: null,
       },
       newTopic: "",
+      custom_ip: false,
     });
   };
 
@@ -279,7 +279,6 @@ class DataCollectorsNewComponent extends React.Component {
             user,
             password,
             ssl,
-            custom_ip,
             topics,
             data_collector_type_id,
             policy_id,
@@ -299,7 +298,6 @@ class DataCollectorsNewComponent extends React.Component {
             user,
             password,
             ssl,
-            custom_ip,
             topics,
             data_collector_type_id,
             policy_id,
@@ -459,7 +457,6 @@ class DataCollectorsNewComponent extends React.Component {
       user,
       password,
       ssl,
-      custom_ip,
       topics,
       data_collector_type_id,
       policy_id,
@@ -476,6 +473,7 @@ class DataCollectorsNewComponent extends React.Component {
       isLoading,
       isSaving,
       title,
+      custom_ip,
       error,
       types,
       regions,
@@ -510,11 +508,12 @@ class DataCollectorsNewComponent extends React.Component {
           password.length < 120 &&
           gateway_id) ||
         (dataCollectorTypeCode === "ttn_v3_collector" &&
-          region_id &&
+          (region_id &&
           gateway_name &&
           gateway_name.length <= 36 &&
           gateway_api_key &&
-          gateway_api_key.length < 120));
+          gateway_api_key.length < 120)) ||
+          (ip && port));
 
     return (
       <div className="app-body-container-view">
@@ -617,8 +616,7 @@ class DataCollectorsNewComponent extends React.Component {
                     </div>
                   )}
 
-                  {dataCollectorTypeCode === "chirpstack_collector" ||
-                    (custom_ip && (
+                  {(dataCollectorTypeCode === "ttn_v3_collector" && (custom_ip &&
                       <Form.Group>
                         <Form.Field required>
                           <Form.Input
@@ -652,6 +650,41 @@ class DataCollectorsNewComponent extends React.Component {
                         </Form.Field>
                       </Form.Group>
                     ))}
+                  
+                  {(dataCollectorTypeCode === "chirpstack_collector" && (
+                     <Form.Group>
+                     <Form.Field required>
+                       <Form.Input
+                         required
+                         name="ip"
+                         value={ip}
+                         onChange={this.handleChange}
+                         error={
+                           !!ip &&
+                           !(
+                             Validation.isValidIp(ip) ||
+                             Validation.isValidHostname(ip)
+                           )
+                         }
+                       >
+                         <input />
+                         <label>Server IP Address/Hostname</label>
+                       </Form.Input>
+                     </Form.Field>
+                     <Form.Field required>
+                       <Form.Input
+                         required
+                         name="port"
+                         value={port}
+                         onChange={this.handleChange}
+                         error={!!port && !Validation.isValidPort(port)}
+                       >
+                         <input />
+                         <label>Port</label>
+                       </Form.Input>
+                     </Form.Field>
+                   </Form.Group>
+                  ))}
 
                   {(dataCollectorTypeCode === "chirpstack_collector" ||
                     dataCollectorTypeCode === "ttn_collector") && (
