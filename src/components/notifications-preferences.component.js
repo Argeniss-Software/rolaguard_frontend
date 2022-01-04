@@ -24,6 +24,8 @@ class NotificationsPreferencesComponent extends React.Component {
         preferences: {},
         newEmail: '',
         newPhone: '',
+        newWebhookUrl: '',
+        newSecret: '',
         showMessage: false
       }
 
@@ -85,6 +87,13 @@ class NotificationsPreferencesComponent extends React.Component {
         this.setState({newPhone: '', preferences});
     }
 
+    onAdditionalWebhookAdded = () => {
+      const { newWebhookUrl, newSecret, preferences } = this.state;
+      const webhookItem = preferences.destinations.find(item => item.destination === 'webhook');
+      webhookItem.additional.push({active: false, url: newWebhookUrl, secret: newSecret});
+      this.setState({newWebhookUrl: '', newSecret:'', preferences});
+    }
+
     removeEmail = index => {
         const { preferences } = this.state;
         const emailItem = preferences.destinations.find(item => item.destination === 'email');
@@ -97,6 +106,13 @@ class NotificationsPreferencesComponent extends React.Component {
         const smsItem = preferences.destinations.find(item => item.destination === 'sms');
         smsItem.additional.splice(index, 1);
         this.setState({ preferences });
+    }
+
+    removeWebhook = index => {
+      const { preferences } = this.state;
+      const webhookItem = preferences.destinations.find(item => item.destination === 'webhook');
+      webhookItem.additional.splice(index, 1);
+      this.setState({ preferences });
     }
 
     save = () => {
@@ -125,13 +141,14 @@ class NotificationsPreferencesComponent extends React.Component {
     }
 
     render() {
-        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage } = this.state;
+        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage, newWebhookUrl, newSecret } = this.state;
         const { risks, dataCollectors, destinations, asset_importance} = preferences;
-        let emailItem = null, smsItem = null, pushItem;
+        let emailItem = null, smsItem = null, pushItem, webhookItem=null;
         if(destinations) {
             emailItem = destinations.find(item => item.destination === 'email');
             smsItem = destinations.find(item => item.destination === 'sms');
             pushItem = destinations.find(item => item.destination === 'push');
+            webhookItem = destinations.find(item => item.destination === 'webhook');
         }
 
         smsItem = {...smsItem, enabled: false};
@@ -513,6 +530,105 @@ class NotificationsPreferencesComponent extends React.Component {
                                               }}
                                               onClick={() =>
                                                 this.removeEmail(index)
+                                              }
+                                            ></Icon>
+                                          </div>
+                                        )
+                                      )}
+                                    </div>
+                                  </Form>
+                                </Table.Cell>
+                              </Table.Row>
+                            )}
+                            <Table.Row>
+                              <Table.Cell className="status-column">
+                                <Popup
+                                  content={
+                                    webhookItem.enabled ? "Disable" : "Enable"
+                                  }
+                                  trigger={
+                                    <Checkbox
+                                      toggle
+                                      onChange={() =>
+                                        this.toggleDestination(
+                                          webhookItem.destination
+                                        )
+                                      }
+                                      checked={webhookItem.enabled}
+                                    />
+                                  }
+                                />
+                              </Table.Cell>
+                              <Table.Cell>
+                                <Header
+                                  as="h4"
+                                  className="notification-preferences-header"
+                                >
+                                  Webhooks
+                                </Header>
+                              </Table.Cell>
+                            </Table.Row>
+                            {webhookItem.enabled && (
+                              <Table.Row>
+                                <Table.Cell colSpan="2">
+                                  <Form
+                                    className="form-label form-css-label"
+                                    noValidate="novalidate"
+                                  >
+                                    <Form.Group>
+                                      <Input
+                                        style={{
+                                          width: "100%",
+                                          marginRight: "25px",
+                                        }}
+                                        placeholder="Enter webhook url"
+                                        name="newWebhookUrl"
+                                        value={newWebhookUrl}
+                                        onChange={this.onAdditionalChange}
+                                      />
+                                      <Input
+                                        style={{
+                                          width: "100%",
+                                          marginRight: "25px",
+                                        }}
+                                        placeholder="Enter SHA-256 secret"
+                                        name="newSecret"
+                                        value={newSecret}
+                                        onChange={this.onAdditionalChange}
+                                      />
+                                      <Button
+                                        content="Add"
+                                        disabled={
+                                          isSaving ||
+                                          isLoading ||
+                                          newWebhookUrl.length === 0
+                                        }
+                                        onClick={this.onAdditionalWebhookAdded}
+                                      />
+                                    </Form.Group>
+                                    <div className="mt-lg ml-xs">
+                                      {webhookItem.additional.map(
+                                        (item, index) => (
+                                          <div className="mt" key={index}>
+                                            <Icon
+                                              name={
+                                                item.active ? "check" : "clock"
+                                              }
+                                              color={
+                                                item.active ? "green" : "yellow"
+                                              }
+                                              className="mr"
+                                            ></Icon>
+                                            <span>{item.url}</span>
+                                            <Icon
+                                              name="close"
+                                              color="red"
+                                              style={{
+                                                marginLeft: 10,
+                                                cursor: "pointer",
+                                              }}
+                                              onClick={() =>
+                                                this.removeWebhook(index)
                                               }
                                             ></Icon>
                                           </div>
