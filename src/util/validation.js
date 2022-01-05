@@ -1,12 +1,10 @@
-import isValidHostname from 'is-valid-hostname';
+import isValidHostname from "is-valid-hostname";
+import validator from "validator";
+
 const Validation = {
   isValidUsername: (username) => {
     const regex = new RegExp("^[a-z0-9-_.]{3,32}$");
     return regex.test(username);
-  },
-
-  isValidHostname: (text) => {
-    return isValidHostname(text);
   },
 
   hasLength: (text, length) => {
@@ -21,33 +19,33 @@ const Validation = {
     return text.length > 64;
   },
 
-  isEmpty: text => {
+  isEmpty: (text) => {
     //check text is not only white spaces
     text = text.replace(/\s+/g, "");
     return text.length === 0 ? true : false;
   },
 
-  isValidPassword: password => {
+  isValidPassword: (password) => {
     const rePassword = new RegExp(
       "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[ !\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]).{8,50}$"
     );
     return rePassword.test(password);
   },
 
-  isValidPhone: phone => {
+  isValidPhone: (phone) => {
     const rePhone = new RegExp("^(\\+\\d+)-(\\d+)$");
     return phone && rePhone.test(phone);
   },
 
-  hasWhiteSpaces: text => {
+  hasWhiteSpaces: (text) => {
     return text.includes(" ") ? true : false;
   },
 
-  isGravatarImg: text => {
+  isGravatarImg: (text) => {
     return text.includes("gravatar.com/avatar/") ? true : false;
   },
 
-  isRegularUser: user => {
+  isRegularUser: (user) => {
     if (user && user.user_roles) {
       /* if (user.user_roles.indexOf(8) !== -1) {
         return true;
@@ -59,25 +57,28 @@ const Validation = {
     }
   },
 
-  isUserAdmin: user => {
+  isUserAdmin: (user) => {
     if (user && user.user_roles) {
       return user.user_roles.indexOf(2) !== -1 ? true : false;
     } else {
       return false;
     }
   },
-  isValidIp: ip => {
-    const blocks = ip.split('.');
-    if(blocks.length !== 4) return false;
-    for(let i = 0; i < 4; i++) {
-      const value = parseInt(blocks[i],10);
-      if(isNaN(value) || value < 0 || value > 255) return false;
-    }
-    return true;
+
+  isValidIp: (ip) => {
+    return validator.isIP(ip);
   },
-  isValidPort: port => {
-    const value = parseInt(port,10);
-    return !(isNaN(value) || value <= 0 || value >= 65536);
+
+  isValidURL: (text) => {
+    return validator.isURL(text);
+  },
+
+  isValidHostname: (text) => {
+    return validator.isFQDN(text);
+  },
+
+  isValidPort: (port) => {
+    return validator.isPort(port);
   },
 
   isValidTagName: (tagName) => {

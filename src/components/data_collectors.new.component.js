@@ -494,26 +494,30 @@ class DataCollectorsNewComponent extends React.Component {
       (!description || description.length <= 1000) &&
       (dataCollectorTypeCode === "ttn_collector" ||
         dataCollectorTypeCode === "ttn_v3_collector" ||
-        ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) &&
-          Validation.isValidPort(port))) &&
-      data_collector_type_id &&
-      policy_id &&
-      ((dataCollectorTypeCode === "chirpstack_collector" &&
-        (!user || (user && user.length < 120)) &&
-        (!password || (password && password.length < 120))) ||
-        (dataCollectorTypeCode === "ttn_collector" &&
-          user &&
-          user.length < 120 &&
-          password &&
-          password.length < 120 &&
-          gateway_id) ||
-        (dataCollectorTypeCode === "ttn_v3_collector" &&
-          (region_id &&
-          gateway_name &&
-          gateway_name.length <= 36 &&
-          gateway_api_key &&
-          gateway_api_key.length < 120)) ||
-          (ip && port));
+        ((Validation.isValidIp(ip) ||
+          (Validation.isValidHostname(ip) && Validation.isValidPort(port))) &&
+          data_collector_type_id &&
+          policy_id &&
+          ((dataCollectorTypeCode === "chirpstack_collector" &&
+            (!user || (user && user.length < 120)) &&
+            (!password || (password && password.length < 120))) ||
+            (dataCollectorTypeCode === "ttn_collector" &&
+              user &&
+              user.length < 120 &&
+              password &&
+              password.length < 120 &&
+              gateway_id) ||
+            (dataCollectorTypeCode === "ttn_v3_collector" &&
+              (Validation.isValidIp(ip) ||
+                Validation.isValidHostname(ip) ||
+                Validation.isValidURL(ip)) &&
+              Validation.isValidPort(port) &&
+              region_id &&
+              gateway_name &&
+              gateway_name.length <= 36 &&
+              gateway_api_key &&
+              gateway_api_key.length < 120) ||
+            (ip && port))));
 
     return (
       <div className="app-body-container-view">
@@ -578,7 +582,6 @@ class DataCollectorsNewComponent extends React.Component {
                       </div>
                     </Form.Field>
                   </Form.Group>
-
                   {dataCollectorTypeCode !== null && (
                     <Form.Group>
                       <Form.Field>
@@ -596,7 +599,6 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-
                   {dataCollectorTypeCode === "ttn_v3_collector" && (
                     <div
                       style={{
@@ -615,77 +617,75 @@ class DataCollectorsNewComponent extends React.Component {
                       ></Form.Checkbox>
                     </div>
                   )}
-
-                  {(dataCollectorTypeCode === "ttn_v3_collector" && (custom_ip &&
-                      <Form.Group>
-                        <Form.Field required>
-                          <Form.Input
-                            required
-                            name="ip"
-                            value={ip}
-                            onChange={this.handleChange}
-                            error={
-                              !!ip &&
-                              !(
-                                Validation.isValidIp(ip) ||
-                                Validation.isValidHostname(ip)
-                              )
-                            }
-                          >
-                            <input />
-                            <label>Server IP Address/Hostname</label>
-                          </Form.Input>
-                        </Form.Field>
-                        <Form.Field required>
-                          <Form.Input
-                            required
-                            name="port"
-                            value={port}
-                            onChange={this.handleChange}
-                            error={!!port && !Validation.isValidPort(port)}
-                          >
-                            <input />
-                            <label>Port</label>
-                          </Form.Input>
-                        </Form.Field>
-                      </Form.Group>
-                    ))}
-                  
-                  {(dataCollectorTypeCode === "chirpstack_collector" && (
-                     <Form.Group>
-                     <Form.Field required>
-                       <Form.Input
-                         required
-                         name="ip"
-                         value={ip}
-                         onChange={this.handleChange}
-                         error={
-                           !!ip &&
-                           !(
-                             Validation.isValidIp(ip) ||
-                             Validation.isValidHostname(ip)
-                           )
-                         }
-                       >
-                         <input />
-                         <label>Server IP Address/Hostname</label>
-                       </Form.Input>
-                     </Form.Field>
-                     <Form.Field required>
-                       <Form.Input
-                         required
-                         name="port"
-                         value={port}
-                         onChange={this.handleChange}
-                         error={!!port && !Validation.isValidPort(port)}
-                       >
-                         <input />
-                         <label>Port</label>
-                       </Form.Input>
-                     </Form.Field>
-                   </Form.Group>
-                  ))}
-
+                  {dataCollectorTypeCode === "ttn_v3_collector" && custom_ip && (
+                    <Form.Group>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="ip"
+                          value={ip}
+                          onChange={this.handleChange}
+                          error={
+                            !!ip &&
+                            !(
+                              Validation.isValidIp(ip) ||
+                              Validation.isValidHostname(ip) ||
+                              Validation.isValidURL(ip)
+                            )
+                          }
+                        >
+                          <input />
+                          <label>Server IP Address/Hostname/Domain</label>
+                        </Form.Input>
+                      </Form.Field>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="port"
+                          value={port}
+                          onChange={this.handleChange}
+                          error={!!port && !Validation.isValidPort(port)}
+                        >
+                          <input />
+                          <label>Port</label>
+                        </Form.Input>
+                      </Form.Field>
+                    </Form.Group>
+                  )}
+                  {dataCollectorTypeCode === "chirpstack_collector" && (
+                    <Form.Group>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="ip"
+                          value={ip}
+                          onChange={this.handleChange}
+                          error={
+                            !!ip &&
+                            !(
+                              Validation.isValidIp(ip) ||
+                              Validation.isValidHostname(ip)
+                            )
+                          }
+                        >
+                          <input />
+                          <label>Server IP Address/Hostname</label>
+                        </Form.Input>
+                      </Form.Field>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="port"
+                          value={port}
+                          onChange={this.handleChange}
+                          error={!!port && !Validation.isValidPort(port)}
+                        >
+                          <input />
+                          <label>Port</label>
+                        </Form.Input>
+                      </Form.Field>
+                    </Form.Group>
+                  )}
                   {(dataCollectorTypeCode === "chirpstack_collector" ||
                     dataCollectorTypeCode === "ttn_collector") && (
                     <Form.Group>
@@ -731,11 +731,10 @@ class DataCollectorsNewComponent extends React.Component {
                       )}
                     </Form.Group>
                   )}
-
                   {dataCollectorTypeCode === "ttn_v3_collector" && (
                     <div>
-                      {!custom_ip && (
-                        <Form.Group>
+                      <Form.Group>
+                        {!custom_ip && (
                           <Form.Field required>
                             <div className="dropdown-label-wrapper">
                               <label className="dropdown-label">Region</label>
@@ -751,42 +750,38 @@ class DataCollectorsNewComponent extends React.Component {
                               />
                             </div>
                           </Form.Field>
-                          <Form.Field required>
-                            <Form.Input
-                              required
-                              name="gateway_name"
-                              value={gateway_name}
-                              onChange={this.handleChange}
-                              error={!!gateway_name && gateway_name.length > 36}
-                            >
-                              <input />
-                              <label>Gateway ID</label>
-                            </Form.Input>
-                          </Form.Field>
-                        </Form.Group>
-                      )}
-                      {!custom_ip && (
-                        <Form.Group>
-                          <Form.Field required>
-                            <Form.Input
-                              required
-                              name="gateway_api_key"
-                              value={gateway_api_key}
-                              onChange={this.handleChange}
-                              error={
-                                !!gateway_api_key &&
-                                gateway_api_key.length > 120
-                              }
-                            >
-                              <input />
-                              <label>Gateway API Key</label>
-                            </Form.Input>
-                          </Form.Field>
-                        </Form.Group>
-                      )}
+                        )}
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="gateway_name"
+                            value={gateway_name}
+                            onChange={this.handleChange}
+                            error={!!gateway_name && gateway_name.length > 36}
+                          >
+                            <input />
+                            <label>Gateway ID</label>
+                          </Form.Input>
+                        </Form.Field>
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Field required>
+                          <Form.Input
+                            required
+                            name="gateway_api_key"
+                            value={gateway_api_key}
+                            onChange={this.handleChange}
+                            error={
+                              !!gateway_api_key && gateway_api_key.length > 120
+                            }
+                          >
+                            <input />
+                            <label>Gateway API Key</label>
+                          </Form.Input>
+                        </Form.Field>
+                      </Form.Group>
                     </div>
                   )}
-
                   {dataCollectorTypeCode === "chirpstack_collector" && (
                     <div>
                       <Form.Group>
