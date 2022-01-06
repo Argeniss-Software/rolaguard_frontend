@@ -69,12 +69,12 @@ const Validation = {
     return validator.isIP(ip);
   },
 
-  isValidURL: (text) => {
-    return validator.isURL(text);
+  isValidURL: (URL) => {
+    return validator.isURL(URL);
   },
 
-  isValidHostname: (text) => {
-    return validator.isFQDN(text);
+  isValidHostname: (hostname) => {
+    return validator.isFQDN(hostname);
   },
 
   isValidPort: (port) => {

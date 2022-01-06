@@ -80,6 +80,8 @@ class DataCollectorsNewComponent extends React.Component {
     }
     if (name === "custom_ip") {
       this.state.custom_ip = !this.state.custom_ip;
+
+      //When the checkbox is true or false the values are set to null
       dataCollector["gateway_api_key"] = null;
       dataCollector["gateway_id"] = null;
       dataCollector["gateway_name"] = null;
@@ -607,6 +609,8 @@ class DataCollectorsNewComponent extends React.Component {
                         justifyContent: "left",
                       }}
                     >
+                      {/*This checkbox allows user to input a custom IP/Hostname and port or URL to connect a TTNv3 Data-Collector. 
+                      Then, if custom_ip is true the Form shows different fields*/}
                       <Form.Checkbox
                         toggle
                         className="custom_ip-checkbox"
