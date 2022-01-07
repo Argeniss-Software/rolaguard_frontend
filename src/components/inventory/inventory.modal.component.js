@@ -114,8 +114,12 @@ class InventoryDetailsModal extends Component {
           />
           <Confirm
             open={this.state.removalConfirmOpen}
+            header={"Removing label"}
             onCancel={this.handleConfirmCancel}
+            content={"Are you sure you want to remove the label?"}
             onConfirm={() => this.handleTagRemoval(this.state.tagToRemove)}
+            cancelButton="Cancel"
+            confirmButton="Yes"
           />
         </>
       );
