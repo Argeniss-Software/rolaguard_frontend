@@ -62,8 +62,9 @@ class InventoryReviewComponent extends React.Component {
         gateways: [],
         dataCollectors: [],
         tags: [],
-        importances: [],
+        importances: []
       },
+      hidden: false,
       selectAll: false,
       anyElementSelected: false,
     };
@@ -78,11 +79,12 @@ class InventoryReviewComponent extends React.Component {
   };
 
   loadAssetsAndCounts = () => {
-    const { activePage, pageSize, criteria } = this.state;
+    const { activePage, pageSize, criteria, hidden } = this.state;
     this.setState({ isLoading: true, isGraphsLoading: true });
     const assetsPromise = this.props.inventoryAssetsStore.getAssets(
       { page: activePage, size: pageSize },
-      criteria
+      criteria,
+      hidden,
     );
     const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(
       criteria
@@ -377,6 +379,54 @@ class InventoryReviewComponent extends React.Component {
     });
   }
 
+  HideButton = (props) => {
+    return (
+      <Button
+          onClick={() =>{
+            this.props.inventoryAssetsStore.setHiding(true,props.assets.filter((item) => item.selected));
+            this.loadAssetsAndCounts();
+          }}
+          disabled={!props.assets.some((asset) => asset.selected)}
+        >
+          HIDE
+        </Button>
+    );
+  }
+
+  ShowButton = (props) => {
+    return (
+      <Button
+          onClick={() =>{
+            this.props.inventoryAssetsStore.setHiding(false,props.assets.filter((item) => item.selected));
+            this.loadAssetsAndCounts();
+          }}
+          disabled={!props.assets.some((asset) => asset.selected)}
+        >
+          SHOW
+        </Button>
+    );
+  }
+
+  SeeHiddenButton = (props) => {
+    return(
+      <Button
+        onClick={ props.toggleHiding}
+      >
+        SEE HIDDEN ASSETS
+      </Button>
+    );
+  }
+
+  SeeVisibleButton = (props) => {
+    return(
+      <Button
+        onClick={ props.toggleHiding }
+      >
+        SEE VISIBLE ASSETS
+      </Button>
+    );
+  }
+
   ShowInventoryTable = (props) => {
     const { assetsCount, isLoading, assets, criteria, selectAll } = this.state;
 
@@ -598,9 +648,11 @@ class InventoryReviewComponent extends React.Component {
   };
 
   showActionsButtons() {
-    const { assets } = this.state;
+    const { assets, hidden } = this.state;
     return (
       <React.Fragment>
+        {! hidden && <this.HideButton assets={assets}/>}
+        { hidden && <this.ShowButton assets={assets}/>}
         <Button
           onClick={() => this.setState({ setImportance: true })}
           disabled={!assets.some((asset) => asset.selected)}
@@ -715,6 +767,7 @@ class InventoryReviewComponent extends React.Component {
       selectedAsset,
       assignTags,
       setImportance,
+      hidden,
     } = this.state;
 
     return (
@@ -854,7 +907,8 @@ class InventoryReviewComponent extends React.Component {
               <div className="view-body">
                 <div className="table-container">
                   <div className="table-container-box">
-                    <Segment>
+                    <Segment
+                      style={{marginBottom:20}}>
                       <div className="header-table-container">
                         <div
                           className={
@@ -887,7 +941,16 @@ class InventoryReviewComponent extends React.Component {
                         </Grid>
                       )}
                     </Segment>
-
+                    <div className="actions-buttons-container">
+                      { !hidden && <this.SeeHiddenButton 
+                        toggleHiding = {
+                          () => this.setState({hidden: true},this.loadAssetsAndCounts)
+                      }/>}
+                      { hidden && <this.SeeVisibleButton toggleHiding = {
+                          () => this.setState({hidden: false},this.loadAssetsAndCounts)
+                      }/> }
+                    </div>
+                    
                     {selectedAsset && (
                       <InventoryDetailsModal
                         loading={this.state.isLoading}
