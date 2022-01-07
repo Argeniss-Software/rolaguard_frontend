@@ -1,8 +1,9 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid } from "semantic-ui-react";
+import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid} from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
+import WebhookInfoModal from "./webhook.info.modal.component";
 
 import AlertUtil from '../util/alert-util';
 
@@ -26,7 +27,7 @@ class NotificationsPreferencesComponent extends React.Component {
         newPhone: '',
         newWebhookUrl: '',
         newSecret: '',
-        showMessage: false
+        showWebhookInfo: false
       }
 
       this.colors = AlertUtil.getColorsMap();
@@ -140,8 +141,12 @@ class NotificationsPreferencesComponent extends React.Component {
       this.setState({newPhone: phone});
     }
 
+    closeWebhookInfo = () => {
+      this.setState({ showWebhookInfo: false });
+    };
+
     render() {
-        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage, newWebhookUrl, newSecret } = this.state;
+        const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage, newWebhookUrl, newSecret, showWebhookInfo } = this.state;
         const { risks, dataCollectors, destinations, asset_importance} = preferences;
         let emailItem = null, smsItem = null, pushItem, webhookItem=null;
         if(destinations) {
@@ -589,13 +594,20 @@ class NotificationsPreferencesComponent extends React.Component {
                                       <Input
                                         style={{
                                           width: "100%",
-                                          marginRight: "25px",
+                                          marginRight: "20px",
                                         }}
                                         placeholder="Enter SHA-256 secret"
                                         name="newSecret"
                                         value={newSecret}
                                         onChange={this.onAdditionalChange}
                                       />
+                                      <div className="td-actions" style={{marginRight: "20px"}}>
+                                        <button
+                                          onClick = {() => {this.setState({showWebhookInfo:true})}}
+                                        >
+                                          <i className="fas fa-info-circle" />
+                                        </button>
+                                      </div>
                                       <Button
                                         content="Add"
                                         disabled={
@@ -647,6 +659,7 @@ class NotificationsPreferencesComponent extends React.Component {
                       style={{ display: "flex", justifyContent: "flex-end" }}
                     >
                       {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
+                      <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="See notifications" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/events_log')}/>
                       <Form.Button
                         color="green"
                         disabled={isLoading || isSaving}
@@ -657,6 +670,11 @@ class NotificationsPreferencesComponent extends React.Component {
                       />
                     </div>
                   </div>
+                  {showWebhookInfo && (
+                    <WebhookInfoModal
+                    onClose={this.closeWebhookInfo}
+                  />
+                  )}
                 </div>
               )}
             </div>
