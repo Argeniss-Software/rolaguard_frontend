@@ -31,6 +31,7 @@ import TruncateMarkup from "react-truncate-markup";
 import moment from "moment";
 import _ from "lodash";
 import AssetShowSearchComponent from "../utils/asset/asset-show-search.component";
+import { scaleDivergingPow } from "d3";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -87,14 +88,14 @@ class InventoryReviewComponent extends React.Component {
       hidden,
     );
     const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(
-      criteria
+      criteria, hidden
     );
     const vendorsPromise = this.props.inventoryAssetsStore.getVendorsCount(
-      criteria
+      criteria, hidden
     );
-    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(criteria);
+    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(criteria, hidden);
     const importancesPromise = this.props.inventoryAssetsStore.getImportanceCount(
-      criteria
+      criteria, hidden
     );
 
     Promise.all([
@@ -382,12 +383,9 @@ class InventoryReviewComponent extends React.Component {
   HideButton = (props) => {
     return (
       <Button
-          onClick={() =>{
-            this.props.inventoryAssetsStore.setHiding(true,props.assets.filter((item) => item.selected));
-            this.loadAssetsAndCounts();
-          }}
-          disabled={!props.assets.some((asset) => asset.selected)}
-        >
+        onClick = { props.onClick}
+        disabled = {!props.assets.some((asset) => asset.selected)}
+      >
           HIDE
         </Button>
     );
@@ -396,11 +394,8 @@ class InventoryReviewComponent extends React.Component {
   ShowButton = (props) => {
     return (
       <Button
-          onClick={() =>{
-            this.props.inventoryAssetsStore.setHiding(false,props.assets.filter((item) => item.selected));
-            this.loadAssetsAndCounts();
-          }}
-          disabled={!props.assets.some((asset) => asset.selected)}
+          onClick = { props.onClick}
+          disabled = {!props.assets.some((asset) => asset.selected)}
         >
           SHOW
         </Button>
@@ -651,8 +646,22 @@ class InventoryReviewComponent extends React.Component {
     const { assets, hidden } = this.state;
     return (
       <React.Fragment>
-        {! hidden && <this.HideButton assets={assets}/>}
-        { hidden && <this.ShowButton assets={assets}/>}
+        {! hidden && 
+        <this.HideButton 
+          assets={assets}
+          onClick = {() =>{
+            this.props.inventoryAssetsStore.setHiding(true,assets.filter((item) => item.selected));
+            this.loadAssetsAndCounts();
+          }}
+        />}
+        { hidden && 
+        <this.ShowButton 
+          assets={assets}
+          onClick = {() =>{
+            this.props.inventoryAssetsStore.setHiding(false,assets.filter((item) => item.selected));
+            this.loadAssetsAndCounts();
+          }}
+        />}
         <Button
           onClick={() => this.setState({ setImportance: true })}
           disabled={!assets.some((asset) => asset.selected)}

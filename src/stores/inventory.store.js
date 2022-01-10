@@ -34,7 +34,7 @@ class InventoryAssetsStore {
     return this.pagesCount;
   }
 
-  getDataCollectorsCount(criteria) {
+  getDataCollectorsCount(criteria, hidden) {
     const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
 
     const headers = this.getHeaders();
@@ -44,7 +44,8 @@ class InventoryAssetsStore {
       ...(dataCollectors && { data_collector_ids: dataCollectors }),
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
-      ...(importances && { importances: importances })
+      ...(importances && { importances: importances }),
+      hidden
     }
 
     return API.get(`inventory/count/data_collector`, { headers, params });
