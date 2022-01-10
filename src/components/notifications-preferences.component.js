@@ -25,6 +25,7 @@ class NotificationsPreferencesComponent extends React.Component {
         preferences: {},
         newEmail: '',
         newPhone: '',
+        showMessage: false,
         newWebhookUrl: '',
         newSecret: '',
         showWebhookInfo: false
