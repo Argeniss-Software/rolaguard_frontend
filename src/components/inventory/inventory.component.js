@@ -825,7 +825,7 @@ class InventoryReviewComponent extends React.Component {
           )}
           {!isLoading && (
             <React.Fragment>
-              {showFilters && (
+              {!hidden && showFilters && (
                 <Segment>
                   <Grid className="animated fadeIn">
                     <Grid.Row
@@ -927,7 +927,7 @@ class InventoryReviewComponent extends React.Component {
                   </Grid>
                 </Segment>
               )}
-              <div className="view-body">
+              <div className="view-body" style={{marginTop:20}}>
                 <div className="table-container">
                   <div className="table-container-box">
                     <Segment
