@@ -927,11 +927,10 @@ class InventoryReviewComponent extends React.Component {
                   </Grid>
                 </Segment>
               )}
-              <div className="view-body" style={{marginTop:20}}>
+              <div className="view-body">
                 <div className="table-container">
                   <div className="table-container-box">
-                    <Segment
-                      style={{marginBottom:20}}>
+                    <Segment>
                       <div className="header-table-container">
                         <div
                           className={
