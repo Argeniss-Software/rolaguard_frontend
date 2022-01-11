@@ -32,6 +32,7 @@ import moment from "moment";
 import _ from "lodash";
 import AssetShowSearchComponent from "../utils/asset/asset-show-search.component";
 import { scaleDivergingPow } from "d3";
+import * as HttpStatus from "http-status-codes";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -655,16 +656,24 @@ class InventoryReviewComponent extends React.Component {
         <this.HideButton 
           assets={assets}
           onClick = {() =>{
-            this.props.inventoryAssetsStore.setHiding(true,assets.filter((item) => item.selected));
-            this.loadAssetsAndCounts();
+            this.props.inventoryAssetsStore.setHiding(true,assets.filter((item) => item.selected)).
+            then((response) => {
+              if(response.status === HttpStatus.OK) {
+                this.loadAssetsAndCounts();
+              }
+            });
           }}
         />}
         { hidden && 
         <this.ShowButton 
           assets={assets}
           onClick = {() =>{
-            this.props.inventoryAssetsStore.setHiding(false,assets.filter((item) => item.selected));
-            this.loadAssetsAndCounts();
+            this.props.inventoryAssetsStore.setHiding(false,assets.filter((item) => item.selected)).
+            then((response) => {
+              if(response.status === HttpStatus.OK) {
+                this.loadAssetsAndCounts();
+              }
+            });
           }}
         />}
         <Button
