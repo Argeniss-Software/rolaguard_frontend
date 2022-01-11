@@ -45,13 +45,13 @@ class InventoryAssetsStore {
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
       ...(importances && { importances: importances }),
-      hidden
-    }
+      hidden,
+    };
 
     return API.get(`inventory/count/data_collector`, { headers, params });
   }
 
-  getGatewaysCount(criteria) {
+  getGatewaysCount(criteria, hidden) {
     const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
 
     const headers = this.getHeaders();
@@ -61,13 +61,14 @@ class InventoryAssetsStore {
       ...(dataCollectors && { data_collector_ids: dataCollectors }),
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
-      ...(importances && { importances: importances })
-    }
+      ...(importances && { importances: importances }),
+      hidden,
+    };
 
     return API.get(`inventory/count/gateway`, { headers, params });
   }
 
-  getVendorsCount(criteria) {
+  getVendorsCount(criteria, hidden) {
     const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
 
     const headers = this.getHeaders();
@@ -77,13 +78,14 @@ class InventoryAssetsStore {
       ...(dataCollectors && { data_collector_ids: dataCollectors }),
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
-      ...(importances && { importances: importances })
-    }
+      ...(importances && { importances: importances }),
+      hidden,
+    };
 
     return API.get(`inventory/count/vendor`, { headers, params });
   }
 
-  getTagsCount(criteria) {
+  getTagsCount(criteria, hidden) {
     const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
 
     const headers = this.getHeaders();
@@ -93,13 +95,14 @@ class InventoryAssetsStore {
       ...(dataCollectors && { data_collector_ids: dataCollectors }),
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
-      ...(importances && { importances: importances })
-    }
+      ...(importances && { importances: importances }),
+      hidden,
+    };
 
     return API.get(`inventory/count/tag`, { headers, params });
   }
 
-  getImportanceCount(criteria) {
+  getImportanceCount(criteria, hidden) {
     const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
 
     const headers = this.getHeaders();
@@ -109,8 +112,9 @@ class InventoryAssetsStore {
       ...(dataCollectors && { data_collector_ids: dataCollectors }),
       ...(tags && { tag_ids: tags }),
       ...(type && { asset_type: type }),
-      ...(importances && { importances: importances })
-    }
+      ...(importances && { importances: importances }),
+      hidden,
+    };
 
     return API.get(`inventory/count/importance`, { headers, params });
   }

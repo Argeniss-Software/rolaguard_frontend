@@ -88,14 +88,19 @@ class InventoryReviewComponent extends React.Component {
       hidden,
     );
     const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(
-      criteria, hidden
+      criteria,
+      hidden,
     );
     const vendorsPromise = this.props.inventoryAssetsStore.getVendorsCount(
-      criteria, hidden
+      criteria,
+      hidden,
     );
-    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(criteria, hidden);
+    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(
+      criteria,
+      hidden,);
     const importancesPromise = this.props.inventoryAssetsStore.getImportanceCount(
-      criteria, hidden
+      criteria,
+      hidden,
     );
 
     Promise.all([
