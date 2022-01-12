@@ -33,7 +33,7 @@ class WebhookInfoModal extends Component{
                         The POST requests sended by rolaguard contain a field called signature, 
                         wich is the hexadecimal HMAC of the body. So, in your endpoint you should 
                         use the shared secret and the body to obtain a HMAC and compare it with 
-                        the signature field. If they are equal, the request is from Rolaguard.
+                        the signature field. If they are equal then the request is of trust.
                     </p>
                 </Modal.Content>
             </Modal>
