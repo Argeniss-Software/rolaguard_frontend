@@ -26,7 +26,7 @@ function StepsDashboardComponent(props) {
     {
       id: "menu",
       title: "<b>Menu<b>",
-      text: `This menu can allow you to interact with different sections of the system`,
+      text: `This menu allows you to interact with different sections of the system`,
       attachTo: { element: ".sidebar-menu ", on: "right" },
       buttons: [
         {
@@ -95,7 +95,7 @@ function StepsDashboardComponent(props) {
     {
       id: "new_policy",
       title: `<b>New Policy<b>`,
-      text: `This button can allow you to open a form to add a new policy.`,
+      text: `This button allows you to open a form to add a new policy.`,
       attachTo: { element: "#new_policy", on: "left" },
       beforeShowPromise: function () {
         return new Promise(function (resolve) {
@@ -172,7 +172,7 @@ function StepsDashboardComponent(props) {
     {
       id: "new_data_sources",
       title: `<b>New Data Source<b>`,
-      text: "This button can allow you to open a form to add a new data source",
+      text: "This button allows you to open a form to add a new data source",
       beforeShowPromise: function () {
         return new Promise(function (resolve) {
           setTimeout(function () {
@@ -226,7 +226,7 @@ function StepsDashboardComponent(props) {
     {
       id: "events_manager",
       title: `<b>Events Manager<b>`,
-      text: `This section can allow you to configure the notifications of the system.`,
+      text: `This section allows you to configure the system notifications.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
         {
@@ -249,7 +249,7 @@ function StepsDashboardComponent(props) {
     {
       id: "sources",
       title: `<b>Sources<b>`,
-      text: `These switches can allow you to select which data sources should generate notifications.`,
+      text: `These switches allow you to select which data sources should send notifications.`,
       attachTo: { element: "#sources", on: "right" },
       buttons: [
         {
@@ -303,7 +303,7 @@ function StepsDashboardComponent(props) {
     {
       id: "action",
       title: `<b>Action<b>`,
-      text: `These switches can allow you to configure the type of notifications to receive: push or email notifications.`,
+      text: `These switches allow you to configure the type of notifications to receive: push or email notifications.`,
       attachTo: { element: "#action", on: "right" },
       buttons: [
         {
@@ -384,7 +384,7 @@ function StepsDashboardComponent(props) {
     {
       id: "network_overview",
       title: `<b>Network Overview<b>`,
-      text: `This section displays statistics about the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by status, flow messages and signal strength. The list can allow you to interact with the items on the list by clicking on one.`,
+      text: `This section displays statistics about the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by status, flow messages and signal strength. The list allows you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
         {
@@ -430,7 +430,7 @@ function StepsDashboardComponent(props) {
     {
       id: "inventory",
       title: `<b>Inventory<b>`,
-      text: `This section lists the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by vendor, data source and importance.The list can allow you to interact with the items on the list by clicking on one or checking the box to set importance or assign labels.`,
+      text: `This section lists the existing devices on the network. Also, you can use the filters or search bar. It shows graphs by vendor, data source and importance.The list allows you to interact with the items on the list by clicking on one or checking the box to set importance or assign labels.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
         {
@@ -476,7 +476,7 @@ function StepsDashboardComponent(props) {
     {
       id: "alerts",
       title: `<b>Alerts<b>`,
-      text: `This section displays the existing alerts on the system. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list can allow you to interact with the items on the list by clicking on one.`,
+      text: `This section displays the existing alerts on the system. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list allows you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
         {
@@ -522,7 +522,7 @@ function StepsDashboardComponent(props) {
     {
       id: "current_issues",
       title: `<b>Current Issues<b>`,
-      text: `This section displays the current issues on the network. While an alert is a specific event in time that can affect the network, an issue is a problem/vulnerability that is persistent. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list can allow you to interact with the items on the list by clicking on one.`,
+      text: `This section displays the current issues on the network. While an alert is a specific event in time that can affect the network, an issue is a problem/vulnerability that is persistent. Also, you can use the filters or search bar. It shows graphs by risk, description and data source. The list allows you to interact with the items on the list by clicking on one.`,
       attachTo: { element: ".app-body-container" },
       buttons: [
         {

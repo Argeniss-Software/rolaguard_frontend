@@ -201,7 +201,6 @@ class NotificationsPreferencesComponent extends React.Component {
                 header="Done!"
                 content={"Changes were saved, click to hide."}
                 className="success-message"
-                style={{ height: "100%" }}
               />
             </div>
           )}
@@ -277,117 +276,119 @@ class NotificationsPreferencesComponent extends React.Component {
                     <Grid celled="internally" stackable columns={2}>
                       <Grid.Row>
                         <Grid.Column>
-                          <Table
-                            className="animated fadeIn"
-                            unstackable
-                            basic="very"
-                            style={{ margin: "20px" }}
-                          >
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell className="border-bottom-none pb0">
-                                  STATUS
-                                </Table.HeaderCell>
-                                <Table.HeaderCell className="border-bottom-none pb0">
-                                  RISK
-                                </Table.HeaderCell>
-                              </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                              {risks.map((item, index) => {
-                                return (
-                                  <Table.Row key={index}>
-                                    <Table.Cell className="status-column">
-                                      <Popup
-                                        content={
-                                          item.enabled ? "Disable" : "Enable"
-                                        }
-                                        trigger={
-                                          <Checkbox
-                                            toggle
-                                            onChange={() =>
-                                              this.toggle("risks", index)
-                                            }
-                                            checked={item.enabled}
-                                          />
-                                        }
-                                      />
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <Label
-                                        horizontal
-                                        style={{
-                                          backgroundColor:
-                                            this.colors[
-                                              item.name.toUpperCase()
-                                            ],
-                                          color: "white",
-                                          width: "100px",
-                                          borderColor:
-                                            this.colors[
-                                              item.name.toUpperCase()
-                                            ],
-                                        }}
-                                      >
-                                        {item.name.toUpperCase()}
-                                      </Label>
-                                    </Table.Cell>
-                                  </Table.Row>
-                                );
-                              })}
-                            </Table.Body>
-                          </Table>
+                          <div className="notification-preferences-table">
+                            <Table
+                              className="animated fadeIn"
+                              unstackable
+                              basic="very"
+                            >
+                              <Table.Header>
+                                <Table.Row>
+                                  <Table.HeaderCell className="border-bottom-none pb0">
+                                    STATUS
+                                  </Table.HeaderCell>
+                                  <Table.HeaderCell className="border-bottom-none pb0">
+                                    RISK
+                                  </Table.HeaderCell>
+                                </Table.Row>
+                              </Table.Header>
+                              <Table.Body>
+                                {risks.map((item, index) => {
+                                  return (
+                                    <Table.Row key={index}>
+                                      <Table.Cell className="status-column">
+                                        <Popup
+                                          content={
+                                            item.enabled ? "Disable" : "Enable"
+                                          }
+                                          trigger={
+                                            <Checkbox
+                                              toggle
+                                              onChange={() =>
+                                                this.toggle("risks", index)
+                                              }
+                                              checked={item.enabled}
+                                            />
+                                          }
+                                        />
+                                      </Table.Cell>
+                                      <Table.Cell>
+                                        <Label
+                                          horizontal
+                                          style={{
+                                            backgroundColor:
+                                              this.colors[
+                                                item.name.toUpperCase()
+                                              ],
+                                            color: "white",
+                                            width: "100px",
+                                            borderColor:
+                                              this.colors[
+                                                item.name.toUpperCase()
+                                              ],
+                                          }}
+                                        >
+                                          {item.name.toUpperCase()}
+                                        </Label>
+                                      </Table.Cell>
+                                    </Table.Row>
+                                  );
+                                })}
+                              </Table.Body>
+                            </Table>
+                          </div>
                         </Grid.Column>
                         <Grid.Column>
-                          <Table
-                            className="animated fadeIn"
-                            unstackable
-                            basic="very"
-                            style={{ margin: "20px" }}
-                          >
-                            <Table.Header>
-                              <Table.Row>
-                                <Table.HeaderCell className="border-bottom-none pb0">
-                                  STATUS
-                                </Table.HeaderCell>
-                                <Table.HeaderCell className="border-bottom-none pb0">
-                                  IMPORTANCE
-                                </Table.HeaderCell>
-                              </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                              {asset_importance.map((item, index) => {
-                                return (
-                                  <Table.Row key={index}>
-                                    <Table.Cell className="status-column">
-                                      <Popup
-                                        content={
-                                          item.enabled ? "Disable" : "Enable"
-                                        }
-                                        trigger={
-                                          <Checkbox
-                                            toggle
-                                            onChange={() =>
-                                              this.toggle(
-                                                "asset_importance",
-                                                index
-                                              )
-                                            }
-                                            checked={item.enabled}
-                                          />
-                                        }
-                                      />
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                      <ImportanceLabel
-                                        importance={item.name.toUpperCase()}
-                                      />
-                                    </Table.Cell>
-                                  </Table.Row>
-                                );
-                              })}
-                            </Table.Body>
-                          </Table>
+                          <div className="notification-preferences-table">
+                            <Table
+                              className="animated fadeIn"
+                              unstackable
+                              basic="very"
+                            >
+                              <Table.Header>
+                                <Table.Row>
+                                  <Table.HeaderCell className="border-bottom-none pb0">
+                                    STATUS
+                                  </Table.HeaderCell>
+                                  <Table.HeaderCell className="border-bottom-none pb0">
+                                    IMPORTANCE
+                                  </Table.HeaderCell>
+                                </Table.Row>
+                              </Table.Header>
+                              <Table.Body>
+                                {asset_importance.map((item, index) => {
+                                  return (
+                                    <Table.Row key={index}>
+                                      <Table.Cell className="status-column">
+                                        <Popup
+                                          content={
+                                            item.enabled ? "Disable" : "Enable"
+                                          }
+                                          trigger={
+                                            <Checkbox
+                                              toggle
+                                              onChange={() =>
+                                                this.toggle(
+                                                  "asset_importance",
+                                                  index
+                                                )
+                                              }
+                                              checked={item.enabled}
+                                            />
+                                          }
+                                        />
+                                      </Table.Cell>
+                                      <Table.Cell>
+                                        <ImportanceLabel
+                                          importance={item.name.toUpperCase()}
+                                        />
+                                      </Table.Cell>
+                                    </Table.Row>
+                                  );
+                                })}
+                              </Table.Body>
+                            </Table>
+                          </div>
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
@@ -498,14 +499,11 @@ class NotificationsPreferencesComponent extends React.Component {
                               >
                                 <Form.Group inline>
                                   <Input
-                                    style={{
-                                      width: "100%",
-                                      marginRight: "25px",
-                                    }}
                                     placeholder="Add additional email"
                                     name="newEmail"
                                     value={newEmail}
                                     onChange={this.onAdditionalChange}
+                                    className="notification-preferences-input-email"
                                   />
                                   <Button
                                     content="Add"
@@ -529,11 +527,8 @@ class NotificationsPreferencesComponent extends React.Component {
                                       <Icon
                                         name="close"
                                         color="red"
-                                        style={{
-                                          marginLeft: 10,
-                                          cursor: "pointer",
-                                        }}
                                         onClick={() => this.removeEmail(index)}
+                                        className="notification-preferences-remove-email"
                                       ></Icon>
                                     </div>
                                   ))}
@@ -546,7 +541,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     </Table>
                   </Accordion.Content>
                 </Accordion>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div className="notification-preferences-save">
                   {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
                   <Form.Button
                     id="save_button"
@@ -554,7 +549,6 @@ class NotificationsPreferencesComponent extends React.Component {
                     disabled={isLoading || isSaving}
                     loading={isSaving}
                     content="Save"
-                    style={{ marginTop: 25, marginLeft: 10 }}
                     onClick={this.save}
                   ></Form.Button>
                 </div>
