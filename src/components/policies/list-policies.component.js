@@ -27,9 +27,9 @@ class ListPoliciesComponent extends React.Component {
     totalPages: null,
     pagination: {
       page: 1,
-      size: 20,
-    },
-  };
+      size: 50  
+    }
+  }
 
   loadPage() {
     const { pagination } = this.state;

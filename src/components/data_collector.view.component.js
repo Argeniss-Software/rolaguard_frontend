@@ -15,6 +15,7 @@ class DataCollectorViewComponent extends React.Component {
       isLoading: true,
       ...props,
       dataCollector: null,
+      regions: [],
       isAdmin: false
     };
   }
@@ -27,15 +28,36 @@ class DataCollectorViewComponent extends React.Component {
         this.setState({dataCollector: res.data, isLoading: false, isAdmin});
       }
     )
+    this.props.dataCollectorStore
+    .getDataCollectorTTNRegions()
+    .then((response) => {
+      const regions = response.data.map((region) => {
+        return {
+          key: region.id,
+          value: region.name
+        };
+      });
+      
+      this.setState({ regions });
+    })
+    .catch((err) => {
+      console.error(err);
+      this.setState({ isLoading: false });
+    });
   }
 
   render() {
     const { history } = this.props;
-    const { dataCollector, isAdmin } = this.state;
+    const { dataCollector, regions, isAdmin } = this.state;
     let topics = null;
+    let region_name = null
     if (dataCollector) {
       topics = dataCollector.topics.reduce((topic, previous) => (previous + ', ' + topic), '')
       topics = topics.substring(0, topics.length - 2);
+      if (dataCollector.type.type && dataCollector.type.type === "ttn_v3_collector") {
+        const region_text = regions.find((r) => r.key === dataCollector.region_id)
+        region_name = region_text ? region_text.value : null;
+      }
     }
     return (
       <div className="app-body-container-view">
@@ -109,34 +131,51 @@ class DataCollectorViewComponent extends React.Component {
                 <Header as='h2' >Connection</Header>
                 <Divider style={{marginTop: 0}} ></Divider>
 
-                { dataCollector.type.type !== 'ttn_collector' && <Grid columns={2} style={{marginBottom: 10}}>
-                    <Grid.Column>
-                      <h4>IP address</h4>
-                      <p>{dataCollector.ip}</p>
-                      {dataCollector.user && <h4>User</h4>}
-                      {dataCollector.user && <p>{dataCollector.user}</p>}
-                      <h4>Mode SSL</h4>
-                      <p>{dataCollector.ssl ? 'Yes': 'No'}</p>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <h4>Port</h4>
-                      <p>{dataCollector.port}</p>
-                      <h4>Topics</h4>
-                      <p>{topics.length>0 && topics}
-                      {topics.length===0 && 'No topics'}</p>
-                    </Grid.Column>
-                  </Grid> }
-                  { dataCollector.type.type === 'ttn_collector' && <Grid columns={2} style={{marginBottom: 10}}>
-                    <Grid.Column>
-                      <h4>Gateway ID</h4>
-                      <p>{dataCollector.gateway_id}</p>
-                    </Grid.Column>
-                    <Grid.Column>
-                      <h4>User</h4>
-                      <p>{dataCollector.user}</p>
-                    </Grid.Column>
-                  </Grid> }
-
+                {dataCollector.type.type === "chirpstack_collector" && (
+									<Grid columns={2} style={{ marginBottom: 10 }}>
+										<Grid.Column>
+											<h4>IP address</h4>
+											<p>{dataCollector.ip}</p>
+											{dataCollector.user && <h4>User</h4>}
+											{dataCollector.user && <p>{dataCollector.user}</p>}
+											<h4>Mode SSL</h4>
+											<p>{dataCollector.ssl ? "Yes" : "No"}</p>
+										</Grid.Column>
+										<Grid.Column>
+											<h4>Port</h4>
+											<p>{dataCollector.port}</p>
+											<h4>Topics</h4>
+											<p>
+												{topics.length > 0 && topics}
+												{topics.length === 0 && "No topics"}
+											</p>
+										</Grid.Column>
+									</Grid>
+								)}
+								{dataCollector.type.type === "ttn_collector" && (
+									<Grid columns={2} style={{ marginBottom: 10 }}>
+										<Grid.Column>
+											<h4>Gateway ID</h4>
+											<p>{dataCollector.gateway_id}</p>
+										</Grid.Column>
+										<Grid.Column>
+											<h4>User</h4>
+											<p>{dataCollector.user}</p>
+										</Grid.Column>
+									</Grid>
+								)}
+                {dataCollector.type.type === "ttn_v3_collector" && (
+									<Grid columns={2} style={{ marginBottom: 10 }}>
+										<Grid.Column>
+											<h4>Gateway Name</h4>
+											<p>{dataCollector.gateway_name}</p>
+										</Grid.Column>
+										<Grid.Column>
+											<h4>Region</h4>
+											<p>{region_name}</p>
+										</Grid.Column>
+									</Grid>
+								)}
               </div>)}
             </div>
           </div>

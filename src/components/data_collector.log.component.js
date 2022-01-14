@@ -16,7 +16,7 @@ class DataCollectorLogComponent extends React.Component {
         dataCollector: {},
         pagination: {
             page: 1,
-            size: 20
+            size: 50
         },
         totalPages: 0,
         activeIndex: null

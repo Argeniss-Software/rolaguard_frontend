@@ -64,7 +64,7 @@ class DashboardComponent extends React.Component {
     this.state = {
       dataCollectors: [],
       selectedDataCollectors: [],
-      numberOfPreviewAlerts: 5,
+      numberOfPreviewAlerts: 50,
       microchipUrl: microchipSvg,
       alarms: null,
       alertsCount: null,

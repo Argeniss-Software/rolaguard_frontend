@@ -40,7 +40,7 @@ class ListNotificationsComponent extends React.Component {
     totalPages: null,
     pagination: {
       page: 1,
-      size: 20,
+      size: 50,
     },
     selectedAlert: null,
     newNotifications: false,
@@ -224,6 +224,8 @@ class ListNotificationsComponent extends React.Component {
                   <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                   <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                   <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>SOURCE</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>STATE</Table.HeaderCell>
                   <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -305,6 +307,12 @@ class ListNotificationsComponent extends React.Component {
                         >
                           {notification.createdAt}
                         </Moment>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {notification.notificationSource}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {notification.notificationState}
                       </Table.Cell>
                       <Table.Cell className="notifications-table-cell wd-xl td-actions">
                         <Popup

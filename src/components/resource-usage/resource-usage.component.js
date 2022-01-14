@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { MobXProviderContext, observer } from "mobx-react";
 
-import { Segment, Grid, Pagination, Label, Icon } from "semantic-ui-react";
+import { Segment, Grid, Pagination, Label, Icon, Dropdown, Menu} from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 
 import "./resource-usage.component.css";
@@ -15,9 +15,15 @@ const ResourceUsageComponent = (props) => {
   const [showFilters, setShowFilters] = useState(true);
   const [deviceTypeFilter, setDeviceTypeFilter] = useState(null);
 
+
   const clearFilters = () => {
     // clean all criteria filtering
     resourceUsageStore.deleteCriteria();
+  };
+
+  const handlePageSizeChange = (e, data) => {
+    resourceUsageStore.setPageSize(data.value);
+    resourceUsageStore.getDataListFromApi();
   };
 
   const deleteFilter = (k, v) => {
@@ -125,9 +131,16 @@ const ResourceUsageComponent = (props) => {
     setDeviceTypeFilter(nextType);
     resourceUsageStore.setCriteria(newCriteria);
   };
+  
   const handlePaginationChange = (e, { activePage }) => {
     resourceUsageStore.setActivePage(activePage);
+
   };
+
+  const pageSizeOptions = [ 
+    { key: 1, text: 'Show 50', value: 50 },
+    { key: 2, text: 'Show 25', value: 25 },
+    { key: 3, text: 'Show 10', value: 10 },]
 
   useEffect(() => {
     resourceUsageStore.getDataListFromApi();
@@ -141,9 +154,6 @@ const ResourceUsageComponent = (props) => {
       <div className="animated fadeIn animation-view">
         <div className="view-header">
           <h1 className="mb0">NETWORK OVERVIEW</h1>
-          <Grid.Column style={{ width: "50%" }}>
-            <AssetShowSearchComponent />
-          </Grid.Column>
           <div className="view-header-actions">
             {!showFilters && (
               <div onClick={() => setShowFilters(true)}>
@@ -222,10 +232,23 @@ const ResourceUsageComponent = (props) => {
                   resourceUsageStore.model.totalPages > 1 && (
                     <Grid className="segment centered">
                       <Pagination
+                        className=""
                         activePage={resourceUsageStore.model.activePage}
                         onPageChange={handlePaginationChange}
                         totalPages={resourceUsageStore.model.totalPages}
                       />
+                        {!resourceUsageStore.model.isLoading &&
+                  resourceUsageStore.model.totalPages > 1 && (
+                      <Menu compact>
+                        <Dropdown
+                        className=""  
+                        text={'Show '+resourceUsageStore.model.pageSize}
+                        options={pageSizeOptions}
+                        onChange={handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>       
+                  )}
                     </Grid>
                   )}
               </Segment>

@@ -13,6 +13,8 @@ import {
   Popup,
   Message,
   Divider,
+  Dropdown,
+  Menu,
 } from "semantic-ui-react";
 import AlertUtil from "../util/alert-util";
 import Pie from "./visualizations/Pie";
@@ -30,7 +32,6 @@ import "./alarm_review.component.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "./utils/react-datetimepicker-custom.css";
 import ColorUtil from "../util/colors";
-import AssetShowSearchComponent from "./utils/asset/asset-show-search.component";
 
 @inject(
   "generalDataStore",
@@ -64,7 +65,7 @@ class AlarmReviewComponent extends React.Component {
       isGraphsLoading: true,
       isStatusLoading: false,
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       alerts: [],
       count: null,
       alertsCount: null,
@@ -121,10 +122,11 @@ class AlarmReviewComponent extends React.Component {
       resolved: false,
     });
 
-    const dataCollectorsPromise = this.props.dataCollectorStore.getDataCollectorApi(
-      this.state.criteria.from,
-      this.state.criteria.to
-    );
+    const dataCollectorsPromise =
+      this.props.dataCollectorStore.getDataCollectorApi(
+        this.state.criteria.from,
+        this.state.criteria.to
+      );
 
     Promise.all([
       alarmsDataPromise,
@@ -134,7 +136,6 @@ class AlarmReviewComponent extends React.Component {
       dataCollectorsPromise,
     ]).then((responses) => {
       this.alarmsTypesMap = {};
-
       const alarmsTypesMap = {};
       responses[1].forEach((alarmType) => {
         alarmsTypesMap[alarmType.code] = alarmType;
@@ -183,7 +184,7 @@ class AlarmReviewComponent extends React.Component {
         };
       });
 
-      const colors = ColorUtil.colorList()
+      const colors = ColorUtil.colorList();
       const filteredRisks = risks.filter((r) => r.value !== 0);
       const filteredTypes = types.filter((t) => t.value !== 0);
       const filteredDataCollectors = dataCollectors.filter(
@@ -208,6 +209,10 @@ class AlarmReviewComponent extends React.Component {
         alarmsTypesMap,
       });
     });
+  };
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadAlertsAndCounts);
   };
 
   /*handleAlertResolution = () => {
@@ -283,16 +288,15 @@ class AlarmReviewComponent extends React.Component {
     if (dateTo) {
       let validTo = dateTo;
       if (dateTo < criteria.from) {
-        dateTo = criteria.from
-        validTo = moment(
-          dateTo.setSeconds(dateTo.getSeconds() + 1)
-        ).toDate();
+        dateTo = criteria.from;
+        validTo = moment(dateTo.setSeconds(dateTo.getSeconds() + 1)).toDate();
         criteria["to"] = validTo;
       } else {
         criteria["to"] = null;
       }
     } else {
-      criteria["to"]=null    }
+      criteria["to"] = null;
+    }
     this.setState({ criteria, range: null });
   };
 
@@ -532,15 +536,15 @@ class AlarmReviewComponent extends React.Component {
     const filteredRisks = risks.filter((risk) => risk.selected);
     const filteredTypes = types.filter((type) => type.selected);
     const filteredDataCollectors = dataCollectors.filter((dc) => dc.selected);
-
+    const pageSizeOptions = [ 
+    { key: 1, text: 'Show 50', value: 50 },
+    { key: 2, text: 'Show 25', value: 25 },
+    { key: 3, text: 'Show 10', value: 10 },]
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             <h1 className="mb0">ALERTS</h1>
-            <Grid.Column style={{ width: "50%" }}>
-              <AssetShowSearchComponent />
-            </Grid.Column>
             <div className="view-header-actions">
               {!showFilters && (
                 <div onClick={() => this.setState({ showFilters: true })}>
@@ -962,7 +966,18 @@ class AlarmReviewComponent extends React.Component {
                         onPageChange={this.handlePaginationChange}
                         totalPages={totalPages}
                       />
-                    )}
+                      )}
+                    {totalPages > 1 && !this.state.isLoading && (
+                      <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>
+                      )}
                   </Grid>
                 </Segment>
 
