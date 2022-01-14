@@ -183,7 +183,7 @@ class NotificationsPreferencesComponent extends React.Component {
           </div>
           {hasError && (
             <div id="error-message-wrapper">
-              <Message
+              <Message
                 error
                 header="Oops!"
                 content={"Something went wrong. Try again later."}
