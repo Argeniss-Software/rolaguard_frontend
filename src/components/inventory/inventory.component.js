@@ -11,6 +11,8 @@ import {
   Checkbox,
   Popup,
   Button,
+  Dropdown,
+  Menu,
 } from "semantic-ui-react";
 import ColorUtil from "../../util/colors.js";
 import Pie from "../visualizations/Pie";
@@ -329,7 +331,11 @@ class InventoryReviewComponent extends React.Component {
     this.setState(
       { activePage, isLoading: true, isGraphsLoading: true },
       this.loadAssetsAndCounts
-    );
+    );  
+  };
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadAssetsAndCounts);
   };
 
   handlePaginationChangeWithCallBack = (e, { activePage }, callback) => {
@@ -429,7 +435,7 @@ class InventoryReviewComponent extends React.Component {
   }
 
   ShowInventoryTable = (props) => {
-    const { assetsCount, isLoading, assets, criteria, selectAll } = this.state;
+    const { assetsCount, isLoading, assets, criteria, selectAll} = this.state;
 
     const tagsLeftEllipsis = (node) => {
       const tagsRendered = node.props.children;
@@ -705,7 +711,7 @@ class InventoryReviewComponent extends React.Component {
     const filteredDataCollectors = byDataCollectorsViz.filter(filter);
     const filteredTags = byTagsViz.filter(filter);
     const filteredImportances = byImportancesViz.filter(filter);
-
+ 
     return (
       <React.Fragment>
         <label style={{ fontWeight: "bolder" }}>Filters: </label>
@@ -789,9 +795,15 @@ class InventoryReviewComponent extends React.Component {
       pagesCount,
       selectedAsset,
       assignTags,
+      pageSize,
       setImportance,
       hidden,
     } = this.state;
+
+    const pageSizeOptions = [ 
+      { key: 1, text: 'Show 50', value: 50 },
+      { key: 2, text: 'Show 25', value: 25 },
+      { key: 3, text: 'Show 10', value: 10 },]
 
     return (
       <div className="app-body-container-view">
@@ -960,6 +972,15 @@ class InventoryReviewComponent extends React.Component {
                             onPageChange={this.handlePaginationChange}
                             totalPages={pagesCount}
                           />
+                                <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>       
                         </Grid>
                       )}
                     </Segment>
