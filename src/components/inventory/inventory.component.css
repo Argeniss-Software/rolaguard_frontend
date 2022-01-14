@@ -148,6 +148,7 @@ div.tooltip {
 
 .view-body {
     min-height: 100px;
+    margin-top: 20px;
 }
 
 .react-datepicker-wrapper {
