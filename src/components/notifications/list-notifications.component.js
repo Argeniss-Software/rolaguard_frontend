@@ -1,13 +1,25 @@
 import * as React from "react";
 import { inject } from "mobx-react";
 import Moment from "react-moment";
-import { Table, Popup, Label, Pagination, Grid, Message, Button, Icon } from "semantic-ui-react";
+import {
+  Table,
+  Popup,
+  Label,
+  Pagination,
+  Grid,
+  Message,
+  Button,
+  Icon,
+} from "semantic-ui-react";
 import "../policies/new-policy.component.css";
 import LoaderComponent from "../utils/loader.component";
 import DetailsAlertModal from "../details.alert.modal.component";
-import {subscribeToNewNotificationEvents, unsubscribeFromNewNotificationEvents} from "../../util/web-socket"
+import {
+  subscribeToNewNotificationEvents,
+  unsubscribeFromNewNotificationEvents,
+} from "../../util/web-socket";
 
-import AlertUtil from '../../util/alert-util';
+import AlertUtil from "../../util/alert-util";
 
 import "./list-notifications.component.css";
 import EmptyComponent from "../utils/empty.component";
@@ -262,14 +274,12 @@ class ListNotificationsComponent extends React.Component {
                         <Label
                           horizontal
                           style={{
-                            backgroundColor: this.colors[
-                              notification.alertType.risk
-                            ],
+                            backgroundColor:
+                              this.colors[notification.alertType.risk],
                             color: "white",
                             borderWidth: 1,
-                            borderColor: this.colors[
-                              notification.alertType.risk
-                            ],
+                            borderColor:
+                              this.colors[notification.alertType.risk],
                             width: "100px",
                           }}
                         >

@@ -1,20 +1,27 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Table, Popup, Label, Pagination, Grid, Message, Header } from "semantic-ui-react";
+import {
+  Table,
+  Popup,
+  Label,
+  Pagination,
+  Grid,
+  Message,
+  Header,
+} from "semantic-ui-react";
 import LoaderComponent from "../utils/loader.component";
 import "./new-policy.component.css";
-import DeletePolicyModal from './delete-policy.component';
-import NewSimplifiedPolicy from './new-simplified-policy.component';
+import DeletePolicyModal from "./delete-policy.component";
+import NewSimplifiedPolicy from "./new-simplified-policy.component";
 import Validation from "../../util/validation";
 
 @inject("policyStore", "usersStore")
 class ListPoliciesComponent extends React.Component {
-
   state = {
     hasError: false,
     recentlyRemoved: false,
     isLoading: false,
-    title: 'POLICIES',
+    title: "POLICIES",
     policies: [],
     totalItems: null,
     totalPages: null,
@@ -26,20 +33,19 @@ class ListPoliciesComponent extends React.Component {
 
   loadPage() {
     const { pagination } = this.state;
-    this.setState({isLoading: true});
-    this.props.policyStore.query(pagination).then(
-      ({ data, headers }) => {
+    this.setState({ isLoading: true });
+    this.props.policyStore
+      .query(pagination)
+      .then(({ data, headers }) => {
         const policies = data;
-        const totalItems = headers['total-items'];
-        const totalPages = headers['total-pages'];
-        this.setState({isLoading: false, totalItems, totalPages, policies});
-      }
-    ).catch(
-      err => {
-        this.setState({isLoading: false, hasError: true });
-        console.error('err', err);
-      }
-    );
+        const totalItems = headers["total-items"];
+        const totalPages = headers["total-pages"];
+        this.setState({ isLoading: false, totalItems, totalPages, policies });
+      })
+      .catch((err) => {
+        this.setState({ isLoading: false, hasError: true });
+        console.error("err", err);
+      });
   }
 
   componentDidMount() {
@@ -47,24 +53,30 @@ class ListPoliciesComponent extends React.Component {
   }
 
   handlePaginationChange = (e, { activePage }) => {
-    
     let { pagination } = this.state;
     pagination.page = activePage;
     this.setState({ pagination });
 
     this.loadPage();
-  }
+  };
 
   callbackConfirm = () => {
     const { pagination } = this.state;
     pagination.page = 1;
-    this.setState({pagination});
+    this.setState({ pagination });
     this.loadPage();
-  }
+  };
 
   render() {
-
-    const { title, policies, isLoading, totalPages, pagination, hasError, recentlyRemoved } = this.state;
+    const {
+      title,
+      policies,
+      isLoading,
+      totalPages,
+      pagination,
+      hasError,
+      recentlyRemoved,
+    } = this.state;
     const { page } = pagination;
     const { history } = this.props;
 
@@ -75,9 +87,9 @@ class ListPoliciesComponent extends React.Component {
         <div className="animated fadeIn animation-view">
           <div className="view-header">
             <h1>{title}</h1>
-            <div className="view-header-actions">
+            <div className="view-header-actions" >
               {isAdmin && (
-                <div onClick={() => history.push("/dashboard/policies/new")}>
+                <div id="new_policy" onClick={() => history.push("/dashboard/policies/new")}>
                   <i className="fas fa-plus" />
                   <span>NEW POLICY</span>
                 </div>
@@ -85,7 +97,10 @@ class ListPoliciesComponent extends React.Component {
             </div>
           </div>
           <div>
-            <Header as="h5" style={{marginTop: "0.5em", marginBottom: "0.8em"}}>
+            <Header
+              as="h5"
+              style={{ marginTop: "0.5em", marginBottom: "0.8em" }}
+            >
               The "default policy" cannot be edited. For a personalized
               configuration, you can create a new policy with the new policy
               button or clone the default policy and then edit it
