@@ -157,6 +157,23 @@ th {
     font-size: 1.25em;
 }
 
+.sort-and-filters-labels{
+    font-weight: bolder;
+}
+
+.sort-buttons{
+    margin-right: 20px !important;
+}
+
+.icon-and-content{
+    font-weight: bolder;
+    margin-right: 20px !important;
+}
+
+.sort-by{
+    margin-top: 20px !important;
+}
+
 /* @media only screen and (max-width: 991px) {
     .column {
         margin-top: 20px !important;
