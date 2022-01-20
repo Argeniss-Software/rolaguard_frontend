@@ -876,20 +876,11 @@ class AlarmReviewComponent extends React.Component {
                     <Button.Group size="tiny" className="sort-buttons">
                       <Button
                         color={orderBy[0] === "created_at" ? "blue" : ""}
-                        id="created_at"
                         onClick={() => this.handleSort("created_at")}
                       >
                         {orderBy[0] === "created_at"
                           ? "Date (" + orderBy[1].toLowerCase() + ")"
                           : "Date"}
-                      </Button>
-                      <Button
-                        color={orderBy[0] === "type" ? "blue" : ""}
-                        onClick={() => this.handleSort("type")}
-                      >
-                        {orderBy[0] === "type"
-                          ? "Risk (" + orderBy[1].toLowerCase() + ")"
-                          : "Risk"}
                       </Button>
                       <Button
                         color={orderBy[0] === "gateway_id" ? "blue" : ""}
@@ -907,6 +898,10 @@ class AlarmReviewComponent extends React.Component {
                           ? "Device ID (" + orderBy[1].toLowerCase() + ")"
                           : "Device ID"}
                       </Button>
+                      <Button
+                        icon="remove"
+                        onClick={() => this.handleSort("")}
+                      ></Button>
                     </Button.Group>
                   </div>
                   {!this.state.isLoading && (

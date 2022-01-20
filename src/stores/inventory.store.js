@@ -2,14 +2,14 @@ import AuthStore from "./auth.store";
 import API from "../util/api";
 
 class InventoryAssetsStore {
-
   getHeaders() {
     return { Authorization: "Bearer " + AuthStore.access_token };
   }
 
-  getAssets(pagination, criteria, hidden) {
+  getAssets(pagination, criteria, hidden, order_by) {
     const { page, size } = pagination || {};
-    const { vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -22,11 +22,12 @@ class InventoryAssetsStore {
       hidden,
       page,
       size,
+      order_by,
     };
     return API.get(`inventory/list`, { headers, params });
   }
 
-  getAsstesCount() {
+  getAssetsCount() {
     return this.assetsCount;
   }
 
@@ -34,8 +35,9 @@ class InventoryAssetsStore {
     return this.pagesCount;
   }
 
-  getDataCollectorsCount(criteria, hidden) {
-    const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+  getDataCollectorsCount(criteria, hidden, order_by) {
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -51,8 +53,9 @@ class InventoryAssetsStore {
     return API.get(`inventory/count/data_collector`, { headers, params });
   }
 
-  getGatewaysCount(criteria, hidden) {
-    const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+  getGatewaysCount(criteria, hidden, order_by) {
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -68,8 +71,9 @@ class InventoryAssetsStore {
     return API.get(`inventory/count/gateway`, { headers, params });
   }
 
-  getVendorsCount(criteria, hidden) {
-    const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+  getVendorsCount(criteria, hidden, order_by) {
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -85,8 +89,9 @@ class InventoryAssetsStore {
     return API.get(`inventory/count/vendor`, { headers, params });
   }
 
-  getTagsCount(criteria, hidden) {
-    const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+  getTagsCount(criteria, hidden, order_by) {
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -103,7 +108,8 @@ class InventoryAssetsStore {
   }
 
   getImportanceCount(criteria, hidden) {
-    const {vendors, gateways, dataCollectors, tags, type, importances} = criteria || {};
+    const { vendors, gateways, dataCollectors, tags, type, importances } =
+      criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -123,7 +129,7 @@ class InventoryAssetsStore {
     /*
      * @param importance: string, defines the importance
      * @param assets: list of asset, must have th id inside each object in the list
-     * 
+     *
      * @return promise
      */
 
@@ -131,19 +137,25 @@ class InventoryAssetsStore {
     const body = {
       importance: importance,
       asset_list: assets.map((asset) => {
-        return { asset_id: asset.id, asset_type: asset.type.trim().toLowerCase() };
+        return {
+          asset_id: asset.id,
+          asset_type: asset.type.trim().toLowerCase(),
+        };
       }),
     };
     return API.post("inventory/set_importance", body, { headers });
   }
 
-  setHiding(hidden, assets){
+  setHiding(hidden, assets) {
     const headers = this.getHeaders();
     const body = {
       hidden: hidden,
       asset_list: assets.map((asset) => {
-        return { asset_id: asset.id, asset_type: asset.type.trim().toLowerCase() };
-      })
+        return {
+          asset_id: asset.id,
+          asset_type: asset.type.trim().toLowerCase(),
+        };
+      }),
     };
     return API.post("inventory/set_hiding", body, { headers });
   }

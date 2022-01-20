@@ -202,3 +202,11 @@ th {
 .filters-container {
     float: left;
 }
+
+.sort-by-inventory{
+    margin-top: 30px !important;
+}
+
+.sort-buttons-inventory{
+    margin-right: 10px !important;
+}

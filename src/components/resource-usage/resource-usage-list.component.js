@@ -5,7 +5,7 @@ import AssetIdComponent from "../utils/asset-id.component";
 import ShowDeviceIcon from "../utils/show-device-icon.component";
 import ShowDeviceState from "../utils/show-device-state.component";
 import ShowMessagesSummary from "./show-message-summary.component";
-import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component"
+import ShowMessageFrequency from "../utils/show-asset-info/resource-usage/show-message-frequency.component";
 import EmptyComponent from "../utils/empty.component";
 import WifiIndicator from "react-wifi-indicator";
 import NumberFormat from "react-number-format";
