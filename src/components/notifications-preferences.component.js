@@ -1,6 +1,19 @@
 import * as React from "react";
 import { inject } from "mobx-react";
-import { Input, Button, Form, Header, Checkbox, Accordion, Icon, Table, Message, Popup, Label, Grid } from "semantic-ui-react";
+import {
+  Input,
+  Button,
+  Form,
+  Header,
+  Checkbox,
+  Accordion,
+  Icon,
+  Table,
+  Message,
+  Popup,
+  Label,
+  Grid,
+} from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
 import WebhookInfoModal from "./webhook.info.modal.component";
@@ -13,7 +26,6 @@ import ImportanceLabel from "./utils/importance-label.component";
 
 @inject("notificationStore")
 class NotificationsPreferencesComponent extends React.Component {
-  
   constructor(props) {
     super(props);
 
@@ -23,17 +35,16 @@ class NotificationsPreferencesComponent extends React.Component {
       isSaving: false,
       hasError: false,
       preferences: {},
-      newEmail: '',
-      newPhone: '',
+      newEmail: "",
+      newPhone: "",
       showMessage: false,
-      newWebhookUrl: '',
-      newSecret: '',
-      showWebhookInfo: false
-    }
+      newWebhookUrl: "",
+      newSecret: "",
+      showWebhookInfo: false,
+    };
 
     this.colors = AlertUtil.getColorsMap();
   }
-
 
   componentWillMount() {
     this.setState({ isLoading: true });
@@ -102,10 +113,16 @@ class NotificationsPreferencesComponent extends React.Component {
 
   onAdditionalWebhookAdded = () => {
     const { newWebhookUrl, newSecret, preferences } = this.state;
-    const webhookItem = preferences.destinations.find(item => item.destination === 'webhook');
-    webhookItem.additional.push({active: false, url: newWebhookUrl, secret: newSecret});
-    this.setState({newWebhookUrl: '', newSecret:'', preferences});
-  }
+    const webhookItem = preferences.destinations.find(
+      (item) => item.destination === "webhook"
+    );
+    webhookItem.additional.push({
+      active: false,
+      url: newWebhookUrl,
+      secret: newSecret,
+    });
+    this.setState({ newWebhookUrl: "", newSecret: "", preferences });
+  };
 
   removeEmail = (index) => {
     const { preferences } = this.state;
@@ -125,12 +142,14 @@ class NotificationsPreferencesComponent extends React.Component {
     this.setState({ preferences });
   };
 
-  removeWebhook = index => {
+  removeWebhook = (index) => {
     const { preferences } = this.state;
-    const webhookItem = preferences.destinations.find(item => item.destination === 'webhook');
+    const webhookItem = preferences.destinations.find(
+      (item) => item.destination === "webhook"
+    );
     webhookItem.additional.splice(index, 1);
     this.setState({ preferences });
-  }
+  };
 
   save = () => {
     this.setState({ isSaving: true });
@@ -163,14 +182,30 @@ class NotificationsPreferencesComponent extends React.Component {
   };
 
   render() {
-    const { isLoading, isSaving, hasError, preferences, newEmail, newPhone, activeIndex, showMessage, newWebhookUrl, newSecret, showWebhookInfo } = this.state;
-    const { risks, dataCollectors, destinations, asset_importance} = preferences;
-    let emailItem = null, smsItem = null, pushItem, webhookItem=null;
-    if(destinations) {
-        emailItem = destinations.find(item => item.destination === 'email');
-        smsItem = destinations.find(item => item.destination === 'sms');
-        pushItem = destinations.find(item => item.destination === 'push');
-        webhookItem = destinations.find(item => item.destination === 'webhook');
+    const {
+      isLoading,
+      isSaving,
+      hasError,
+      preferences,
+      newEmail,
+      newPhone,
+      activeIndex,
+      showMessage,
+      newWebhookUrl,
+      newSecret,
+      showWebhookInfo,
+    } = this.state;
+    const { risks, dataCollectors, destinations, asset_importance } =
+      preferences;
+    let emailItem = null,
+      smsItem = null,
+      pushItem,
+      webhookItem = null;
+    if (destinations) {
+      emailItem = destinations.find((item) => item.destination === "email");
+      smsItem = destinations.find((item) => item.destination === "sms");
+      pushItem = destinations.find((item) => item.destination === "push");
+      webhookItem = destinations.find((item) => item.destination === "webhook");
     }
 
     smsItem = { ...smsItem, enabled: false };
@@ -214,6 +249,7 @@ class NotificationsPreferencesComponent extends React.Component {
               <div id="notification-preferences-container">
                 <Accordion fluid styled>
                   <Accordion.Title
+                    id="sources"
                     active={activeIndex === 2}
                     index={2}
                     onClick={this.handleAccordionClick}
@@ -222,11 +258,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     Sources ({dataCollectors.length})
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 2}>
-                    <Table
-                      className="animated fadeIn"
-                      unstackable
-                      basic="very"
-                    >
+                    <Table className="animated fadeIn" unstackable basic="very">
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell className="border-bottom-none pb0">
@@ -243,9 +275,7 @@ class NotificationsPreferencesComponent extends React.Component {
                             <Table.Row key={index}>
                               <Table.Cell className="status-column">
                                 <Popup
-                                  content={
-                                    item.enabled ? "Disable" : "Enable"
-                                  }
+                                  content={item.enabled ? "Disable" : "Enable"}
                                   trigger={
                                     <Checkbox
                                       toggle
@@ -267,6 +297,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     </Table>
                   </Accordion.Content>
                   <Accordion.Title
+                    id="triggers"
                     active={activeIndex === 1}
                     index={1}
                     onClick={this.handleAccordionClick}
@@ -301,9 +332,7 @@ class NotificationsPreferencesComponent extends React.Component {
                                     <Table.Cell className="status-column">
                                       <Popup
                                         content={
-                                          item.enabled
-                                            ? "Disable"
-                                            : "Enable"
+                                          item.enabled ? "Disable" : "Enable"
                                         }
                                         trigger={
                                           <Checkbox
@@ -320,14 +349,16 @@ class NotificationsPreferencesComponent extends React.Component {
                                       <Label
                                         horizontal
                                         style={{
-                                          backgroundColor: this.colors[
-                                            item.name.toUpperCase()
-                                          ],
+                                          backgroundColor:
+                                            this.colors[
+                                              item.name.toUpperCase()
+                                            ],
                                           color: "white",
                                           width: "100px",
-                                          borderColor: this.colors[
-                                            item.name.toUpperCase()
-                                          ],
+                                          borderColor:
+                                            this.colors[
+                                              item.name.toUpperCase()
+                                            ],
                                         }}
                                       >
                                         {item.name.toUpperCase()}
@@ -363,9 +394,7 @@ class NotificationsPreferencesComponent extends React.Component {
                                     <Table.Cell className="status-column">
                                       <Popup
                                         content={
-                                          item.enabled
-                                            ? "Disable"
-                                            : "Enable"
+                                          item.enabled ? "Disable" : "Enable"
                                         }
                                         trigger={
                                           <Checkbox
@@ -396,6 +425,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     </Grid>
                   </Accordion.Content>
                   <Accordion.Title
+                    id="action"
                     active={activeIndex === 0}
                     index={0}
                     onClick={this.handleAccordionClick}
@@ -404,11 +434,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     Action
                   </Accordion.Title>
                   <Accordion.Content active={activeIndex === 0}>
-                    <Table
-                      className="animated fadeIn"
-                      unstackable
-                      basic="very"
-                    >
+                    <Table className="animated fadeIn" unstackable basic="very">
                       <Table.Header>
                         <Table.Row>
                           <Table.HeaderCell className="border-bottom-none pb0">
@@ -421,16 +447,12 @@ class NotificationsPreferencesComponent extends React.Component {
                         <Table.Row>
                           <Table.Cell className="status-column">
                             <Popup
-                              content={
-                                pushItem.enabled ? "Disable" : "Enable"
-                              }
+                              content={pushItem.enabled ? "Disable" : "Enable"}
                               trigger={
                                 <Checkbox
                                   toggle
                                   onChange={() =>
-                                    this.toggleDestination(
-                                      pushItem.destination
-                                    )
+                                    this.toggleDestination(pushItem.destination)
                                   }
                                   checked={pushItem.enabled}
                                 />
@@ -476,9 +498,7 @@ class NotificationsPreferencesComponent extends React.Component {
                         <Table.Row>
                           <Table.Cell className="status-column">
                             <Popup
-                              content={
-                                emailItem.enabled ? "Disable" : "Enable"
-                              }
+                              content={emailItem.enabled ? "Disable" : "Enable"}
                               trigger={
                                 <Checkbox
                                   toggle
@@ -530,33 +550,25 @@ class NotificationsPreferencesComponent extends React.Component {
                                   />
                                 </Form.Group>
                                 <div className="mt-lg ml-xs">
-                                  {emailItem.additional.map(
-                                    (item, index) => (
-                                      <div className="mt" key={index}>
-                                        <Icon
-                                          name={
-                                            item.active ? "check" : "clock"
-                                          }
-                                          color={
-                                            item.active ? "green" : "yellow"
-                                          }
-                                          className="mr"
-                                        ></Icon>
-                                        <span>{item.email}</span>
-                                        <Icon
-                                          name="close"
-                                          color="red"
-                                          style={{
-                                            marginLeft: 10,
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            this.removeEmail(index)
-                                          }
-                                        ></Icon>
-                                      </div>
-                                    )
-                                  )}
+                                  {emailItem.additional.map((item, index) => (
+                                    <div className="mt" key={index}>
+                                      <Icon
+                                        name={item.active ? "check" : "clock"}
+                                        color={item.active ? "green" : "yellow"}
+                                        className="mr"
+                                      ></Icon>
+                                      <span>{item.email}</span>
+                                      <Icon
+                                        name="close"
+                                        color="red"
+                                        style={{
+                                          marginLeft: 10,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => this.removeEmail(index)}
+                                      ></Icon>
+                                    </div>
+                                  ))}
                                 </div>
                               </Form>
                             </Table.Cell>
@@ -618,9 +630,16 @@ class NotificationsPreferencesComponent extends React.Component {
                                     value={newSecret}
                                     onChange={this.onAdditionalChange}
                                   />
-                                  <div className="td-actions" style={{marginRight: "20px"}}>
+                                  <div
+                                    className="td-actions"
+                                    style={{ marginRight: "20px" }}
+                                  >
                                     <button
-                                      onClick = {() => {this.setState({showWebhookInfo:true})}}
+                                      onClick={() => {
+                                        this.setState({
+                                          showWebhookInfo: true,
+                                        });
+                                      }}
                                     >
                                       <i className="fas fa-info-circle" />
                                     </button>
@@ -636,33 +655,27 @@ class NotificationsPreferencesComponent extends React.Component {
                                   />
                                 </Form.Group>
                                 <div className="mt-lg ml-xs">
-                                  {webhookItem.additional.map(
-                                    (item, index) => (
-                                      <div className="mt" key={index}>
-                                        <Icon
-                                          name={
-                                            item.active ? "check" : "clock"
-                                          }
-                                          color={
-                                            item.active ? "green" : "yellow"
-                                          }
-                                          className="mr"
-                                        ></Icon>
-                                        <span>{item.url}</span>
-                                        <Icon
-                                          name="close"
-                                          color="red"
-                                          style={{
-                                            marginLeft: 10,
-                                            cursor: "pointer",
-                                          }}
-                                          onClick={() =>
-                                            this.removeWebhook(index)
-                                          }
-                                        ></Icon>
-                                      </div>
-                                    )
-                                  )}
+                                  {webhookItem.additional.map((item, index) => (
+                                    <div className="mt" key={index}>
+                                      <Icon
+                                        name={item.active ? "check" : "clock"}
+                                        color={item.active ? "green" : "yellow"}
+                                        className="mr"
+                                      ></Icon>
+                                      <span>{item.url}</span>
+                                      <Icon
+                                        name="close"
+                                        color="red"
+                                        style={{
+                                          marginLeft: 10,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() =>
+                                          this.removeWebhook(index)
+                                        }
+                                      ></Icon>
+                                    </div>
+                                  ))}
                                 </div>
                               </Form>
                             </Table.Cell>
@@ -672,12 +685,20 @@ class NotificationsPreferencesComponent extends React.Component {
                     </Table>
                   </Accordion.Content>
                 </Accordion>
-                <div
-                  style={{ display: "flex", justifyContent: "flex-end" }}
-                >
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
-                  <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="See notifications" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/events_log')}/>
                   <Form.Button
+                    type="button"
+                    loading={isLoading || isSaving}
+                    disabled={isLoading || isSaving}
+                    content="See notifications"
+                    style={{ marginTop: 25 }}
+                    onClick={() =>
+                      this.props.history.push("/dashboard/events_log")
+                    }
+                  />
+                  <Form.Button
+                    id="save_button"
                     color="green"
                     disabled={isLoading || isSaving}
                     loading={isSaving}
@@ -688,9 +709,7 @@ class NotificationsPreferencesComponent extends React.Component {
                 </div>
               </div>
               {showWebhookInfo && (
-                <WebhookInfoModal
-                onClose={this.closeWebhookInfo}
-              />
+                <WebhookInfoModal onClose={this.closeWebhookInfo} />
               )}
             </div>
           )}
