@@ -17,13 +17,40 @@
   margin-right: auto;
 }
 
-.error-message, .success-message {
+.error-message{
   max-width: 100%;
   margin-top: 50px;
 }
 
+.success-message{
+  max-width: 100%;
+  margin-top: 50px;
+  height: 100% !important;
+}
+
 .status-column {
   width: 120px;
+}
+
+.notification-preferences-table{
+  margin: 20px;
+}
+
+.notification-preferences-input-email{
+  width: 100%;
+  margin-right: 25px;
+}
+
+.notification-preferences-remove-email{
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.notification-preferences-save{
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+  margin-left: 10px;
 }
 
 @media only screen and (min-width: 991px) {

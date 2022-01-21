@@ -16,6 +16,7 @@ import {
 } from "semantic-ui-react";
 import LoaderComponent from "./utils/loader.component";
 import PhoneComponent from "./utils/phone.component";
+import WebhookInfoModal from "./webhook.info.modal.component";
 
 import AlertUtil from "../util/alert-util";
 
@@ -29,7 +30,7 @@ class NotificationsPreferencesComponent extends React.Component {
     super(props);
 
     this.state = {
-      activeIndex: -1,
+      activeIndex: 2,
       isLoading: false,
       isSaving: false,
       hasError: false,
@@ -37,6 +38,9 @@ class NotificationsPreferencesComponent extends React.Component {
       newEmail: "",
       newPhone: "",
       showMessage: false,
+      newWebhookUrl: "",
+      newSecret: "",
+      showWebhookInfo: false,
     };
 
     this.colors = AlertUtil.getColorsMap();
@@ -107,6 +111,19 @@ class NotificationsPreferencesComponent extends React.Component {
     this.setState({ newPhone: "", preferences });
   };
 
+  onAdditionalWebhookAdded = () => {
+    const { newWebhookUrl, newSecret, preferences } = this.state;
+    const webhookItem = preferences.destinations.find(
+      (item) => item.destination === "webhook"
+    );
+    webhookItem.additional.push({
+      active: false,
+      url: newWebhookUrl,
+      secret: newSecret,
+    });
+    this.setState({ newWebhookUrl: "", newSecret: "", preferences });
+  };
+
   removeEmail = (index) => {
     const { preferences } = this.state;
     const emailItem = preferences.destinations.find(
@@ -122,6 +139,15 @@ class NotificationsPreferencesComponent extends React.Component {
       (item) => item.destination === "sms"
     );
     smsItem.additional.splice(index, 1);
+    this.setState({ preferences });
+  };
+
+  removeWebhook = (index) => {
+    const { preferences } = this.state;
+    const webhookItem = preferences.destinations.find(
+      (item) => item.destination === "webhook"
+    );
+    webhookItem.additional.splice(index, 1);
     this.setState({ preferences });
   };
 
@@ -151,6 +177,10 @@ class NotificationsPreferencesComponent extends React.Component {
     this.setState({ newPhone: phone });
   };
 
+  closeWebhookInfo = () => {
+    this.setState({ showWebhookInfo: false });
+  };
+
   render() {
     const {
       isLoading,
@@ -161,16 +191,21 @@ class NotificationsPreferencesComponent extends React.Component {
       newPhone,
       activeIndex,
       showMessage,
+      newWebhookUrl,
+      newSecret,
+      showWebhookInfo,
     } = this.state;
     const { risks, dataCollectors, destinations, asset_importance } =
       preferences;
     let emailItem = null,
       smsItem = null,
-      pushItem;
+      pushItem,
+      webhookItem = null;
     if (destinations) {
       emailItem = destinations.find((item) => item.destination === "email");
       smsItem = destinations.find((item) => item.destination === "sms");
       pushItem = destinations.find((item) => item.destination === "push");
+      webhookItem = destinations.find((item) => item.destination === "webhook");
     }
 
     smsItem = { ...smsItem, enabled: false };
@@ -270,10 +305,7 @@ class NotificationsPreferencesComponent extends React.Component {
                     <Icon name="dropdown" />
                     Triggers
                   </Accordion.Title>
-                  <Accordion.Content
-                    id="triggers_content"
-                    active={activeIndex === 1}
-                  >
+                  <Accordion.Content active={activeIndex === 1}>
                     <Grid celled="internally" stackable columns={2}>
                       <Grid.Row>
                         <Grid.Column>
@@ -438,30 +470,30 @@ class NotificationsPreferencesComponent extends React.Component {
                         </Table.Row>
 
                         {/* <Table.Row>
-                          <Table.Cell className="status-column">
-                            <Popup content={smsItem.enabled ? 'Disable' : 'Enable'} trigger={
-                              <Checkbox toggle onChange={() => this.toggleDestination(smsItem.destination)} checked={smsItem.enabled} />
-                            }/>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Header as='h4' className="notification-preferences-header">SMS</Header>
-                          </Table.Cell>
-                        </Table.Row>
-                        {smsItem.enabled && <Table.Row>
-                          <Table.Cell colSpan="2">
-                            <Form className="form-label form-css-label" noValidate="novalidate">
-                              <Form.Group inline>
-                                <Form.Field required>
-                                  <PhoneComponent onPhoneChange={this.onPhoneChange}></PhoneComponent>
-                                </Form.Field>
-                                <Button content="Add" disabled={isSaving || isLoading || !Validation.isValidPhone(newPhone)} onClick={this.onAdditionalPhoneAdded}/>
-                              </Form.Group>
-                              <div className="mt-lg ml-xs">
-                                {smsItem.additional.map((item, index) => <div className="mt" key={index}><Icon name={item.active ? 'check' : 'clock' } color={item.active ? 'green' : 'yellow'} className="mr"></Icon><span>{item.phone}</span><Icon name="close" color="red" style={{marginLeft:10, cursor: 'pointer'}} onClick={() => this.removePhone(index)}></Icon></div>)}
-                              </div>
-                            </Form>
-                          </Table.Cell>
-                        </Table.Row>} */}
+                      <Table.Cell className="status-column">
+                        <Popup content={smsItem.enabled ? 'Disable' : 'Enable'} trigger={
+                          <Checkbox toggle onChange={() => this.toggleDestination(smsItem.destination)} checked={smsItem.enabled} />
+                        }/>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Header as='h4' className="notification-preferences-header">SMS</Header>
+                      </Table.Cell>
+                    </Table.Row>
+                    {smsItem.enabled && <Table.Row>
+                      <Table.Cell colSpan="2">
+                        <Form className="form-label form-css-label" noValidate="novalidate">
+                          <Form.Group inline>
+                            <Form.Field required>
+                              <PhoneComponent onPhoneChange={this.onPhoneChange}></PhoneComponent>
+                            </Form.Field>
+                            <Button content="Add" disabled={isSaving || isLoading || !Validation.isValidPhone(newPhone)} onClick={this.onAdditionalPhoneAdded}/>
+                          </Form.Group>
+                          <div className="mt-lg ml-xs">
+                            {smsItem.additional.map((item, index) => <div className="mt" key={index}><Icon name={item.active ? 'check' : 'clock' } color={item.active ? 'green' : 'yellow'} className="mr"></Icon><span>{item.phone}</span><Icon name="close" color="red" style={{marginLeft:10, cursor: 'pointer'}} onClick={() => this.removePhone(index)}></Icon></div>)}
+                          </div>
+                        </Form>
+                      </Table.Cell>
+                    </Table.Row>} */}
 
                         <Table.Row>
                           <Table.Cell className="status-column">
@@ -542,12 +574,129 @@ class NotificationsPreferencesComponent extends React.Component {
                             </Table.Cell>
                           </Table.Row>
                         )}
+                        <Table.Row>
+                          <Table.Cell className="status-column">
+                            <Popup
+                              content={
+                                webhookItem.enabled ? "Disable" : "Enable"
+                              }
+                              trigger={
+                                <Checkbox
+                                  toggle
+                                  onChange={() =>
+                                    this.toggleDestination(
+                                      webhookItem.destination
+                                    )
+                                  }
+                                  checked={webhookItem.enabled}
+                                />
+                              }
+                            />
+                          </Table.Cell>
+                          <Table.Cell>
+                            <Header
+                              as="h4"
+                              className="notification-preferences-header"
+                            >
+                              Webhooks
+                            </Header>
+                          </Table.Cell>
+                        </Table.Row>
+                        {webhookItem.enabled && (
+                          <Table.Row>
+                            <Table.Cell colSpan="2">
+                              <Form
+                                className="form-label form-css-label"
+                                noValidate="novalidate"
+                              >
+                                <Form.Group>
+                                  <Input
+                                    style={{
+                                      width: "100%",
+                                      marginRight: "25px",
+                                    }}
+                                    placeholder="Enter webhook url"
+                                    name="newWebhookUrl"
+                                    value={newWebhookUrl}
+                                    onChange={this.onAdditionalChange}
+                                  />
+                                  <Input
+                                    style={{
+                                      width: "100%",
+                                      marginRight: "20px",
+                                    }}
+                                    placeholder="Enter SHA-256 secret"
+                                    name="newSecret"
+                                    value={newSecret}
+                                    onChange={this.onAdditionalChange}
+                                  />
+                                  <div
+                                    className="td-actions"
+                                    style={{ marginRight: "20px" }}
+                                  >
+                                    <button
+                                      onClick={() => {
+                                        this.setState({
+                                          showWebhookInfo: true,
+                                        });
+                                      }}
+                                    >
+                                      <i className="fas fa-info-circle" />
+                                    </button>
+                                  </div>
+                                  <Button
+                                    content="Add"
+                                    disabled={
+                                      isSaving ||
+                                      isLoading ||
+                                      newWebhookUrl.length === 0
+                                    }
+                                    onClick={this.onAdditionalWebhookAdded}
+                                  />
+                                </Form.Group>
+                                <div className="mt-lg ml-xs">
+                                  {webhookItem.additional.map((item, index) => (
+                                    <div className="mt" key={index}>
+                                      <Icon
+                                        name={item.active ? "check" : "clock"}
+                                        color={item.active ? "green" : "yellow"}
+                                        className="mr"
+                                      ></Icon>
+                                      <span>{item.url}</span>
+                                      <Icon
+                                        name="close"
+                                        color="red"
+                                        style={{
+                                          marginLeft: 10,
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() =>
+                                          this.removeWebhook(index)
+                                        }
+                                      ></Icon>
+                                    </div>
+                                  ))}
+                                </div>
+                              </Form>
+                            </Table.Cell>
+                          </Table.Row>
+                        )}
                       </Table.Body>
                     </Table>
                   </Accordion.Content>
                 </Accordion>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   {/* <Form.Button type="button" loading={isLoading || isSaving} disabled={isLoading || isSaving} content="Cancel" style={{marginTop: 25}} onClick={() => this.props.history.push('/dashboard/notifications')}/> */}
+                  <Form.Button
+                    type="button"
+                    loading={isLoading || isSaving}
+                    disabled={isLoading || isSaving}
+                    content="See notifications"
+                    style={{ marginTop: 25 }}
+                    onClick={() =>
+                      this.props.history.push("/dashboard/events_log")
+                    }
+                  />
                   <Form.Button
                     id="save_button"
                     color="green"
@@ -556,9 +705,12 @@ class NotificationsPreferencesComponent extends React.Component {
                     content="Save"
                     style={{ marginTop: 25, marginLeft: 10 }}
                     onClick={this.save}
-                  ></Form.Button>
+                  />
                 </div>
               </div>
+              {showWebhookInfo && (
+                <WebhookInfoModal onClose={this.closeWebhookInfo} />
+              )}
             </div>
           )}
         </div>

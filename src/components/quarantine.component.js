@@ -1,6 +1,6 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup } from "semantic-ui-react";
+import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup, Dropdown, Menu } from "semantic-ui-react";
 import "./quarantine.component.css";
 import AlertUtil from '../util/alert-util';
 import "./quarantine.component.css";
@@ -41,7 +41,7 @@ class QuarantineComponent extends React.Component {
       byRiskViz: [],
       byCollectorViz: [],
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       criteria: {
         type: [],
         risk: [],
@@ -82,6 +82,10 @@ class QuarantineComponent extends React.Component {
       }
     );
   }
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.componentDidMount);
+  };
 
   componentDidMount() {
     this.loadViz();
@@ -280,7 +284,12 @@ class QuarantineComponent extends React.Component {
     const { quarantineDeviceCount, quarantineCount, quarantine } = this.props.deviceStore;
 
     const { isLoadingByReasonViz, isLoadingByRiskViz, isLoadingByCollectorViz, activePage, pageSize, showFilters, selectedAlert } = this.state;
-
+    
+    const pageSizeOptions = [ 
+      { key: 1, text: 'Show 50', value: 50 },
+      { key: 2, text: 'Show 25', value: 25 },
+      { key: 3, text: 'Show 10', value: 10 },]
+  
     let totalPages = Math.ceil(quarantineCount/pageSize);
 
     return (
@@ -651,6 +660,15 @@ class QuarantineComponent extends React.Component {
                         onPageChange={this.handlePaginationChange}
                         totalPages={totalPages}
                       />
+                      <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>       
                     </Grid>
                   )}
                 </Segment>

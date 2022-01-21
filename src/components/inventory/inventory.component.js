@@ -11,6 +11,8 @@ import {
   Checkbox,
   Popup,
   Button,
+  Dropdown,
+  Menu,
 } from "semantic-ui-react";
 import ColorUtil from "../../util/colors.js";
 import Pie from "../visualizations/Pie";
@@ -31,6 +33,8 @@ import TruncateMarkup from "react-truncate-markup";
 import moment from "moment";
 import _ from "lodash";
 import AssetShowSearchComponent from "../utils/asset/asset-show-search.component";
+import { scaleDivergingPow } from "d3";
+import * as HttpStatus from "http-status-codes";
 
 @inject("generalDataStore", "usersStore", "inventoryAssetsStore", "tagsStore")
 @observer
@@ -62,8 +66,9 @@ class InventoryReviewComponent extends React.Component {
         gateways: [],
         dataCollectors: [],
         tags: [],
-        importances: [],
+        importances: []
       },
+      hidden: false,
       selectAll: false,
       anyElementSelected: false,
     };
@@ -78,21 +83,27 @@ class InventoryReviewComponent extends React.Component {
   };
 
   loadAssetsAndCounts = () => {
-    const { activePage, pageSize, criteria } = this.state;
+    const { activePage, pageSize, criteria, hidden } = this.state;
     this.setState({ isLoading: true, isGraphsLoading: true });
     const assetsPromise = this.props.inventoryAssetsStore.getAssets(
       { page: activePage, size: pageSize },
-      criteria
+      criteria,
+      hidden,
     );
     const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(
-      criteria
+      criteria,
+      hidden,
     );
     const vendorsPromise = this.props.inventoryAssetsStore.getVendorsCount(
-      criteria
+      criteria,
+      hidden,
     );
-    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(criteria);
+    const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(
+      criteria,
+      hidden,);
     const importancesPromise = this.props.inventoryAssetsStore.getImportanceCount(
-      criteria
+      criteria,
+      hidden,
     );
 
     Promise.all([
@@ -320,7 +331,11 @@ class InventoryReviewComponent extends React.Component {
     this.setState(
       { activePage, isLoading: true, isGraphsLoading: true },
       this.loadAssetsAndCounts
-    );
+    );  
+  };
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadAssetsAndCounts);
   };
 
   handlePaginationChangeWithCallBack = (e, { activePage }, callback) => {
@@ -377,8 +392,50 @@ class InventoryReviewComponent extends React.Component {
     });
   }
 
+  HideButton = (props) => {
+    return (
+      <Button
+        onClick = { props.onClick}
+        disabled = {!props.assets.some((asset) => asset.selected)}
+      >
+          HIDE
+        </Button>
+    );
+  }
+
+  ShowButton = (props) => {
+    return (
+      <Button
+          onClick = { props.onClick}
+          disabled = {!props.assets.some((asset) => asset.selected)}
+        >
+          SHOW
+        </Button>
+    );
+  }
+
+  SeeHiddenButton = (props) => {
+    return(
+      <Button
+        onClick={ props.toggleHiding}
+      >
+        SEE HIDDEN ASSETS
+      </Button>
+    );
+  }
+
+  SeeVisibleButton = (props) => {
+    return(
+      <Button
+        onClick={ props.toggleHiding }
+      >
+        SEE VISIBLE ASSETS
+      </Button>
+    );
+  }
+
   ShowInventoryTable = (props) => {
-    const { assetsCount, isLoading, assets, criteria, selectAll } = this.state;
+    const { assetsCount, isLoading, assets, criteria, selectAll} = this.state;
 
     const tagsLeftEllipsis = (node) => {
       const tagsRendered = node.props.children;
@@ -598,9 +655,33 @@ class InventoryReviewComponent extends React.Component {
   };
 
   showActionsButtons() {
-    const { assets } = this.state;
+    const { assets, hidden } = this.state;
     return (
       <React.Fragment>
+        {! hidden && 
+        <this.HideButton 
+          assets={assets}
+          onClick = {() =>{
+            this.props.inventoryAssetsStore.setHiding(true,assets.filter((item) => item.selected)).
+            then((response) => {
+              if(response.status === HttpStatus.OK) {
+                this.loadAssetsAndCounts();
+              }
+            });
+          }}
+        />}
+        { hidden && 
+        <this.ShowButton 
+          assets={assets}
+          onClick = {() =>{
+            this.props.inventoryAssetsStore.setHiding(false,assets.filter((item) => item.selected)).
+            then((response) => {
+              if(response.status === HttpStatus.OK) {
+                this.loadAssetsAndCounts();
+              }
+            });
+          }}
+        />}
         <Button
           onClick={() => this.setState({ setImportance: true })}
           disabled={!assets.some((asset) => asset.selected)}
@@ -630,7 +711,7 @@ class InventoryReviewComponent extends React.Component {
     const filteredDataCollectors = byDataCollectorsViz.filter(filter);
     const filteredTags = byTagsViz.filter(filter);
     const filteredImportances = byImportancesViz.filter(filter);
-
+ 
     return (
       <React.Fragment>
         <label style={{ fontWeight: "bolder" }}>Filters: </label>
@@ -714,8 +795,15 @@ class InventoryReviewComponent extends React.Component {
       pagesCount,
       selectedAsset,
       assignTags,
+      pageSize,
       setImportance,
+      hidden,
     } = this.state;
+
+    const pageSizeOptions = [ 
+      { key: 1, text: 'Show 50', value: 50 },
+      { key: 2, text: 'Show 25', value: 25 },
+      { key: 3, text: 'Show 10', value: 10 },]
 
     return (
       <div className="app-body-container-view">
@@ -749,7 +837,7 @@ class InventoryReviewComponent extends React.Component {
           )}
           {!isLoading && (
             <React.Fragment>
-              {showFilters && (
+              {!hidden && showFilters && (
                 <Segment>
                   <Grid className="animated fadeIn">
                     <Grid.Row
@@ -884,10 +972,28 @@ class InventoryReviewComponent extends React.Component {
                             onPageChange={this.handlePaginationChange}
                             totalPages={pagesCount}
                           />
+                                <Menu compact>
+                        <Dropdown 
+                        className=""
+                        text={'Show '+pageSize}
+                        options={pageSizeOptions} 
+                        onChange={this.handlePageSizeChange}   
+                        item
+                        />
+                        </Menu>       
                         </Grid>
                       )}
                     </Segment>
-
+                    <div className="actions-buttons-container">
+                      { !hidden && <this.SeeHiddenButton 
+                        toggleHiding = {
+                          () => this.setState({hidden: true},this.loadAssetsAndCounts)
+                      }/>}
+                      { hidden && <this.SeeVisibleButton toggleHiding = {
+                          () => this.setState({hidden: false},this.loadAssetsAndCounts)
+                      }/> }
+                    </div>
+                    
                     {selectedAsset && (
                       <InventoryDetailsModal
                         loading={this.state.isLoading}
