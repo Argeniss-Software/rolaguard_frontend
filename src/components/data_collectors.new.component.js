@@ -401,7 +401,7 @@ class DataCollectorsNewComponent extends React.Component {
       .then((response) => {
         if (response.status === 200) {
           this.props.dataCollectorStore
-            .getTTNGateways()
+            .getTTNGateways(this.state.dataCollector.dataCollectorTypeCode)
             .then((response) => {
               const ttn_gateways = response.data.map((gateway, index) => {
                 return {
@@ -427,6 +427,51 @@ class DataCollectorsNewComponent extends React.Component {
                 isGettingGateways: false,
               });
               setTimeout(() => this.setState({ error: null }), 5000);
+            });
+        } else {
+          this.setState({
+            isGettingGateways: false,
+            errorMsgGateways: response.data.error,
+            errorGateways: true,
+            finishedGateways: true,
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          isGettingGateways: false,
+          errorMsgGateways:
+            typeof err.response.data.error !== "undefined"
+              ? err.response.data.error
+              : "",
+          errorGateways: true,
+          finishedGateways: true,
+        });
+      });
+  };
+
+  getTTN3Gateways = () => {
+    this.setState({ isGettingGateways: true });
+    this.props.dataCollectorStore
+      .saveTTN3Credentials(
+        this.state.dataCollector.region_id,
+        this.state.dataCollector.gateway_api_key
+      )
+      .then((response) => {
+        if (response.status === 200) {
+            const ttn_gateways = response.data.map((gateway, index) => {
+              return {
+                key: index,
+                gateway_id: gateway.eui,
+                gateway_name: gateway.id,
+              };
+            });
+            this.setState({
+              ttn_gateways,
+              isGettingGateways: false,
+              errorMsgGateways: "",
+              errorGateways: false,
+              finishedGateways: true,
             });
         } else {
           this.setState({
@@ -738,6 +783,23 @@ class DataCollectorsNewComponent extends React.Component {
                   {dataCollectorTypeCode === "ttn_v3_collector" && (
                     <div>
                       <Form.Group>
+                        {custom_ip && (  
+                          <Form.Field required>
+                            <Form.Input
+                              required
+                              name="gateway_name"
+                              value={gateway_name}
+                              onChange={this.handleChange}
+                              error={!!gateway_name && gateway_name.length > 36}
+                            >
+                              <input />
+                              <label>Gateway ID</label>
+                            </Form.Input>
+                          </Form.Field>
+                          )
+                        }
+                      </Form.Group>
+                      <Form.Group>
                         {!custom_ip && (
                           <Form.Field required>
                             <div className="dropdown-label-wrapper">
@@ -754,21 +816,7 @@ class DataCollectorsNewComponent extends React.Component {
                               />
                             </div>
                           </Form.Field>
-                        )}
-                        <Form.Field required>
-                          <Form.Input
-                            required
-                            name="gateway_name"
-                            value={gateway_name}
-                            onChange={this.handleChange}
-                            error={!!gateway_name && gateway_name.length > 36}
-                          >
-                            <input />
-                            <label>Gateway ID</label>
-                          </Form.Input>
-                        </Form.Field>
-                      </Form.Group>
-                      <Form.Group>
+                          )}
                         <Form.Field required>
                           <Form.Input
                             required
@@ -783,6 +831,18 @@ class DataCollectorsNewComponent extends React.Component {
                             <label>Gateway API Key</label>
                           </Form.Input>
                         </Form.Field>
+                        {!custom_ip && (
+                          <Button
+                            type="button"
+                            style = {{width:"300px", height: "40px"}}
+                            disabled={!region_id || !gateway_api_key}
+                            loading={isGettingGateways}
+                            content="Get Gateways"
+                            onClick={() => this.getTTN3Gateways()}
+                            floated="right"
+                          />
+                          )
+                        }
                       </Form.Group>
                     </div>
                   )}
@@ -910,7 +970,8 @@ class DataCollectorsNewComponent extends React.Component {
                         )}
                     </span>
                   }
-                  {dataCollectorTypeCode === "ttn_collector" &&
+                  {(dataCollectorTypeCode === "ttn_collector" ||
+                    dataCollectorTypeCode === "ttn_v3_collector") &&
                     this.state.finishedGateways &&
                     ttn_gateways.length > 0 && (
                       <Form.Group grouped>
@@ -929,7 +990,12 @@ class DataCollectorsNewComponent extends React.Component {
                               </Table.HeaderCell>
 
                               <Table.HeaderCell>Gateway ID</Table.HeaderCell>
-                              <Table.HeaderCell>Description</Table.HeaderCell>
+                              { dataCollectorTypeCode === "ttn_collector" && (
+                                  <Table.HeaderCell>Description</Table.HeaderCell>
+                              )}
+                              { dataCollectorTypeCode === "ttn_v3_collector" && (
+                                  <Table.HeaderCell>Name</Table.HeaderCell>
+                              )}
                             </Table.Row>
                           </Table.Header>
                           <Table.Body>
@@ -952,8 +1018,12 @@ class DataCollectorsNewComponent extends React.Component {
                                     />
                                   </Table.Cell>
                                   <Table.Cell>{gateway.gateway_id}</Table.Cell>
-
-                                  <Table.Cell>{gateway.description}</Table.Cell>
+                                  { dataCollectorTypeCode === "ttn_collector" && (
+                                    <Table.Cell>{gateway.description}</Table.Cell>
+                                  )}
+                                  { dataCollectorTypeCode === "ttn_v3_collector" && (
+                                    <Table.Cell>{gateway.gateway_name}</Table.Cell>
+                                  )}
                                 </Table.Row>
                               );
                             })}
