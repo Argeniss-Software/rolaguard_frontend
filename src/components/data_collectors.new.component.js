@@ -118,7 +118,10 @@ class DataCollectorsNewComponent extends React.Component {
       .filter((gateway) => gateway.selected)
       .map((gateway) => gateway.gateway_id.replace("eui-", ""))
       .join();
-
+    dataCollector.gateway_name = ttn_gateways
+      .filter((gateway) => gateway.selected)
+      .map((gateway) => gateway.gateway_name)
+      .join();
     this.setState({
       selectAll: ttn_gateways.every((gateway) => gateway.selected),
       ttn_gateways: ttn_gateways,
@@ -136,7 +139,10 @@ class DataCollectorsNewComponent extends React.Component {
       .filter((gateway) => gateway.selected)
       .map((gateway) => gateway.gateway_id.replace("eui-", ""))
       .join();
-
+    dataCollector.gateway_name = ttn_gateways
+      .filter((gateway) => gateway.selected)
+      .map((gateway) => gateway.gateway_name)
+      .join();
     this.setState({
       selectAllGateways: !selectAllGateways,
       ttn_gateways: ttn_gateways,
@@ -148,7 +154,7 @@ class DataCollectorsNewComponent extends React.Component {
     this.setState({ isSaving: true });
     if (this.state.typeForm === "Add") {
       this.props.dataCollectorStore
-        .saveDataCollector(this.state.dataCollector)
+        .saveDataCollector(this.state.dataCollector,this.state.custom_ip)
         .then(() => {
           this.clearForm();
           this.setState({ isSaving: false });
@@ -401,7 +407,7 @@ class DataCollectorsNewComponent extends React.Component {
       .then((response) => {
         if (response.status === 200) {
           this.props.dataCollectorStore
-            .getTTNGateways(this.state.dataCollector.dataCollectorTypeCode)
+            .getTTNGateways()
             .then((response) => {
               const ttn_gateways = response.data.map((gateway, index) => {
                 return {
@@ -453,7 +459,7 @@ class DataCollectorsNewComponent extends React.Component {
   getTTN3Gateways = () => {
     this.setState({ isGettingGateways: true });
     this.props.dataCollectorStore
-      .saveTTN3Credentials(
+      .getTTN3Gateways(
         this.state.dataCollector.region_id,
         this.state.dataCollector.gateway_api_key
       )
