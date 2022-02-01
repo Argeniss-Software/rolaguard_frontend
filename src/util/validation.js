@@ -1,8 +1,14 @@
 import isValidHostname from 'is-valid-hostname';
+import validator from 'validator';
+
 const Validation = {
   isValidUsername: (username) => {
     const regex = new RegExp("^[a-z0-9-_.]{3,32}$");
     return regex.test(username);
+  },
+
+  isValidUrl: (text) => {
+    return validator.isURL(text);
   },
 
   isValidHostname: (text) => {

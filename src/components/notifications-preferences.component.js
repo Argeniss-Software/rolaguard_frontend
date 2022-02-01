@@ -41,6 +41,7 @@ class NotificationsPreferencesComponent extends React.Component {
       newWebhookUrl: "",
       newSecret: "",
       showWebhookInfo: false,
+      isValidUrl: true
     };
 
     this.colors = AlertUtil.getColorsMap();
@@ -91,6 +92,11 @@ class NotificationsPreferencesComponent extends React.Component {
 
   onAdditionalChange = (e, { name, value }) => {
     this.setState({ [name]: value });
+  };
+
+  onWebhookURLChange = (e, { value }) => {
+    this.setState({ newWebhookUrl: value});
+    this.setState({ isValidUrl: Validation.isValidUrl(value) });
   };
 
   onAdditionalEmailAdded = () => {
@@ -194,6 +200,7 @@ class NotificationsPreferencesComponent extends React.Component {
       newWebhookUrl,
       newSecret,
       showWebhookInfo,
+      isValidUrl,
     } = this.state;
     const { risks, dataCollectors, destinations, asset_importance } =
       preferences;
@@ -610,21 +617,21 @@ class NotificationsPreferencesComponent extends React.Component {
                                 noValidate="novalidate"
                               >
                                 <Form.Group>
-                                  <Input
-                                    style={{
-                                      width: "100%",
-                                      marginRight: "25px",
-                                    }}
+                                  <Form.Field
+                                    className="webhook-field"
+                                    control = {Input}
                                     placeholder="Enter webhook url"
                                     name="newWebhookUrl"
                                     value={newWebhookUrl}
-                                    onChange={this.onAdditionalChange}
-                                  />
-                                  <Input
-                                    style={{
-                                      width: "100%",
-                                      marginRight: "20px",
+                                    onChange={this.onWebhookURLChange}
+                                    error = { ! isValidUrl && {
+                                      content: 'Enter a valid url.',
+                                      pointing: 'above',
                                     }}
+                                  />
+                                  <Form.Field 
+                                    className="webhook-field"
+                                    control = {Input}
                                     placeholder="Enter SHA-256 secret"
                                     name="newSecret"
                                     value={newSecret}
@@ -632,7 +639,7 @@ class NotificationsPreferencesComponent extends React.Component {
                                   />
                                   <div
                                     className="td-actions"
-                                    style={{ marginRight: "20px" }}
+                                    style={{ marginRight: "20px"}}
                                   >
                                     <button
                                       onClick={() => {
@@ -645,11 +652,13 @@ class NotificationsPreferencesComponent extends React.Component {
                                     </button>
                                   </div>
                                   <Button
+                                    className="add-webhook-button"
                                     content="Add"
                                     disabled={
                                       isSaving ||
                                       isLoading ||
-                                      newWebhookUrl.length === 0
+                                      newWebhookUrl.length === 0 ||
+                                      !Validation.isValidUrl(newWebhookUrl)
                                     }
                                     onClick={this.onAdditionalWebhookAdded}
                                   />
