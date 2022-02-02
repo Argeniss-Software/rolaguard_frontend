@@ -53,6 +53,15 @@
   margin-left: 10px;
 }
 
+.webhook-field{
+  width: 100%;
+  margin-right: 25px;
+}
+
+.add-webhook-button{
+  height: 40px;
+}
+
 @media only screen and (min-width: 991px) {
   #notification-preferences-container {
     max-width: 75%;
