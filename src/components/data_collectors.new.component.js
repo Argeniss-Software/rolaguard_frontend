@@ -214,7 +214,7 @@ class DataCollectorsNewComponent extends React.Component {
         setTimeout(() => this.setState({ error: null }), 5000);
       });
 
-      this.props.dataCollectorStore
+    this.props.dataCollectorStore
       .getDataCollectorTTNRegions()
       .then((response) => {
         const regions = response.data.map((region) => {
@@ -277,7 +277,7 @@ class DataCollectorsNewComponent extends React.Component {
             gateway_api_key,
             ca_cert,
             client_cert,
-            client_key
+            client_key,
           } = response.data;
           const dataCollector = {
             name,
@@ -296,7 +296,7 @@ class DataCollectorsNewComponent extends React.Component {
             gateway_api_key,
             ca_cert,
             client_cert,
-            client_key
+            client_key,
           };
           this.setState({ dataCollector, dataCollectorId, typeForm: "Edit" });
           this.setState({ isLoading: false });
@@ -428,9 +428,7 @@ class DataCollectorsNewComponent extends React.Component {
         this.setState({
           isGettingGateways: false,
           errorMsgGateways:
-            typeof err.response.data.error !== "undefined"
-              ? err.response.data.error
-              : "",
+            err.response !== undefined ? err.response.data.error : "",
           errorGateways: true,
           finishedGateways: true,
         });
@@ -455,7 +453,7 @@ class DataCollectorsNewComponent extends React.Component {
       gateway_api_key,
       ca_cert,
       client_cert,
-      client_key
+      client_key,
     } = this.state.dataCollector;
     const {
       newTopic,
@@ -482,7 +480,8 @@ class DataCollectorsNewComponent extends React.Component {
       (!description || description.length <= 1000) &&
       (dataCollectorTypeCode === "ttn_collector" ||
         dataCollectorTypeCode === "ttn_v3_collector" ||
-        ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) && Validation.isValidPort(port))) &&
+        ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) &&
+          Validation.isValidPort(port))) &&
       data_collector_type_id &&
       policy_id &&
       ((dataCollectorTypeCode === "chirpstack_collector" &&
@@ -591,7 +590,13 @@ class DataCollectorsNewComponent extends React.Component {
                           name="ip"
                           value={ip}
                           onChange={this.handleChange}
-                          error={!!ip && !(Validation.isValidIp(ip) || Validation.isValidHostname(ip))}
+                          error={
+                            !!ip &&
+                            !(
+                              Validation.isValidIp(ip) ||
+                              Validation.isValidHostname(ip)
+                            )
+                          }
                         >
                           <input />
                           <label>Server IP Address/Hostname</label>
@@ -613,7 +618,7 @@ class DataCollectorsNewComponent extends React.Component {
                   )}
 
                   {(dataCollectorTypeCode === "chirpstack_collector" ||
-                   dataCollectorTypeCode === "ttn_collector") && (
+                    dataCollectorTypeCode === "ttn_collector") && (
                     <Form.Group>
                       <Form.Field
                         required={dataCollectorTypeCode === "ttn_collector"}
@@ -695,7 +700,9 @@ class DataCollectorsNewComponent extends React.Component {
                             name="gateway_api_key"
                             value={gateway_api_key}
                             onChange={this.handleChange}
-                            error={!!gateway_api_key && gateway_api_key.length > 120}
+                            error={
+                              !!gateway_api_key && gateway_api_key.length > 120
+                            }
                           >
                             <input />
                             <label>Gateway API Key</label>
@@ -781,19 +788,34 @@ class DataCollectorsNewComponent extends React.Component {
                           </div>
                         )}
                       </Form.Group>
-                      {ssl &&
+                      {ssl && (
                         <Form.Group>
                           <Form.Field>
-                            <Form.TextArea name='ca_cert' value={ca_cert || ""} onChange={this.handleChange} label="CA Certificate" />
+                            <Form.TextArea
+                              name="ca_cert"
+                              value={ca_cert || ""}
+                              onChange={this.handleChange}
+                              label="CA Certificate"
+                            />
                           </Form.Field>
                           <Form.Field>
-                            <Form.TextArea name='client_cert' value={client_cert || ""} onChange={this.handleChange} label="Client Certificate" />
+                            <Form.TextArea
+                              name="client_cert"
+                              value={client_cert || ""}
+                              onChange={this.handleChange}
+                              label="Client Certificate"
+                            />
                           </Form.Field>
                           <Form.Field>
-                            <Form.TextArea name='client_key' value={client_key || ""} onChange={this.handleChange} label="Client Private Key" />
+                            <Form.TextArea
+                              name="client_key"
+                              value={client_key || ""}
+                              onChange={this.handleChange}
+                              label="Client Private Key"
+                            />
                           </Form.Field>
                         </Form.Group>
-                      }
+                      )}
                     </div>
                   )}
                   {
@@ -867,16 +889,13 @@ class DataCollectorsNewComponent extends React.Component {
                         </Table>
                       </Form.Group>
                     )}
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
+                  <div class="data_collectors_new_buttons">
                     <div>
                       <Form.Button
                         type="button"
                         disabled={!validForm || isLoading || isSaving}
                         loading={isTesting}
                         content="Test connection"
-                        style={{ marginTop: 25 }}
                         onClick={() => this.testConnection()}
                       />
                       <span>
@@ -887,49 +906,44 @@ class DataCollectorsNewComponent extends React.Component {
                         )}
                       </span>
                     </div>
-                    <div style={{ display: "flex" }}>
-                      <Form.Button
-                        type="button"
-                        loading={isLoading || isSaving}
-                        disabled={isLoading || isSaving || isTesting}
-                        content="Cancel"
-                        style={{ marginTop: 25 }}
-                        onClick={() =>
-                          this.props.history.push("/dashboard/data_collectors")
+                  </div>
+                  <div class="data_collectors_new_buttons">
+                    <Form.Button
+                      type="button"
+                      basic
+                      loading={isLoading || isSaving}
+                      disabled={isLoading || isSaving || isTesting}
+                      content="Cancel"
+                      onClick={() =>
+                        this.props.history.push("/dashboard/data_collectors")
+                      }
+                    />
+                    <div>
+                      <Popup
+                        trigger={
+                          <span>
+                            <Form.Button
+                              color="green"
+                              disabled={
+                                !validForm ||
+                                isLoading ||
+                                isSaving ||
+                                isTesting ||
+                                !testSuccess
+                              }
+                              loading={isSaving}
+                              content="Save"
+                            />
+                          </span>
                         }
-                      />
-                      <div
-                        style={{
-                          display: "inline-block",
-                          marginTop: 25,
-                          marginLeft: 10,
-                        }}
+                        class="pop_up_save"
+                        position="top right"
                       >
-                        <Popup
-                          trigger={
-                            <span>
-                              <Form.Button
-                                color="green"
-                                disabled={
-                                  !validForm ||
-                                  isLoading ||
-                                  isSaving ||
-                                  isTesting ||
-                                  !testSuccess
-                                }
-                                loading={isSaving}
-                                content="Save"
-                              />
-                            </span>
-                          }
-                          style={{ marginTop: 25, marginLeft: 10 }}
-                          position="top right"
-                        >
-                          Test the connection before saving the Data Source.
-                        </Popup>
-                      </div>
+                        Test the connection before saving the Data Source.
+                      </Popup>
                     </div>
                   </div>
+
                   {error && (
                     <Form.Group style={{ height: "8rem" }}>
                       <Message

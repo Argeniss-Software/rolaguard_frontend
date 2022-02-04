@@ -1,4 +1,15 @@
 .fields .field {
-    width: 100%;
-    padding-bottom: 5px;
+  width: 100%;
+  padding-bottom: 5px;
+}
+
+.data_collectors_new_buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.pop_up_save {
+  margin-top: 25;
+  margin-left: 10;
 }
