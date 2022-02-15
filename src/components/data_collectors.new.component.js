@@ -63,12 +63,12 @@ class DataCollectorsNewComponent extends React.Component {
       isSaving: false,
       isLoading: false,
       custom_ip: false,
-      isTesting: false,
+      //isTesting: false,
       typeForm: "Add",
       error: null,
       errorTesting: false,
       testingResult: "",
-      testSuccess: false,
+      //testSuccess: true,i
       title: "New Data Source",
     };
   }
@@ -328,7 +328,7 @@ class DataCollectorsNewComponent extends React.Component {
     }
   }
 
-  async pollTestResults(start, dataCollectorId) {
+/*async pollTestResults(start, dataCollectorId) {
     return new Promise((resolve, reject) => {
       const intervalId = setInterval(async () => {
         try {
@@ -395,7 +395,7 @@ class DataCollectorsNewComponent extends React.Component {
       testingResult: result,
     });
     return testSuccess;
-  }
+  }*/
 
   getUserGateways = () => {
     this.setState({ isGettingGateways: true });
@@ -531,10 +531,10 @@ class DataCollectorsNewComponent extends React.Component {
       types,
       regions,
       policies,
-      isTesting,
+      //isTesting,
       isGettingGateways,
       ttn_gateways,
-      testSuccess,
+      //testSuccess,
       selectAllGateways,
     } = this.state;
 
@@ -1042,7 +1042,7 @@ class DataCollectorsNewComponent extends React.Component {
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <div>
+                  {/*<div>
                       <Form.Button
                         type="button"
                         disabled={!validForm || isLoading || isSaving}
@@ -1058,12 +1058,12 @@ class DataCollectorsNewComponent extends React.Component {
                           </Label>
                         )}
                       </span>
-                    </div>
+                    </div>*/}
                     <div style={{ display: "flex" }}>
                       <Form.Button
                         type="button"
                         loading={isLoading || isSaving}
-                        disabled={isLoading || isSaving || isTesting}
+                        disabled={isLoading || isSaving /*|| isTesting */}
                         content="Cancel"
                         style={{ marginTop: 25 }}
                         onClick={() =>
@@ -1085,9 +1085,9 @@ class DataCollectorsNewComponent extends React.Component {
                                 disabled={
                                   !validForm ||
                                   isLoading ||
-                                  isSaving ||
+                                  isSaving /*||
                                   isTesting ||
-                                  !testSuccess
+                                  !testSuccess */
                                 }
                                 loading={isSaving}
                                 content="Save"
