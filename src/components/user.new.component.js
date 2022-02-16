@@ -23,7 +23,7 @@ class UsersNewComponent extends React.Component {
         email: "",
         full_name: "",
         phone: "",
-        user_roles: ""
+        user_roles: "",
       },
       valueDropdown: [],
       formHasError: true,
@@ -34,29 +34,29 @@ class UsersNewComponent extends React.Component {
         usernameExists: false,
         usernameInvalid: false,
         emailExists: false,
-        phoneNotValid: false
+        phoneNotValid: false,
       },
       loading: false,
       title: "NEW USER",
       roleList: [],
       roleListLoading: true,
       defaultRoles: [],
-      showSuccessMessage: false
+      showSuccessMessage: false,
     };
 
     let roleList = [];
 
-    this.props.rolesStore.getRolesApi().then(response => {
-      response.map(role => {
+    this.props.rolesStore.getRolesApi().then((response) => {
+      response.map((role) => {
         roleList.push({
           key: role.id,
           text: role.role_name.replace("_", " "),
-          value: role.id
+          value: role.id,
         });
       });
       this.setState({
         roleList: roleList,
-        roleListLoading: false
+        roleListLoading: false,
       });
     });
   }
@@ -72,10 +72,21 @@ class UsersNewComponent extends React.Component {
     user.username = user.username.trim();
 
     showErrors.usernameInvalid = !Validation.isValidUsername(user.username);
-    showErrors.fullNameTooLong = Validation.exceedsFullNameLength(user.full_name);
-    showErrors.emailTooLong = Validation.exceedsEmailLength(this.state.user.email);
+    showErrors.fullNameTooLong = Validation.exceedsFullNameLength(
+      user.full_name
+    );
+    showErrors.emailTooLong = Validation.exceedsEmailLength(
+      this.state.user.email
+    );
 
-    formHasError = formHasError || showErrors.username || showErrors.usernameInvalid || showErrors.fullNameTooLong || showErrors.emailTooLong ? true : false;
+    formHasError =
+      formHasError ||
+      showErrors.username ||
+      showErrors.usernameInvalid ||
+      showErrors.fullNameTooLong ||
+      showErrors.emailTooLong
+        ? true
+        : false;
 
     this.setState({ showErrors: showErrors, formHasError: formHasError });
     return formHasError;
@@ -101,7 +112,7 @@ class UsersNewComponent extends React.Component {
     this.setState({
       user: user,
       showErrors: showErrors,
-      unknownError: false
+      unknownError: false,
     });
   };
 
@@ -112,20 +123,26 @@ class UsersNewComponent extends React.Component {
     if (!errors) {
       this.setState({ loading: true });
 
-      this.props.usersStore.saveUser(this.state.user).then(response => {
-        debugger
+      this.props.usersStore.saveUser(this.state.user).then((response) => {
+        debugger;
         if (response.status !== 200) {
-    sanitizeHtml(this.state.user.username,{ allowedTags: [], disallowedTagsMode: "escape" })
+          sanitizeHtml(this.state.user.username, {
+            allowedTags: [],
+            disallowedTagsMode: "escape",
+          });
           const username = sanitizeHtml(this.state.user.username, {
             allowedTags: [],
             disallowedTagsMode: "escape",
           });
-          const email = sanitizeHtml(this.state.user.email,{ allowedTags: [], disallowedTagsMode: "escape" })
-          const phone = sanitizeHtml(this.state.user.username, {
+          const email = sanitizeHtml(this.state.user.email, {
             allowedTags: [],
             disallowedTagsMode: "escape",
           });
-                  
+          const phone = sanitizeHtml(this.state.user.phone, {
+            allowedTags: [],
+            disallowedTagsMode: "escape",
+          });
+
           switch (response.data.message) {
             case `Email ${email} is not valid`:
               showErrors.emailExists = true;
@@ -134,7 +151,7 @@ class UsersNewComponent extends React.Component {
             case `User ${username} is not valid`:
               showErrors.usernameInvalid = true;
               this.setState({ showErrors: showErrors, loading: false });
-              break;  
+              break;
             case `User ${username} already exists`:
               showErrors.usernameExists = true;
               this.setState({ showErrors: showErrors, loading: false });
@@ -148,25 +165,18 @@ class UsersNewComponent extends React.Component {
               break;
           }
         } else {
-          this.setState({loading: false, createOK: true});
+          this.setState({ loading: false, createOK: true });
         }
       });
     }
   };
-
-  setPhone = event => {
-    let user = this.state.user;
-
-    user.phone = event.target.value;
-    this.setState({ user: user });
-  };
-
+  
   onPhoneChange = (phone) => {
     const user = this.state.user;
     user.phone = phone;
 
-    this.setState({user: user});
-  }
+    this.setState({ user: user });
+  };
 
   render() {
     const { user, title, createOK, unknownError } = this.state;
