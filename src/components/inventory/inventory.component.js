@@ -66,11 +66,12 @@ class InventoryReviewComponent extends React.Component {
         gateways: [],
         dataCollectors: [],
         tags: [],
-        importances: []
+        importances: [],
       },
       hidden: false,
       selectAll: false,
       anyElementSelected: false,
+      orderBy: ["first_activity", "DESC"],
     };
   }
 
@@ -83,28 +84,26 @@ class InventoryReviewComponent extends React.Component {
   };
 
   loadAssetsAndCounts = () => {
-    const { activePage, pageSize, criteria, hidden } = this.state;
+    const { activePage, pageSize, criteria, hidden, orderBy } = this.state;
     this.setState({ isLoading: true, isGraphsLoading: true });
     const assetsPromise = this.props.inventoryAssetsStore.getAssets(
       { page: activePage, size: pageSize },
       criteria,
       hidden,
+      orderBy
     );
-    const dataCollectorsPromise = this.props.inventoryAssetsStore.getDataCollectorsCount(
-      criteria,
-      hidden,
-    );
+    const dataCollectorsPromise =
+      this.props.inventoryAssetsStore.getDataCollectorsCount(criteria, hidden);
     const vendorsPromise = this.props.inventoryAssetsStore.getVendorsCount(
       criteria,
-      hidden,
+      hidden
     );
     const tagsPromise = this.props.inventoryAssetsStore.getTagsCount(
       criteria,
-      hidden,);
-    const importancesPromise = this.props.inventoryAssetsStore.getImportanceCount(
-      criteria,
-      hidden,
+      hidden
     );
+    const importancesPromise =
+      this.props.inventoryAssetsStore.getImportanceCount(criteria, hidden);
 
     Promise.all([
       assetsPromise,
@@ -331,7 +330,7 @@ class InventoryReviewComponent extends React.Component {
     this.setState(
       { activePage, isLoading: true, isGraphsLoading: true },
       this.loadAssetsAndCounts
-    );  
+    );
   };
 
   handlePageSizeChange = (e, data) => {
@@ -395,47 +394,35 @@ class InventoryReviewComponent extends React.Component {
   HideButton = (props) => {
     return (
       <Button
-        onClick = { props.onClick}
-        disabled = {!props.assets.some((asset) => asset.selected)}
+        onClick={props.onClick}
+        disabled={!props.assets.some((asset) => asset.selected)}
       >
-          HIDE
-        </Button>
+        HIDE
+      </Button>
     );
-  }
+  };
 
   ShowButton = (props) => {
     return (
       <Button
-          onClick = { props.onClick}
-          disabled = {!props.assets.some((asset) => asset.selected)}
-        >
-          SHOW
-        </Button>
+        onClick={props.onClick}
+        disabled={!props.assets.some((asset) => asset.selected)}
+      >
+        SHOW
+      </Button>
     );
-  }
+  };
 
   SeeHiddenButton = (props) => {
-    return(
-      <Button
-        onClick={ props.toggleHiding}
-      >
-        SEE HIDDEN ASSETS
-      </Button>
-    );
-  }
+    return <Button onClick={props.toggleHiding}>SEE HIDDEN ASSETS</Button>;
+  };
 
   SeeVisibleButton = (props) => {
-    return(
-      <Button
-        onClick={ props.toggleHiding }
-      >
-        SEE VISIBLE ASSETS
-      </Button>
-    );
-  }
+    return <Button onClick={props.toggleHiding}>SEE VISIBLE ASSETS</Button>;
+  };
 
   ShowInventoryTable = (props) => {
-    const { assetsCount, isLoading, assets, criteria, selectAll} = this.state;
+    const { assetsCount, isLoading, assets, criteria, selectAll } = this.state;
 
     const tagsLeftEllipsis = (node) => {
       const tagsRendered = node.props.children;
@@ -479,12 +466,8 @@ class InventoryReviewComponent extends React.Component {
             <Table.HeaderCell collapsing>ID</Table.HeaderCell>
             <Table.HeaderCell>NAME</Table.HeaderCell>
 
-            <Table.HeaderCell>
-              VENDOR
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              APPLICATION
-            </Table.HeaderCell>
+            <Table.HeaderCell>VENDOR</Table.HeaderCell>
+            <Table.HeaderCell>APPLICATION</Table.HeaderCell>
             <Table.HeaderCell className="hide-old-computer">
               JOIN EUI/APP EUI
             </Table.HeaderCell>
@@ -560,9 +543,7 @@ class InventoryReviewComponent extends React.Component {
                         hexId={item.hex_id}
                       />
                     </Table.Cell>
-                    <Table.Cell
-                      onClick={() => this.showAssetDetails(index)}
-                    >
+                    <Table.Cell onClick={() => this.showAssetDetails(index)}>
                       <TruncateMarkup>
                         <span>{item.name}</span>
                       </TruncateMarkup>
@@ -658,30 +639,40 @@ class InventoryReviewComponent extends React.Component {
     const { assets, hidden } = this.state;
     return (
       <React.Fragment>
-        {! hidden && 
-        <this.HideButton 
-          assets={assets}
-          onClick = {() =>{
-            this.props.inventoryAssetsStore.setHiding(true,assets.filter((item) => item.selected)).
-            then((response) => {
-              if(response.status === HttpStatus.OK) {
-                this.loadAssetsAndCounts();
-              }
-            });
-          }}
-        />}
-        { hidden && 
-        <this.ShowButton 
-          assets={assets}
-          onClick = {() =>{
-            this.props.inventoryAssetsStore.setHiding(false,assets.filter((item) => item.selected)).
-            then((response) => {
-              if(response.status === HttpStatus.OK) {
-                this.loadAssetsAndCounts();
-              }
-            });
-          }}
-        />}
+        {!hidden && (
+          <this.HideButton
+            assets={assets}
+            onClick={() => {
+              this.props.inventoryAssetsStore
+                .setHiding(
+                  true,
+                  assets.filter((item) => item.selected)
+                )
+                .then((response) => {
+                  if (response.status === HttpStatus.OK) {
+                    this.loadAssetsAndCounts();
+                  }
+                });
+            }}
+          />
+        )}
+        {hidden && (
+          <this.ShowButton
+            assets={assets}
+            onClick={() => {
+              this.props.inventoryAssetsStore
+                .setHiding(
+                  false,
+                  assets.filter((item) => item.selected)
+                )
+                .then((response) => {
+                  if (response.status === HttpStatus.OK) {
+                    this.loadAssetsAndCounts();
+                  }
+                });
+            }}
+          />
+        )}
         <Button
           onClick={() => this.setState({ setImportance: true })}
           disabled={!assets.some((asset) => asset.selected)}
@@ -699,19 +690,37 @@ class InventoryReviewComponent extends React.Component {
     );
   }
 
+  handleSort = (field) => {
+    const { activePage, orderBy, criteria, pageSize, hidden } = this.state;
+
+    if (orderBy[0] === field) {
+      orderBy[1] = orderBy[1] === "ASC" ? "DESC" : "ASC";
+    }
+    orderBy[0] = field;
+    this.setState({ activePage: 1, isLoading: true, orderBy });
+    this.props.inventoryAssetsStore
+      .getAssets(
+        { page: activePage, size: pageSize },
+        criteria,
+        hidden,
+        orderBy
+      )
+      .then((response) => {
+        if (response.status === HttpStatus.OK) {
+          this.loadAssetsAndCounts();
+        }
+      });
+  };
+
   showFilters() {
-    const {
-      byVendorsViz,
-      byDataCollectorsViz,
-      byTagsViz,
-      byImportancesViz,
-    } = this.state;
+    const { byVendorsViz, byDataCollectorsViz, byTagsViz, byImportancesViz } =
+      this.state;
     const filter = (item) => item.selected;
     const filteredVendors = byVendorsViz.filter(filter);
     const filteredDataCollectors = byDataCollectorsViz.filter(filter);
     const filteredTags = byTagsViz.filter(filter);
     const filteredImportances = byImportancesViz.filter(filter);
- 
+
     return (
       <React.Fragment>
         <label style={{ fontWeight: "bolder" }}>Filters: </label>
@@ -798,12 +807,14 @@ class InventoryReviewComponent extends React.Component {
       pageSize,
       setImportance,
       hidden,
+      orderBy,
     } = this.state;
 
-    const pageSizeOptions = [ 
-      { key: 1, text: 'Show 50', value: 50 },
-      { key: 2, text: 'Show 25', value: 25 },
-      { key: 3, text: 'Show 10', value: 10 },]
+    const pageSizeOptions = [
+      { key: 1, text: "Show 50", value: 50 },
+      { key: 2, text: "Show 25", value: 25 },
+      { key: 3, text: "Show 10", value: 10 },
+    ];
 
     return (
       <div className="app-body-container-view">
@@ -956,6 +967,48 @@ class InventoryReviewComponent extends React.Component {
                         </div>
                       </div>
                       {/* Show inventory table */}
+                      <div className="sort-by-inventory">
+                        <label className="sort-and-filters-labels">
+                          Sort by:{" "}
+                        </label>
+                        <Button.Group
+                          size="tiny"
+                          className="sort-buttons-inventory"
+                        >
+                          <Button
+                            color={
+                              orderBy[0] === "first_activity" ? "blue" : ""
+                            }
+                            onClick={() => this.handleSort("first_activity")}
+                          >
+                            {orderBy[0] === "first_activity"
+                              ? "First activity (" +
+                                orderBy[1].toLowerCase() +
+                                ")"
+                              : "First activity"}
+                          </Button>
+                          <Button
+                            color={orderBy[0] === "name" ? "blue" : ""}
+                            onClick={() => this.handleSort("name")}
+                          >
+                            {orderBy[0] === "name"
+                              ? "Name (" + orderBy[1].toLowerCase() + ")"
+                              : "Name"}
+                          </Button>
+                          <Button
+                            color={orderBy[0] === "vendor" ? "blue" : ""}
+                            onClick={() => this.handleSort("vendor")}
+                          >
+                            {orderBy[0] === "vendor"
+                              ? "Vendor (" + orderBy[1].toLowerCase() + ")"
+                              : "Vendor"}
+                          </Button>
+                          <Button
+                            icon="remove"
+                            onClick={() => this.handleSort("")}
+                          ></Button>
+                        </Button.Group>
+                      </div>
                       {!this.isLoading && <this.ShowInventoryTable />}
 
                       {isLoading && (
@@ -972,28 +1025,41 @@ class InventoryReviewComponent extends React.Component {
                             onPageChange={this.handlePaginationChange}
                             totalPages={pagesCount}
                           />
-                                <Menu compact>
-                        <Dropdown 
-                        className=""
-                        text={'Show '+pageSize}
-                        options={pageSizeOptions} 
-                        onChange={this.handlePageSizeChange}   
-                        item
-                        />
-                        </Menu>       
+                          <Menu compact>
+                            <Dropdown
+                              className=""
+                              text={"Show " + pageSize}
+                              options={pageSizeOptions}
+                              onChange={this.handlePageSizeChange}
+                              item
+                            />
+                          </Menu>
                         </Grid>
                       )}
                     </Segment>
                     <div className="actions-buttons-container">
-                      { !hidden && <this.SeeHiddenButton 
-                        toggleHiding = {
-                          () => this.setState({hidden: true},this.loadAssetsAndCounts)
-                      }/>}
-                      { hidden && <this.SeeVisibleButton toggleHiding = {
-                          () => this.setState({hidden: false},this.loadAssetsAndCounts)
-                      }/> }
+                      {!hidden && (
+                        <this.SeeHiddenButton
+                          toggleHiding={() =>
+                            this.setState(
+                              { hidden: true },
+                              this.loadAssetsAndCounts
+                            )
+                          }
+                        />
+                      )}
+                      {hidden && (
+                        <this.SeeVisibleButton
+                          toggleHiding={() =>
+                            this.setState(
+                              { hidden: false },
+                              this.loadAssetsAndCounts
+                            )
+                          }
+                        />
+                      )}
                     </div>
-                    
+
                     {selectedAsset && (
                       <InventoryDetailsModal
                         loading={this.state.isLoading}

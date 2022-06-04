@@ -22,6 +22,7 @@ class ResourceUsageStore {
     totalPages: 0,
     activePage: 1,
     pageSize: 50,
+    orderBy: ["activity_freq", "DESC"],
   };
 
   @observable statusGraph = {
@@ -51,7 +52,6 @@ class ResourceUsageStore {
     isLoading: false,
     series: [],
   };
-  
 
   @action setModelLoading(val) {
     this.model.isLoading = val;
@@ -75,6 +75,10 @@ class ResourceUsageStore {
 
   @action setList(data) {
     this.model.list = data;
+  }
+
+  @action setOrderBy(val) {
+    this.model.orderBy = val;
   }
 
   @computed get getTotalList() {
@@ -111,6 +115,34 @@ class ResourceUsageStore {
       self.setTotalList(response[0].data.total_items);
       self.setTotalPages(response[0].data.total_pages);
       self.setList(this.formatApiData(response[0].data.assets));
+      this.setModelLoading(false);
+    });
+  };
+
+  @action handleSort = (order_field) => {
+    if (this.model.orderBy[0] === order_field) {
+      this.model.orderBy[1] = this.model.orderBy[1] === "ASC" ? "DESC" : "ASC";
+    }
+
+    this.model.orderBy[0] = order_field;
+
+    this.setActivePage(1);
+    this.setModelLoading(true);
+    this.setOrderBy(this.model.orderBy);
+
+    const assetsPromise = this.getAssets(
+      {
+        page: this.model.activePage,
+        size: this.model.pageSize,
+        order_by: this.model.orderBy,
+      },
+      this.getCriteria()
+    );
+
+    Promise.all([assetsPromise]).then((response) => {
+      this.setTotalList(response[0].data.total_items);
+      this.setTotalPages(response[0].data.total_pages);
+      this.setList(this.formatApiData(response[0].data.assets));
       this.setModelLoading(false);
     });
   };
@@ -323,7 +355,7 @@ class ResourceUsageStore {
         };
         break;
       case "data_collectors":
-        this.criteria.data_collectors = data.data_collectors
+        this.criteria.data_collectors = data.data_collectors;
         break;
       case "gateways":
         let foundItemToDelete = this.criteria.gateways.findIndex(
@@ -360,9 +392,15 @@ class ResourceUsageStore {
 
   /* used it on list device and gateway on resrouce ussages */
   @action getAssets(pagination) {
-    const { page, size } = pagination || {};
-    const { status, type, gateways, packet_lost_range, signal_strength, data_collectors } =
-      this.criteria || {};
+    const { page, size, order_by } = pagination || {};
+    const {
+      status,
+      type,
+      gateways,
+      packet_lost_range,
+      signal_strength,
+      data_collectors,
+    } = this.criteria || {};
 
     const headers = this.getHeaders();
     const params = {
@@ -384,21 +422,28 @@ class ResourceUsageStore {
       }),
       page,
       size,
+      order_by,
     };
     return API.get(`resource_usage/list`, { headers, params });
   }
 
   // return for graphs associated to resource usage
   @action getAssetsCount(criteria) {
-    const { status, type, gateways, packet_lost_range, signal_strength, data_collectors } =
-      this.criteria || {};
+    const {
+      status,
+      type,
+      gateways,
+      packet_lost_range,
+      signal_strength,
+      data_collectors,
+    } = this.criteria || {};
     const headers = this.getHeaders();
 
     const params = {
       ...(status && { asset_status: status }),
       ...(type && { asset_type: type }),
       ...(data_collectors && {
-        data_collector_ids: data_collectors
+        data_collector_ids: data_collectors,
       }),
       ...(gateways && {
         gateway_ids: gateways.map((e) => e.id),
@@ -436,22 +481,23 @@ class ResourceUsageStore {
     return API.get(uri, { headers, params });
   }
 
-      
   /* list associated assets for specific devices or gateways */
   @action getAssociatedAssets(filterParams) {
-    const { type, id, page, size } = filterParams || {}
+    const { type, id, page, size } = filterParams || {};
     const headers = this.getHeaders();
-    let params = {}
-    let normalizedType = type.toLowerCase().trim()
-    if (normalizedType === 'device') { // device connected to gateways
-      params["asset_type"] = 'gateway'
-      params['device_ids[]']=id
-    } else { // devices associated to gateway
-      params["asset_type"] = 'device'
-      params['gateway_ids[]']=id
+    let params = {};
+    let normalizedType = type.toLowerCase().trim();
+    if (normalizedType === "device") {
+      // device connected to gateways
+      params["asset_type"] = "gateway";
+      params["device_ids[]"] = id;
+    } else {
+      // devices associated to gateway
+      params["asset_type"] = "device";
+      params["gateway_ids[]"] = id;
     }
-    params['page']=page
-    params['size']=size
+    params["page"] = page;
+    params["size"] = size;
 
     return API.get(`resource_usage/list`, { headers, params });
   }
@@ -501,7 +547,10 @@ class ResourceUsageStore {
   @action getDummyDataForGraphs() {
     return {
       byType: {
-        types: [{ label: "Gateway", qty: 5 }, { label: "Device", qty: 95 }],
+        types: [
+          { label: "Gateway", qty: 5 },
+          { label: "Device", qty: 95 },
+        ],
         total: 100,
       },
       byStauts: {

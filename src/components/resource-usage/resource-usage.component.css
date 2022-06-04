@@ -13,3 +13,11 @@ div.ui.medium.progress {
 .lightgray{
     color: lightgray;
 }
+
+.sort-by{
+    margin-top: 10px !important;
+}
+
+.sort-buttons{
+    margin-right: 10px !important;
+}

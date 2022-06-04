@@ -1,11 +1,24 @@
 import * as React from "react";
 import { observer, inject } from "mobx-react";
-import { Table, Loader, Segment, Grid, Label, Icon, Divider, Pagination, Popup, Dropdown, Menu } from "semantic-ui-react";
+import {
+  Table,
+  Loader,
+  Segment,
+  Grid,
+  Label,
+  Icon,
+  Divider,
+  Pagination,
+  Popup,
+  Dropdown,
+  Button,
+  Menu,
+} from "semantic-ui-react";
 import "./quarantine.component.css";
-import AlertUtil from '../util/alert-util';
+import AlertUtil from "../util/alert-util";
 import "./quarantine.component.css";
 import Pie from "./visualizations/Pie";
-import ImportanceLabel from "./utils/importance-label.component.js"
+import ImportanceLabel from "./utils/importance-label.component.js";
 
 import Moment from "react-moment";
 
@@ -17,15 +30,15 @@ import ColorUtil from "../util/colors";
 // import QuarantineRemoveModal from "./quarantine.remove.modal";
 import DetailsAlertModal from "./details.alert.modal.component";
 import DeviceIdComponent from "./utils/device-id.component";
-import AssetLink from "./utils/asset-link.component"
+import AssetLink from "./utils/asset-link.component";
 import TruncateMarkup from "react-truncate-markup";
 @inject("deviceStore", "globalConfigStore")
 @observer
 class QuarantineComponent extends React.Component {
-  colorsMap
-  ALERT_TYPE_NAME = "alert_type_name"
-  ALERT_TYPE_RISK = "alert_type_risk"
-  DATA_COLLECTOR_NAME = "data_collector_name"
+  colorsMap;
+  ALERT_TYPE_NAME = "alert_type_name";
+  ALERT_TYPE_RISK = "alert_type_risk";
+  DATA_COLLECTOR_NAME = "data_collector_name";
 
   constructor(props) {
     super(props);
@@ -45,42 +58,51 @@ class QuarantineComponent extends React.Component {
       criteria: {
         type: [],
         risk: [],
-        dataCollector: []
+        dataCollector: [],
       },
       showFilters: false,
-      selectedAlert: null
+      selectedAlert: null,
+      orderBy: ["last_checked", "DESC"],
     };
 
-    this.getColorByPriority = this.getColorByPriority.bind(this)
+    this.getColorByPriority = this.getColorByPriority.bind(this);
   }
 
   loadQuarantineData(page) {
     this.setState({ isLoadingTable: true });
 
-    const { pageSize, criteria, selectedAlert } = this.state;
+    const { orderBy, pageSize, criteria, selectedAlert } = this.state;
 
-    const quarantinePromise = this.props.deviceStore.getQuarantine({page: page, size: pageSize}, criteria);
-    const quarantineDeviceCountPromise = this.props.deviceStore.getQuarantineDeviceCount(criteria);
-    const quarantineCountPromise = this.props.deviceStore.getQuarantineCount(criteria);
+    const quarantinePromise = this.props.deviceStore.getQuarantine(
+      { page: page, size: pageSize },
+      criteria,
+      orderBy
+    );
+    const quarantineDeviceCountPromise =
+      this.props.deviceStore.getQuarantineDeviceCount(criteria);
+    const quarantineCountPromise =
+      this.props.deviceStore.getQuarantineCount(criteria);
 
-    Promise.all([quarantinePromise, quarantineDeviceCountPromise, quarantineCountPromise]).then(
-      (data) => {
+    Promise.all([
+      quarantinePromise,
+      quarantineDeviceCountPromise,
+      quarantineCountPromise,
+    ])
+      .then((data) => {
         this.setState({ isLoadingTable: false });
 
         if (selectedAlert) {
           if (selectedAlert.index === 0) {
-            this.showAlertDetails(this.props.deviceStore.quarantine.length-1)
+            this.showAlertDetails(this.props.deviceStore.quarantine.length - 1);
           } else if (selectedAlert.index < pageSize) {
-            this.showAlertDetails(0)
+            this.showAlertDetails(0);
           }
         }
-      }
-    ).catch(
-      err => {
+      })
+      .catch((err) => {
         this.setState({ isLoadingTable: false, hasError: true });
-        console.error('err', err);
-      }
-    );
+        console.error("err", err);
+      });
   }
 
   handlePageSizeChange = (e, data) => {
@@ -89,62 +111,92 @@ class QuarantineComponent extends React.Component {
 
   componentDidMount() {
     this.loadViz();
-    this.loadQuarantineData(1)
+    this.loadQuarantineData(1);
   }
 
   loadViz() {
     this.setState({ showFilters: false });
 
     this.setState({ isLoadingByReasonViz: true });
-    const quarantineCountByAlertPromise = this.props.deviceStore.getQuarantineCount({groupBy: this.ALERT_TYPE_NAME})
-    quarantineCountByAlertPromise.then(
-      (data) => {
-        const totalItems = data.reduce((total, item) => total + item.count, 0);
+    const quarantineCountByAlertPromise =
+      this.props.deviceStore.getQuarantineCount({
+        groupBy: this.ALERT_TYPE_NAME,
+      });
+    quarantineCountByAlertPromise.then((data) => {
+      const totalItems = data.reduce((total, item) => total + item.count, 0);
 
-        const dataMap = this.rollUp(data, this.ALERT_TYPE_NAME, "alert_type_id");
-        const dataArray = this.setPieArrayFromMap(dataMap, totalItems, this.getColorByIndex, (key) => this.state.criteria.type.includes(key));
-        
-        this.setState({ isLoadingByReasonViz: false, byReasonsViz: dataArray });
-      }
-    );
+      const dataMap = this.rollUp(data, this.ALERT_TYPE_NAME, "alert_type_id");
+      const dataArray = this.setPieArrayFromMap(
+        dataMap,
+        totalItems,
+        this.getColorByIndex,
+        (key) => this.state.criteria.type.includes(key)
+      );
+
+      this.setState({ isLoadingByReasonViz: false, byReasonsViz: dataArray });
+    });
 
     this.setState({ isLoadingByRiskViz: true });
-    const quarantineCountByRiskPromise = this.props.deviceStore.getQuarantineCount({groupBy: this.ALERT_TYPE_RISK})
-    quarantineCountByRiskPromise.then(
-      (data) => {
-        const totalItems = data.reduce((total, item) => total + item.count, 0);
+    const quarantineCountByRiskPromise =
+      this.props.deviceStore.getQuarantineCount({
+        groupBy: this.ALERT_TYPE_RISK,
+      });
+    quarantineCountByRiskPromise.then((data) => {
+      const totalItems = data.reduce((total, item) => total + item.count, 0);
 
-        const dataMap = this.rollUp(data, this.ALERT_TYPE_RISK, this.ALERT_TYPE_RISK);
-        const dataArray = this.setPieArrayFromMap(dataMap, totalItems, this.getColorByPriority, (key) => this.state.criteria.risk.includes(key));
+      const dataMap = this.rollUp(
+        data,
+        this.ALERT_TYPE_RISK,
+        this.ALERT_TYPE_RISK
+      );
+      const dataArray = this.setPieArrayFromMap(
+        dataMap,
+        totalItems,
+        this.getColorByPriority,
+        (key) => this.state.criteria.risk.includes(key)
+      );
 
-        this.setState({ isLoadingByRiskViz: false, byRiskViz: dataArray });
-      }
-    );
-    
+      this.setState({ isLoadingByRiskViz: false, byRiskViz: dataArray });
+    });
+
     this.setState({ isLoadingByCollectorViz: true });
-    const quarantineCountByCollectorPromise = this.props.deviceStore.getQuarantineCount({groupBy: this.DATA_COLLECTOR_NAME})
-    quarantineCountByCollectorPromise.then(
-      (data) => {
-        const totalItems = data.reduce((total, item) => total + item.count, 0);
+    const quarantineCountByCollectorPromise =
+      this.props.deviceStore.getQuarantineCount({
+        groupBy: this.DATA_COLLECTOR_NAME,
+      });
+    quarantineCountByCollectorPromise.then((data) => {
+      const totalItems = data.reduce((total, item) => total + item.count, 0);
 
-        const dataMap = this.rollUp(data, this.DATA_COLLECTOR_NAME, "data_collector_id");
-        const dataArray = this.setPieArrayFromMap(dataMap, totalItems, this.getColorByIndex, (key) => this.state.criteria.dataCollector.includes(key));
+      const dataMap = this.rollUp(
+        data,
+        this.DATA_COLLECTOR_NAME,
+        "data_collector_id"
+      );
+      const dataArray = this.setPieArrayFromMap(
+        dataMap,
+        totalItems,
+        this.getColorByIndex,
+        (key) => this.state.criteria.dataCollector.includes(key)
+      );
 
-        this.setState({ isLoadingByCollectorViz: false, byCollectorViz: dataArray });
-      }
-    );
+      this.setState({
+        isLoadingByCollectorViz: false,
+        byCollectorViz: dataArray,
+      });
+    });
 
-    Promise.all([quarantineCountByAlertPromise, quarantineCountByRiskPromise, quarantineCountByCollectorPromise]).then(
-      (data) => {
+    Promise.all([
+      quarantineCountByAlertPromise,
+      quarantineCountByRiskPromise,
+      quarantineCountByCollectorPromise,
+    ])
+      .then((data) => {
         this.setState({ showFilters: this.showFilters() });
-      }
-    ).catch(
-      err => {
+      })
+      .catch((err) => {
         this.setState({ isLoading: false, hasError: true });
-        console.error('err', err);
-      }
-    );
-
+        console.error("err", err);
+      });
   }
 
   getColorByPriority(item, key, index) {
@@ -159,11 +211,16 @@ class QuarantineComponent extends React.Component {
     let index = 0;
     let array = [];
 
-    map.forEach( (value, key) => {
+    map.forEach((value, key) => {
       array.push({
-        label: key, percentage: value.total/totalItems, value: value.total, color: colorFn(value, key, index++), id: value.id, selected: selectedFn(value.id)
-      })
-    })
+        label: key,
+        percentage: value.total / totalItems,
+        value: value.total,
+        color: colorFn(value, key, index++),
+        id: value.id,
+        selected: selectedFn(value.id),
+      });
+    });
 
     return array;
   }
@@ -171,7 +228,7 @@ class QuarantineComponent extends React.Component {
   rollUp(data, key, id) {
     const map = new Map();
 
-    data.forEach( (item) => {
+    data.forEach((item) => {
       let mapValue = { total: item.count, id: item[id] };
       map.set(item[key], mapValue);
     });
@@ -182,12 +239,12 @@ class QuarantineComponent extends React.Component {
   clearFilters() {
     const { criteria } = this.state;
 
-    this.state.byRiskViz.forEach(entry => entry.selected = false) 
-    this.state.byReasonsViz.forEach(entry => entry.selected = false)
-    this.state.byCollectorViz.forEach(entry => entry.selected = false)
+    this.state.byRiskViz.forEach((entry) => (entry.selected = false));
+    this.state.byReasonsViz.forEach((entry) => (entry.selected = false));
+    this.state.byCollectorViz.forEach((entry) => (entry.selected = false));
 
-    criteria.type = []; 
-    criteria.risk = []; 
+    criteria.type = [];
+    criteria.risk = [];
     criteria.dataCollector = [];
 
     this.setState({ criteria, showFilters: false });
@@ -196,44 +253,58 @@ class QuarantineComponent extends React.Component {
   }
 
   showFilters() {
-    const { byRiskViz, byReasonsViz, byCollectorViz } = this.state
+    const { byRiskViz, byReasonsViz, byCollectorViz } = this.state;
 
-    return byRiskViz.some(entry => entry.selected) || 
-      byReasonsViz.some(entry => entry.selected) || 
-      byCollectorViz.some(entry => entry.selected)
+    return (
+      byRiskViz.some((entry) => entry.selected) ||
+      byReasonsViz.some((entry) => entry.selected) ||
+      byCollectorViz.some((entry) => entry.selected)
+    );
   }
 
   handlePaginationChange = (e, { activePage }) => {
     this.setState({ activePage });
     this.loadQuarantineData(activePage);
-  }
+  };
 
   handleItemSelected = (array, selectedItem, type) => {
-    const foundItem = array.find(item => item.label === selectedItem.label);
+    const foundItem = array.find((item) => item.label === selectedItem.label);
     foundItem.selected = !foundItem.selected;
 
     const { criteria } = this.state;
 
-    switch(type) {
+    switch (type) {
       case this.ALERT_TYPE_NAME:
-        criteria.type = array.filter(item => item.selected).map(item => item.id);
+        criteria.type = array
+          .filter((item) => item.selected)
+          .map((item) => item.id);
         break;
 
       case this.ALERT_TYPE_RISK:
-        criteria.risk = array.filter(risk => risk.selected).map(risk => risk.label);
+        criteria.risk = array
+          .filter((risk) => risk.selected)
+          .map((risk) => risk.label);
         break;
-      
+
       case this.DATA_COLLECTOR_NAME:
-        criteria.dataCollector = array.filter(dc => dc.selected).map(dc => dc.id);
+        criteria.dataCollector = array
+          .filter((dc) => dc.selected)
+          .map((dc) => dc.id);
         break;
-      default: 
+      default:
         break;
     }
 
-    this.setState({[type]: array, activePage: 1, isLoadingTable: true, criteria, showFilters: this.showFilters()});
+    this.setState({
+      [type]: array,
+      activePage: 1,
+      isLoadingTable: true,
+      criteria,
+      showFilters: this.showFilters(),
+    });
 
     this.loadQuarantineData(1);
-  }
+  };
 
   /*handleQuarantineRemoval = () => {
     this.setState({ activePage: 1 } );
@@ -249,48 +320,88 @@ class QuarantineComponent extends React.Component {
       alert: quarantine.alert,
       alert_type: quarantine.alert_type,
       isFirst: this.state.activePage === 1 && index === 0,
-      isLast: this.state.activePage === Math.ceil(this.props.deviceStore.quarantineCount/this.state.pageSize) && index === this.props.deviceStore.quarantine.length-1
-    }
+      isLast:
+        this.state.activePage ===
+          Math.ceil(
+            this.props.deviceStore.quarantineCount / this.state.pageSize
+          ) && index === this.props.deviceStore.quarantine.length - 1,
+    };
 
     this.setState({ selectedAlert });
-  }
+  };
 
   goToQuarantine = (direction) => {
     if (this.state.selectedAlert.index === 0 && direction < 0) {
       if (this.state.activePage > 1) {
-        this.handlePaginationChange(null, {activePage: this.state.activePage-1})
+        this.handlePaginationChange(null, {
+          activePage: this.state.activePage - 1,
+        });
       }
-        
+
       return;
     }
 
-    if (this.state.selectedAlert.index === this.props.deviceStore.quarantine.length-1 && direction > 0) {
-      if (this.state.activePage < Math.ceil(this.props.deviceStore.quarantineCount/this.state.pageSize)) {
-        this.handlePaginationChange(null, {activePage: this.state.activePage+1})
+    if (
+      this.state.selectedAlert.index ===
+        this.props.deviceStore.quarantine.length - 1 &&
+      direction > 0
+    ) {
+      if (
+        this.state.activePage <
+        Math.ceil(this.props.deviceStore.quarantineCount / this.state.pageSize)
+      ) {
+        this.handlePaginationChange(null, {
+          activePage: this.state.activePage + 1,
+        });
       }
-      
+
       return;
     }
 
     const newIndex = this.state.selectedAlert.index + direction;
     this.showAlertDetails(newIndex);
-  }
+  };
 
   closeAlertDetails = () => {
     this.setState({ selectedAlert: null });
-  }
+  };
+
+  handleSort = (field) => {
+    const { activePage, orderBy, criteria, pageSize } = this.state;
+    if (orderBy[0] === field) {
+      orderBy[1] = orderBy[1] === "ASC" ? "DESC" : "ASC";
+    }
+    orderBy[0] = field;
+    this.setState({ activePage: 1, isLoading: true, orderBy });
+    const quarantinePromise = this.props.deviceStore.getQuarantine(
+      { page: activePage, size: pageSize },
+      criteria,
+      orderBy
+    );
+  };
 
   render() {
-    const { quarantineDeviceCount, quarantineCount, quarantine } = this.props.deviceStore;
+    const { quarantineDeviceCount, quarantineCount, quarantine } =
+      this.props.deviceStore;
 
-    const { isLoadingByReasonViz, isLoadingByRiskViz, isLoadingByCollectorViz, activePage, pageSize, showFilters, selectedAlert } = this.state;
-    
-    const pageSizeOptions = [ 
-      { key: 1, text: 'Show 50', value: 50 },
-      { key: 2, text: 'Show 25', value: 25 },
-      { key: 3, text: 'Show 10', value: 10 },]
-  
-    let totalPages = Math.ceil(quarantineCount/pageSize);
+    const {
+      orderBy,
+      isLoadingByReasonViz,
+      isLoadingByRiskViz,
+      isLoadingByCollectorViz,
+      activePage,
+      pageSize,
+      showFilters,
+      selectedAlert,
+    } = this.state;
+
+    const pageSizeOptions = [
+      { key: 1, text: "Show 50", value: 50 },
+      { key: 2, text: "Show 25", value: 25 },
+      { key: 3, text: "Show 10", value: 10 },
+    ];
+
+    let totalPages = Math.ceil(quarantineCount / pageSize);
 
     return (
       <div className="app-body-container-view">
@@ -396,6 +507,39 @@ class QuarantineComponent extends React.Component {
                   </Grid>
                 </Segment>
                 <Segment>
+                  <div className="sort-by">
+                    <label className="sort-and-filters-labels">Sort by: </label>
+                    <Button.Group size="tiny" className="sort-buttons">
+                      <Button
+                        color={orderBy[0] === "last_checked" ? "blue" : ""}
+                        onClick={() => this.handleSort("last_checked")}
+                      >
+                        {orderBy[0] === "last_checked"
+                          ? "Last Check (" + orderBy[1].toLowerCase() + ")"
+                          : "Last Check"}
+                      </Button>
+                      <Button
+                        color={orderBy[0] === "since" ? "blue" : ""}
+                        onClick={() => this.handleSort("since")}
+                      >
+                        {orderBy[0] === "since"
+                          ? "Date (" + orderBy[1].toLowerCase() + ")"
+                          : "Date"}
+                      </Button>
+                      <Button
+                        color={orderBy[0] === "device_id" ? "blue" : ""}
+                        onClick={() => this.handleSort("device_id")}
+                      >
+                        {orderBy[0] === "device_id"
+                          ? "Device ID (" + orderBy[1].toLowerCase() + ")"
+                          : "Device ID"}
+                      </Button>
+                      <Button
+                        icon="remove"
+                        onClick={() => this.handleSort("")}
+                      ></Button>
+                    </Button.Group>
+                  </div>
                   {showFilters && (
                     <div>
                       <label style={{ fontWeight: "bolder" }}>Filters: </label>
@@ -531,9 +675,10 @@ class QuarantineComponent extends React.Component {
                                   <Label
                                     horizontal
                                     style={{
-                                      backgroundColor: AlertUtil.getColorsMap()[
-                                        item.alert_type.risk
-                                      ],
+                                      backgroundColor:
+                                        AlertUtil.getColorsMap()[
+                                          item.alert_type.risk
+                                        ],
                                       color: "white",
                                       borderWidth: 1,
                                       width: "100px",
@@ -661,14 +806,14 @@ class QuarantineComponent extends React.Component {
                         totalPages={totalPages}
                       />
                       <Menu compact>
-                        <Dropdown 
-                        className=""
-                        text={'Show '+pageSize}
-                        options={pageSizeOptions} 
-                        onChange={this.handlePageSizeChange}   
-                        item
+                        <Dropdown
+                          className=""
+                          text={"Show " + pageSize}
+                          options={pageSizeOptions}
+                          onChange={this.handlePageSizeChange}
+                          item
                         />
-                        </Menu>       
+                      </Menu>
                     </Grid>
                   )}
                 </Segment>
