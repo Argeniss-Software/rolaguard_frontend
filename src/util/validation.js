@@ -1,5 +1,6 @@
-import isValidHostname from "is-valid-hostname";
-import validator from "validator";
+
+import isValidHostname from 'is-valid-hostname';
+import validator from 'validator';
 
 const Validation = {
   isValidUsername: (username) => {
@@ -7,6 +8,14 @@ const Validation = {
     return regex.test(username);
   },
 
+  isValidUrl: (text) => {
+    return validator.isURL(text);
+  },
+
+  isValidHostname: (text) => {
+    return isValidHostname(text);
+  },
+  
   hasLength: (text, length) => {
     return text.length < length ? false : true;
   },

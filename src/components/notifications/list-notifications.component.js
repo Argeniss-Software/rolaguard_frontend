@@ -1,13 +1,25 @@
 import * as React from "react";
 import { inject } from "mobx-react";
 import Moment from "react-moment";
-import { Table, Popup, Label, Pagination, Grid, Message, Button, Icon } from "semantic-ui-react";
+import {
+  Table,
+  Popup,
+  Label,
+  Pagination,
+  Grid,
+  Message,
+  Button,
+  Icon,
+} from "semantic-ui-react";
 import "../policies/new-policy.component.css";
 import LoaderComponent from "../utils/loader.component";
 import DetailsAlertModal from "../details.alert.modal.component";
-import {subscribeToNewNotificationEvents, unsubscribeFromNewNotificationEvents} from "../../util/web-socket"
+import {
+  subscribeToNewNotificationEvents,
+  unsubscribeFromNewNotificationEvents,
+} from "../../util/web-socket";
 
-import AlertUtil from '../../util/alert-util';
+import AlertUtil from "../../util/alert-util";
 
 import "./list-notifications.component.css";
 import EmptyComponent from "../utils/empty.component";
@@ -28,7 +40,7 @@ class ListNotificationsComponent extends React.Component {
     totalPages: null,
     pagination: {
       page: 1,
-      size: 20,
+      size: 50,
     },
     selectedAlert: null,
     newNotifications: false,
@@ -212,6 +224,8 @@ class ListNotificationsComponent extends React.Component {
                   <Table.HeaderCell collapsing>RISK</Table.HeaderCell>
                   <Table.HeaderCell>DESCRIPTION</Table.HeaderCell>
                   <Table.HeaderCell collapsing>DATE</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>SOURCE</Table.HeaderCell>
+                  <Table.HeaderCell collapsing>STATE</Table.HeaderCell>
                   <Table.HeaderCell collapsing>ACTIONS</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -260,14 +274,12 @@ class ListNotificationsComponent extends React.Component {
                         <Label
                           horizontal
                           style={{
-                            backgroundColor: this.colors[
-                              notification.alertType.risk
-                            ],
+                            backgroundColor:
+                              this.colors[notification.alertType.risk],
                             color: "white",
                             borderWidth: 1,
-                            borderColor: this.colors[
-                              notification.alertType.risk
-                            ],
+                            borderColor:
+                              this.colors[notification.alertType.risk],
                             width: "100px",
                           }}
                         >
@@ -295,6 +307,12 @@ class ListNotificationsComponent extends React.Component {
                         >
                           {notification.createdAt}
                         </Moment>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {notification.notificationSource}
+                      </Table.Cell>
+                      <Table.Cell>
+                        {notification.notificationState}
                       </Table.Cell>
                       <Table.Cell className="notifications-table-cell wd-xl td-actions">
                         <Popup

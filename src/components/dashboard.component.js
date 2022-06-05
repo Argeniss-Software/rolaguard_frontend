@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Component, createContext, useContext } from "react";
 import { observer, inject } from "mobx-react";
 import {
   Table,
@@ -28,7 +28,23 @@ import AlertListComponent from "./alert.list.component";
 import BounceLoader from "react-spinners/BounceLoader";
 import { css } from "@emotion/core";
 import _ from "lodash";
-import DataCollectorSelector from "./utils/data-collector-selector.component"
+import DataCollectorSelector from "./utils/data-collector-selector.component";
+import stepsDashboard from "./tour/steps-dashboard.component";
+import "shepherd.js/dist/css/shepherd.css";
+import { ShepherdTour, ShepherdTourContext, TourMethods } from "react-shepherd";
+import AutoStartTour from "./tour/auto-start-tour";
+
+function TourButton() {
+  const tour = useContext(ShepherdTourContext);
+  return (
+    <Button
+      content="Start Tour"
+      basic
+      color="blue"
+      onClick={tour.start}
+    ></Button>
+  );
+}
 
 @inject(
   "generalDataStore",
@@ -40,6 +56,7 @@ import DataCollectorSelector from "./utils/data-collector-selector.component"
 )
 @observer
 class DashboardComponent extends React.Component {
+  static tourContext = ShepherdTourContext;
   subscriber = null;
 
   constructor(props) {
@@ -48,7 +65,7 @@ class DashboardComponent extends React.Component {
     this.state = {
       dataCollectors: [],
       selectedDataCollectors: [],
-      numberOfPreviewAlerts: 5,
+      numberOfPreviewAlerts: 50,
       microchipUrl: microchipSvg,
       alarms: null,
       alertsCount: null,
@@ -69,6 +86,7 @@ class DashboardComponent extends React.Component {
       },
       lastUpdated: Date.now(),
       override: null,
+      firstLogin: this.props.usersStore.currentUser.first_login,
     };
   }
 
@@ -172,6 +190,7 @@ class DashboardComponent extends React.Component {
   }
 
   componentDidMount() {
+    const tour = this.context;
     this.getDataCollectors();
     this.updateRange("DAY");
     this.getTopAlerts();
@@ -200,21 +219,17 @@ class DashboardComponent extends React.Component {
   };
 
   handleDataCollectorSelection = (params) => {
-    const {
-      totalCollectors,
-      activeCollectors,
-      dataCollectorsOptions,
-    } = params;
-    
+    const { totalCollectors, activeCollectors, dataCollectorsOptions } = params;
+
     const dataCollectors = dataCollectorsOptions;
 
-     this.setState({
-       totalCollectors,
-       activeCollectors,
-       dataCollectorsLoading: false,
-       isLoading: false,
-       dataCollectors,
-     });
+    this.setState({
+      totalCollectors,
+      activeCollectors,
+      dataCollectorsLoading: false,
+      isLoading: false,
+      dataCollectors,
+    });
     const { range } = this.state;
 
     this.setState({ selectedDataCollectors: params.selected }, () => {
@@ -333,6 +348,7 @@ class DashboardComponent extends React.Component {
 
   render() {
     let organization_name = this.props.usersStore.currentUser.organization_name;
+    const isFirstLogin = this.props.usersStore.currentUser.first_login;
 
     let {
       activeCollectors,
@@ -359,14 +375,39 @@ class DashboardComponent extends React.Component {
       packetsCount = (packetsCount / 1000000).toFixed(1) + "M";
     }
 
+    const tourOptions = {
+      defaultStepOptions: {
+        cancelIcon: {
+          enabled: true,
+        },
+        classes: "shepherd-theme-custom",
+      },
+      useModalOverlay: true,
+    };
+
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view dashboard">
           <div className="view-header">
             {/* HEADER TITLE */}
             <h1>DASHBOARD</h1>
+            <div>
+              <ShepherdTour
+                steps={stepsDashboard(this.props)}
+                tourOptions={tourOptions}
+              >
+                <TourMethods>
+                  {(tourContext) => (
+                    <AutoStartTour
+                      {...this.props.usersStore.currentUser.first_login}
+                      startTour={tourContext}
+                    />
+                  )}
+                </TourMethods>
+                <TourButton />
+              </ShepherdTour>
+            </div>
           </div>
-
           {/* VIEW BODY */}
           <div className="view-body">
             {this.state.isLoading && (

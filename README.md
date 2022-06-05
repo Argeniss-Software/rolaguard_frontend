@@ -19,8 +19,17 @@ These instructions are meant to set up a local development environment for the f
 
 #### Install dependencies
 First, you need to have [node.js](https://nodejs.org/download/release/latest-v12.x/) 12 LTE installed. The first time you run the code you need to install all dependencies. This is done by running (in the frontend folder) the following command:
+
+Windows
+
 ```bash
 npm install
+```
+
+Linux
+
+```bash
+yarn install
 ```
 
 #### Point to local backend and configure reCaptcha
@@ -42,9 +51,18 @@ Where RECAPTCHA_SITE_KEY is the public key from the reCAPTCHA service. To get th
 NOTE: you have to configure the reCaptcha secret key as an environment variable in the [backend](https://github.com/Argeniss-Software/rolaguard/blob/master/config/backend.env).
 
 #### Runnning the frontend
-Once you installed the dependencies, pointed the frontend to the local backend and have the docker-compose up an running, you can launch the local frontend by executing the following command in the frontend folder.
+Once you installed the dependencies, pointed the frontend to the local backend and have the docker-compose up an running, you can launch the local frontend by executing the following command in the frontend folder:
+
+Windows
+
 ```bash
 npm start
+```
+
+Linux
+
+```bash
+yarn start
 ```
 
 NOTE: in development mode, the code will recompile after saving every change made in the source code.

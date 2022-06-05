@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import { observer, inject } from "mobx-react";
-import { Modal, Button, Grid, Table, Divider, Icon } from "semantic-ui-react";
+import {
+  Modal,
+  Button,
+  Grid,
+  Table,
+  Divider,
+  Icon,
+  Confirm,
+} from "semantic-ui-react";
 import Skeleton from "react-loading-skeleton";
 import * as HttpStatus from "http-status-codes";
 import _ from "lodash";
@@ -13,7 +21,7 @@ import ItemDetailsIcon from "./inventory.modal.icon.component";
 import ImportanceLabel from "../utils/importance-label.component";
 import Geolocation from "../utils/geolocation/geolocation.component";
 import AssetLink from "../utils/asset-link.component";
-import moment from "moment"
+import moment from "moment";
 import NotAvailableComponent from "../utils/not-available-value/not-available-value.component";
 
 @inject("tagsStore", "commonStore", "globalConfigStore")
@@ -27,9 +35,20 @@ class InventoryDetailsModal extends Component {
       modalOpen: true,
       item: this.props.selectedItem.item,
       activeIndex: this.props.selectedItem.index,
+      removalConfirmOpen: false,
+      tagToRemove: null,
     };
-    this.hanldleTagSelected = this.hanldleTagSelected.bind(this);              
+    this.handleTagSelected = this.handleTagSelected.bind(this);
+    this.handleTagRemoval = this.handleTagRemoval.bind(this);
   }
+
+  showConfirmAndSetTag(tag) {
+    this.setState({ removalConfirmOpen: true });
+    this.setState({ tagToRemove: tag });
+  }
+
+  handleConfirm = () => this.setState({ removalConfirmOpen: false });
+  handleConfirmCancel = () => this.setState({ removalConfirmOpen: false });
 
   UNSAFE_componentWillMount() {
     this.getGatewaysLocations();
@@ -77,21 +96,32 @@ class InventoryDetailsModal extends Component {
     this.props.onNavigate(-1);
   };
 
-  getPArameterValue(parameters, parameterName) {
+  getParameterValue(parameters, parameterName) {
     return parameters[parameterName];
   }
 
   showTags(tags) {
     return tags.map((tag) => {
       return (
-        <Tag
-          key={tag.id}
-          name={tag.name}
-          removable={true}
-          color={tag.color}
-          id={tag.id}
-          onRemoveClick={() => this.handleTagRemoval(tag)}
-        />
+        <>
+          <Tag
+            key={tag.id}
+            name={tag.name}
+            removable={true}
+            color={tag.color}
+            id={tag.id}
+            onRemoveClick={() => this.showConfirmAndSetTag(tag)}
+          />
+          <Confirm
+            open={this.state.removalConfirmOpen}
+            header={"Removing label"}
+            onCancel={this.handleConfirmCancel}
+            content={"Are you sure you want to remove the label?"}
+            onConfirm={() => this.handleTagRemoval(this.state.tagToRemove)}
+            cancelButton="Cancel"
+            confirmButton="Yes"
+          />
+        </>
       );
     });
   }
@@ -200,7 +230,7 @@ class InventoryDetailsModal extends Component {
       });
   }
 
-  hanldleTagSelected(tag) {
+  handleTagSelected(tag) {
     let { item } = this.state;
     this.props.tagsStore.assignTag(tag, item).then(() => {
       item.tags.push(tag);
@@ -210,15 +240,16 @@ class InventoryDetailsModal extends Component {
     });
   }
 
-  handleTagRemoval = (tag) => {
+  handleTagRemoval(tag) {
     const { item } = this.state;
     this.props.tagsStore.removeTag(tag, item).then(() => {
       item.tags = item.tags.filter((t) => t.id !== tag.id);
       this.setState({
         item,
+        removalConfirmOpen: false,
       });
     });
-  };
+  }
 
   ModalTitle = (props) => {
     /*
@@ -251,7 +282,8 @@ class InventoryDetailsModal extends Component {
     const { index, isFirst, isLast } = this.props.selectedItem;
     const { assets } = this.props;
     const item = assets[index];
-    const dateFormat = this.props.globalConfigStore.dateFormats.moment.dateTimeFormat;
+    const dateFormat =
+      this.props.globalConfigStore.dateFormats.moment.dateTimeFormat;
 
     return (
       <Modal
@@ -332,7 +364,7 @@ class InventoryDetailsModal extends Component {
                     {this.showTags(item.tags)}{" "}
                     <TagSelector
                       alreadyAssignTags={item.tags}
-                      onSelection={this.hanldleTagSelected}
+                      onSelection={this.handleTagSelected}
                     />
                   </Grid.Row>
                   <Divider />

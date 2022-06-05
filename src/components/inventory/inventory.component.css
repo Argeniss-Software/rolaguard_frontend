@@ -148,6 +148,7 @@ div.tooltip {
 
 .view-body {
     min-height: 100px;
+    margin-top: 20px;
 }
 
 .react-datepicker-wrapper {
@@ -200,4 +201,12 @@ th {
 
 .filters-container {
     float: left;
+}
+
+.sort-by-inventory{
+    margin-top: 30px !important;
+}
+
+.sort-buttons-inventory{
+    margin-right: 10px !important;
 }

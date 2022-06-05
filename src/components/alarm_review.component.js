@@ -13,6 +13,8 @@ import {
   Popup,
   Message,
   Divider,
+  Dropdown,
+  Menu,
 } from "semantic-ui-react";
 import AlertUtil from "../util/alert-util";
 import Pie from "./visualizations/Pie";
@@ -63,7 +65,7 @@ class AlarmReviewComponent extends React.Component {
       isGraphsLoading: true,
       isStatusLoading: false,
       activePage: 1,
-      pageSize: 20,
+      pageSize: 50,
       alerts: [],
       count: null,
       alertsCount: null,
@@ -120,10 +122,11 @@ class AlarmReviewComponent extends React.Component {
       resolved: false,
     });
 
-    const dataCollectorsPromise = this.props.dataCollectorStore.getDataCollectorApi(
-      this.state.criteria.from,
-      this.state.criteria.to
-    );
+    const dataCollectorsPromise =
+      this.props.dataCollectorStore.getDataCollectorApi(
+        this.state.criteria.from,
+        this.state.criteria.to
+      );
 
     Promise.all([
       alarmsDataPromise,
@@ -133,7 +136,6 @@ class AlarmReviewComponent extends React.Component {
       dataCollectorsPromise,
     ]).then((responses) => {
       this.alarmsTypesMap = {};
-
       const alarmsTypesMap = {};
       responses[1].forEach((alarmType) => {
         alarmsTypesMap[alarmType.code] = alarmType;
@@ -182,7 +184,7 @@ class AlarmReviewComponent extends React.Component {
         };
       });
 
-      const colors = ColorUtil.colorList()
+      const colors = ColorUtil.colorList();
       const filteredRisks = risks.filter((r) => r.value !== 0);
       const filteredTypes = types.filter((t) => t.value !== 0);
       const filteredDataCollectors = dataCollectors.filter(
@@ -207,6 +209,10 @@ class AlarmReviewComponent extends React.Component {
         alarmsTypesMap,
       });
     });
+  };
+
+  handlePageSizeChange = (e, data) => {
+    this.setState({ pageSize: data.value }, this.loadAlertsAndCounts);
   };
 
   /*handleAlertResolution = () => {
@@ -282,16 +288,15 @@ class AlarmReviewComponent extends React.Component {
     if (dateTo) {
       let validTo = dateTo;
       if (dateTo < criteria.from) {
-        dateTo = criteria.from
-        validTo = moment(
-          dateTo.setSeconds(dateTo.getSeconds() + 1)
-        ).toDate();
+        dateTo = criteria.from;
+        validTo = moment(dateTo.setSeconds(dateTo.getSeconds() + 1)).toDate();
         criteria["to"] = validTo;
       } else {
         criteria["to"] = null;
       }
     } else {
-      criteria["to"]=null    }
+      criteria["to"] = null;
+    }
     this.setState({ criteria, range: null });
   };
 
@@ -418,6 +423,7 @@ class AlarmReviewComponent extends React.Component {
     if (orderBy[0] === field) {
       orderBy[1] = orderBy[1] === "ASC" ? "DESC" : "ASC";
     }
+    orderBy[0] = field;
     this.setState({ activePage: 1, isLoading: true, orderBy });
     const alertsPromise = this.props.alertStore.query(
       { page: 0, size: pageSize, order: orderBy },
@@ -531,7 +537,11 @@ class AlarmReviewComponent extends React.Component {
     const filteredRisks = risks.filter((risk) => risk.selected);
     const filteredTypes = types.filter((type) => type.selected);
     const filteredDataCollectors = dataCollectors.filter((dc) => dc.selected);
-
+    const pageSizeOptions = [
+      { key: 1, text: "Show 50", value: 50 },
+      { key: 2, text: "Show 25", value: 25 },
+      { key: 3, text: "Show 10", value: 10 },
+    ];
     return (
       <div className="app-body-container-view">
         <div className="animated fadeIn animation-view">
@@ -758,7 +768,7 @@ class AlarmReviewComponent extends React.Component {
               <div className="table-container-box">
                 <Segment>
                   <div>
-                    <label style={{ fontWeight: "bolder" }}>Filters: </label>
+                    <label className="sort-and-filters-labels">Filters: </label>
                     {range && <Label as="a">{"LAST " + range}</Label>}
 
                     {customRange && criteria.from && criteria.to && (
@@ -861,6 +871,39 @@ class AlarmReviewComponent extends React.Component {
                       Clear
                     </span>
                   </div>
+                  <div className="sort-by">
+                    <label className="sort-and-filters-labels">Sort by: </label>
+                    <Button.Group size="tiny" className="sort-buttons">
+                      <Button
+                        color={orderBy[0] === "created_at" ? "blue" : ""}
+                        onClick={() => this.handleSort("created_at")}
+                      >
+                        {orderBy[0] === "created_at"
+                          ? "Date (" + orderBy[1].toLowerCase() + ")"
+                          : "Date"}
+                      </Button>
+                      <Button
+                        color={orderBy[0] === "gateway_id" ? "blue" : ""}
+                        onClick={() => this.handleSort("gateway_id")}
+                      >
+                        {orderBy[0] === "gateway_id"
+                          ? "Gateway ID (" + orderBy[1].toLowerCase() + ")"
+                          : "Gateway ID"}
+                      </Button>
+                      <Button
+                        color={orderBy[0] === "device_id" ? "blue" : ""}
+                        onClick={() => this.handleSort("device_id")}
+                      >
+                        {orderBy[0] === "device_id"
+                          ? "Device ID (" + orderBy[1].toLowerCase() + ")"
+                          : "Device ID"}
+                      </Button>
+                      <Button
+                        icon="remove"
+                        onClick={() => this.handleSort("")}
+                      ></Button>
+                    </Button.Group>
+                  </div>
                   {!this.state.isLoading && (
                     <Table
                       striped
@@ -958,6 +1001,17 @@ class AlarmReviewComponent extends React.Component {
                         onPageChange={this.handlePaginationChange}
                         totalPages={totalPages}
                       />
+                    )}
+                    {totalPages > 1 && !this.state.isLoading && (
+                      <Menu compact>
+                        <Dropdown
+                          className=""
+                          text={"Show " + pageSize}
+                          options={pageSizeOptions}
+                          onChange={this.handlePageSizeChange}
+                          item
+                        />
+                      </Menu>
                     )}
                   </Grid>
                 </Segment>
