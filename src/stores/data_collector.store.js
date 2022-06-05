@@ -60,13 +60,16 @@ class DataCollectorStore {
       headers: { Authorization: "Bearer " + AuthStore.access_token }
     })
   }
-
-  @action
-  saveDataCollector(dataCollector) {
-    return API.post("data_collectors", dataCollector, {
-      headers: { Authorization: "Bearer " + AuthStore.access_token }
-    }).then(response => {
-     
+  
+  
+  saveDataCollector(dataCollector,custom_ip) {
+    const headers = { Authorization: "Bearer " + AuthStore.getAccessToken() };
+    const params = {
+      ... dataCollector,
+      custom_ip: custom_ip
+    };
+    return API.post("data_collectors", params, { headers })
+    .then(response => { 
       this.getDataCollectorApi()
     });
   }
@@ -117,7 +120,7 @@ class DataCollectorStore {
     const headers = this.getHeaders();
     const creds = { user: user , password: password };
 
-    return API.post("data_collectors/ttn_credentials", creds, {
+    return API.post("data_collectors/ttn_v2_credentials", creds, {
       headers: { Authorization: "Bearer " + AuthStore.access_token },
       withCredentials: true
     });
@@ -128,6 +131,12 @@ class DataCollectorStore {
       headers: { Authorization: "Bearer " + AuthStore.access_token },
       withCredentials: true
     })
+  }
+
+  getTTN3Gateways(region_id, gateway_api_key) {
+    const params = { region_id: region_id, gateway_api_key: gateway_api_key };
+    const headers = { Authorization: "Bearer " + AuthStore.getAccessToken() };
+    return API.get("data_collectors/ttn_v3_gateways",  { headers, params } );
   }
 
   query(pagination) {
