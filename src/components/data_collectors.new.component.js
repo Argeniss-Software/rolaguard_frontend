@@ -62,6 +62,7 @@ class DataCollectorsNewComponent extends React.Component {
       newTopic: "",
       isSaving: false,
       isLoading: false,
+      custom_ip: false,
       isTesting: false,
       typeForm: "Add",
       error: null,
@@ -76,6 +77,17 @@ class DataCollectorsNewComponent extends React.Component {
     let dataCollector = this.state.dataCollector;
     if (name === "ssl") {
       dataCollector["ssl"] = !dataCollector["ssl"];
+    }
+    if (name === "custom_ip") {
+      this.state.custom_ip = !this.state.custom_ip;
+
+      //When the checkbox is true or false the values are set to null
+      dataCollector["gateway_api_key"] = null;
+      dataCollector["gateway_id"] = null;
+      dataCollector["gateway_name"] = null;
+      dataCollector["region_id"] = null;
+      dataCollector["ip"] = null;
+      dataCollector["port"] = null;
     } else {
       dataCollector[name] = value;
     }
@@ -187,6 +199,7 @@ class DataCollectorsNewComponent extends React.Component {
         gateway_api_key: null,
       },
       newTopic: "",
+      custom_ip: false,
     });
   };
 
@@ -214,7 +227,7 @@ class DataCollectorsNewComponent extends React.Component {
         setTimeout(() => this.setState({ error: null }), 5000);
       });
 
-      this.props.dataCollectorStore
+    this.props.dataCollectorStore
       .getDataCollectorTTNRegions()
       .then((response) => {
         const regions = response.data.map((region) => {
@@ -277,7 +290,7 @@ class DataCollectorsNewComponent extends React.Component {
             gateway_api_key,
             ca_cert,
             client_cert,
-            client_key
+            client_key,
           } = response.data;
           const dataCollector = {
             name,
@@ -296,7 +309,7 @@ class DataCollectorsNewComponent extends React.Component {
             gateway_api_key,
             ca_cert,
             client_cert,
-            client_key
+            client_key,
           };
           this.setState({ dataCollector, dataCollectorId, typeForm: "Edit" });
           this.setState({ isLoading: false });
@@ -455,13 +468,14 @@ class DataCollectorsNewComponent extends React.Component {
       gateway_api_key,
       ca_cert,
       client_cert,
-      client_key
+      client_key,
     } = this.state.dataCollector;
     const {
       newTopic,
       isLoading,
       isSaving,
       title,
+      custom_ip,
       error,
       types,
       regions,
@@ -482,24 +496,30 @@ class DataCollectorsNewComponent extends React.Component {
       (!description || description.length <= 1000) &&
       (dataCollectorTypeCode === "ttn_collector" ||
         dataCollectorTypeCode === "ttn_v3_collector" ||
-        ((Validation.isValidIp(ip) || Validation.isValidHostname(ip)) && Validation.isValidPort(port))) &&
-      data_collector_type_id &&
-      policy_id &&
-      ((dataCollectorTypeCode === "chirpstack_collector" &&
-        (!user || (user && user.length < 120)) &&
-        (!password || (password && password.length < 120))) ||
-        (dataCollectorTypeCode === "ttn_collector" &&
-          user &&
-          user.length < 120 &&
-          password &&
-          password.length < 120 &&
-          gateway_id) ||
-        (dataCollectorTypeCode === "ttn_v3_collector" &&
-          region_id &&
-          gateway_name &&
-          gateway_name.length <= 36 &&
-          gateway_api_key &&
-          gateway_api_key.length < 120));
+        ((Validation.isValidIp(ip) ||
+          (Validation.isValidHostname(ip) && Validation.isValidPort(port))) &&
+          data_collector_type_id &&
+          policy_id &&
+          ((dataCollectorTypeCode === "chirpstack_collector" &&
+            (!user || (user && user.length < 120)) &&
+            (!password || (password && password.length < 120))) ||
+            (dataCollectorTypeCode === "ttn_collector" &&
+              user &&
+              user.length < 120 &&
+              password &&
+              password.length < 120 &&
+              gateway_id) ||
+            (dataCollectorTypeCode === "ttn_v3_collector" &&
+              (Validation.isValidIp(ip) ||
+                Validation.isValidHostname(ip) ||
+                Validation.isValidURL(ip)) &&
+              Validation.isValidPort(port) &&
+              region_id &&
+              gateway_name &&
+              gateway_name.length <= 36 &&
+              gateway_api_key &&
+              gateway_api_key.length < 120) ||
+            (ip && port))));
 
     return (
       <div className="app-body-container-view">
@@ -564,7 +584,6 @@ class DataCollectorsNewComponent extends React.Component {
                       </div>
                     </Form.Field>
                   </Form.Group>
-
                   {dataCollectorTypeCode !== null && (
                     <Form.Group>
                       <Form.Field>
@@ -582,7 +601,61 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-
+                  {dataCollectorTypeCode === "ttn_v3_collector" && (
+                    <div
+                      style={{
+                        display: "flex",
+                        marginBottom: 25,
+                        justifyContent: "left",
+                      }}
+                    >
+                      {/*This checkbox allows user to input a custom IP/Hostname and port or URL to connect a TTNv3 Data-Collector. 
+                      Then, if custom_ip is true the Form shows different fields*/}
+                      <Form.Checkbox
+                        toggle
+                        className="custom_ip-checkbox"
+                        label="Local Server"
+                        name="custom_ip"
+                        checked={custom_ip}
+                        onChange={this.handleChange}
+                      ></Form.Checkbox>
+                    </div>
+                  )}
+                  {dataCollectorTypeCode === "ttn_v3_collector" && custom_ip && (
+                    <Form.Group>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="ip"
+                          value={ip}
+                          onChange={this.handleChange}
+                          error={
+                            !!ip &&
+                            !(
+                              Validation.isValidIp(ip) ||
+                              Validation.isValidHostname(ip) ||
+                              Validation.isValidURL(ip)
+                            )
+                          }
+                        >
+                          <input />
+                          <label>Server IP Address/Hostname/Domain</label>
+                        </Form.Input>
+                      </Form.Field>
+                      <Form.Field required>
+                        <Form.Input
+                          required
+                          name="port"
+                          value={port}
+                          onChange={this.handleChange}
+                          error={!!port && !Validation.isValidPort(port)}
+                        >
+                          <input />
+                          <label>Port</label>
+                        </Form.Input>
+                      </Form.Field>
+                    </Form.Group>
+                  )}
                   {dataCollectorTypeCode === "chirpstack_collector" && (
                     <Form.Group>
                       <Form.Field required>
@@ -591,7 +664,13 @@ class DataCollectorsNewComponent extends React.Component {
                           name="ip"
                           value={ip}
                           onChange={this.handleChange}
-                          error={!!ip && !(Validation.isValidIp(ip) || Validation.isValidHostname(ip))}
+                          error={
+                            !!ip &&
+                            !(
+                              Validation.isValidIp(ip) ||
+                              Validation.isValidHostname(ip)
+                            )
+                          }
                         >
                           <input />
                           <label>Server IP Address/Hostname</label>
@@ -611,9 +690,8 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-
                   {(dataCollectorTypeCode === "chirpstack_collector" ||
-                   dataCollectorTypeCode === "ttn_collector") && (
+                    dataCollectorTypeCode === "ttn_collector") && (
                     <Form.Group>
                       <Form.Field
                         required={dataCollectorTypeCode === "ttn_collector"}
@@ -657,23 +735,26 @@ class DataCollectorsNewComponent extends React.Component {
                       )}
                     </Form.Group>
                   )}
-
                   {dataCollectorTypeCode === "ttn_v3_collector" && (
                     <div>
                       <Form.Group>
-                        <Form.Field required>
-                          <div className="dropdown-label-wrapper">
-                            <label className="dropdown-label">Region</label>
-                            <Form.Dropdown
-                              search
-                              selection
-                              options={regions}
-                              name="region_id"
-                              value={region_id}
-                              onChange={this.handleChange}
-                            />
-                          </div>
-                        </Form.Field>
+                        {!custom_ip && (
+                          <Form.Field required>
+                            <div className="dropdown-label-wrapper">
+                              <label className="dropdown-label">Region</label>
+                              <Form.Dropdown
+                                id="regions-dropdown"
+                                clearable
+                                search
+                                selection
+                                options={regions}
+                                name="region_id"
+                                value={region_id}
+                                onChange={this.handleChange}
+                              />
+                            </div>
+                          </Form.Field>
+                        )}
                         <Form.Field required>
                           <Form.Input
                             required
@@ -687,7 +768,6 @@ class DataCollectorsNewComponent extends React.Component {
                           </Form.Input>
                         </Form.Field>
                       </Form.Group>
-
                       <Form.Group>
                         <Form.Field required>
                           <Form.Input
@@ -695,7 +775,9 @@ class DataCollectorsNewComponent extends React.Component {
                             name="gateway_api_key"
                             value={gateway_api_key}
                             onChange={this.handleChange}
-                            error={!!gateway_api_key && gateway_api_key.length > 120}
+                            error={
+                              !!gateway_api_key && gateway_api_key.length > 120
+                            }
                           >
                             <input />
                             <label>Gateway API Key</label>
@@ -704,7 +786,6 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Group>
                     </div>
                   )}
-
                   {dataCollectorTypeCode === "chirpstack_collector" && (
                     <div>
                       <Form.Group>
@@ -781,19 +862,34 @@ class DataCollectorsNewComponent extends React.Component {
                           </div>
                         )}
                       </Form.Group>
-                      {ssl &&
+                      {ssl && (
                         <Form.Group>
                           <Form.Field>
-                            <Form.TextArea name='ca_cert' value={ca_cert || ""} onChange={this.handleChange} label="CA Certificate" />
+                            <Form.TextArea
+                              name="ca_cert"
+                              value={ca_cert || ""}
+                              onChange={this.handleChange}
+                              label="CA Certificate"
+                            />
                           </Form.Field>
                           <Form.Field>
-                            <Form.TextArea name='client_cert' value={client_cert || ""} onChange={this.handleChange} label="Client Certificate" />
+                            <Form.TextArea
+                              name="client_cert"
+                              value={client_cert || ""}
+                              onChange={this.handleChange}
+                              label="Client Certificate"
+                            />
                           </Form.Field>
                           <Form.Field>
-                            <Form.TextArea name='client_key' value={client_key || ""} onChange={this.handleChange} label="Client Private Key" />
+                            <Form.TextArea
+                              name="client_key"
+                              value={client_key || ""}
+                              onChange={this.handleChange}
+                              label="Client Private Key"
+                            />
                           </Form.Field>
                         </Form.Group>
-                      }
+                      )}
                     </div>
                   )}
                   {
