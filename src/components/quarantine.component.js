@@ -396,9 +396,10 @@ class QuarantineComponent extends React.Component {
     } = this.state;
 
     const pageSizeOptions = [
-      { key: 1, text: "Show 50", value: 50 },
-      { key: 2, text: "Show 25", value: 25 },
-      { key: 3, text: "Show 10", value: 10 },
+      { key: 1, text: "Show 100", value: 100 },
+      { key: 2, text: "Show 50", value: 50 },
+      { key: 3, text: "Show 25", value: 25 },
+      { key: 4, text: "Show 10", value: 10 },
     ];
 
     let totalPages = Math.ceil(quarantineCount / pageSize);
