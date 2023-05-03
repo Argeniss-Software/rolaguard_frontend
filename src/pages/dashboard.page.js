@@ -6,8 +6,13 @@ import DashBoardRouter from '../components/dashboard.router';
 import AuthComponent from '../components/auth.component';
 import SidebarComponent from '../components/sidebar.component';
 import AlertComponent from '../components/alert/alert.component';
+import SidebarMobileComponent from '../components/sidebar_mobile.component';
 
 import { SemanticToastContainer, toast } from 'react-semantic-toasts';
+import {
+    Button,
+    Grid,
+  } from "semantic-ui-react";
 
 import { subscribeToNewNotificationEvents, unsubscribeFromNewNotificationEvents } from "../util/web-socket";
 
@@ -17,8 +22,14 @@ class DashboardPage extends React.Component {
 
     notificationSubscriber = null;
     state = {
-        countUnread: null
+        countUnread: null,
+        openMenuMobile: false
     }
+    toggleMenu = () => {
+        this.setState((prevState) => ({
+          openMenuMobile: !prevState.openMenuMobile
+        }));
+      };
     
     toggleVisibility = () => {
         this.props.history.push("/dashboard/pepe")
@@ -70,7 +81,17 @@ class DashboardPage extends React.Component {
                 </div> */}
             </div>
             <div className="app-body">
-                <SidebarComponent history={ this.props.history } countUnread={this.state.countUnread} resetUnread={this.resetUnread}/>
+            <Grid>
+                <Grid.Column only="computer">
+                    <SidebarComponent history={ this.props.history } countUnread={this.state.countUnread} resetUnread={this.resetUnread}/>
+                </Grid.Column>
+                <Grid.Column only="tablet mobile" >
+                    {this.state.openMenuMobile && <SidebarMobileComponent history={ this.props.history } countUnread={this.state.countUnread} resetUnread={this.resetUnread}/>}
+                </Grid.Column>
+                <Grid.Column only="tablet mobile">
+                    <Button attached='right' color='teal' icon={this.state.openMenuMobile? "angle double left" : "angle double right"} onClick={this.toggleMenu}/>
+                </Grid.Column>
+            </Grid>
                 <div className="app-body-container">
                     <DashBoardRouter />
                 </div>
