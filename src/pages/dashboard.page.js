@@ -89,7 +89,7 @@ class DashboardPage extends React.Component {
                     {this.state.openMenuMobile && <SidebarMobileComponent history={ this.props.history } countUnread={this.state.countUnread} resetUnread={this.resetUnread}/>}
                 </Grid.Column>
                 <Grid.Column only="tablet mobile">
-                    <Button attached='right' color='teal' icon={this.state.openMenuMobile? "angle double left" : "angle double right"} onClick={this.toggleMenu}/>
+                    <Button className={`${this.state.openMenuMobile ? "collapse-button-mobile ": ""}`}  color="blue" icon={this.state.openMenuMobile? "angle double left" : "angle double right"} onClick={this.toggleMenu}/>
                 </Grid.Column>
             </Grid>
                 <div className="app-body-container">

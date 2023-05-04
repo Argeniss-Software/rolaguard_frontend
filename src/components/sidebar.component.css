@@ -131,3 +131,8 @@
   -o-transition: left .2s cubic-bezier(.35,0,.25,1);
   transition: left .2s cubic-bezier(.35,0,.25,1);
 }
+
+.collapse-button-mobile{
+  position: absolute;
+  left: 180px;
+}
