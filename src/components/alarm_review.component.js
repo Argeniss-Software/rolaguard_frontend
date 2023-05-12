@@ -538,10 +538,10 @@ class AlarmReviewComponent extends React.Component {
     const filteredTypes = types.filter((type) => type.selected);
     const filteredDataCollectors = dataCollectors.filter((dc) => dc.selected);
     const pageSizeOptions = [
-      { key: 1, text: "Show 100", value: 100 },
-      { key: 2, text: "Show 50", value: 50 },
-      { key: 3, text: "Show 25", value: 25 },
-      { key: 4, text: "Show 10", value: 10 },
+      { key: 1, text: "Show 10", value: 10 },
+      { key: 2, text: "Show 25", value: 25 },
+      { key: 3, text: "Show 50", value: 50 },
+      { key: 4, text: "Show 100", value: 100 },
     ];
     return (
       <div className="app-body-container-view">
@@ -995,7 +995,7 @@ class AlarmReviewComponent extends React.Component {
                         style={{ marginBottom: 20 }}
                       />
                     )}
-                    {totalPages > 1 && !this.state.isLoading && (
+                    {!this.state.isLoading && (
                       <Pagination
                         className=""
                         activePage={activePage}
@@ -1003,7 +1003,7 @@ class AlarmReviewComponent extends React.Component {
                         totalPages={totalPages}
                       />
                     )}
-                    {totalPages > 1 && !this.state.isLoading && (
+                    {!this.state.isLoading && (
                       <Menu compact>
                         <Dropdown
                           className=""
