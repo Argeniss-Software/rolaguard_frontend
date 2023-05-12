@@ -150,10 +150,10 @@ const ResourceUsageComponent = (props) => {
   };
 
   const pageSizeOptions = [
-      { key: 1, text: "Show 100", value: 100 },
-      { key: 2, text: "Show 50", value: 50 },
-      { key: 3, text: "Show 25", value: 25 },
-      { key: 4, text: "Show 10", value: 10 },
+    { key: 1, text: "Show 10", value: 10 },
+    { key: 2, text: "Show 25", value: 25 },
+    { key: 3, text: "Show 50", value: 50 },
+    { key: 4, text: "Show 100", value: 100 },
   ];
 
   useEffect(() => {
@@ -333,8 +333,7 @@ const ResourceUsageComponent = (props) => {
                     style={{ marginBottom: 20 }}
                   />
                 )}
-                {!resourceUsageStore.model.isLoading &&
-                  resourceUsageStore.model.totalPages > 1 && (
+                {!resourceUsageStore.model.isLoading && (
                     <Grid className="segment centered">
                       <Pagination
                         className=""
@@ -342,8 +341,7 @@ const ResourceUsageComponent = (props) => {
                         onPageChange={handlePaginationChange}
                         totalPages={resourceUsageStore.model.totalPages}
                       />
-                      {!resourceUsageStore.model.isLoading &&
-                        resourceUsageStore.model.totalPages > 1 && (
+                      {!resourceUsageStore.model.isLoading && (
                           <Menu compact>
                             <Dropdown
                               className=""
