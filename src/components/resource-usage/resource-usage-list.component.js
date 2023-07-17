@@ -83,6 +83,13 @@ const ResourceUsageList = (props) => {
             </Table.HeaderCell>
             <Table.HeaderCell
               collapsing
+              style={{ textAlign: "center" }}
+              className="hide-old-computer"
+            >
+              SF
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              collapsing
               className="hide-old-computer"
               style={{ textAlign: "center" }}
             >
@@ -236,6 +243,19 @@ const ResourceUsageList = (props) => {
                       <NumberFormat
                         value={item.max_lsnr}
                         suffix=" dB"
+                        displayType={"text"}
+                        decimalScale="1"
+                      />
+                    </Table.Cell>
+                    <Table.Cell
+                      style={{ textAlign: "center" }}
+                      className={
+                        (item.connected ? "" : "lightgray", "hide-old-computer")
+                      }
+                      onClick={() => showModal({ item: item, index: index })}
+                    >
+                      <NumberFormat
+                        value={item.spread_factor}
                         displayType={"text"}
                         decimalScale="1"
                       />
