@@ -65,13 +65,13 @@ class ResendActivationModal extends Component {
         </Modal.Header>
         <Modal.Content>
           <p>
-            A new activation token will be send to {user.username} ({user.email}). Are you sure?
+            A new activation token will be sent to {user.username} ({user.email}). Are you sure?
           </p>
           {success && (
             <Label basic color='green'>Activation email was successfully sent.</Label>
           )}
           {error && (
-            <Label basic color='red'>We are sorry. It has been an error while trying to send the activation email.</Label>
+            <Label basic color='red'>An error has occurred while trying to send the activation email.</Label>
           )}
         </Modal.Content>
         <Modal.Actions>

@@ -18,6 +18,7 @@ class UsersNewComponent extends React.Component {
 
     this.state = {
       createOK: false,
+      creationMessage: "The user has been successfully created. A link to activate the account has been emailed.",
       user: {
         username: "",
         email: "",
@@ -165,7 +166,10 @@ class UsersNewComponent extends React.Component {
               break;
           }
         } else {
-          this.setState({ loading: false, createOK: true });
+          if(response.data.message)
+            this.setState({ loading: false, createOK: true, creationMessage: response.data.message });
+          else 
+            this.setState({ loading: false, createOK: true });
         }
       });
     }
@@ -179,7 +183,7 @@ class UsersNewComponent extends React.Component {
   };
 
   render() {
-    const { user, title, createOK, unknownError } = this.state;
+    const { user, title, createOK, unknownError, creationMessage } = this.state;
     let hideSave;
     const isAdmin = Validation.isUserAdmin(this.props.usersStore.currentUser);
 
@@ -326,13 +330,13 @@ class UsersNewComponent extends React.Component {
                   {createOK && (
                     <Label className="text-center mh-auto" basic color="green">
                       {
-                        "The user has been successfully created. A link to activate the account has been emailed."
+                        creationMessage
                       }{" "}
                     </Label>
                   )}
                   {unknownError && (
                     <Label className="text-center mh-auto" basic color="red">
-                      We are sorry. It has been an error while trying to create
+                      An error has occurred while trying to create
                       the user.
                     </Label>
                   )}
