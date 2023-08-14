@@ -50,6 +50,8 @@ class RegisterPage extends React.Component {
         emailExists: false,
         email: false,
         usernameHasWhiteSpaces: false,
+        phoneNotValid: false,
+        noEmailServer: false,
         unknownError: false,
         bad_recaptcha_token: false,
       },
@@ -121,28 +123,29 @@ class RegisterPage extends React.Component {
           this.setState({ loading: false });
 
           if (response.status !== 200) {
-            if (
-              response.data.error ===
-              "User " + this.state.user.username + " already exists"
-            ) {
-              showErrors.usernameExists = true;
-            } else if (
-              response.data.error ===
-              "User " + this.state.user.username + " is not valid"
-            ) {
-              showErrors.usernameInvalid = true;
-            } else if (
-              response.data.error ===
-              "Email " + this.state.user.email + " is not available"
-            ) {
-              showErrors.emailExists = true;
-            } else if (response.data.error === "Bad recaptcha token") {
-              showErrors.bad_recaptcha_token = true;
-              this.setState({ showErrors: showErrors, loading: false });
-            } else {
-              showErrors.unknownError = true;
+            switch(response.data.message){
+              case `User ${this.state.user.username} already exists`: 
+                showErrors.usernameExists = true;
+                break;
+              case `User ${this.state.user.username} is not valid`:
+                showErrors.usernameInvalid = true;
+                break;
+              case `Email ${this.state.user.email} is not available`:
+                showErrors.emailExists = true;
+                break;
+              case `Phone ${this.state.user.phone} is not valid`:
+                showErrors.phoneNotValid = true;
+                break;
+              case 'Missing recaptcha token in request':
+              case 'Invalid recaptcha token':
+                showErrors.bad_recaptcha_token = true;
+                break;
+              case 'Something went wrong trying to send activation: Activation mail not sent because there is no SMTP server configured.':
+                showErrors.noEmailServer = true;
+                break;
+              default:
+                showErrors.unknownError = true;
             }
-
             this.setState({ showErrors: showErrors });
           } else {
             this.setState({ showSuccessMessage: true });
@@ -154,8 +157,9 @@ class RegisterPage extends React.Component {
   onPhoneChange = (phone) => {
     const user = this.state.user;
     user.phone = phone;
-
-    this.setState({ user: user });
+    let showErrors = this.state.showErrors;
+    showErrors.phoneNotValid = false;
+    this.setState({ user: user, showErrors:showErrors });
   };
 
   render() {
@@ -266,7 +270,11 @@ class RegisterPage extends React.Component {
                         onPhoneChange={this.onPhoneChange}
                       ></PhoneComponent>
                     </Form.Field>
-
+                    {this.state.showErrors.phoneNotValid && (
+                      <Label className="mt0" basic color="red" pointing>
+                        We are sorry, the phone is not valid
+                      </Label>
+                    )}
                     <div className="recaptcha-component">
                       <RecaptchaComponent />
                     </div>
@@ -294,10 +302,17 @@ class RegisterPage extends React.Component {
                 </Message>
               </Segment>
             )}
+            {this.state.showErrors.noEmailServer && (
+              <Segment>
+                <Message className="mh-auto" color="red">
+                There is no SMTP server configured. Please create this user from an admin account.
+                </Message>
+              </Segment>
+            )}
             {this.state.showErrors.unknownError && (
               <Segment>
                 <Message className="mh-auto" color="red">
-                  We are sorry. It has been an error while trying to create your
+                  An error has occurred while trying to create your
                   account.
                 </Message>
               </Segment>

@@ -71,7 +71,7 @@ class DeleteUserModal extends Component {
             system. Are you sure?
           </p>
           {error && (
-            <Label basic color='red'>We are sorry. It has been an error while trying to remove the user.</Label>
+            <Label basic color='red'>An error has occurred while trying to remove the user.</Label>
           )}
         </Modal.Content>
         <Modal.Actions>

@@ -143,7 +143,7 @@ export default class QuarantineRemoveModal extends Component {
             <span>
               {error && (
                 <Label basic color="red">
-                  We are sorry. It has been an error while trying to remove this
+                  An error has occurred while trying to remove this
                   issue.
                 </Label>
               )}

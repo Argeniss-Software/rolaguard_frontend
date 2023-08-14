@@ -302,7 +302,7 @@ class UsersNewComponent extends React.Component {
                           basic
                           color="red"
                         >
-                          We are sorry. It has been an error while trying to
+                          An error has occurred while trying to
                           update the user.
                         </Label>
                       )}
