@@ -273,12 +273,12 @@ class AlarmReviewComponent extends React.Component {
         validFrom = moment(
           dateFrom.setSeconds(dateFrom.getSeconds() - 1)
         ).toDate();
-        criteria["from"] = validFrom;
+        criteria.from = validFrom;
       } else {
-        criteria["from"] = null;
+        criteria.from = dateFrom;
       }
     } else {
-      criteria["from"] = null;
+      criteria.from = null;
     }
     this.setState({ criteria, range: null });
   };
@@ -290,12 +290,12 @@ class AlarmReviewComponent extends React.Component {
       if (dateTo < criteria.from) {
         dateTo = criteria.from;
         validTo = moment(dateTo.setSeconds(dateTo.getSeconds() + 1)).toDate();
-        criteria["to"] = validTo;
+        criteria.to = validTo;
       } else {
-        criteria["to"] = null;
+        criteria.to = dateTo;
       }
     } else {
-      criteria["to"] = null;
+      criteria.to = null;
     }
     this.setState({ criteria, range: null });
   };
