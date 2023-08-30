@@ -1018,7 +1018,7 @@ class InventoryReviewComponent extends React.Component {
                           style={{ marginBottom: 20, height: "320px" }}
                         />
                       )}
-                      {!isLoading && (
+                      {!isLoading && this.state.assetsCount!=null && this.state.assetsCount > 0 && (
                         <Grid className="segment centered">
                           <Pagination
                             className=""

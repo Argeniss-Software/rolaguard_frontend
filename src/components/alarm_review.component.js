@@ -995,7 +995,7 @@ class AlarmReviewComponent extends React.Component {
                         style={{ marginBottom: 20 }}
                       />
                     )}
-                    {!this.state.isLoading && (
+                    {!this.state.isLoading && alertsCount!=null && alertsCount>0 && (
                       <Pagination
                         className=""
                         activePage={activePage}
@@ -1003,7 +1003,7 @@ class AlarmReviewComponent extends React.Component {
                         totalPages={totalPages}
                       />
                     )}
-                    {!this.state.isLoading && (
+                    {!this.state.isLoading && alertsCount!=null && alertsCount>0 && (
                       <Menu compact>
                         <Dropdown
                           className=""
