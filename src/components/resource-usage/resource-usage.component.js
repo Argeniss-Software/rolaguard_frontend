@@ -333,7 +333,7 @@ const ResourceUsageComponent = (props) => {
                     style={{ marginBottom: 20 }}
                   />
                 )}
-                {!resourceUsageStore.model.isLoading && (
+                {!resourceUsageStore.model.isLoading && resourceUsageStore.model.totalList!=null && resourceUsageStore.model.totalList>0 && (
                     <Grid className="segment centered">
                       <Pagination
                         className=""
