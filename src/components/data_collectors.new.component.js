@@ -500,7 +500,8 @@ class DataCollectorsNewComponent extends React.Component {
           (Validation.isValidHostname(ip) && Validation.isValidPort(port))) &&
           data_collector_type_id &&
           policy_id &&
-          ((dataCollectorTypeCode === "chirpstack_collector" &&
+          (((dataCollectorTypeCode === "chirpstack_collector" 
+          || dataCollectorTypeCode === "chirpstack_v4_collector") &&
             (!user || (user && user.length < 120)) &&
             (!password || (password && password.length < 120))) ||
             (dataCollectorTypeCode === "ttn_collector" &&
@@ -656,7 +657,9 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-                  {dataCollectorTypeCode === "chirpstack_collector" && (
+                  {(dataCollectorTypeCode === "chirpstack_collector"
+                  || dataCollectorTypeCode === "chirpstack_v4_collector")
+                  && (
                     <Form.Group>
                       <Form.Field required>
                         <Form.Input
@@ -690,7 +693,8 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Field>
                     </Form.Group>
                   )}
-                  {(dataCollectorTypeCode === "chirpstack_collector" ||
+                  {(dataCollectorTypeCode === "chirpstack_collector" 
+                  || dataCollectorTypeCode === "chirpstack_v4_collector" ||
                     dataCollectorTypeCode === "ttn_collector") && (
                     <Form.Group>
                       <Form.Field
@@ -786,7 +790,8 @@ class DataCollectorsNewComponent extends React.Component {
                       </Form.Group>
                     </div>
                   )}
-                  {dataCollectorTypeCode === "chirpstack_collector" && (
+                  {(dataCollectorTypeCode === "chirpstack_collector" 
+                  || dataCollectorTypeCode === "chirpstack_v4_collector") && (
                     <div>{/*
                       <Form.Group>
                         <Form.Field required className="mb0">
