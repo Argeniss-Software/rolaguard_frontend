@@ -131,7 +131,7 @@ class DataCollectorViewComponent extends React.Component {
                 <Header as='h2' >Connection</Header>
                 <Divider style={{marginTop: 0}} ></Divider>
 
-                {dataCollector.type.type === "chirpstack_collector" && (
+                {(dataCollector.type.type === "chirpstack_collector" || dataCollector.type.type === "chirpstack_v4_collector" ) && (
 									<Grid columns={2} style={{ marginBottom: 10 }}>
 										<Grid.Column>
 											<h4>IP address</h4>
